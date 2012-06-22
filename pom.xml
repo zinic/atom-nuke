@@ -1,0 +1,63 @@
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+   <modelVersion>4.0.0</modelVersion>
+
+   <groupId>com.rackspace.nuke</groupId>
+   <artifactId>nuke</artifactId>
+   <version>0.0.1-SNAPSHOT</version>
+   <packaging>jar</packaging>
+
+   <name>nuke</name>
+   <url>http://github.com/rackspace/nuke</url>
+
+   <properties>
+      <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+   </properties>
+   
+   <repositories>
+      <repository>
+         <id>public.maven.research.rackspace.com</id>
+            
+         <name>Rackspace Research</name>
+         <url>http://maven.research.rackspacecloud.com/content/groups/aggregate</url>
+      </repository>
+   </repositories>
+
+   <distributionManagement>
+      <repository>
+         <id>releases.maven.research.rackspace.com</id>
+ 
+         <name>Rackspace Research Releases</name>
+         <url>http://maven.research.rackspacecloud.com/content/repositories/releases</url>
+      </repository>
+        
+      <snapshotRepository>
+         <id>snapshots.maven.research.rackspace.com</id>
+
+         <name>Rackspace Research Snapshots</name>
+         <url>http://maven.research.rackspacecloud.com/content/repositories/snapshots</url>
+      </snapshotRepository>
+   </distributionManagement>
+   
+   <dependencies>
+      <dependency>
+         <groupId>org.apache.httpcomponents</groupId>
+         <artifactId>httpclient</artifactId>
+         <version>4.2</version>
+      </dependency>
+
+      <dependency>
+         <groupId>com.rackspace.papi.commons</groupId>
+         <artifactId>utilities</artifactId>
+         <version>2.1.1</version>
+      </dependency>
+      
+      <dependency>
+         <groupId>junit</groupId>
+         <artifactId>junit</artifactId>
+         <version>4.10</version>
+         <scope>test</scope>
+      </dependency>
+   </dependencies>
+</project>
