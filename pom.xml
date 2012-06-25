@@ -3,13 +3,13 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
    <modelVersion>4.0.0</modelVersion>
 
-   <groupId>com.rackspace.nuke</groupId>
+   <groupId>net.jps.nuke</groupId>
    <artifactId>nuke</artifactId>
-   <version>0.0.1-SNAPSHOT</version>
+   <version>0.0.2-SNAPSHOT</version>
    <packaging>jar</packaging>
 
    <name>nuke</name>
-   <url>http://github.com/rackspace/nuke</url>
+   <url>https://github.com/zinic/atom-nuke</url>
 
    <properties>
       <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -42,11 +42,47 @@
    
    <dependencies>
       <dependency>
+         <groupId>xerces</groupId>
+         <artifactId>xercesImpl</artifactId>
+         <version>2.10.0</version>
+      </dependency>
+      
+      <dependency>
+         <groupId>xalan</groupId>
+         <artifactId>xalan</artifactId>
+         <version>2.7.1</version>
+      </dependency>
+      
+      <dependency>
          <groupId>org.apache.httpcomponents</groupId>
          <artifactId>httpclient</artifactId>
          <version>4.2</version>
       </dependency>
 
+      <dependency>
+         <groupId>org.apache.abdera</groupId>
+         <artifactId>abdera-core</artifactId>
+         <version>1.1.2</version>
+      </dependency>
+
+      <dependency>
+         <groupId>org.apache.abdera</groupId>
+         <artifactId>abdera-parser</artifactId>
+         <version>1.1.2</version>
+      </dependency>
+         
+      <dependency>
+         <groupId>org.apache.hadoop</groupId>
+         <artifactId>hadoop-core</artifactId>
+         <version>1.0.3</version>
+      </dependency>
+         
+      <dependency>
+         <groupId>org.apache.hadoop</groupId>
+         <artifactId>hadoop-client</artifactId>
+         <version>1.0.3</version>
+      </dependency>
+         
       <dependency>
          <groupId>com.rackspace.papi.commons</groupId>
          <artifactId>utilities</artifactId>
