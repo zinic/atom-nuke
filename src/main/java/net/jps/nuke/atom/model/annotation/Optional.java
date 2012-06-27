@@ -11,7 +11,5 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-public @interface Restriction {
-
-   String value();
+public @interface Optional {
 }
