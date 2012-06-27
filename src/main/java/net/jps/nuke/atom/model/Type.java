@@ -1,0 +1,12 @@
+package net.jps.nuke.atom.model;
+
+/**
+ *
+ * @author zinic
+ */
+public enum Type {
+
+   TEXT,
+   HTML,
+   XHTML;
+}

@@ -1,7 +1,7 @@
 package net.jps.nuke.listener.hadoop;
 
-import net.jps.nuke.listener.FeedListener;
-import net.jps.nuke.listener.ListenerResult;
+import net.jps.nuke.abdera.listener.FeedListener;
+import net.jps.nuke.abdera.listener.ListenerResult;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.StringWriter;

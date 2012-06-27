@@ -1,7 +1,7 @@
-package net.jps.nuke;
+package net.jps.nuke.crawler;
 
-import net.jps.nuke.listener.FeedListener;
-import net.jps.nuke.listener.ListenerResult;
+import net.jps.nuke.abdera.listener.FeedListener;
+import net.jps.nuke.abdera.listener.ListenerResult;
 import com.rackspace.papi.commons.util.io.RawInputStreamReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -22,21 +22,22 @@ import org.apache.http.client.methods.HttpGet;
  *
  * @author zinic
  */
-public class FeedCrawler {
+public class AbderaFeedCrawler implements FeedCrawler {
 
    private final ParserFactory parserFactory;
    private final FeedListener feedListener;
    private final HttpClient httpClient;
    private final File stateFile;
 
-   public FeedCrawler(ParserFactory parserFactory, FeedListener feedListener, HttpClient httpClient, File stateFile) {
+   public AbderaFeedCrawler(ParserFactory parserFactory, FeedListener feedListener, HttpClient httpClient, File stateFile) {
       this.parserFactory = parserFactory;
       this.feedListener = feedListener;
       this.httpClient = httpClient;
       this.stateFile = stateFile;
    }
 
-   public void go(String origin) {
+   @Override
+   public void crawl(String origin) {
       String targetUri = origin;
       boolean readNext = true;
 
