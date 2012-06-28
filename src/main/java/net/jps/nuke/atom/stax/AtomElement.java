@@ -23,7 +23,10 @@ public enum AtomElement {
    SUBTITLE,
    SUMMARY,
    TITLE,
-   UPDATED;
+   UPDATED,
+   NAME,
+   EMAIL,
+   URI;
 
    public static AtomElement findIgnoreCase(String st) {
 

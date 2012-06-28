@@ -42,7 +42,11 @@ public class AtomHandler extends DefaultHandler {
    }
 
    private void push(AtomElement element, Object builder) {
-      contextStack.push(new HandlerContext(element, builder));
+      push(new HandlerContext(element, builder));
+   }
+
+   private void push(HandlerContext context) {
+      contextStack.push(context);
    }
 
    private static String simplifyLocalName(String qName, String localName) {
@@ -72,6 +76,12 @@ public class AtomHandler extends DefaultHandler {
          case CONTRIBUTOR:
             startPersonConstruct(currentElement, attributeScannerDriver);
             break;
+
+         case NAME:
+         case EMAIL:
+         case URI:
+            startChildElement(currentElement);
+            break;
       }
    }
 
@@ -97,7 +107,58 @@ public class AtomHandler extends DefaultHandler {
 
    @Override
    public void characters(char[] ch, int start, int length) throws SAXException {
-      super.characters(ch, start, length);
+      if (!expectingCharacters()) {
+         return;
+      }
+      
+      final HandlerContext target = pop();
+      final HandlerContext targetParent = peek();
+      final AtomElement targetElement = target.getElementDef();
+
+      if (targetElement == AtomElement.NAME) {
+         switch (targetParent.getElementDef()) {
+            case AUTHOR:
+            case CONTRIBUTOR:
+               ((PersonConstructBuilder) targetParent.getBuilder()).setName(new String(ch, start, length));
+               break;
+
+            default:
+               unexpectedElement(targetParent.getElementDef(), targetElement);
+         }
+      } else if (targetElement == AtomElement.URI) {
+         switch (targetParent.getElementDef()) {
+            case AUTHOR:
+            case CONTRIBUTOR:
+               ((PersonConstructBuilder) targetParent.getBuilder()).setUri(new String(ch, start, length));
+               break;
+
+            default:
+               unexpectedElement(targetParent.getElementDef(), targetElement);
+         }
+      } else if ((targetElement == AtomElement.EMAIL)) {
+         switch (targetParent.getElementDef()) {
+            case AUTHOR:
+            case CONTRIBUTOR:
+               ((PersonConstructBuilder) targetParent.getBuilder()).setEmail(new String(ch, start, length));
+               break;
+
+            default:
+               unexpectedElement(targetParent.getElementDef(), targetElement);
+         }
+      } else {
+         push(target);
+      }
+   }
+
+   public boolean expectingCharacters() {
+      switch (peek().getElementDef()) {
+         case NAME:
+         case URI:
+         case EMAIL:
+            return true;
+      }
+
+      return false;
    }
 
    public ParserResult getResult() {
@@ -158,6 +219,11 @@ public class AtomHandler extends DefaultHandler {
       push(personConstructElement, personConstructBuilder);
    }
 
+   private void startChildElement(AtomElement child) {
+      final HandlerContext previous = peek();
+      push(child, previous.getBuilder());
+   }
+
    private void endFeed() {
       final HandlerContext<FeedBuilder> feedBuilderContext = pop();
       result.setFeedBuilder(feedBuilderContext.getBuilder());
@@ -197,7 +263,7 @@ public class AtomHandler extends DefaultHandler {
                break;
 
             default:
-               throw new RuntimeException("Unexpected parent element: " + parentContext.getElementDef() + " on element: " + element);
+               unexpectedElement(parentContext.getElementDef(), element);
          }
       } else {
          final Contributor contributor = personConstructBuilder.buildContributor();
@@ -212,8 +278,12 @@ public class AtomHandler extends DefaultHandler {
                break;
 
             default:
-               throw new RuntimeException("Unexpected parent element: " + parentContext.getElementDef() + " on element: " + element);
+               unexpectedElement(parentContext.getElementDef(), element);
          }
       }
+   }
+
+   public static void unexpectedElement(AtomElement parent, AtomElement child) {
+      throw new RuntimeException("Unexpected parent element: " + parent + " on element: " + child);
    }
 }

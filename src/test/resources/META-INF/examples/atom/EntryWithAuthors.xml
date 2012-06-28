@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<entry>
+   <author>
+      <name>John Doe 1</name>
+      <uri>http://john.doe.1.example.domain/</uri>
+      <email>john.doe.1@example.domain</email>
+   </author>
+
+   <author>
+      <name>John Doe 2</name>
+      <uri>http://john.doe.2.example.domain/</uri>
+      <email>john.doe.2@example.domain</email>
+   </author>
+
+   <author>
+      <name>John Doe 3</name>
+      <uri>http://john.doe.3.example.domain/</uri>
+      <email>john.doe.3@example.domain</email>
+   </author>
+</entry>
