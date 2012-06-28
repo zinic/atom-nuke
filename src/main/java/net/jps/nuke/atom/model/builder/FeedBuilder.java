@@ -25,7 +25,7 @@ import net.jps.nuke.atom.model.impl.FeedImpl;
  */
 public class FeedBuilder extends FeedImpl {
 
-   public FeedBuilder newBuilder() {
+   public static FeedBuilder newBuilder() {
       final FeedBuilder builder = new FeedBuilder();
 
       builder.authors = new LinkedList<Author>();

@@ -1,6 +1,7 @@
 package net.jps.nuke.atom;
 
-import java.net.URI;
+import net.jps.nuke.atom.model.Entry;
+import net.jps.nuke.atom.model.Feed;
 
 /**
  *
@@ -8,7 +9,7 @@ import java.net.URI;
  */
 public interface ParserResult {
 
-   FeedMetadata getFeedMetadata();
+   Feed getFeed();
 
-   URI getNextLocation();
+   Entry getEntry();
 }

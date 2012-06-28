@@ -1,6 +1,9 @@
 package net.jps.nuke.atom;
 
-import java.net.URI;
+import net.jps.nuke.atom.model.Entry;
+import net.jps.nuke.atom.model.Feed;
+import net.jps.nuke.atom.model.builder.EntryBuilder;
+import net.jps.nuke.atom.model.builder.FeedBuilder;
 
 /**
  *
@@ -8,27 +11,22 @@ import java.net.URI;
  */
 public class ParserResultImpl implements ParserResult {
 
-   private FeedMetadata feedMetadata;
-   private URI nextLocation;
+   private FeedBuilder feed;
+   private EntryBuilder entry;
 
-   public ParserResultImpl() {
+   public void setFeedBuilder(FeedBuilder feed) {
+      this.feed = feed;
    }
 
-   @Override
-   public FeedMetadata getFeedMetadata() {
-      return feedMetadata;
+   public void setEntryBuilder(EntryBuilder entry) {
+      this.entry = entry;
    }
 
-   public void setFeedMetadata(FeedMetadata feedMetadata) {
-      this.feedMetadata = feedMetadata;
+   public Feed getFeed() {
+      return feed != null ? feed.build() : null;
    }
 
-   @Override
-   public URI getNextLocation() {
-      return nextLocation;
-   }
-
-   public void setNextLocation(URI nextLocation) {
-      this.nextLocation = nextLocation;
+   public Entry getEntry() {
+      return entry != null ? entry.build() : null;
    }
 }

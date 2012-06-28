@@ -31,6 +31,7 @@ public class SaxAtomParser implements FeedParser {
          final SAXParser parser = parserFactory.newSAXParser();
          parser.parse(source, handler);
       } catch (Exception e) {
+         e.printStackTrace();
          throw new AtomParserException(e.getMessage(), e.getCause());
       }
 

@@ -1,5 +1,6 @@
 package net.jps.nuke.atom.model.builder;
 
+import java.net.URI;
 import java.util.Collections;
 import java.util.LinkedList;
 import net.jps.nuke.atom.model.Author;
@@ -23,7 +24,7 @@ import net.jps.nuke.atom.model.impl.EntryImpl;
  */
 public class EntryBuilder extends EntryImpl {
 
-   public EntryBuilder newBuilder() {
+   public static EntryBuilder newBuilder() {
       final EntryBuilder builder = new EntryBuilder();
 
       builder.authors = new LinkedList<Author>();
@@ -99,5 +100,13 @@ public class EntryBuilder extends EntryImpl {
 
    public void setSource(Source source) {
       this.source = source;
+   }
+
+   public void setBase(URI base) {
+      this.base = base;
+   }
+
+   public void setLang(String lang) {
+      this.lang = lang;
    }
 }

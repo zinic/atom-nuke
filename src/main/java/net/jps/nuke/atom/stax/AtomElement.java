@@ -23,5 +23,16 @@ public enum AtomElement {
    SUBTITLE,
    SUMMARY,
    TITLE,
-   UPDATED
+   UPDATED;
+
+   public static AtomElement findIgnoreCase(String st) {
+
+      for (AtomElement element : values()) {
+         if (element.name().equalsIgnoreCase(st)) {
+            return element;
+         }
+      }
+
+      return null;
+   }
 }
