@@ -14,5 +14,5 @@ public interface DateConstruct extends AtomCommonAtributes {
     * 
     * @return 
     */
-   Calendar toCalendar();
+   Calendar asCalendar();
 }

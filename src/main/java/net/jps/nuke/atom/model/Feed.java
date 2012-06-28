@@ -12,7 +12,7 @@ public interface Feed extends AtomCommonAtributes {
 
    List<Author> authors();
 
-   List<Contributer> contributers();
+   List<Contributor> contributors();
 
    List<Category> categories();
 

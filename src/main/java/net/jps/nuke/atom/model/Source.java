@@ -8,7 +8,7 @@ import java.util.List;
  */
 public interface Source extends AtomCommonAtributes {
 
-   List<PersonConstruct> authors();
+   List<Author> authors();
 
    List<Category> categories();
 

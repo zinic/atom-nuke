@@ -40,13 +40,13 @@ public class StaxAtomParser {
             case XMLEvent.END_DOCUMENT:
                documentEnd(reader);
                break;
-               
+
             case XMLEvent.START_ELEMENT:
-               elementOpen(reader);
+               elementStart(reader);
                break;
-               
+
             case XMLEvent.END_ELEMENT:
-               elementClosed(reader);
+               elementEnd(reader);
                break;
 
             case XMLEvent.ATTRIBUTE:
@@ -81,10 +81,39 @@ public class StaxAtomParser {
    private void documentStart(XMLStreamReader reader) {
    }
 
-   private void documentEnd(XMLStreamReader reader) {
+   private void namespace(XMLStreamReader reader) {
    }
 
-   private void namespace(XMLStreamReader reader) {
+   private void elementStart(XMLStreamReader reader) {
+      final String elementName = reader.getLocalName().toUpperCase();
+
+      switch (AtomElement.valueOf(elementName)) {
+         case FEED:
+         case ENTRY:
+         case CONTENT:
+         case AUTHOR:
+         case CATEGORY:
+         case CONTRIBUTOR:
+         case GENERATOR:
+         case ICON:
+         case ID:
+         case LINK:
+         case LOGO:
+         case PUBLISHED:
+         case RIGHTS:
+         case SOURCE:
+         case SUBTITLE:
+         case SUMMARY:
+         case TITLE:
+         case UPDATED:
+      }
+   }
+
+   private void elementEnd(XMLStreamReader reader) {
+      final String elementName = reader.getLocalName();
+   }
+
+   private void documentEnd(XMLStreamReader reader) {
    }
 
    private void cdata(XMLStreamReader reader) {
@@ -95,13 +124,4 @@ public class StaxAtomParser {
 
    private void attribute(XMLStreamReader reader) {
    }
-   
-   private void elementOpen(XMLStreamReader reader) {
-      final String elementName = reader.getLocalName();
-   }
-   
-   private void elementClosed(XMLStreamReader reader) {
-      final String elementName = reader.getLocalName();
-   }
-
 }
