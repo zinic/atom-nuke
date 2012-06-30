@@ -20,7 +20,7 @@ public class HandlerContext<T> {
       return elementDef;
    }
 
-   public T getBuilder() {
+   public T builder() {
       return builder;
    }
 }

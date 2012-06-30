@@ -7,6 +7,7 @@ import java.net.URI;
 import java.util.List;
 import net.jps.nuke.atom.ParserResult;
 import net.jps.nuke.atom.model.Author;
+import net.jps.nuke.atom.model.Category;
 import net.jps.nuke.atom.model.Contributor;
 import net.jps.nuke.atom.model.Entry;
 import net.jps.nuke.atom.model.Feed;
@@ -64,6 +65,18 @@ public class AtomHandlerTest {
             assertEquals("John Doe", contributors.get(i).name());
             assertEquals("http://john.doe.example.domain/", contributors.get(i).uri());
             assertEquals("john.doe@example.domain", contributors.get(i).email());
+         }
+      }
+
+      protected void checkCategories(List<Category> categories) {
+         assertEquals(3, categories.size());
+
+         for (int i = 0; i < categories.size(); i++) {
+            final Category c = categories.get(i);
+            
+            assertEquals("a", c.term());
+            assertEquals("Category A", c.label());
+            assertEquals("http", c.scheme());
          }
       }
    }
@@ -158,6 +171,22 @@ public class AtomHandlerTest {
          final Entry e = result.getEntry();
          assertEquals(3, e.contributors().size());
          checkContributors(e.contributors());
+      }
+
+      @Test
+      public void shouldReadEntryContent() throws Exception {
+         final ParserResult result = getParser().read(openEntryResource("EntryWithContent.xml"));
+
+         final Entry e = result.getEntry();
+         assertEquals("Text content.", e.content().value());
+      }
+
+      @Test
+      public void shouldReadEntryCategories() throws Exception {
+         final ParserResult result = getParser().read(openEntryResource("EntryWithCategories.xml"));
+
+         final Entry e = result.getEntry();
+         checkCategories(e.categories());
       }
    }
 }

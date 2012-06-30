@@ -10,9 +10,9 @@ import net.jps.nuke.atom.model.Logo;
  */
 public abstract class LangAwareStringValue extends AtomCommonAttributesImpl implements ID, Icon, Logo {
 
-   protected String value;
+   protected StringBuilder value;
 
    public String value() {
-      return value;
+      return value.toString();
    }
 }

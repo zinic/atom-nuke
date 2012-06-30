@@ -1,7 +1,9 @@
 package net.jps.nuke.atom.sax;
 
 import java.util.List;
-import net.jps.nuke.atom.model.PersonConstruct;
+import net.jps.nuke.atom.model.Author;
+import net.jps.nuke.atom.model.Category;
+import net.jps.nuke.atom.model.Contributor;
 import net.jps.nuke.atom.model.builder.EntryBuilder;
 import net.jps.nuke.atom.model.builder.FeedBuilder;
 import net.jps.nuke.atom.stax.AtomElement;
@@ -12,48 +14,54 @@ import net.jps.nuke.atom.stax.AtomElement;
  */
 public class ModelHelper {
 
-   public List<? extends PersonConstruct> getPersonConstructList(AtomElement personElement, HandlerContext parent) {
-      switch (parent.getElementDef()) {
+   public List<Category> getCategoryList(HandlerContext target) {
+      switch (target.getElementDef()) {
          case FEED:
-            return getPersonConstructListFromFeed(personElement, (FeedBuilder) parent.getBuilder());
+            return ((FeedBuilder) target.builder()).categories();
 
          case ENTRY:
-            return getPersonConstructListFromEntry(personElement, (EntryBuilder) parent.getBuilder());
+            return ((EntryBuilder) target.builder()).categories();
 
          case SOURCE:
          default:
-            throw invalidState(parent.getElementDef(), "Unexpected parent element for person construct list.");
+            throw invalidState(target.getElementDef(), "Unexpected parent element for category.");
       }
    }
 
-   private List<? extends PersonConstruct> getPersonConstructListFromFeed(AtomElement personElement, FeedBuilder feed) {
-      switch (personElement) {
-         case AUTHOR:
-            return feed.authors();
+   public List<Author> getAuthorList(HandlerContext target) {
+      switch (target.getElementDef()) {
+         case FEED:
+            return ((FeedBuilder) target.builder()).authors();
 
-         case CONTRIBUTOR:
-            return feed.contributors();
+         case ENTRY:
+            return ((EntryBuilder) target.builder()).authors();
 
+         case SOURCE:
          default:
-            throw invalidState(personElement, "Unexpected person construct element.");
+            throw unexpectedElement(target.getElementDef(), "Element does not have an authors list.");
       }
    }
 
-   private List<? extends PersonConstruct> getPersonConstructListFromEntry(AtomElement personElement, EntryBuilder entry) {
-      switch (personElement) {
-         case AUTHOR:
-            return entry.authors();
+   public List<Contributor> getContributorList(HandlerContext target) {
+      switch (target.getElementDef()) {
+         case FEED:
+            return ((FeedBuilder) target.builder()).contributors();
 
-         case CONTRIBUTOR:
-            return entry.contributors();
+         case ENTRY:
+            return ((EntryBuilder) target.builder()).contributors();
 
+         case SOURCE:
          default:
-            throw invalidState(personElement, "Unexpected person construct element.");
+            throw unexpectedElement(target.getElementDef(), "Element does not have a contributors list.");
       }
    }
 
-   public InvalidElementException unexpectedElement(AtomElement parent, AtomElement child) {
-      throw new InvalidElementException(child, "Unexpected parent element: " + parent);
+   public InvalidElementException unexpectedElement(AtomElement element) {
+      throw new InvalidElementException(element, "Element: " + element + " was unexpected in this context.");
+   }
+
+   public InvalidElementException unexpectedElement(AtomElement element, String message) {
+      throw new InvalidElementException(element, message);
    }
 
    public InvalidElementException invalidState(AtomElement cause, String message) {
