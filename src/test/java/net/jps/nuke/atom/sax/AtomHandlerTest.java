@@ -30,23 +30,44 @@ public class AtomHandlerTest {
    }
 
    public static InputStream openEntryResource(String name) throws IOException {
-      return  AtomHandlerTest.class.getResourceAsStream("/META-INF/examples/atom/entry/" + name);
+      return AtomHandlerTest.class.getResourceAsStream("/META-INF/examples/atom/entry/" + name);
    }
- 
+
    @Ignore
    public static class TestParent {
+
       private SaxAtomParser parserInstance;
-      
+
       @Before
       public void standUp() {
          parserInstance = new SaxAtomParser();
       }
-      
+
       protected SaxAtomParser getParser() {
          return parserInstance;
       }
+
+      protected void checkAuthors(List<Author> authors) {
+         assertEquals(3, authors.size());
+
+         for (int i = 0; i < authors.size(); i++) {
+            assertEquals("John Doe", authors.get(i).name());
+            assertEquals("http://john.doe.example.domain/", authors.get(i).uri());
+            assertEquals("john.doe@example.domain", authors.get(i).email());
+         }
+      }
+
+      protected void checkContributors(List<Contributor> contributors) {
+         assertEquals(3, contributors.size());
+
+         for (int i = 0; i < contributors.size(); i++) {
+            assertEquals("John Doe", contributors.get(i).name());
+            assertEquals("http://john.doe.example.domain/", contributors.get(i).uri());
+            assertEquals("john.doe@example.domain", contributors.get(i).email());
+         }
+      }
    }
-   
+
    public static class WhenParsingFeedElements extends TestParent {
 
       @Test
@@ -72,19 +93,16 @@ public class AtomHandlerTest {
          final ParserResult result = getParser().read(openFeedResource("FeedWithAuthors.xml"));
 
          final Feed f = result.getFeed();
-         final List<Author> authors = f.authors();
+         checkAuthors(f.authors());
+      }
 
-         assertEquals("John Doe", authors.get(0).name());
-         assertEquals("http://john.doe.example.domain/", authors.get(0).uri());
-         assertEquals("john.doe@example.domain", authors.get(0).email());
+      @Test
+      public void shouldReadFeedContributors() throws Exception {
+         final ParserResult result = getParser().read(openFeedResource("FeedWithContributors.xml"));
 
-         assertEquals("John Doe", authors.get(1).name());
-         assertEquals("http://john.doe.example.domain/", authors.get(1).uri());
-         assertEquals("john.doe@example.domain", authors.get(1).email());
-
-         assertEquals("John Doe", authors.get(2).name());
-         assertEquals("http://john.doe.example.domain/", authors.get(2).uri());
-         assertEquals("john.doe@example.domain", authors.get(2).email());
+         final Feed f = result.getFeed();
+         assertEquals(3, f.contributors().size());
+         checkContributors(f.contributors());
       }
    }
 
@@ -130,43 +148,16 @@ public class AtomHandlerTest {
          final ParserResult result = getParser().read(openEntryResource("EntryWithAuthors.xml"));
 
          final Entry e = result.getEntry();
-         assertEquals(3, e.authors().size());
-
-         final List<Author> authors = e.authors();
-
-         assertEquals("John Doe", authors.get(0).name());
-         assertEquals("http://john.doe.example.domain/", authors.get(0).uri());
-         assertEquals("john.doe@example.domain", authors.get(0).email());
-
-         assertEquals("John Doe", authors.get(1).name());
-         assertEquals("http://john.doe.example.domain/", authors.get(1).uri());
-         assertEquals("john.doe@example.domain", authors.get(1).email());
-
-         assertEquals("John Doe", authors.get(2).name());
-         assertEquals("http://john.doe.example.domain/", authors.get(2).uri());
-         assertEquals("john.doe@example.domain", authors.get(2).email());
+         checkAuthors(e.authors());
       }
 
-      @Test @Ignore
+      @Test
       public void shouldReadEntryContributors() throws Exception {
          final ParserResult result = getParser().read(openEntryResource("EntryWithContributors.xml"));
 
          final Entry e = result.getEntry();
-         assertEquals(3, e.authors().size());
-
-         final List<Contributor> contributors = e.contributors();
-
-         assertEquals("John Doe", contributors.get(0).name());
-         assertEquals("http://john.doe.example.domain/", contributors.get(0).uri());
-         assertEquals("john.doe@example.domain", contributors.get(0).email());
-
-         assertEquals("John Doe", contributors.get(1).name());
-         assertEquals("http://john.doe.example.domain/", contributors.get(1).uri());
-         assertEquals("john.doe@example.domain", contributors.get(1).email());
-
-         assertEquals("John Doe", contributors.get(2).name());
-         assertEquals("http://john.doe.example.domain/", contributors.get(2).uri());
-         assertEquals("john.doe@example.domain", contributors.get(2).email());
+         assertEquals(3, e.contributors().size());
+         checkContributors(e.contributors());
       }
    }
 }

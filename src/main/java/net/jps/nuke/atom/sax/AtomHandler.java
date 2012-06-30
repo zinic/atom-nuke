@@ -1,15 +1,14 @@
 package net.jps.nuke.atom.sax;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Stack;
 import net.jps.nuke.atom.ParserResult;
 import net.jps.nuke.atom.ParserResultImpl;
-import net.jps.nuke.atom.model.Author;
-import net.jps.nuke.atom.model.Contributor;
+import net.jps.nuke.atom.model.PersonConstruct;
 import net.jps.nuke.atom.model.builder.EntryBuilder;
 import net.jps.nuke.atom.model.builder.FeedBuilder;
 import net.jps.nuke.atom.model.builder.PersonConstructBuilder;
-import net.jps.nuke.atom.model.builder.SourceBuilder;
 import net.jps.nuke.atom.stax.AtomElement;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -21,6 +20,8 @@ import org.xml.sax.helpers.DefaultHandler;
  */
 public class AtomHandler extends DefaultHandler {
 
+   private static final ModelHelper m = new ModelHelper();
+   
    private final Stack<HandlerContext<?>> contextStack;
    private final ParserResultImpl result;
 
@@ -110,7 +111,7 @@ public class AtomHandler extends DefaultHandler {
       if (!expectingCharacters()) {
          return;
       }
-      
+
       final HandlerContext target = pop();
       final HandlerContext targetParent = peek();
       final AtomElement targetElement = target.getElementDef();
@@ -123,7 +124,7 @@ public class AtomHandler extends DefaultHandler {
                break;
 
             default:
-               unexpectedElement(targetParent.getElementDef(), targetElement);
+               throw m.unexpectedElement(targetParent.getElementDef(), targetElement);
          }
       } else if (targetElement == AtomElement.URI) {
          switch (targetParent.getElementDef()) {
@@ -133,7 +134,7 @@ public class AtomHandler extends DefaultHandler {
                break;
 
             default:
-               unexpectedElement(targetParent.getElementDef(), targetElement);
+               throw m.unexpectedElement(targetParent.getElementDef(), targetElement);
          }
       } else if ((targetElement == AtomElement.EMAIL)) {
          switch (targetParent.getElementDef()) {
@@ -143,7 +144,7 @@ public class AtomHandler extends DefaultHandler {
                break;
 
             default:
-               unexpectedElement(targetParent.getElementDef(), targetElement);
+               throw m.unexpectedElement(targetParent.getElementDef(), targetElement);
          }
       } else {
          push(target);
@@ -246,44 +247,7 @@ public class AtomHandler extends DefaultHandler {
 
       final PersonConstructBuilder personConstructBuilder = personConstructContext.getBuilder();
 
-      if (element == AtomElement.AUTHOR) {
-         final Author author = personConstructBuilder.buildAuthor();
-
-         switch (parentContext.getElementDef()) {
-            case FEED:
-               ((HandlerContext<FeedBuilder>) parentContext).getBuilder().addAuthor(author);
-               break;
-
-            case ENTRY:
-               ((HandlerContext<EntryBuilder>) parentContext).getBuilder().addAuthor(author);
-               break;
-
-            case SOURCE:
-               ((HandlerContext<SourceBuilder>) parentContext).getBuilder().addAuthor(author);
-               break;
-
-            default:
-               unexpectedElement(parentContext.getElementDef(), element);
-         }
-      } else {
-         final Contributor contributor = personConstructBuilder.buildContributor();
-
-         switch (parentContext.getElementDef()) {
-            case FEED:
-               ((HandlerContext<FeedBuilder>) parentContext).getBuilder().addContributor(contributor);
-               break;
-
-            case ENTRY:
-               ((HandlerContext<EntryBuilder>) parentContext).getBuilder().addContributor(contributor);
-               break;
-
-            default:
-               unexpectedElement(parentContext.getElementDef(), element);
-         }
-      }
-   }
-
-   public static void unexpectedElement(AtomElement parent, AtomElement child) {
-      throw new RuntimeException("Unexpected parent element: " + parent + " on element: " + child);
+      final List personConstructList = m.getPersonConstructList(element, parentContext);
+      personConstructList.add(personConstructBuilder.build());
    }
 }

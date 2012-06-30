@@ -3,6 +3,7 @@ package net.jps.nuke.atom.model.builder;
 import java.net.URI;
 import net.jps.nuke.atom.model.Author;
 import net.jps.nuke.atom.model.Contributor;
+import net.jps.nuke.atom.model.PersonConstruct;
 import net.jps.nuke.atom.model.impl.PersonConstructImpl;
 
 /**
@@ -23,6 +24,10 @@ public class PersonConstructBuilder extends PersonConstructImpl {
    }
 
    public Contributor buildContributor() {
+      return this;
+   }
+   
+   public PersonConstruct build() {
       return this;
    }
 
