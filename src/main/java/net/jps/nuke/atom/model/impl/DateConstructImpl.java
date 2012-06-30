@@ -1,5 +1,6 @@
 package net.jps.nuke.atom.model.impl;
 
+import java.net.URI;
 import java.util.Calendar;
 import net.jps.nuke.atom.model.DateConstruct;
 import net.jps.nuke.atom.model.Published;

@@ -14,6 +14,7 @@ import net.jps.nuke.atom.model.builder.FeedBuilder;
 import net.jps.nuke.atom.model.builder.LangAwareTextElementBuilder;
 import net.jps.nuke.atom.model.builder.LinkBuilder;
 import net.jps.nuke.atom.model.builder.PersonConstructBuilder;
+import net.jps.nuke.atom.model.builder.XmlDateConstructBuilder;
 import net.jps.nuke.atom.stax.AtomElement;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -113,7 +114,7 @@ public class AtomHandler extends DefaultHandler {
          case LINK:
             startLink(attributeScannerDriver);
             break;
-            
+
          case ID:
          case ICON:
          case LOGO:
@@ -125,7 +126,29 @@ public class AtomHandler extends DefaultHandler {
          case URI:
             startFieldContentElement(currentElement);
             break;
+
+         case PUBLISHED:
+         case UPDATED:
+            startDateConstruct(currentElement, attributeScannerDriver);
+            break;
       }
+   }
+
+   public boolean expectingCharacters() {
+      switch (peek().getElementDef()) {
+         case NAME:
+         case URI:
+         case EMAIL:
+         case CONTENT:
+         case ID:
+         case ICON:
+         case PUBLISHED:
+         case UPDATED:
+         case LOGO:
+            return true;
+      }
+
+      return false;
    }
 
    @Override
@@ -162,6 +185,11 @@ public class AtomHandler extends DefaultHandler {
             peek(LangAwareTextElementBuilder.class).builder().appendValue(characters);
             break;
 
+         case PUBLISHED:
+         case UPDATED:
+            peek(XmlDateConstructBuilder.class).builder().appendDateString(characters);
+            break;
+
          default:
             throw _.invalidState(peek().getElementDef(), "Not expecting content for element.");
       }
@@ -185,10 +213,18 @@ public class AtomHandler extends DefaultHandler {
             endPersonConstruct();
             break;
 
+         case PUBLISHED:
+            endPublished();
+            break;
+
+         case UPDATED:
+            endUpdated();
+            break;
+
          case CONTENT:
             endContent();
             break;
-            
+
          case LINK:
             endLink();
             break;
@@ -204,26 +240,11 @@ public class AtomHandler extends DefaultHandler {
          case ICON:
             endIcon();
             break;
-            
+
          case LOGO:
             endLogo();
             break;
       }
-   }
-
-   public boolean expectingCharacters() {
-      switch (peek().getElementDef()) {
-         case NAME:
-         case URI:
-         case EMAIL:
-         case CONTENT:
-         case ID:
-         case ICON:
-         case LOGO:
-            return true;
-      }
-
-      return false;
    }
 
    public ParserResult getResult() {
@@ -304,6 +325,24 @@ public class AtomHandler extends DefaultHandler {
       });
 
       push(element, contentBuilder);
+   }
+
+   private void startDateConstruct(AtomElement element, AttributeScannerDriver attributes) {
+      final XmlDateConstructBuilder dateConstructBuilder = XmlDateConstructBuilder.newBuilder();
+
+      attributes.scan(new AttributeScanner() {
+         public void attribute(String localName, String qname, String value) {
+            final String attrName = simplifyLocalName(qname, localName);
+
+            if ("base".equals(attrName)) {
+               dateConstructBuilder.setBase(URI.create(value));
+            } else if ("lang".equals(attrName)) {
+               dateConstructBuilder.setLang(value);
+            }
+         }
+      });
+
+      push(element, dateConstructBuilder);
    }
 
    private void startLink(AttributeScannerDriver attributes) {
@@ -398,7 +437,7 @@ public class AtomHandler extends DefaultHandler {
          result.setEntryBuilder(entryContext.builder());
       }
    }
-   
+
    private void endPersonConstruct() {
       final HandlerContext<PersonConstructBuilder> personContext = pop(PersonConstructBuilder.class);
       final HandlerContext parent = peek();
@@ -423,13 +462,13 @@ public class AtomHandler extends DefaultHandler {
 
       switch (parent.getElementDef()) {
          case FEED:
-            ((FeedBuilder)parent.builder()).setId(idContext.builder().build());
+            ((FeedBuilder) parent.builder()).setId(idContext.builder().build());
             break;
 
          case ENTRY:
-            ((EntryBuilder)parent.builder()).setId(idContext.builder().build());
+            ((EntryBuilder) parent.builder()).setId(idContext.builder().build());
             break;
-            
+
          case SOURCE:
          default:
             throw _.unexpectedElement(idContext.getElementDef());
@@ -442,9 +481,9 @@ public class AtomHandler extends DefaultHandler {
 
       switch (parent.getElementDef()) {
          case FEED:
-            ((FeedBuilder)parent.builder()).setLogo(logoContext.builder().build());
+            ((FeedBuilder) parent.builder()).setLogo(logoContext.builder().build());
             break;
-            
+
          case SOURCE:
          default:
             throw _.unexpectedElement(logoContext.getElementDef());
@@ -457,13 +496,37 @@ public class AtomHandler extends DefaultHandler {
 
       switch (parent.getElementDef()) {
          case FEED:
-            ((FeedBuilder)parent.builder()).setIcon(iconContext.builder().build());
+            ((FeedBuilder) parent.builder()).setIcon(iconContext.builder().build());
             break;
-            
+
          case SOURCE:
          default:
             throw _.unexpectedElement(iconContext.getElementDef());
       }
+   }
+
+   private void endUpdated() {
+      final HandlerContext<XmlDateConstructBuilder> updatedContext = pop(XmlDateConstructBuilder.class);
+      final HandlerContext parent = peek();
+
+      switch (parent.getElementDef()) {
+         case FEED:
+            ((FeedBuilder) parent.builder()).setUpdated(updatedContext.builder().buildUpdated());
+            break;
+            
+         case ENTRY:
+            ((EntryBuilder) parent.builder()).setUpdated(updatedContext.builder().buildUpdated());
+            break;
+
+         case SOURCE:
+         default:
+            throw _.unexpectedElement(updatedContext.getElementDef());
+      }
+   }
+
+   private void endPublished() {
+      final HandlerContext<XmlDateConstructBuilder> publishedContext = pop(XmlDateConstructBuilder.class);
+      peek(EntryBuilder.class).builder().setPublished(publishedContext.builder().buildPublished());
    }
 
    private void endContent() {
