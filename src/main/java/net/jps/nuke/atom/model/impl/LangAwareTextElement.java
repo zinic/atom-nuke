@@ -8,7 +8,7 @@ import net.jps.nuke.atom.model.Logo;
  *
  * @author zinic
  */
-public abstract class LangAwareStringValue extends AtomCommonAttributesImpl implements ID, Icon, Logo {
+public abstract class LangAwareTextElement extends AtomCommonAttributesImpl implements ID, Icon, Logo {
 
    protected StringBuilder value;
 

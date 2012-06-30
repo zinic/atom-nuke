@@ -6,10 +6,13 @@ import java.util.Stack;
 import net.jps.nuke.atom.ParserResult;
 import net.jps.nuke.atom.ParserResultImpl;
 import net.jps.nuke.atom.model.Category;
+import net.jps.nuke.atom.model.Link;
 import net.jps.nuke.atom.model.builder.CategoryBuilder;
 import net.jps.nuke.atom.model.builder.ContentBuilder;
 import net.jps.nuke.atom.model.builder.EntryBuilder;
 import net.jps.nuke.atom.model.builder.FeedBuilder;
+import net.jps.nuke.atom.model.builder.LangAwareTextElementBuilder;
+import net.jps.nuke.atom.model.builder.LinkBuilder;
 import net.jps.nuke.atom.model.builder.PersonConstructBuilder;
 import net.jps.nuke.atom.stax.AtomElement;
 import org.xml.sax.Attributes;
@@ -102,15 +105,25 @@ public class AtomHandler extends DefaultHandler {
          case CONTENT:
             startContent(currentElement, attributeScannerDriver);
             break;
-            
+
          case CATEGORY:
             startCategory(attributeScannerDriver);
+            break;
+
+         case LINK:
+            startLink(attributeScannerDriver);
+            break;
+            
+         case ID:
+         case ICON:
+         case LOGO:
+            startLangAwareTextElement(currentElement, attributeScannerDriver);
             break;
 
          case NAME:
          case EMAIL:
          case URI:
-            startContentField(currentElement);
+            startFieldContentElement(currentElement);
             break;
       }
    }
@@ -143,6 +156,12 @@ public class AtomHandler extends DefaultHandler {
             peek(PersonConstructBuilder.class).builder().setEmail(characters);
             break;
 
+         case ID:
+         case ICON:
+         case LOGO:
+            peek(LangAwareTextElementBuilder.class).builder().appendValue(characters);
+            break;
+
          default:
             throw _.invalidState(peek().getElementDef(), "Not expecting content for element.");
       }
@@ -170,8 +189,24 @@ public class AtomHandler extends DefaultHandler {
             endContent();
             break;
             
+         case LINK:
+            endLink();
+            break;
+
          case CATEGORY:
             endCategory();
+            break;
+
+         case ID:
+            endId();
+            break;
+
+         case ICON:
+            endIcon();
+            break;
+            
+         case LOGO:
+            endLogo();
             break;
       }
    }
@@ -182,6 +217,9 @@ public class AtomHandler extends DefaultHandler {
          case URI:
          case EMAIL:
          case CONTENT:
+         case ID:
+         case ICON:
+         case LOGO:
             return true;
       }
 
@@ -268,6 +306,36 @@ public class AtomHandler extends DefaultHandler {
       push(element, contentBuilder);
    }
 
+   private void startLink(AttributeScannerDriver attributes) {
+      final LinkBuilder linkBuilder = LinkBuilder.newBuilder();
+
+      attributes.scan(new AttributeScanner() {
+         public void attribute(String localName, String qname, String value) {
+            final String attrName = simplifyLocalName(qname, localName);
+
+            if ("base".equals(attrName)) {
+               linkBuilder.setBase(URI.create(value));
+            } else if ("lang".equals(attrName)) {
+               linkBuilder.setLang(value);
+            } else if ("href".equals(attrName)) {
+               linkBuilder.setHref(value);
+            } else if ("hreflang".equals(attrName)) {
+               linkBuilder.setHreflang(value);
+            } else if ("length".equals(attrName)) {
+               linkBuilder.setLength(Integer.parseInt(value));
+            } else if ("rel".equals(attrName)) {
+               linkBuilder.setRel(value);
+            } else if ("title".equals(attrName)) {
+               linkBuilder.setTitle(value);
+            } else if ("type".equals(attrName)) {
+               linkBuilder.setType(value);
+            }
+         }
+      });
+
+      push(AtomElement.LINK, linkBuilder);
+   }
+
    private void startCategory(AttributeScannerDriver attributes) {
       final CategoryBuilder categoryBuilder = CategoryBuilder.newBuilder();
 
@@ -292,7 +360,25 @@ public class AtomHandler extends DefaultHandler {
       push(AtomElement.CATEGORY, categoryBuilder);
    }
 
-   private void startContentField(AtomElement element) {
+   private void startLangAwareTextElement(AtomElement element, AttributeScannerDriver attributes) {
+      final LangAwareTextElementBuilder textElementBuilder = LangAwareTextElementBuilder.newBuilder();
+
+      attributes.scan(new AttributeScanner() {
+         public void attribute(String localName, String qname, String value) {
+            final String attrName = simplifyLocalName(qname, localName);
+
+            if ("base".equals(attrName)) {
+               textElementBuilder.setBase(URI.create(value));
+            } else if ("lang".equals(attrName)) {
+               textElementBuilder.setLang(value);
+            }
+         }
+      });
+
+      push(element, textElementBuilder);
+   }
+
+   private void startFieldContentElement(AtomElement element) {
       final HandlerContext previous = peek();
       push(element, previous.builder());
    }
@@ -312,22 +398,71 @@ public class AtomHandler extends DefaultHandler {
          result.setEntryBuilder(entryContext.builder());
       }
    }
-
+   
    private void endPersonConstruct() {
       final HandlerContext<PersonConstructBuilder> personContext = pop(PersonConstructBuilder.class);
       final HandlerContext parent = peek();
-      
+
       switch (personContext.getElementDef()) {
          case CONTRIBUTOR:
             _.getContributorList(parent).add(personContext.builder().buildContributor());
             break;
-            
+
          case AUTHOR:
             _.getAuthorList(parent).add(personContext.builder().buildAuthor());
             break;
-            
+
          default:
             throw _.unexpectedElement(personContext.getElementDef());
+      }
+   }
+
+   private void endId() {
+      final HandlerContext<LangAwareTextElementBuilder> idContext = pop(LangAwareTextElementBuilder.class);
+      final HandlerContext parent = peek();
+
+      switch (parent.getElementDef()) {
+         case FEED:
+            ((FeedBuilder)parent.builder()).setId(idContext.builder().build());
+            break;
+
+         case ENTRY:
+            ((EntryBuilder)parent.builder()).setId(idContext.builder().build());
+            break;
+            
+         case SOURCE:
+         default:
+            throw _.unexpectedElement(idContext.getElementDef());
+      }
+   }
+
+   private void endLogo() {
+      final HandlerContext<LangAwareTextElementBuilder> logoContext = pop(LangAwareTextElementBuilder.class);
+      final HandlerContext parent = peek();
+
+      switch (parent.getElementDef()) {
+         case FEED:
+            ((FeedBuilder)parent.builder()).setLogo(logoContext.builder().build());
+            break;
+            
+         case SOURCE:
+         default:
+            throw _.unexpectedElement(logoContext.getElementDef());
+      }
+   }
+
+   private void endIcon() {
+      final HandlerContext<LangAwareTextElementBuilder> iconContext = pop(LangAwareTextElementBuilder.class);
+      final HandlerContext parent = peek();
+
+      switch (parent.getElementDef()) {
+         case FEED:
+            ((FeedBuilder)parent.builder()).setIcon(iconContext.builder().build());
+            break;
+            
+         case SOURCE:
+         default:
+            throw _.unexpectedElement(iconContext.getElementDef());
       }
    }
 
@@ -339,7 +474,14 @@ public class AtomHandler extends DefaultHandler {
    private void endCategory() {
       final HandlerContext<CategoryBuilder> category = pop(CategoryBuilder.class);
       final List<Category> categoryList = _.getCategoryList(peek());
-      
+
       categoryList.add(category.builder().build());
+   }
+
+   private void endLink() {
+      final HandlerContext<LinkBuilder> category = pop(LinkBuilder.class);
+      final List<Link> linkList = _.getLinkList(peek());
+
+      linkList.add(category.builder().build());
    }
 }

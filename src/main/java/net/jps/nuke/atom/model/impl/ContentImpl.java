@@ -6,7 +6,7 @@ import net.jps.nuke.atom.model.Content;
  *
  * @author zinic
  */
-public abstract class ContentImpl extends LangAwareStringValue implements Content {
+public abstract class ContentImpl extends LangAwareTextElement implements Content {
 
    protected String type;
    protected String src;

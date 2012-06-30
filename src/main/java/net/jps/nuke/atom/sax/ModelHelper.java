@@ -4,6 +4,7 @@ import java.util.List;
 import net.jps.nuke.atom.model.Author;
 import net.jps.nuke.atom.model.Category;
 import net.jps.nuke.atom.model.Contributor;
+import net.jps.nuke.atom.model.Link;
 import net.jps.nuke.atom.model.builder.EntryBuilder;
 import net.jps.nuke.atom.model.builder.FeedBuilder;
 import net.jps.nuke.atom.stax.AtomElement;
@@ -13,6 +14,20 @@ import net.jps.nuke.atom.stax.AtomElement;
  * @author zinic
  */
 public class ModelHelper {
+
+   public List<Link> getLinkList(HandlerContext target) {
+      switch (target.getElementDef()) {
+         case FEED:
+            return ((FeedBuilder) target.builder()).links();
+
+         case ENTRY:
+            return ((EntryBuilder) target.builder()).links();
+
+         case SOURCE:
+         default:
+            throw unexpectedElement(target.getElementDef());
+      }
+   }
 
    public List<Category> getCategoryList(HandlerContext target) {
       switch (target.getElementDef()) {
@@ -24,7 +39,7 @@ public class ModelHelper {
 
          case SOURCE:
          default:
-            throw invalidState(target.getElementDef(), "Unexpected parent element for category.");
+            throw unexpectedElement(target.getElementDef());
       }
    }
 
@@ -38,7 +53,7 @@ public class ModelHelper {
 
          case SOURCE:
          default:
-            throw unexpectedElement(target.getElementDef(), "Element does not have an authors list.");
+            throw unexpectedElement(target.getElementDef());
       }
    }
 
@@ -52,7 +67,7 @@ public class ModelHelper {
 
          case SOURCE:
          default:
-            throw unexpectedElement(target.getElementDef(), "Element does not have a contributors list.");
+            throw unexpectedElement(target.getElementDef());
       }
    }
 

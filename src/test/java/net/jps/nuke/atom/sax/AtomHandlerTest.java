@@ -11,6 +11,7 @@ import net.jps.nuke.atom.model.Category;
 import net.jps.nuke.atom.model.Contributor;
 import net.jps.nuke.atom.model.Entry;
 import net.jps.nuke.atom.model.Feed;
+import net.jps.nuke.atom.model.Link;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
@@ -73,10 +74,25 @@ public class AtomHandlerTest {
 
          for (int i = 0; i < categories.size(); i++) {
             final Category c = categories.get(i);
-            
+
             assertEquals("a", c.term());
             assertEquals("Category A", c.label());
             assertEquals("http", c.scheme());
+         }
+      }
+
+      protected void checkLinks(List<Link> links) {
+         assertEquals(3, links.size());
+
+         for (int i = 0; i < links.size(); i++) {
+            final Link l = links.get(i);
+
+            assertEquals("http://example.domain/12345", l.href());
+            assertEquals("en", l.hreflang());
+            assertTrue(52153 == l.length());
+            assertEquals("self", l.rel());
+            assertEquals("me", l.title());
+            assertEquals("application/atom+xml", l.type());
          }
       }
    }
@@ -116,6 +132,46 @@ public class AtomHandlerTest {
          final Feed f = result.getFeed();
          assertEquals(3, f.contributors().size());
          checkContributors(f.contributors());
+      }
+
+      @Test
+      public void shouldReadFeedCategories() throws Exception {
+         final ParserResult result = getParser().read(openFeedResource("FeedWithCategories.xml"));
+
+         final Feed f = result.getFeed();
+         checkCategories(f.categories());
+      }
+
+      @Test
+      public void shouldReadFeedID() throws Exception {
+         final ParserResult result = getParser().read(openFeedResource("FeedWithID.xml"));
+
+         final Feed f = result.getFeed();
+         assertEquals("urn:uuid:05b6e287-eb46-4f4b-a1a7-1a171ea66c78", f.id().value());
+      }
+
+      @Test
+      public void shouldReadFeedIcon() throws Exception {
+         final ParserResult result = getParser().read(openFeedResource("FeedWithIcon.xml"));
+
+         final Feed f = result.getFeed();
+         assertEquals("http://example.domain/images/icon.jpg", f.icon().value());
+      }
+
+      @Test
+      public void shouldReadFeedLogo() throws Exception {
+         final ParserResult result = getParser().read(openFeedResource("FeedWithLogo.xml"));
+
+         final Feed f = result.getFeed();
+         assertEquals("http://example.domain/images/logo.jpg", f.logo().value());
+      }
+
+      @Test
+      public void shouldReadFeedLinks() throws Exception {
+         final ParserResult result = getParser().read(openFeedResource("FeedWithLinks.xml"));
+
+         final Feed f = result.getFeed();
+         checkLinks(f.links());
       }
    }
 
@@ -187,6 +243,22 @@ public class AtomHandlerTest {
 
          final Entry e = result.getEntry();
          checkCategories(e.categories());
+      }
+
+      @Test
+      public void shouldReadEntryID() throws Exception {
+         final ParserResult result = getParser().read(openEntryResource("EntryWithID.xml"));
+
+         final Entry e = result.getEntry();
+         assertEquals("urn:uuid:05b6e287-eb46-4f4b-a1a7-1a171ea66c78", e.id().value());
+      }
+
+      @Test
+      public void shouldReadEntryLinks() throws Exception {
+         final ParserResult result = getParser().read(openEntryResource("EntryWithLinks.xml"));
+
+         final Entry e = result.getEntry();
+         checkLinks(e.links());
       }
    }
 }

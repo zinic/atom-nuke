@@ -1,23 +1,23 @@
 package net.jps.nuke.atom.model.builder;
 
 import java.net.URI;
-import net.jps.nuke.atom.model.impl.LangAwareStringValue;
+import net.jps.nuke.atom.model.impl.LangAwareTextElement;
 
 /**
  *
  * @author zinic
  */
-public class LangAwareStringValueBuilder extends LangAwareStringValue {
+public class LangAwareTextElementBuilder extends LangAwareTextElement {
 
-   public static LangAwareStringValueBuilder newBuilder() {
-      return new LangAwareStringValueBuilder();
+   public static LangAwareTextElementBuilder newBuilder() {
+      return new LangAwareTextElementBuilder();
    }
 
-   protected LangAwareStringValueBuilder() {
+   protected LangAwareTextElementBuilder() {
       value = new StringBuilder();
    }
 
-   public LangAwareStringValue build() {
+   public LangAwareTextElement build() {
       return this;
    }
 
