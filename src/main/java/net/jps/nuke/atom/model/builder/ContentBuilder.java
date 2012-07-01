@@ -30,12 +30,8 @@ public class ContentBuilder extends ContentImpl {
       this.src = src;
    }
 
-   public void setValue(String value) {
-      this.value = new StringBuilder(value);
-   }
-
-   public void appendValue(String value) {
-      this.value.append(value);
+   public StringBuilder getValueBuilder() {
+      return this.value;
    }
 
    public void setBase(URI base) {

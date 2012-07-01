@@ -7,6 +7,7 @@ import net.jps.nuke.atom.model.Contributor;
 import net.jps.nuke.atom.model.Link;
 import net.jps.nuke.atom.model.builder.EntryBuilder;
 import net.jps.nuke.atom.model.builder.FeedBuilder;
+import net.jps.nuke.atom.model.builder.SourceBuilder;
 import net.jps.nuke.atom.stax.AtomElement;
 
 /**
@@ -24,6 +25,8 @@ public class ModelHelper {
             return ((EntryBuilder) target.builder()).links();
 
          case SOURCE:
+            return ((SourceBuilder) target.builder()).links();
+            
          default:
             throw unexpectedElement(target.getElementDef());
       }
@@ -38,6 +41,8 @@ public class ModelHelper {
             return ((EntryBuilder) target.builder()).categories();
 
          case SOURCE:
+            return ((SourceBuilder) target.builder()).categories();
+            
          default:
             throw unexpectedElement(target.getElementDef());
       }
@@ -52,6 +57,8 @@ public class ModelHelper {
             return ((EntryBuilder) target.builder()).authors();
 
          case SOURCE:
+            return ((SourceBuilder) target.builder()).authors();
+            
          default:
             throw unexpectedElement(target.getElementDef());
       }
@@ -65,7 +72,6 @@ public class ModelHelper {
          case ENTRY:
             return ((EntryBuilder) target.builder()).contributors();
 
-         case SOURCE:
          default:
             throw unexpectedElement(target.getElementDef());
       }

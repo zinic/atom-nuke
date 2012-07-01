@@ -14,13 +14,13 @@ import net.jps.nuke.atom.model.Type;
 public abstract class TextConstructImpl extends AtomCommonAttributesImpl implements TextConstruct, Rights, Subtitle, Title, Summary {
 
    protected Type type;
-   protected String value;
+   protected StringBuilder value;
 
    public Type type() {
       return type;
    }
 
    public String value() {
-      return value;
+      return value.toString();
    }
 }

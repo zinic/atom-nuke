@@ -19,6 +19,7 @@ public class TextConstructBuilder extends TextConstructImpl {
    }
 
    protected TextConstructBuilder() {
+      this.value = new StringBuilder();
    }
 
    public Rights buildRights() {
@@ -41,8 +42,8 @@ public class TextConstructBuilder extends TextConstructImpl {
       this.type = type;
    }
 
-   public void setValue(String value) {
-      this.value = value;
+   public StringBuilder getValueBuilder() {
+      return value;
    }
 
    public void setBase(URI base) {

@@ -8,5 +8,16 @@ public enum Type {
 
    TEXT,
    HTML,
-   XHTML;
+   XHTML,
+   INVALID;
+
+   public static Type findIgnoreCase(String st) {
+      for (Type type : values()) {
+         if (type.name().equalsIgnoreCase(st)) {
+            return type;
+         }
+      }
+
+      return INVALID;
+   }
 }

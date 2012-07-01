@@ -10,11 +10,12 @@ import net.jps.nuke.atom.model.impl.GeneratorImpl;
  */
 public class GeneratorBuilder extends GeneratorImpl {
 
-   public GeneratorBuilder newBuilder() {
+   public static GeneratorBuilder newBuilder() {
       return new GeneratorBuilder();
    }
 
    protected GeneratorBuilder() {
+      value = new StringBuilder();
    }
 
    public Generator build() {
@@ -29,8 +30,8 @@ public class GeneratorBuilder extends GeneratorImpl {
       this.version = version;
    }
 
-   public void setValue(String value) {
-      this.value = value;
+   public StringBuilder getValueBuilder() {
+      return value;
    }
 
    public void setBase(URI base) {

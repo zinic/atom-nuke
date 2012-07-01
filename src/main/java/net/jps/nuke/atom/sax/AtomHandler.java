@@ -7,30 +7,36 @@ import net.jps.nuke.atom.ParserResult;
 import net.jps.nuke.atom.ParserResultImpl;
 import net.jps.nuke.atom.model.Category;
 import net.jps.nuke.atom.model.Link;
+import net.jps.nuke.atom.model.Type;
 import net.jps.nuke.atom.model.builder.CategoryBuilder;
 import net.jps.nuke.atom.model.builder.ContentBuilder;
 import net.jps.nuke.atom.model.builder.EntryBuilder;
 import net.jps.nuke.atom.model.builder.FeedBuilder;
+import net.jps.nuke.atom.model.builder.GeneratorBuilder;
 import net.jps.nuke.atom.model.builder.LangAwareTextElementBuilder;
 import net.jps.nuke.atom.model.builder.LinkBuilder;
 import net.jps.nuke.atom.model.builder.PersonConstructBuilder;
+import net.jps.nuke.atom.model.builder.SourceBuilder;
+import net.jps.nuke.atom.model.builder.TextConstructBuilder;
 import net.jps.nuke.atom.model.builder.XmlDateConstructBuilder;
 import net.jps.nuke.atom.stax.AtomElement;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
+import org.xml.sax.XMLReader;
 
 /**
  *
  * @author zinic
  */
-public class AtomHandler extends DefaultHandler {
+public class AtomHandler extends ReaderAwareHandler {
 
-   private static final ModelHelper _ = new ModelHelper();
+   private static final ModelHelper MODEL_HELPER = new ModelHelper();
    private final Stack<HandlerContext<?>> contextStack;
    private final ParserResultImpl result;
 
-   public AtomHandler() {
+   public AtomHandler(XMLReader xmlReader) {
+      super(xmlReader);
+      
       contextStack = new Stack<HandlerContext<?>>();
       result = new ParserResultImpl();
    }
@@ -98,6 +104,10 @@ public class AtomHandler extends DefaultHandler {
             startEntry(attributeScannerDriver);
             break;
 
+         case SOURCE:
+            startSource(attributeScannerDriver);
+            break;
+
          case AUTHOR:
          case CONTRIBUTOR:
             startPersonConstruct(currentElement, attributeScannerDriver);
@@ -113,6 +123,10 @@ public class AtomHandler extends DefaultHandler {
 
          case LINK:
             startLink(attributeScannerDriver);
+            break;
+
+         case GENERATOR:
+            startGenerator(attributeScannerDriver);
             break;
 
          case ID:
@@ -131,6 +145,12 @@ public class AtomHandler extends DefaultHandler {
          case UPDATED:
             startDateConstruct(currentElement, attributeScannerDriver);
             break;
+
+         case RIGHTS:
+         case TITLE:
+         case SUMMARY:
+            startTextConstruct(currentElement, attributeScannerDriver);
+            break;
       }
    }
 
@@ -139,12 +159,15 @@ public class AtomHandler extends DefaultHandler {
          case NAME:
          case URI:
          case EMAIL:
-         case CONTENT:
+         case GENERATOR:
          case ID:
          case ICON:
          case PUBLISHED:
          case UPDATED:
          case LOGO:
+         case RIGHTS:
+         case TITLE:
+         case SUMMARY:
             return true;
       }
 
@@ -160,10 +183,6 @@ public class AtomHandler extends DefaultHandler {
       final String characters = new String(ch, start, length).trim();
 
       switch (peek().getElementDef()) {
-         case CONTENT:
-            peek(ContentBuilder.class).builder().appendValue(characters);
-            break;
-
          case NAME:
             pop();
             peek(PersonConstructBuilder.class).builder().setName(characters);
@@ -179,6 +198,10 @@ public class AtomHandler extends DefaultHandler {
             peek(PersonConstructBuilder.class).builder().setEmail(characters);
             break;
 
+         case GENERATOR:
+            peek(GeneratorBuilder.class).builder().getValueBuilder().append(characters);
+            break;
+            
          case ID:
          case ICON:
          case LOGO:
@@ -187,11 +210,11 @@ public class AtomHandler extends DefaultHandler {
 
          case PUBLISHED:
          case UPDATED:
-            peek(XmlDateConstructBuilder.class).builder().appendDateString(characters);
+            peek(XmlDateConstructBuilder.class).builder().getDateStringBuilder().append(characters);
             break;
 
          default:
-            throw _.invalidState(peek().getElementDef(), "Not expecting content for element.");
+            throw MODEL_HELPER.invalidState(peek().getElementDef(), "Not expecting content for element.");
       }
    }
 
@@ -208,9 +231,17 @@ public class AtomHandler extends DefaultHandler {
             endEntry();
             break;
 
+         case SOURCE:
+            endSource();
+            break;
+
          case AUTHOR:
          case CONTRIBUTOR:
             endPersonConstruct();
+            break;
+
+         case GENERATOR:
+            endGenerator();
             break;
 
          case PUBLISHED:
@@ -243,6 +274,18 @@ public class AtomHandler extends DefaultHandler {
 
          case LOGO:
             endLogo();
+            break;
+
+         case RIGHTS:
+            endRights();
+            break;
+
+         case TITLE:
+            endTitle();
+            break;
+
+         case SUMMARY:
+            endSummary();
             break;
       }
    }
@@ -287,6 +330,24 @@ public class AtomHandler extends DefaultHandler {
       push(AtomElement.ENTRY, entryBuilder);
    }
 
+   private void startSource(AttributeScannerDriver attributes) {
+      final SourceBuilder sourceBuilder = SourceBuilder.newBuilder();
+
+      attributes.scan(new AttributeScanner() {
+         public void attribute(String localName, String qname, String value) {
+            final String attrName = simplifyLocalName(qname, localName);
+
+            if ("base".equals(attrName)) {
+               sourceBuilder.setBase(URI.create(value));
+            } else if ("lang".equals(attrName)) {
+               sourceBuilder.setLang(value);
+            }
+         }
+      });
+
+      push(AtomElement.SOURCE, sourceBuilder);
+   }
+
    private void startPersonConstruct(AtomElement element, AttributeScannerDriver attributes) {
       final PersonConstructBuilder personConstructBuilder = PersonConstructBuilder.newBuilder();
 
@@ -303,6 +364,49 @@ public class AtomHandler extends DefaultHandler {
       });
 
       push(element, personConstructBuilder);
+   }
+
+   private void startGenerator(AttributeScannerDriver attributes) {
+      final GeneratorBuilder generatorBuilder = GeneratorBuilder.newBuilder();
+
+      attributes.scan(new AttributeScanner() {
+         public void attribute(String localName, String qname, String value) {
+            final String attrName = simplifyLocalName(qname, localName);
+
+            if ("base".equals(attrName)) {
+               generatorBuilder.setBase(URI.create(value));
+            } else if ("lang".equals(attrName)) {
+               generatorBuilder.setLang(value);
+            } else if ("uri".equals(attrName)) {
+               generatorBuilder.setUri(value);
+            } else if ("version".equals(attrName)) {
+               generatorBuilder.setVersion(value);
+            }
+         }
+      });
+
+      push(AtomElement.GENERATOR, generatorBuilder);
+   }
+
+   private void startTextConstruct(AtomElement element, AttributeScannerDriver attributes) {
+      final TextConstructBuilder textConstructBuilder = TextConstructBuilder.newBuilder();
+
+      attributes.scan(new AttributeScanner() {
+         public void attribute(String localName, String qname, String value) {
+            final String attrName = simplifyLocalName(qname, localName);
+
+            if ("base".equals(attrName)) {
+               textConstructBuilder.setBase(URI.create(value));
+            } else if ("lang".equals(attrName)) {
+               textConstructBuilder.setLang(value);
+            } else if ("type".equals(attrName)) {
+               textConstructBuilder.setType(Type.findIgnoreCase(value));
+            }
+         }
+      });
+
+      push(element, textConstructBuilder);
+      delegateTo(new MixedContentHandler(textConstructBuilder.getValueBuilder(), this, getReader()));
    }
 
    private void startContent(AtomElement element, AttributeScannerDriver attributes) {
@@ -325,6 +429,7 @@ public class AtomHandler extends DefaultHandler {
       });
 
       push(element, contentBuilder);
+      delegateTo(new MixedContentHandler(contentBuilder.getValueBuilder(), this, getReader()));
    }
 
    private void startDateConstruct(AtomElement element, AttributeScannerDriver attributes) {
@@ -438,21 +543,26 @@ public class AtomHandler extends DefaultHandler {
       }
    }
 
+   private void endSource() {
+      final HandlerContext<SourceBuilder> sourceBuilder = pop(SourceBuilder.class);
+      peek(EntryBuilder.class).builder().setSource(sourceBuilder.builder().build());
+   }
+
    private void endPersonConstruct() {
       final HandlerContext<PersonConstructBuilder> personContext = pop(PersonConstructBuilder.class);
       final HandlerContext parent = peek();
 
       switch (personContext.getElementDef()) {
          case CONTRIBUTOR:
-            _.getContributorList(parent).add(personContext.builder().buildContributor());
+            MODEL_HELPER.getContributorList(parent).add(personContext.builder().buildContributor());
             break;
 
          case AUTHOR:
-            _.getAuthorList(parent).add(personContext.builder().buildAuthor());
+            MODEL_HELPER.getAuthorList(parent).add(personContext.builder().buildAuthor());
             break;
 
          default:
-            throw _.unexpectedElement(personContext.getElementDef());
+            throw MODEL_HELPER.unexpectedElement(personContext.getElementDef());
       }
    }
 
@@ -470,8 +580,11 @@ public class AtomHandler extends DefaultHandler {
             break;
 
          case SOURCE:
+            ((SourceBuilder) parent.builder()).setId(idContext.builder().build());
+            break;
+
          default:
-            throw _.unexpectedElement(idContext.getElementDef());
+            throw MODEL_HELPER.unexpectedElement(idContext.getElementDef());
       }
    }
 
@@ -485,8 +598,11 @@ public class AtomHandler extends DefaultHandler {
             break;
 
          case SOURCE:
+            ((SourceBuilder) parent.builder()).setLogo(logoContext.builder().build());
+            break;
+
          default:
-            throw _.unexpectedElement(logoContext.getElementDef());
+            throw MODEL_HELPER.unexpectedElement(logoContext.getElementDef());
       }
    }
 
@@ -500,8 +616,11 @@ public class AtomHandler extends DefaultHandler {
             break;
 
          case SOURCE:
+            ((SourceBuilder) parent.builder()).setIcon(iconContext.builder().build());
+            break;
+
          default:
-            throw _.unexpectedElement(iconContext.getElementDef());
+            throw MODEL_HELPER.unexpectedElement(iconContext.getElementDef());
       }
    }
 
@@ -513,14 +632,17 @@ public class AtomHandler extends DefaultHandler {
          case FEED:
             ((FeedBuilder) parent.builder()).setUpdated(updatedContext.builder().buildUpdated());
             break;
-            
+
          case ENTRY:
             ((EntryBuilder) parent.builder()).setUpdated(updatedContext.builder().buildUpdated());
             break;
 
          case SOURCE:
+            ((SourceBuilder) parent.builder()).setUpdated(updatedContext.builder().buildUpdated());
+            break;
+
          default:
-            throw _.unexpectedElement(updatedContext.getElementDef());
+            throw MODEL_HELPER.unexpectedElement(updatedContext.getElementDef());
       }
    }
 
@@ -536,15 +658,82 @@ public class AtomHandler extends DefaultHandler {
 
    private void endCategory() {
       final HandlerContext<CategoryBuilder> category = pop(CategoryBuilder.class);
-      final List<Category> categoryList = _.getCategoryList(peek());
+      final List<Category> categoryList = MODEL_HELPER.getCategoryList(peek());
 
       categoryList.add(category.builder().build());
    }
 
    private void endLink() {
       final HandlerContext<LinkBuilder> category = pop(LinkBuilder.class);
-      final List<Link> linkList = _.getLinkList(peek());
+      final List<Link> linkList = MODEL_HELPER.getLinkList(peek());
 
       linkList.add(category.builder().build());
+   }
+
+   private void endGenerator() {
+      final HandlerContext<GeneratorBuilder> generatorContext = pop(GeneratorBuilder.class);
+      final HandlerContext parent = peek();
+
+      switch (parent.getElementDef()) {
+         case FEED:
+            ((FeedBuilder) parent.builder()).setGenerator(generatorContext.builder().build());
+            break;
+
+         case SOURCE:
+            ((SourceBuilder) parent.builder()).setGenerator(generatorContext.builder().build());
+            break;
+
+         default:
+            throw MODEL_HELPER.unexpectedElement(generatorContext.getElementDef());
+      }
+   }
+
+   private void endRights() {
+      final HandlerContext<TextConstructBuilder> textConstructContext = pop(TextConstructBuilder.class);
+      final HandlerContext parent = peek();
+
+      switch (parent.getElementDef()) {
+         case FEED:
+            ((FeedBuilder) parent.builder()).setRights(textConstructContext.builder().buildRights());
+            break;
+
+         case ENTRY:
+            ((EntryBuilder) parent.builder()).setRights(textConstructContext.builder().buildRights());
+            break;
+
+         case SOURCE:
+            ((SourceBuilder) parent.builder()).setRights(textConstructContext.builder().buildRights());
+            break;
+
+         default:
+            throw MODEL_HELPER.unexpectedElement(textConstructContext.getElementDef());
+      }
+   }
+
+   private void endSummary() {
+      final HandlerContext<TextConstructBuilder> textConstructContext = pop(TextConstructBuilder.class);
+      peek(EntryBuilder.class).builder().setSummary(textConstructContext.builder().buildSummary());
+   }
+
+   private void endTitle() {
+      final HandlerContext<TextConstructBuilder> textConstructContext = pop(TextConstructBuilder.class);
+      final HandlerContext parent = peek();
+
+      switch (parent.getElementDef()) {
+         case FEED:
+            ((FeedBuilder) parent.builder()).setTitle(textConstructContext.builder().buildTitle());
+            break;
+
+         case ENTRY:
+            ((EntryBuilder) parent.builder()).setTitle(textConstructContext.builder().buildTitle());
+            break;
+
+         case SOURCE:
+            ((SourceBuilder) parent.builder()).setTitle(textConstructContext.builder().buildTitle());
+            break;
+
+         default:
+            throw MODEL_HELPER.unexpectedElement(textConstructContext.getElementDef());
+      }
    }
 }

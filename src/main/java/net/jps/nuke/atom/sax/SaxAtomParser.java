@@ -25,16 +25,15 @@ public class SaxAtomParser implements FeedParser {
 
    @Override
    public ParserResult read(InputStream source) throws AtomParserException {
-      final AtomHandler handler = new AtomHandler();
-
       try {
          final SAXParser parser = parserFactory.newSAXParser();
+         final AtomHandler handler = new AtomHandler(parser.getXMLReader());
          parser.parse(source, handler);
+         
+         return handler.getResult();
       } catch (Exception e) {
          e.printStackTrace();
          throw new AtomParserException(e.getMessage(), e.getCause());
       }
-
-      return handler.getResult();
    }
 }

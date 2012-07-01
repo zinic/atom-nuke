@@ -34,12 +34,12 @@ public class XmlDateConstructBuilder extends DateConstructImpl {
       return this;
    }
 
-   public void appendDateString(String dateString) {
+   public StringBuilder getDateStringBuilder() {
       if (dateStringBuilder == null) {
          dateStringBuilder = new StringBuilder();
       }
 
-      dateStringBuilder.append(dateString);
+      return dateStringBuilder;
    }
 
    public void setBase(URI base) {

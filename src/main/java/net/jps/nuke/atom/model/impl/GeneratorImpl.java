@@ -10,7 +10,7 @@ public abstract class GeneratorImpl extends AtomCommonAttributesImpl implements 
 
    protected String uri;
    protected String version;
-   protected String value;
+   protected StringBuilder value;
 
    public String uri() {
       return uri;
@@ -21,6 +21,6 @@ public abstract class GeneratorImpl extends AtomCommonAttributesImpl implements 
    }
 
    public String value() {
-      return value;
+      return value.toString();
    }
 }
