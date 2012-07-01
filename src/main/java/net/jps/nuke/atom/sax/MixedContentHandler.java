@@ -65,13 +65,16 @@ public class MixedContentHandler extends DelegatingDefaultHandler {
 
    @Override
    public void endElement(String uri, String localName, String qName) throws SAXException {
-      if (--depth <= 0) {
+      if (depth <= 0) {
          getDelegate().endElement(uri, localName, qName);
-         releaseToDelegate();
       } else {
          contentBuilder.append("</");
          contentBuilder.append(asFullName(qName, localName));
          contentBuilder.append(">");
+      }
+
+      if (--depth <= 0) {
+         releaseToDelegate();
       }
    }
 

@@ -2,7 +2,7 @@
 
 <entry>
    <rights type="html" lang="en">
-      <this>
+      <this attr="test">
          <is>some</is>
       </this>
    </rights>

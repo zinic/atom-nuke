@@ -165,7 +165,6 @@ public class AtomHandler extends ReaderAwareHandler {
          case PUBLISHED:
          case UPDATED:
          case LOGO:
-         case RIGHTS:
          case TITLE:
          case SUMMARY:
             return true;
@@ -214,7 +213,7 @@ public class AtomHandler extends ReaderAwareHandler {
             break;
 
          default:
-            throw MODEL_HELPER.invalidState(peek().getElementDef(), "Not expecting content for element.");
+            throw MODEL_HELPER.unexpectedElement(peek().getElementDef());
       }
    }
 
