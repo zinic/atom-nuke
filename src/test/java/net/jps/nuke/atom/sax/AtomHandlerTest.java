@@ -304,5 +304,12 @@ public class AtomHandlerTest {
          final Entry e = result.getEntry();
          assertEquals("<this attr\"test\"><is>some</is></this>", e.rights().value());
       }
+      
+      @Test
+      public void shouldReadEntrySource() throws Exception {
+         final ParserResult result = getParser().read(openEntryResource("EntryWithSource.xml"));
+
+         final Entry e = result.getEntry();
+      }
    }
 }
