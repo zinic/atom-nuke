@@ -1,5 +1,6 @@
 package net.jps.nuke.atom.stax;
 
+import net.jps.nuke.atom.xml.AtomElement;
 import java.io.InputStream;
 import javax.xml.stream.FactoryConfigurationError;
 import javax.xml.stream.XMLInputFactory;

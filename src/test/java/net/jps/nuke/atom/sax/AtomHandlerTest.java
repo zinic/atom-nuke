@@ -187,7 +187,7 @@ public class AtomHandlerTest {
       }
 
       @Test
-      public void shouldReadEntryRights() throws Exception {
+      public void shouldReadFeedRights() throws Exception {
          final ParserResult result = getParser().read(openFeedResource("FeedWithRights.xml"));
 
          final Feed f = result.getFeed();
@@ -304,7 +304,7 @@ public class AtomHandlerTest {
          final Entry e = result.getEntry();
          assertEquals("<this attr\"test\"><is>some</is></this>", e.rights().value());
       }
-      
+
       @Test
       public void shouldReadEntrySource() throws Exception {
          final ParserResult result = getParser().read(openEntryResource("EntryWithSource.xml"));

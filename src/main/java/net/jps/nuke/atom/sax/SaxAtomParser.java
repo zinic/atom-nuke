@@ -1,5 +1,6 @@
 package net.jps.nuke.atom.sax;
 
+import net.jps.nuke.atom.sax.handler.AtomHandler;
 import com.rackspace.papi.commons.util.pooling.ConstructionStrategy;
 import com.rackspace.papi.commons.util.pooling.GenericBlockingResourcePool;
 import com.rackspace.papi.commons.util.pooling.Pool;
@@ -50,6 +51,7 @@ public class SaxAtomParser implements FeedParser {
 
                   return handler.getResult();
                } catch (Exception ex) {
+                  ex.printStackTrace();
                   throw new ResourceContextException(ex.getMessage(), ex);
                }
             }

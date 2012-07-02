@@ -1,29 +1,26 @@
-package net.jps.nuke.atom.sax;
+package net.jps.nuke.atom.sax.handler;
 
+import net.jps.nuke.atom.sax.attribute.AttributeScanner;
+import net.jps.nuke.atom.sax.attribute.AttributeScannerDriver;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.xml.sax.Attributes;
-import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
 
 /**
- *
+ * Ugh... make this pretty...
+ * 
  * @author zinic
  */
-public class MixedContentHandler extends DelegatingDefaultHandler {
+public class MixedContentHandler extends ReaderAwareHandler {
 
    private final StringBuilder contentBuilder;
    private int depth;
 
-   public MixedContentHandler(StringBuilder contentBuilder, ContentHandler delegateHandler, XMLReader reader) {
-      super(delegateHandler, reader);
+   public MixedContentHandler(StringBuilder contentBuilder, ReaderAwareHandler parent) {
+      super(parent);
 
       this.contentBuilder = contentBuilder;
       depth = 0;
-   }
-
-   public StringBuilder getContentBuilder() {
-      return contentBuilder;
    }
 
    private static String asFullName(String qName, String localName) {
@@ -65,16 +62,14 @@ public class MixedContentHandler extends DelegatingDefaultHandler {
 
    @Override
    public void endElement(String uri, String localName, String qName) throws SAXException {
-      if (depth <= 0) {
-         getDelegate().endElement(uri, localName, qName);
-      } else {
+      if (depth > 0) {
          contentBuilder.append("</");
          contentBuilder.append(asFullName(qName, localName));
          contentBuilder.append(">");
       }
-
-      if (--depth <= 0) {
-         releaseToDelegate();
+      
+      if (--depth < 0) {
+         releaseToParent().endElement(uri, localName, qName);
       }
    }
 

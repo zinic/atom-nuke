@@ -1,4 +1,4 @@
-package net.jps.nuke.atom.sax;
+package net.jps.nuke.atom.sax.handler;
 
 import org.xml.sax.ContentHandler;
 import org.xml.sax.XMLReader;

@@ -1,4 +1,4 @@
-package net.jps.nuke.atom.sax;
+package net.jps.nuke.atom.sax.attribute;
 
 import org.xml.sax.Attributes;
 

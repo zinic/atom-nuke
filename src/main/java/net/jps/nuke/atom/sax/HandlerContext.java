@@ -1,6 +1,6 @@
 package net.jps.nuke.atom.sax;
 
-import net.jps.nuke.atom.stax.AtomElement;
+import net.jps.nuke.atom.xml.AtomElement;
 
 /**
  *

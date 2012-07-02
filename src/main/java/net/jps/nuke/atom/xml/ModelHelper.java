@@ -1,4 +1,4 @@
-package net.jps.nuke.atom.sax;
+package net.jps.nuke.atom.xml;
 
 import java.util.List;
 import net.jps.nuke.atom.model.Author;
@@ -8,7 +8,9 @@ import net.jps.nuke.atom.model.Link;
 import net.jps.nuke.atom.model.builder.EntryBuilder;
 import net.jps.nuke.atom.model.builder.FeedBuilder;
 import net.jps.nuke.atom.model.builder.SourceBuilder;
-import net.jps.nuke.atom.stax.AtomElement;
+import net.jps.nuke.atom.sax.HandlerContext;
+import net.jps.nuke.atom.sax.InvalidElementException;
+import net.jps.nuke.atom.sax.InvalidStateException;
 
 /**
  *
@@ -26,7 +28,7 @@ public class ModelHelper {
 
          case SOURCE:
             return ((SourceBuilder) target.builder()).links();
-            
+
          default:
             throw unexpectedElement(target.getElementDef());
       }
@@ -42,7 +44,7 @@ public class ModelHelper {
 
          case SOURCE:
             return ((SourceBuilder) target.builder()).categories();
-            
+
          default:
             throw unexpectedElement(target.getElementDef());
       }
@@ -58,7 +60,7 @@ public class ModelHelper {
 
          case SOURCE:
             return ((SourceBuilder) target.builder()).authors();
-            
+
          default:
             throw unexpectedElement(target.getElementDef());
       }
@@ -78,11 +80,11 @@ public class ModelHelper {
    }
 
    public InvalidElementException unexpectedElement(AtomElement element) {
-      throw new InvalidElementException(element, "Element: " + element + " was unexpected in this context.");
+      return unexpectedElement(element.toString());
    }
 
-   public InvalidElementException unexpectedElement(AtomElement element, String message) {
-      throw new InvalidElementException(element, message);
+   public InvalidElementException unexpectedElement(String element) {
+      return new InvalidElementException("Element: " + element + " was unexpected in this context.");
    }
 
    public InvalidElementException invalidState(AtomElement cause, String message) {
