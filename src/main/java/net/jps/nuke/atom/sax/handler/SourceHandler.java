@@ -1,6 +1,5 @@
 package net.jps.nuke.atom.sax.handler;
 
-import net.jps.nuke.atom.sax.attribute.AttributeScannerDriver;
 import java.util.List;
 import net.jps.nuke.atom.model.Category;
 import net.jps.nuke.atom.model.Link;
@@ -32,7 +31,6 @@ public class SourceHandler extends AtomHandler {
    @Override
    public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
       final AtomElement currentElement = AtomElement.findIgnoreCase(asLocalName(qName, localName), AtomElement.SOURCE_ELEMENTS);
-      final AttributeScannerDriver attributeScannerDriver = new AttributeScannerDriver(attributes);
       
       if (currentElement == null) {
          // TODO:Implement - Error case. Unknown element...
@@ -41,25 +39,25 @@ public class SourceHandler extends AtomHandler {
       
       switch (currentElement) {
          case AUTHOR:
-            startPersonConstruct(currentElement, attributeScannerDriver);
+            startPersonConstruct(currentElement, attributes);
             break;
          
          case CATEGORY:
-            startCategory(attributeScannerDriver);
+            startCategory(attributes);
             break;
          
          case LINK:
-            startLink(attributeScannerDriver);
+            startLink(attributes);
             break;
          
          case GENERATOR:
-            startGenerator(attributeScannerDriver);
+            startGenerator(attributes);
             break;
          
          case ID:
          case ICON:
          case LOGO:
-            startLangAwareTextElement(currentElement, attributeScannerDriver);
+            startLangAwareTextElement(currentElement, attributes);
             break;
          
          case NAME:
@@ -69,14 +67,14 @@ public class SourceHandler extends AtomHandler {
             break;
          
          case UPDATED:
-            startDateConstruct(currentElement, attributeScannerDriver);
+            startDateConstruct(currentElement, attributes);
             break;
          
          case RIGHTS:
          case TITLE:
          case SUBTITLE:
          case SUMMARY:
-            startTextConstruct(currentElement, attributeScannerDriver);
+            startTextConstruct(currentElement, attributes);
             break;
       }
    }

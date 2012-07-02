@@ -6,6 +6,7 @@ package net.jps.nuke.atom.xml;
  */
 public enum AtomElement {
 
+   // States, yo
    FEED,
    ENTRY,
    CONTENT,
@@ -27,54 +28,6 @@ public enum AtomElement {
    NAME,
    EMAIL,
    URI;
-   
-   /*
-    *          case SOURCE:
-            startSource(attributeScannerDriver);
-            break;
-
-         case AUTHOR:
-         case CONTRIBUTOR:
-            startPersonConstruct(currentElement, attributeScannerDriver);
-            break;
-
-         case CONTENT:
-            startContent(currentElement, attributeScannerDriver);
-            break;
-
-         case CATEGORY:
-            startCategory(attributeScannerDriver);
-            break;
-
-         case LINK:
-            startLink(attributeScannerDriver);
-            break;
-
-         case GENERATOR:
-            startGenerator(attributeScannerDriver);
-            break;
-
-         case ID:
-            startLangAwareTextElement(currentElement, attributeScannerDriver);
-            break;
-
-         case NAME:
-         case EMAIL:
-         case URI:
-            startFieldContentElement(currentElement);
-            break;
-
-         case PUBLISHED:
-         case UPDATED:
-            startDateConstruct(currentElement, attributeScannerDriver);
-            break;
-
-         case RIGHTS:
-         case TITLE:
-         case SUMMARY:
-            startTextConstruct(currentElement, attributeScannerDriver);
-            break;
-    */
    
    public static final AtomElement[] ROOT_ELEMENTS = new AtomElement[]{
       FEED,
@@ -141,17 +94,6 @@ public enum AtomElement {
       for (int i = 0; i < elements.length; i++) {
          if (elements[i].name().equalsIgnoreCase(st)) {
             return elements[i];
-         }
-      }
-
-      return null;
-   }
-
-   public static AtomElement findIgnoreCase(String st) {
-
-      for (AtomElement element : values()) {
-         if (element.name().equalsIgnoreCase(st)) {
-            return element;
          }
       }
 

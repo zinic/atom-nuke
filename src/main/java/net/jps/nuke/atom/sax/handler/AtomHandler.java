@@ -1,8 +1,6 @@
 package net.jps.nuke.atom.sax.handler;
 
 import net.jps.nuke.atom.xml.ModelHelper;
-import net.jps.nuke.atom.sax.attribute.AttributeScanner;
-import net.jps.nuke.atom.sax.attribute.AttributeScannerDriver;
 import java.net.URI;
 import net.jps.nuke.atom.ParserResult;
 import net.jps.nuke.atom.ParserResultImpl;
@@ -29,6 +27,7 @@ import org.xml.sax.XMLReader;
 public class AtomHandler extends ReaderAwareHandler {
 
    public static final ModelHelper MODEL_HELPER = new ModelHelper();
+   
    protected final DocumentContextManager contextManager;
    protected final ParserResultImpl result;
 
@@ -53,7 +52,6 @@ public class AtomHandler extends ReaderAwareHandler {
    @Override
    public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
       final AtomElement currentElement = AtomElement.findIgnoreCase(asLocalName(qName, localName), AtomElement.ROOT_ELEMENTS);
-      final AttributeScannerDriver attributeScannerDriver = new AttributeScannerDriver(attributes);
 
       if (currentElement == null) {
          // TODO:Implement - Error case. Unknown element...
@@ -62,11 +60,11 @@ public class AtomHandler extends ReaderAwareHandler {
 
       switch (currentElement) {
          case FEED:
-            startFeed(attributeScannerDriver);
+            startFeed(attributes);
             break;
 
          case ENTRY:
-            startEntry(attributeScannerDriver);
+            startEntry(attributes);
             break;
       }
    }
@@ -105,6 +103,36 @@ public class AtomHandler extends ReaderAwareHandler {
       }
    }
 
+   /**
+    * Null safe.
+    *
+    * @param st
+    * @return
+    */
+   protected static URI toUri(String st) {
+      return st == null ? null : URI.create(st);
+   }
+
+   /**
+    * Null safe.
+    *
+    * @param st
+    * @return
+    */
+   protected static Integer toInteger(String st) {
+      return st == null ? null : Integer.parseInt(st);
+   }
+
+   /**
+    * Null safe.
+    *
+    * @param st
+    * @return
+    */
+   protected static Type toType(String st) {
+      return st == null ? null : Type.findIgnoreCase(st);
+   }
+
    public ParserResult getResult() {
       return result;
    }
@@ -114,191 +142,98 @@ public class AtomHandler extends ReaderAwareHandler {
       contextManager.push(element, previous.builder());
    }
 
-   private void startFeed(AttributeScannerDriver attributes) {
+   private void startFeed(Attributes attributes) {
       final FeedBuilder feedBuilder = FeedBuilder.newBuilder();
 
-      attributes.scan(new AttributeScanner() {
-         public void attribute(String localName, String qname, String value) {
-            final String attrName = asLocalName(qname, localName);
-
-            if ("base".equals(attrName)) {
-               feedBuilder.setBase(URI.create(value));
-            } else if ("lang".equals(attrName)) {
-               feedBuilder.setLang(value);
-            }
-         }
-      });
+      feedBuilder.setBase(toUri(attributes.getValue("base")));
+      feedBuilder.setLang(attributes.getValue("lang"));
 
       contextManager.push(AtomElement.FEED, feedBuilder);
       delegateTo(new FeedHandler(this));
    }
 
-   private void startEntry(AttributeScannerDriver attributes) {
+   protected void startEntry(Attributes attributes) {
       final EntryBuilder entryBuilder = EntryBuilder.newBuilder();
 
-      attributes.scan(new AttributeScanner() {
-         public void attribute(String localName, String qname, String value) {
-            final String attrName = asLocalName(qname, localName);
-
-            if ("base".equals(attrName)) {
-               entryBuilder.setBase(URI.create(value));
-            } else if ("lang".equals(attrName)) {
-               entryBuilder.setLang(value);
-            }
-         }
-      });
+      entryBuilder.setBase(toUri(attributes.getValue("base")));
+      entryBuilder.setLang(attributes.getValue("lang"));
 
       contextManager.push(AtomElement.ENTRY, entryBuilder);
       delegateTo(new EntryHandler(this));
    }
 
-   protected void startPersonConstruct(AtomElement element, AttributeScannerDriver attributes) {
+   protected void startPersonConstruct(AtomElement element, Attributes attributes) {
       final PersonConstructBuilder personConstructBuilder = PersonConstructBuilder.newBuilder();
 
-      attributes.scan(new AttributeScanner() {
-         public void attribute(String localName, String qname, String value) {
-            final String attrName = asLocalName(qname, localName);
-
-            if ("base".equals(attrName)) {
-               personConstructBuilder.setBase(URI.create(value));
-            } else if ("lang".equals(attrName)) {
-               personConstructBuilder.setLang(value);
-            }
-         }
-      });
+      personConstructBuilder.setBase(toUri(attributes.getValue("base")));
+      personConstructBuilder.setLang(attributes.getValue("lang"));
 
       contextManager.push(element, personConstructBuilder);
    }
 
-   protected void startGenerator(AttributeScannerDriver attributes) {
+   protected void startGenerator(Attributes attributes) {
       final GeneratorBuilder generatorBuilder = GeneratorBuilder.newBuilder();
 
-      attributes.scan(new AttributeScanner() {
-         public void attribute(String localName, String qname, String value) {
-            final String attrName = asLocalName(qname, localName);
-
-            if ("base".equals(attrName)) {
-               generatorBuilder.setBase(URI.create(value));
-            } else if ("lang".equals(attrName)) {
-               generatorBuilder.setLang(value);
-            } else if ("uri".equals(attrName)) {
-               generatorBuilder.setUri(value);
-            } else if ("version".equals(attrName)) {
-               generatorBuilder.setVersion(value);
-            }
-         }
-      });
+      generatorBuilder.setBase(toUri(attributes.getValue("base")));
+      generatorBuilder.setLang(attributes.getValue("lang"));
+      generatorBuilder.setUri(attributes.getValue("uri"));
+      generatorBuilder.setVersion(attributes.getValue("version"));
 
       contextManager.push(AtomElement.GENERATOR, generatorBuilder);
    }
 
-   protected void startTextConstruct(AtomElement element, AttributeScannerDriver attributes) {
+   protected void startTextConstruct(AtomElement element, Attributes attributes) {
       final TextConstructBuilder textConstructBuilder = TextConstructBuilder.newBuilder();
 
-      attributes.scan(new AttributeScanner() {
-         public void attribute(String localName, String qname, String value) {
-            final String attrName = asLocalName(qname, localName);
-
-            if ("base".equals(attrName)) {
-               textConstructBuilder.setBase(URI.create(value));
-            } else if ("lang".equals(attrName)) {
-               textConstructBuilder.setLang(value);
-            } else if ("type".equals(attrName)) {
-               textConstructBuilder.setType(Type.findIgnoreCase(value));
-            }
-         }
-      });
+      textConstructBuilder.setBase(toUri(attributes.getValue("base")));
+      textConstructBuilder.setLang(attributes.getValue("lang"));
+      textConstructBuilder.setType(toType(attributes.getValue("type")));
 
       contextManager.push(element, textConstructBuilder);
       delegateTo(new MixedContentHandler(textConstructBuilder.getValueBuilder(), this));
    }
 
-   protected void startDateConstruct(AtomElement element, AttributeScannerDriver attributes) {
+   protected void startDateConstruct(AtomElement element, Attributes attributes) {
       final XmlDateConstructBuilder dateConstructBuilder = XmlDateConstructBuilder.newBuilder();
 
-      attributes.scan(new AttributeScanner() {
-         public void attribute(String localName, String qname, String value) {
-            final String attrName = asLocalName(qname, localName);
-
-            if ("base".equals(attrName)) {
-               dateConstructBuilder.setBase(URI.create(value));
-            } else if ("lang".equals(attrName)) {
-               dateConstructBuilder.setLang(value);
-            }
-         }
-      });
+      dateConstructBuilder.setBase(toUri(attributes.getValue("base")));
+      dateConstructBuilder.setLang(attributes.getValue("lang"));
 
       contextManager.push(element, dateConstructBuilder);
    }
 
-   protected void startLink(AttributeScannerDriver attributes) {
+   protected void startLink(Attributes attributes) {
       final LinkBuilder linkBuilder = LinkBuilder.newBuilder();
 
-      attributes.scan(new AttributeScanner() {
-         public void attribute(String localName, String qname, String value) {
-            final String attrName = asLocalName(qname, localName);
-
-            if ("base".equals(attrName)) {
-               linkBuilder.setBase(URI.create(value));
-            } else if ("lang".equals(attrName)) {
-               linkBuilder.setLang(value);
-            } else if ("href".equals(attrName)) {
-               linkBuilder.setHref(value);
-            } else if ("hreflang".equals(attrName)) {
-               linkBuilder.setHreflang(value);
-            } else if ("length".equals(attrName)) {
-               linkBuilder.setLength(Integer.parseInt(value));
-            } else if ("rel".equals(attrName)) {
-               linkBuilder.setRel(value);
-            } else if ("title".equals(attrName)) {
-               linkBuilder.setTitle(value);
-            } else if ("type".equals(attrName)) {
-               linkBuilder.setType(value);
-            }
-         }
-      });
+      linkBuilder.setBase(toUri(attributes.getValue("base")));
+      linkBuilder.setLang(attributes.getValue("lang"));
+      linkBuilder.setHref(attributes.getValue("href"));
+      linkBuilder.setHreflang(attributes.getValue("hreflang"));
+      linkBuilder.setRel(attributes.getValue("rel"));
+      linkBuilder.setTitle(attributes.getValue("title"));
+      linkBuilder.setType(attributes.getValue("type"));
+      linkBuilder.setLength(toInteger(attributes.getValue("length")));
 
       contextManager.push(AtomElement.LINK, linkBuilder);
    }
 
-   protected void startCategory(AttributeScannerDriver attributes) {
+   protected void startCategory(Attributes attributes) {
       final CategoryBuilder categoryBuilder = CategoryBuilder.newBuilder();
 
-      attributes.scan(new AttributeScanner() {
-         public void attribute(String localName, String qname, String value) {
-            final String attrName = asLocalName(qname, localName);
-
-            if ("base".equals(attrName)) {
-               categoryBuilder.setBase(URI.create(value));
-            } else if ("lang".equals(attrName)) {
-               categoryBuilder.setLang(value);
-            } else if ("scheme".equals(attrName)) {
-               categoryBuilder.setScheme(value);
-            } else if ("term".equals(attrName)) {
-               categoryBuilder.setTerm(value);
-            } else if ("label".equals(attrName)) {
-               categoryBuilder.setLabel(value);
-            }
-         }
-      });
+      categoryBuilder.setBase(toUri(attributes.getValue("base")));
+      categoryBuilder.setLang(attributes.getValue("lang"));
+      categoryBuilder.setScheme(attributes.getValue("scheme"));
+      categoryBuilder.setTerm(attributes.getValue("term"));
+      categoryBuilder.setLabel(attributes.getValue("label"));
 
       contextManager.push(AtomElement.CATEGORY, categoryBuilder);
    }
 
-   protected void startLangAwareTextElement(AtomElement element, AttributeScannerDriver attributes) {
+   protected void startLangAwareTextElement(AtomElement element, Attributes attributes) {
       final LangAwareTextElementBuilder textElementBuilder = LangAwareTextElementBuilder.newBuilder();
 
-      attributes.scan(new AttributeScanner() {
-         public void attribute(String localName, String qname, String value) {
-            final String attrName = asLocalName(qname, localName);
-
-            if ("base".equals(attrName)) {
-               textElementBuilder.setBase(URI.create(value));
-            } else if ("lang".equals(attrName)) {
-               textElementBuilder.setLang(value);
-            }
-         }
-      });
+      textElementBuilder.setBase(toUri(attributes.getValue("base")));
+      textElementBuilder.setLang(attributes.getValue("lang"));
 
       contextManager.push(element, textElementBuilder);
    }

@@ -11,8 +11,16 @@ public interface DateConstruct extends AtomCommonAtributes {
    /**
     * Transforms the internal representation of the DateConstruct into a Java
     * Calendar object.
+    *
+    * @return
+    */
+   Calendar asCalendar();
+
+   /**
+    * Returns the string representation of the date construct. This preserves the 
+    * toString method for other features.
     * 
     * @return 
     */
-   Calendar asCalendar();
+   String asText();
 }

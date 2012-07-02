@@ -1,11 +1,9 @@
 package net.jps.nuke.atom.sax.handler;
 
-import java.net.URI;
 import java.util.List;
 import net.jps.nuke.atom.model.Category;
 import net.jps.nuke.atom.model.Link;
 import net.jps.nuke.atom.model.builder.CategoryBuilder;
-import net.jps.nuke.atom.model.builder.EntryBuilder;
 import net.jps.nuke.atom.model.builder.FeedBuilder;
 import net.jps.nuke.atom.model.builder.GeneratorBuilder;
 import net.jps.nuke.atom.model.builder.LangAwareTextElementBuilder;
@@ -15,8 +13,6 @@ import net.jps.nuke.atom.model.builder.TextConstructBuilder;
 import net.jps.nuke.atom.model.builder.XmlDateConstructBuilder;
 import net.jps.nuke.atom.sax.HandlerContext;
 import net.jps.nuke.atom.sax.InvalidElementException;
-import net.jps.nuke.atom.sax.attribute.AttributeScanner;
-import net.jps.nuke.atom.sax.attribute.AttributeScannerDriver;
 import net.jps.nuke.atom.xml.AtomElement;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -34,7 +30,6 @@ public class FeedHandler extends AtomHandler {
    @Override
    public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
       final AtomElement currentElement = AtomElement.findIgnoreCase(asLocalName(qName, localName), AtomElement.FEED_ELEMENTS);
-      final AttributeScannerDriver attributeScannerDriver = new AttributeScannerDriver(attributes);
 
       if (currentElement == null) {
          // TODO:Implement - Error case. Unknown element...
@@ -43,30 +38,30 @@ public class FeedHandler extends AtomHandler {
 
       switch (currentElement) {
          case ENTRY:
-            startEntry(attributeScannerDriver);
+            startEntry(attributes);
             break;
 
          case AUTHOR:
          case CONTRIBUTOR:
-            startPersonConstruct(currentElement, attributeScannerDriver);
+            startPersonConstruct(currentElement, attributes);
             break;
 
          case CATEGORY:
-            startCategory(attributeScannerDriver);
+            startCategory(attributes);
             break;
 
          case LINK:
-            startLink(attributeScannerDriver);
+            startLink(attributes);
             break;
 
          case GENERATOR:
-            startGenerator(attributeScannerDriver);
+            startGenerator(attributes);
             break;
 
          case ID:
          case ICON:
          case LOGO:
-            startLangAwareTextElement(currentElement, attributeScannerDriver);
+            startLangAwareTextElement(currentElement, attributes);
             break;
 
          case NAME:
@@ -76,35 +71,16 @@ public class FeedHandler extends AtomHandler {
             break;
 
          case UPDATED:
-            startDateConstruct(currentElement, attributeScannerDriver);
+            startDateConstruct(currentElement, attributes);
             break;
 
          case RIGHTS:
          case TITLE:
          case SUBTITLE:
          case SUMMARY:
-            startTextConstruct(currentElement, attributeScannerDriver);
+            startTextConstruct(currentElement, attributes);
             break;
       }
-   }
-
-   private void startEntry(AttributeScannerDriver attributes) {
-      final EntryBuilder entryBuilder = EntryBuilder.newBuilder();
-
-      attributes.scan(new AttributeScanner() {
-         public void attribute(String localName, String qname, String value) {
-            final String attrName = asLocalName(qname, localName);
-
-            if ("base".equals(attrName)) {
-               entryBuilder.setBase(URI.create(value));
-            } else if ("lang".equals(attrName)) {
-               entryBuilder.setLang(value);
-            }
-         }
-      });
-
-      contextManager.push(AtomElement.ENTRY, entryBuilder);
-      delegateTo(new EntryHandler(this));
    }
 
    @Override

@@ -16,10 +16,9 @@ public class XmlDateConstructBuilder extends DateConstructImpl {
    public static XmlDateConstructBuilder newBuilder() {
       return new XmlDateConstructBuilder();
    }
-   private StringBuilder dateStringBuilder;
 
    protected XmlDateConstructBuilder() {
-      dateStringBuilder = null;
+      dateStringBuilder = new StringBuilder();
    }
 
    public Published buildPublished() {
@@ -35,10 +34,6 @@ public class XmlDateConstructBuilder extends DateConstructImpl {
    }
 
    public StringBuilder getDateStringBuilder() {
-      if (dateStringBuilder == null) {
-         dateStringBuilder = new StringBuilder();
-      }
-
       return dateStringBuilder;
    }
 

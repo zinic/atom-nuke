@@ -1,14 +1,12 @@
 package net.jps.nuke.atom.sax.handler;
 
-import net.jps.nuke.atom.sax.attribute.AttributeScanner;
-import net.jps.nuke.atom.sax.attribute.AttributeScannerDriver;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 /**
  * Ugh... make this pretty...
- * 
+ *
  * @author zinic
  */
 public class MixedContentHandler extends ReaderAwareHandler {
@@ -46,15 +44,13 @@ public class MixedContentHandler extends ReaderAwareHandler {
       contentBuilder.append("<");
       contentBuilder.append(asFullName(qName, localName));
 
-      new AttributeScannerDriver(attributes).scan(new AttributeScanner() {
-         public void attribute(String attributeLocalName, String attributeQName, String attributeValue) {
-            contentBuilder.append(" ");
-            contentBuilder.append(asFullName(attributeQName, attributeLocalName));
-            contentBuilder.append('"');
-            contentBuilder.append(StringEscapeUtils.escapeXml(attributeValue));
-            contentBuilder.append('"');
-         }
-      });
+      for (int i = 0; i < attributes.getLength(); i++) {
+         contentBuilder.append(" ");
+         contentBuilder.append(asFullName(attributes.getQName(i), attributes.getLocalName(i)));
+         contentBuilder.append('"');
+         contentBuilder.append(StringEscapeUtils.escapeXml(attributes.getValue(i)));
+         contentBuilder.append('"');
+      }
 
       contentBuilder.append(">");
       depth++;
@@ -67,7 +63,7 @@ public class MixedContentHandler extends ReaderAwareHandler {
          contentBuilder.append(asFullName(qName, localName));
          contentBuilder.append(">");
       }
-      
+
       if (--depth < 0) {
          releaseToParent().endElement(uri, localName, qName);
       }

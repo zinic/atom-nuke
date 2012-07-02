@@ -1,7 +1,5 @@
 package net.jps.nuke.atom.sax.handler;
 
-import net.jps.nuke.atom.sax.attribute.AttributeScanner;
-import net.jps.nuke.atom.sax.attribute.AttributeScannerDriver;
 import java.net.URI;
 import java.util.List;
 import net.jps.nuke.atom.model.Category;
@@ -35,7 +33,6 @@ public class EntryHandler extends AtomHandler {
    @Override
    public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
       final AtomElement currentElement = AtomElement.findIgnoreCase(asLocalName(qName, localName), AtomElement.ENTRY_ELEMENTS);
-      final AttributeScannerDriver attributeScannerDriver = new AttributeScannerDriver(attributes);
 
       if (currentElement == null) {
          // TODO:Implement - Error case. Unknown element...
@@ -44,28 +41,28 @@ public class EntryHandler extends AtomHandler {
 
       switch (currentElement) {
          case SOURCE:
-            startSource(attributeScannerDriver);
+            startSource(attributes);
             break;
 
          case AUTHOR:
          case CONTRIBUTOR:
-            startPersonConstruct(currentElement, attributeScannerDriver);
+            startPersonConstruct(currentElement, attributes);
             break;
 
          case CONTENT:
-            startContent(currentElement, attributeScannerDriver);
+            startContent(currentElement, attributes);
             break;
 
          case CATEGORY:
-            startCategory(attributeScannerDriver);
+            startCategory(attributes);
             break;
 
          case LINK:
-            startLink(attributeScannerDriver);
+            startLink(attributes);
             break;
 
          case ID:
-            startLangAwareTextElement(currentElement, attributeScannerDriver);
+            startLangAwareTextElement(currentElement, attributes);
             break;
 
          case NAME:
@@ -76,13 +73,13 @@ public class EntryHandler extends AtomHandler {
 
          case PUBLISHED:
          case UPDATED:
-            startDateConstruct(currentElement, attributeScannerDriver);
+            startDateConstruct(currentElement, attributes);
             break;
 
          case RIGHTS:
          case TITLE:
          case SUMMARY:
-            startTextConstruct(currentElement, attributeScannerDriver);
+            startTextConstruct(currentElement, attributes);
             break;
       }
    }
@@ -153,43 +150,23 @@ public class EntryHandler extends AtomHandler {
       }
    }
 
-   private void startSource(AttributeScannerDriver attributes) {
+   private void startSource(Attributes attributes) {
       final SourceBuilder sourceBuilder = SourceBuilder.newBuilder();
 
-      attributes.scan(new AttributeScanner() {
-         public void attribute(String localName, String qname, String value) {
-            final String attrName = asLocalName(qname, localName);
-
-            if ("base".equals(attrName)) {
-               sourceBuilder.setBase(URI.create(value));
-            } else if ("lang".equals(attrName)) {
-               sourceBuilder.setLang(value);
-            }
-         }
-      });
+      sourceBuilder.setBase(toUri(attributes.getValue("base")));
+      sourceBuilder.setLang(attributes.getValue("lang"));
 
       contextManager.push(AtomElement.SOURCE, sourceBuilder);
       delegateTo(new SourceHandler(this));
    }
 
-   private void startContent(AtomElement element, AttributeScannerDriver attributes) {
+   private void startContent(AtomElement element, Attributes attributes) {
       final ContentBuilder contentBuilder = ContentBuilder.newBuilder();
 
-      attributes.scan(new AttributeScanner() {
-         public void attribute(String localName, String qname, String value) {
-            final String attrName = asLocalName(qname, localName);
-
-            if ("base".equals(attrName)) {
-               contentBuilder.setBase(URI.create(value));
-            } else if ("lang".equals(attrName)) {
-               contentBuilder.setLang(value);
-            } else if ("type".equals(attrName)) {
-               contentBuilder.setType(value);
-            } else if ("src".equals(attrName)) {
-               contentBuilder.setSrc(value);
-            }
-         }
-      });
+      contentBuilder.setBase(toUri(attributes.getValue("base")));
+      contentBuilder.setLang(attributes.getValue("lang"));
+      contentBuilder.setLang(attributes.getValue("type"));
+      contentBuilder.setLang(attributes.getValue("src"));
 
       contextManager.push(element, contentBuilder);
       delegateTo(new MixedContentHandler(contentBuilder.getValueBuilder(), this));
