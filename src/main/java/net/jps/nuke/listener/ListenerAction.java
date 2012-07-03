@@ -1,4 +1,4 @@
-package net.jps.nuke.abdera.listener;
+package net.jps.nuke.listener;
 
 /**
  *

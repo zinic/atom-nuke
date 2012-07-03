@@ -2,7 +2,7 @@ package net.jps.nuke.atom.sax.handler;
 
 import net.jps.nuke.atom.xml.ModelHelper;
 import java.net.URI;
-import net.jps.nuke.atom.ParserResult;
+import net.jps.nuke.atom.Result;
 import net.jps.nuke.atom.ParserResultImpl;
 import net.jps.nuke.atom.model.Type;
 import net.jps.nuke.atom.model.builder.CategoryBuilder;
@@ -133,7 +133,7 @@ public class AtomHandler extends ReaderAwareHandler {
       return st == null ? null : Type.findIgnoreCase(st);
    }
 
-   public ParserResult getResult() {
+   public Result getResult() {
       return result;
    }
 

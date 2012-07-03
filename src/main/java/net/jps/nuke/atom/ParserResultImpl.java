@@ -9,7 +9,7 @@ import net.jps.nuke.atom.model.builder.FeedBuilder;
  *
  * @author zinic
  */
-public class ParserResultImpl implements ParserResult {
+public class ParserResultImpl implements Result {
 
    private FeedBuilder feed;
    private EntryBuilder entry;

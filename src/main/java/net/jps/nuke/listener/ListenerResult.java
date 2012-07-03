@@ -1,6 +1,6 @@
-package net.jps.nuke.abdera.listener;
+package net.jps.nuke.listener;
 
-import org.apache.abdera.model.Link;
+import net.jps.nuke.atom.model.Link;
 
 /**
  *
@@ -15,7 +15,7 @@ public class ListenerResult {
    public static ListenerResult halt(String message) {
       return new ListenerResult(message, ListenerAction.HALT, null);
    }
-
+   
    private final ListenerAction action;
    private final String message;
    private final Link followLink;

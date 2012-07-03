@@ -1,7 +1,5 @@
 package net.jps.nuke.crawler;
 
-import net.jps.nuke.abdera.listener.FeedListener;
-import net.jps.nuke.abdera.listener.ListenerResult;
 import com.rackspace.papi.commons.util.io.RawInputStreamReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -9,10 +7,12 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import org.apache.abdera.model.Document;
-import org.apache.abdera.model.Feed;
-import org.apache.abdera.parser.ParseException;
-import org.apache.abdera.parser.ParserFactory;
+import net.jps.nuke.listener.ListenerResult;
+import net.jps.nuke.atom.AtomParserException;
+import net.jps.nuke.atom.Reader;
+import net.jps.nuke.atom.Result;
+import net.jps.nuke.listener.FeedListener;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -22,17 +22,17 @@ import org.apache.http.client.methods.HttpGet;
  *
  * @author zinic
  */
-public class AbderaFeedCrawler implements FeedCrawler {
+public class NukeCrawler implements FeedCrawler {
 
-   private final ParserFactory parserFactory;
    private final FeedListener feedListener;
    private final HttpClient httpClient;
+   private final Reader atomReader;
    private final File stateFile;
 
-   public AbderaFeedCrawler(ParserFactory parserFactory, FeedListener feedListener, HttpClient httpClient, File stateFile) {
-      this.parserFactory = parserFactory;
+   public NukeCrawler(FeedListener feedListener, HttpClient httpClient, Reader atomReader, File stateFile) {
       this.feedListener = feedListener;
       this.httpClient = httpClient;
+      this.atomReader = atomReader;
       this.stateFile = stateFile;
    }
 
@@ -44,50 +44,49 @@ public class AbderaFeedCrawler implements FeedCrawler {
       try {
          while (readNext) {
             final ListenerResult result = readNext(targetUri);
-            
-            switch(result.getAction()) {
+
+            switch (result.getAction()) {
                case FOLLOW_LINK:
-                  targetUri = result.getLink().getHref().toString();
+                  targetUri = result.getLink().href();
                   writeMarker(targetUri);
-                  
+
                   break;
-                  
+
                case HALT:
                default:
                   readNext = false;
             }
+            
+            break;
          }
-      } catch (IOException ioe) {
+      } catch (Exception ioe) {
          ioe.printStackTrace(System.err);
       }
    }
 
-   private ListenerResult readNext(String targetUri) throws IOException {
+   private ListenerResult readNext(String targetUri) throws IOException, AtomParserException {
       final HttpGet httpGet = new HttpGet(targetUri);
-
       InputStream inputStream = null;
-      Document<Feed> feedDocument = null;
 
       try {
          final ByteArrayOutputStream baos = new ByteArrayOutputStream();
          final HttpResponse response = httpClient.execute(httpGet);
          final HttpEntity entity = response.getEntity();
-         
+
          inputStream = entity.getContent();
          RawInputStreamReader.instance().copyTo(inputStream, baos);
-         
-         feedDocument = parserFactory.getParser().parse(new ByteArrayInputStream(baos.toByteArray()));
+
+         final Result parsedResult = atomReader.read(new ByteArrayInputStream(baos.toByteArray()));
+         return parsedResult.getFeed() != null ? feedListener.readPage(parsedResult.getFeed()) : ListenerResult.halt("Feed document was null.");
       } catch (IOException ioe) {
          ioe.printStackTrace(System.err);
-      } catch (ParseException pe) {
-         pe.printStackTrace(System.err);
+
+         return ListenerResult.halt(ioe.getMessage());
       } finally {
          if (inputStream != null) {
             inputStream.close();
          }
       }
-
-      return feedDocument != null ? feedListener.readPage(feedDocument.getRoot()) : ListenerResult.halt("Feed document was null.");
    }
 
    private void writeMarker(String marker) throws IOException {

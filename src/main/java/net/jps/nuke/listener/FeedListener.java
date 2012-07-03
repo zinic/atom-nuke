@@ -1,6 +1,6 @@
-package net.jps.nuke.abdera.listener;
+package net.jps.nuke.listener;
 
-import org.apache.abdera.model.Feed;
+import net.jps.nuke.atom.model.Feed;
 
 /**
  *

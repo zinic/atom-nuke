@@ -113,7 +113,9 @@ public final class AtomWriter {
          writeAttribute(output, AtomNamespaceContext.ATOM_NAMESPACE, "rel", link.rel());
          writeAttribute(output, AtomNamespaceContext.ATOM_NAMESPACE, "title", link.title());
          writeAttribute(output, AtomNamespaceContext.ATOM_NAMESPACE, "type", link.type());
-         writeAttribute(output, AtomNamespaceContext.ATOM_NAMESPACE, "length", link.length().toString());
+         
+         final Integer length = link.length();
+         writeAttribute(output, AtomNamespaceContext.ATOM_NAMESPACE, "length", length == null ? null : length.toString());
 
          output.writeEndElement();
       }
@@ -365,6 +367,8 @@ public final class AtomWriter {
    }
 
    public void write(XMLStreamWriter output, Feed f) throws XMLStreamException {
+      output.setNamespaceContext(AtomNamespaceContext.instance());
+      
       output.writeStartDocument();
       writeFeed(output, f);
       output.writeEndDocument();

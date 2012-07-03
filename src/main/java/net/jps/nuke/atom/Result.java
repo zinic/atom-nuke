@@ -7,7 +7,7 @@ import net.jps.nuke.atom.model.Feed;
  *
  * @author zinic
  */
-public interface ParserResult {
+public interface Result {
 
    Feed getFeed();
 

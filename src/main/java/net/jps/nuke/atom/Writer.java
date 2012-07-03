@@ -1,4 +1,4 @@
-package net.jps.nuke.atom.stax;
+package net.jps.nuke.atom;
 
 import java.io.OutputStream;
 import javax.xml.stream.XMLStreamException;

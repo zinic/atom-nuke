@@ -1,13 +1,17 @@
 package net.jps.nuke.listener.hadoop;
 
-import net.jps.nuke.abdera.listener.FeedListener;
-import net.jps.nuke.abdera.listener.ListenerResult;
-import java.io.ByteArrayOutputStream;
+import com.sun.xml.internal.messaging.saaj.util.ByteOutputStream;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import net.jps.nuke.listener.FeedListener;
+import net.jps.nuke.listener.ListenerResult;
 import java.io.IOException;
-import java.io.StringWriter;
-import org.apache.abdera.model.Entry;
-import org.apache.abdera.model.Feed;
-import org.apache.abdera.model.Link;
+import java.io.OutputStreamWriter;
+import net.jps.nuke.atom.model.Entry;
+import net.jps.nuke.atom.model.Feed;
+import net.jps.nuke.atom.model.Link;
+import net.jps.nuke.atom.Writer;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
@@ -23,18 +27,20 @@ public class HDFSFeedListener implements FeedListener {
    private final Configuration configuration;
    private final Path targetPath;
    private final String feedName;
-
+   private final Writer writer;
    private SequenceFile.Writer fileWriter;
    private boolean writeHeader;
    private FileSystem hdfs;
 
-   public HDFSFeedListener(String feedName) {
+   public HDFSFeedListener(String feedName, Writer writer) {
       this.feedName = feedName;
+      this.writer = writer;
+
       targetPath = new Path("/data/atom/" + feedName);
-      
+
       configuration = new Configuration();
       configuration.set("fs.default.name", "hdfs://namenode:9000");
-      
+
       writeHeader = false;
    }
 
@@ -66,31 +72,41 @@ public class HDFSFeedListener implements FeedListener {
             writeFeedHeader(page);
          }
 
-         for (Entry e : page.getEntries()) {
-            final StringWriter stringWriter = new StringWriter();
-            e.writeTo(stringWriter);
+         final ByteOutputStream baos = new ByteOutputStream();
 
-            append(e.getId().toString(), stringWriter.toString());
+         for (Entry e : page.entries()) {
+            writer.write(baos, page);
+            append(new Text(e.id().value()), new Text(baos.getBytes()));
          }
-      } catch (IOException ioe) {
+      } catch (Exception ioe) {
          ioe.printStackTrace(System.err);
       }
 
-      if (page.getEntries().size() > 0) {
-         for (Link link : page.getLinks()) {
-            if (link.getRel().equals("previous")) {
-               return ListenerResult.follow(link);
-            }
+      for (Link link : page.links()) {
+         if (link.rel().equals("previous")) {
+            return ListenerResult.follow(link);
          }
       }
-      
+
       return ListenerResult.halt("End of feed.");
    }
 
    private void append(String key, String value) throws IOException {
-      fileWriter.append(new Text(key), new Text(value));
+      append(new Text(key), new Text(value));
    }
-   
+
+   private void append(Text key, Text value) throws IOException {
+      fileWriter.append(key, value);
+
+      final BufferedWriter lookaside = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File("/home/zinic/atom.txt"), true)));
+      lookaside.write(key.toString());
+      lookaside.write("\n");
+      lookaside.write(value.toString());
+      lookaside.write("\n\n");
+
+      lookaside.close();
+   }
+
    private void writeVariable(String key, String value, StringBuilder builder) {
       builder.append("\"");
       builder.append(key);
@@ -101,11 +117,11 @@ public class HDFSFeedListener implements FeedListener {
 
    private void writeFeedHeader(Feed page) throws IOException {
       writeHeader = false;
-      
+
       final StringBuilder header = new StringBuilder("{");
-      writeVariable("id", page.getId().toString(), header);
+      writeVariable("id", page.id().value(), header);
       header.append(",");
-      writeVariable("title", page.getTitle(), header);
+      writeVariable("title", page.title().value(), header);
       header.append("}");
 
       append(feedName + "-metadata", header.toString());

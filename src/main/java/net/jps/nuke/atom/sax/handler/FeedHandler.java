@@ -89,7 +89,8 @@ public class FeedHandler extends AtomHandler {
       final String elementEnding = asLocalName(qName, localName);
 
       if (!currentElement.name().equalsIgnoreCase(elementEnding)) {
-         throw new InvalidElementException("Element: " + currentElement + " was not expected. Expecting: " + elementEnding);
+         return;
+//         throw new InvalidElementException("Element: " + currentElement + " was not expected. Expecting: " + elementEnding);
       }
 
       switch (currentElement) {

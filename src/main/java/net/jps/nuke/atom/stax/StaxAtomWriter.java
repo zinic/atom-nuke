@@ -1,5 +1,6 @@
 package net.jps.nuke.atom.stax;
 
+import net.jps.nuke.atom.Writer;
 import java.io.OutputStream;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;

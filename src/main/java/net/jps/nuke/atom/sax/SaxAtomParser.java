@@ -11,14 +11,14 @@ import java.io.InputStream;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import net.jps.nuke.atom.AtomParserException;
-import net.jps.nuke.atom.FeedParser;
-import net.jps.nuke.atom.ParserResult;
+import net.jps.nuke.atom.Result;
+import net.jps.nuke.atom.Reader;
 
 /**
  *
  * @author zinic
  */
-public class SaxAtomParser implements FeedParser {
+public class SaxAtomParser implements Reader {
 
    private final SAXParserFactory parserFactory;
    private final Pool<SAXParser> parserPool;
@@ -40,11 +40,10 @@ public class SaxAtomParser implements FeedParser {
       });
    }
 
-   @Override
-   public ParserResult read(final InputStream source) throws AtomParserException {
+   public Result read(final InputStream source) throws AtomParserException {
       try {
-         return parserPool.use(new ResourceContext<SAXParser, ParserResult>() {
-            public ParserResult perform(SAXParser parser) throws ResourceContextException {
+         return parserPool.use(new ResourceContext<SAXParser, Result>() {
+            public Result perform(SAXParser parser) throws ResourceContextException {
                try {
                   final AtomHandler handler = new AtomHandler(parser.getXMLReader());
                   parser.parse(source, handler);
