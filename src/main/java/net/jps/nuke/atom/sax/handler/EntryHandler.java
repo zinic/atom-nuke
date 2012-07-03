@@ -13,7 +13,7 @@ import net.jps.nuke.atom.model.builder.LinkBuilder;
 import net.jps.nuke.atom.model.builder.PersonConstructBuilder;
 import net.jps.nuke.atom.model.builder.SourceBuilder;
 import net.jps.nuke.atom.model.builder.TextConstructBuilder;
-import net.jps.nuke.atom.model.builder.XmlDateConstructBuilder;
+import net.jps.nuke.atom.model.builder.DateConstructBuilder;
 import net.jps.nuke.atom.sax.HandlerContext;
 import net.jps.nuke.atom.sax.InvalidElementException;
 import net.jps.nuke.atom.xml.AtomElement;
@@ -32,7 +32,7 @@ public class EntryHandler extends AtomHandler {
 
    @Override
    public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
-      final AtomElement currentElement = AtomElement.findIgnoreCase(asLocalName(qName, localName), AtomElement.ENTRY_ELEMENTS);
+      final AtomElement currentElement = AtomElement.find(asLocalName(qName, localName), AtomElement.ENTRY_ELEMENTS);
 
       if (currentElement == null) {
          // TODO:Implement - Error case. Unknown element...
@@ -202,12 +202,12 @@ public class EntryHandler extends AtomHandler {
    }
 
    private void endUpdated() {
-      final HandlerContext<XmlDateConstructBuilder> updatedContext = contextManager.pop(XmlDateConstructBuilder.class);
+      final HandlerContext<DateConstructBuilder> updatedContext = contextManager.pop(DateConstructBuilder.class);
       contextManager.peek(EntryBuilder.class).builder().setUpdated(updatedContext.builder().buildUpdated());
    }
 
    private void endPublished() {
-      final HandlerContext<XmlDateConstructBuilder> publishedContext = contextManager.pop(XmlDateConstructBuilder.class);
+      final HandlerContext<DateConstructBuilder> publishedContext = contextManager.pop(DateConstructBuilder.class);
       contextManager.peek(EntryBuilder.class).builder().setPublished(publishedContext.builder().buildPublished());
    }
 

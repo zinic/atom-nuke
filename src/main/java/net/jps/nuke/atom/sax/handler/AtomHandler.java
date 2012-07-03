@@ -13,7 +13,7 @@ import net.jps.nuke.atom.model.builder.LangAwareTextElementBuilder;
 import net.jps.nuke.atom.model.builder.LinkBuilder;
 import net.jps.nuke.atom.model.builder.PersonConstructBuilder;
 import net.jps.nuke.atom.model.builder.TextConstructBuilder;
-import net.jps.nuke.atom.model.builder.XmlDateConstructBuilder;
+import net.jps.nuke.atom.model.builder.DateConstructBuilder;
 import net.jps.nuke.atom.sax.HandlerContext;
 import net.jps.nuke.atom.xml.AtomElement;
 import org.xml.sax.Attributes;
@@ -27,7 +27,6 @@ import org.xml.sax.XMLReader;
 public class AtomHandler extends ReaderAwareHandler {
 
    public static final ModelHelper MODEL_HELPER = new ModelHelper();
-   
    protected final DocumentContextManager contextManager;
    protected final ParserResultImpl result;
 
@@ -51,7 +50,7 @@ public class AtomHandler extends ReaderAwareHandler {
 
    @Override
    public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
-      final AtomElement currentElement = AtomElement.findIgnoreCase(asLocalName(qName, localName), AtomElement.ROOT_ELEMENTS);
+      final AtomElement currentElement = AtomElement.find(asLocalName(qName, localName), AtomElement.ROOT_ELEMENTS);
 
       if (currentElement == null) {
          // TODO:Implement - Error case. Unknown element...
@@ -69,36 +68,55 @@ public class AtomHandler extends ReaderAwareHandler {
       }
    }
 
+   public static String trimSubstring(StringBuilder sb) {
+      int first, last;
+
+      for (first = 0; first < sb.length(); first++) {
+         if (!Character.isWhitespace(sb.charAt(first))) {
+            break;
+         }
+      }
+
+      for (last = sb.length(); last > first; last--) {
+         if (!Character.isWhitespace(sb.charAt(last - 1))) {
+            break;
+         }
+      }
+
+      return sb.substring(first, last);
+   }
+
    @Override
    public void characters(char[] ch, int start, int length) throws SAXException {
-      final String characters = new String(ch, start, length).trim();
+      final StringBuilder characters = new StringBuilder();
+      characters.append(ch, start, length);
 
       switch (contextManager.peek().getElementDef()) {
          case NAME:
-            contextManager.peek(PersonConstructBuilder.class).builder().setName(characters);
+            contextManager.peek(PersonConstructBuilder.class).builder().setName(trimSubstring(characters));
             break;
 
          case URI:
-            contextManager.peek(PersonConstructBuilder.class).builder().setUri(characters);
+            contextManager.peek(PersonConstructBuilder.class).builder().setUri(trimSubstring(characters));
             break;
 
          case EMAIL:
-            contextManager.peek(PersonConstructBuilder.class).builder().setEmail(characters);
+            contextManager.peek(PersonConstructBuilder.class).builder().setEmail(trimSubstring(characters));
             break;
 
          case GENERATOR:
-            contextManager.peek(GeneratorBuilder.class).builder().getValueBuilder().append(characters);
+            contextManager.peek(GeneratorBuilder.class).builder().getValueBuilder().append(trimSubstring(characters));
             break;
 
          case ID:
          case ICON:
          case LOGO:
-            contextManager.peek(LangAwareTextElementBuilder.class).builder().appendValue(characters);
+            contextManager.peek(LangAwareTextElementBuilder.class).builder().appendValue(trimSubstring(characters));
             break;
 
          case PUBLISHED:
          case UPDATED:
-            contextManager.peek(XmlDateConstructBuilder.class).builder().getDateStringBuilder().append(characters);
+            contextManager.peek(DateConstructBuilder.class).builder().getDateStringBuilder().append(trimSubstring(characters));
             break;
       }
    }
@@ -130,7 +148,7 @@ public class AtomHandler extends ReaderAwareHandler {
     * @return
     */
    protected static Type toType(String st) {
-      return st == null ? null : Type.findIgnoreCase(st);
+      return st == null ? null : Type.find(st);
    }
 
    public Result getResult() {
@@ -194,7 +212,7 @@ public class AtomHandler extends ReaderAwareHandler {
    }
 
    protected void startDateConstruct(AtomElement element, Attributes attributes) {
-      final XmlDateConstructBuilder dateConstructBuilder = XmlDateConstructBuilder.newBuilder();
+      final DateConstructBuilder dateConstructBuilder = DateConstructBuilder.newBuilder();
 
       dateConstructBuilder.setBase(toUri(attributes.getValue("base")));
       dateConstructBuilder.setLang(attributes.getValue("lang"));

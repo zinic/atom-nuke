@@ -4,6 +4,7 @@ import java.io.OutputStream;
 import javax.xml.stream.XMLStreamException;
 import net.jps.nuke.atom.model.Entry;
 import net.jps.nuke.atom.model.Feed;
+import net.jps.nuke.atom.stax.WriterConfiguration;
 
 /**
  *
@@ -11,7 +12,11 @@ import net.jps.nuke.atom.model.Feed;
  */
 public interface Writer {
 
-   public void write(OutputStream output, Feed f) throws XMLStreamException;
+   void write(OutputStream output, Feed f) throws XMLStreamException;
 
-   public void write(OutputStream output, Entry e) throws XMLStreamException;
+   void write(OutputStream output, Entry e) throws XMLStreamException;
+
+   void write(OutputStream output, Feed f, WriterConfiguration configuration) throws XMLStreamException;
+
+   void write(OutputStream output, Entry e, WriterConfiguration configuration) throws XMLStreamException;
 }

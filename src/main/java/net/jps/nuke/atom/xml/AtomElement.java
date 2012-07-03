@@ -7,33 +7,31 @@ package net.jps.nuke.atom.xml;
 public enum AtomElement {
 
    // States, yo
-   FEED,
-   ENTRY,
-   CONTENT,
-   AUTHOR,
-   CATEGORY,
-   CONTRIBUTOR,
-   GENERATOR,
-   ICON,
-   ID,
-   LINK,
-   LOGO,
-   PUBLISHED,
-   RIGHTS,
-   SOURCE,
-   SUBTITLE,
-   SUMMARY,
-   TITLE,
-   UPDATED,
-   NAME,
-   EMAIL,
-   URI;
-   
+   FEED("feed"),
+   ENTRY("entry"),
+   CONTENT("content"),
+   AUTHOR("author"),
+   CATEGORY("category"),
+   CONTRIBUTOR("contributor"),
+   GENERATOR("generator"),
+   ICON("icon"),
+   ID("id"),
+   LINK("link"),
+   LOGO("logo"),
+   PUBLISHED("published"),
+   RIGHTS("rights"),
+   SOURCE("source"),
+   SUBTITLE("subtitle"),
+   SUMMARY("summary"),
+   TITLE("title"),
+   UPDATED("updated"),
+   NAME("name"),
+   EMAIL("email"),
+   URI("uri");
    public static final AtomElement[] ROOT_ELEMENTS = new AtomElement[]{
       FEED,
       ENTRY
    };
-   
    public static final AtomElement[] ENTRY_ELEMENTS = new AtomElement[]{
       SOURCE,
       AUTHOR,
@@ -51,7 +49,6 @@ public enum AtomElement {
       TITLE,
       SUMMARY
    };
-   
    public static final AtomElement[] FEED_ELEMENTS = new AtomElement[]{
       ENTRY,
       AUTHOR,
@@ -71,7 +68,6 @@ public enum AtomElement {
       SUBTITLE,
       SUMMARY
    };
-   
    public static final AtomElement[] SOURCE_ELEMENTS = new AtomElement[]{
       AUTHOR,
       GENERATOR,
@@ -90,13 +86,23 @@ public enum AtomElement {
       SUMMARY
    };
 
-   public static AtomElement findIgnoreCase(String st, AtomElement[] elements) {
+   public static AtomElement find(String elementName, AtomElement[] elements) {
       for (int i = 0; i < elements.length; i++) {
-         if (elements[i].name().equalsIgnoreCase(st)) {
+         if (elements[i].getElementName().equals(elementName)) {
             return elements[i];
          }
       }
 
       return null;
+   }
+   
+   private final String elementName;
+
+   private AtomElement(String elementName) {
+      this.elementName = elementName;
+   }
+
+   public String getElementName() {
+      return elementName;
    }
 }

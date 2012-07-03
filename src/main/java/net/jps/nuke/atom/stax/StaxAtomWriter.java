@@ -14,6 +14,8 @@ import net.jps.nuke.atom.model.Feed;
  */
 public class StaxAtomWriter implements Writer {
 
+   private static final WriterConfiguration DEFAULT_CONFIGURATION = new WriterConfiguration(WriterConfiguration.NamespaceLevel.PREFXIED);
+   
    private final XMLOutputFactory outputFactory;
 
    public StaxAtomWriter() {
@@ -25,12 +27,21 @@ public class StaxAtomWriter implements Writer {
    }
 
    public void write(OutputStream output, Feed f) throws XMLStreamException {
-      final XMLStreamWriter writer = outputFactory.createXMLStreamWriter(output);
-      AtomWriter.instance().write(writer, f);
+      write(output, f, DEFAULT_CONFIGURATION);
    }
 
    public void write(OutputStream output, Entry e) throws XMLStreamException {
+      write(output, e, DEFAULT_CONFIGURATION);
+   }
+
+   public void write(OutputStream output, Feed f, WriterConfiguration configuration) throws XMLStreamException {
       final XMLStreamWriter writer = outputFactory.createXMLStreamWriter(output);
-      AtomWriter.instance().write(writer, e);
+      AtomWriter.instance().write(new WriterContext(writer, configuration), f);
+   }
+
+   public void write(OutputStream output, Entry e, WriterConfiguration configuration) throws XMLStreamException {
+      final XMLStreamWriter writer = outputFactory.createXMLStreamWriter(output);
+
+      AtomWriter.instance().write(new WriterContext(writer, configuration), e);
    }
 }

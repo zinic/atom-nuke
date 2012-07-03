@@ -10,7 +10,7 @@ import net.jps.nuke.atom.model.builder.LangAwareTextElementBuilder;
 import net.jps.nuke.atom.model.builder.LinkBuilder;
 import net.jps.nuke.atom.model.builder.PersonConstructBuilder;
 import net.jps.nuke.atom.model.builder.TextConstructBuilder;
-import net.jps.nuke.atom.model.builder.XmlDateConstructBuilder;
+import net.jps.nuke.atom.model.builder.DateConstructBuilder;
 import net.jps.nuke.atom.sax.HandlerContext;
 import net.jps.nuke.atom.sax.InvalidElementException;
 import net.jps.nuke.atom.xml.AtomElement;
@@ -29,7 +29,7 @@ public class FeedHandler extends AtomHandler {
 
    @Override
    public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
-      final AtomElement currentElement = AtomElement.findIgnoreCase(asLocalName(qName, localName), AtomElement.FEED_ELEMENTS);
+      final AtomElement currentElement = AtomElement.find(asLocalName(qName, localName), AtomElement.FEED_ELEMENTS);
 
       if (currentElement == null) {
          // TODO:Implement - Error case. Unknown element...
@@ -185,7 +185,7 @@ public class FeedHandler extends AtomHandler {
    }
 
    private void endUpdated() {
-      final HandlerContext<XmlDateConstructBuilder> updatedContext = contextManager.pop(XmlDateConstructBuilder.class);
+      final HandlerContext<DateConstructBuilder> updatedContext = contextManager.pop(DateConstructBuilder.class);
       contextManager.peek(FeedBuilder.class).builder().setUpdated(updatedContext.builder().buildUpdated());
    }
 

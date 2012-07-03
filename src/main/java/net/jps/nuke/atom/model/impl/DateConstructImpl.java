@@ -1,6 +1,7 @@
 package net.jps.nuke.atom.model.impl;
 
 import java.util.Calendar;
+import javax.xml.bind.DatatypeConverter;
 import net.jps.nuke.atom.model.DateConstruct;
 import net.jps.nuke.atom.model.Published;
 import net.jps.nuke.atom.model.Updated;
@@ -12,9 +13,13 @@ import net.jps.nuke.atom.model.Updated;
 public abstract class DateConstructImpl extends AtomCommonAttributesImpl implements DateConstruct, Updated, Published {
 
    protected StringBuilder dateStringBuilder;
-   protected Calendar date;
+   private Calendar date;
 
    public Calendar asCalendar() {
+      if (date == null) {
+         date = DatatypeConverter.parseDate(dateStringBuilder.toString());
+      }
+      
       return date;
    }
 

@@ -11,7 +11,7 @@ import net.jps.nuke.atom.model.builder.LinkBuilder;
 import net.jps.nuke.atom.model.builder.PersonConstructBuilder;
 import net.jps.nuke.atom.model.builder.SourceBuilder;
 import net.jps.nuke.atom.model.builder.TextConstructBuilder;
-import net.jps.nuke.atom.model.builder.XmlDateConstructBuilder;
+import net.jps.nuke.atom.model.builder.DateConstructBuilder;
 import net.jps.nuke.atom.sax.HandlerContext;
 import net.jps.nuke.atom.sax.InvalidElementException;
 import net.jps.nuke.atom.xml.AtomElement;
@@ -30,7 +30,7 @@ public class SourceHandler extends AtomHandler {
    
    @Override
    public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
-      final AtomElement currentElement = AtomElement.findIgnoreCase(asLocalName(qName, localName), AtomElement.SOURCE_ELEMENTS);
+      final AtomElement currentElement = AtomElement.find(asLocalName(qName, localName), AtomElement.SOURCE_ELEMENTS);
       
       if (currentElement == null) {
          // TODO:Implement - Error case. Unknown element...
@@ -84,7 +84,7 @@ public class SourceHandler extends AtomHandler {
       final AtomElement currentElement = contextManager.peek().getElementDef();
       final String elementEnding = asLocalName(qName, localName);
       
-      if (!currentElement.name().equalsIgnoreCase(elementEnding)) {
+      if (!currentElement.getElementName().equals(elementEnding)) {
          return;
 //         throw new InvalidElementException("Element: " + currentElement + " was not expected. Expecting: " + elementEnding);
       }
@@ -174,7 +174,7 @@ public class SourceHandler extends AtomHandler {
    }
    
    private void endUpdated() {
-      final HandlerContext<XmlDateConstructBuilder> updatedContext = contextManager.pop(XmlDateConstructBuilder.class);
+      final HandlerContext<DateConstructBuilder> updatedContext = contextManager.pop(DateConstructBuilder.class);
       contextManager.peek(SourceBuilder.class).builder().setUpdated(updatedContext.builder().buildUpdated());
    }
    

@@ -29,23 +29,11 @@ public class DocumentContextManager {
    }
 
    public <T> HandlerContext<T> peek(Class<T> castAs) {
-      final HandlerContext<?> entry = peek();
-
-      if (castAs.isAssignableFrom(entry.builder().getClass())) {
-         return (HandlerContext<T>) entry;
-      }
-
-      throw new IllegalArgumentException("Class: " + castAs.getName() + " is not a superclass or superinterface of: " + entry.builder().getClass().getName());
+      return (HandlerContext<T>) peek();
    }
 
    public <T> HandlerContext<T> pop(Class<T> castAs) {
-      final HandlerContext<?> entry = pop();
-
-      if (castAs.isAssignableFrom(entry.builder().getClass())) {
-         return (HandlerContext<T>) entry;
-      }
-
-      throw new IllegalArgumentException("Class: " + castAs.getName() + " is not a superclass or superinterface of: " + entry.builder().getClass().getName());
+      return (HandlerContext<T>) pop();
    }
 
    public void push(AtomElement element, Object builder) {
