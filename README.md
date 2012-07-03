@@ -3,13 +3,13 @@
 
 ##What is it?##
 
-ATOM Nuke is a very simple listener style ATOM client designed specifically to work with [AtomHopper](http://atomhopper.org/).
+Nuke is a simple ATOM implementation built ontop of a SAX parser and a StAX writer designed for simplicity, immutibility and memory efficiency. The project also aspires to maintain a minimal dependency footprint.
+
+Nuke also contains a very simple listener style ATOM client designed specifically to work with [AtomHopper](http://atomhopper.org/).
 
 ##How do I use it?##
 
 ###Java Code Exmaples###
-
-[Interacting with the Nuke client](https://github.com/zinic/atom-nuke/blob/master/src/main/java/net/jps/nuke/App.java)
 
 [HDFS Example Listener](https://github.com/zinic/atom-nuke/blob/master/src/main/java/net/jps/nuke/listener/hadoop/HDFSFeedListener.java)
 

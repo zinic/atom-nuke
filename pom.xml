@@ -6,10 +6,17 @@
    <groupId>net.jps.nuke</groupId>
    <artifactId>nuke</artifactId>
    <version>0.0.2-SNAPSHOT</version>
+   
    <packaging>jar</packaging>
 
    <name>nuke</name>
    <url>https://github.com/zinic/atom-nuke</url>
+
+   <description>
+      Nuke is a simple ATOM implementation built ontop of a SAX parser and a StAX
+      writer designed for simplicity, immutibility and memory efficiency. The
+      project also aspires to maintain a minimal dependency footprint.
+   </description>
 
    <properties>
       <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
