@@ -1,7 +1,7 @@
 package net.jps.nuke.listener.hadoop;
 
-import com.sun.xml.internal.messaging.saaj.util.ByteOutputStream;
 import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import net.jps.nuke.listener.FeedListener;
@@ -72,11 +72,11 @@ public class HDFSFeedListener implements FeedListener {
             writeFeedHeader(page);
          }
 
-         final ByteOutputStream baos = new ByteOutputStream();
+         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
          for (Entry e : page.entries()) {
             writer.write(baos, page);
-            append(new Text(e.id().value()), new Text(baos.getBytes()));
+            append(new Text(e.id().value()), new Text(baos.toByteArray()));
          }
       } catch (Exception ioe) {
          ioe.printStackTrace(System.err);
