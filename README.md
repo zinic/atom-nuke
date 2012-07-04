@@ -1,5 +1,5 @@
-#ATOM Nuke#
-###A Client for Fusing and Splitting ATOM Feeds###
+#Nuke#
+###The Fast, Simple ATOM Implementation###
 
 ##What is it?##
 
@@ -12,6 +12,10 @@ Nuke also contains a very simple listener style ATOM client designed specificall
 ###Java Code Exmaples###
 
 [HDFS Example Listener](https://github.com/zinic/atom-nuke/blob/master/src/main/java/net/jps/nuke/listener/hadoop/HDFSFeedListener.java)
+
+##Features Missing##
+
+* Extensible elements
 
 ##That Legal Thing...##
 
