@@ -15,7 +15,7 @@ Nuke also contains a very simple listener style ATOM client designed specificall
 
 ##Features Missing##
 
-* Extensible elements
+* Extensible elements - Internal elements are currently treated as text content.
 
 ##That Legal Thing...##
 
