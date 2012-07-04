@@ -1,6 +1,5 @@
-package net.jps.nuke.atom.sax;
+package net.jps.nuke.atom.sax.impl;
 
-import net.jps.nuke.atom.sax.handler.AtomHandler;
 import com.rackspace.papi.commons.util.pooling.ConstructionStrategy;
 import com.rackspace.papi.commons.util.pooling.GenericBlockingResourcePool;
 import com.rackspace.papi.commons.util.pooling.Pool;

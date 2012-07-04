@@ -1,4 +1,4 @@
-package net.jps.nuke.atom.sax.handler;
+package net.jps.nuke.atom.sax.impl;
 
 import java.util.List;
 import net.jps.nuke.atom.ParserResultImpl;
@@ -14,7 +14,9 @@ import net.jps.nuke.atom.model.builder.PersonConstructBuilder;
 import net.jps.nuke.atom.model.builder.SourceBuilder;
 import net.jps.nuke.atom.model.builder.TextConstructBuilder;
 import net.jps.nuke.atom.model.builder.DateConstructBuilder;
+import net.jps.nuke.atom.sax.DocumentContextManager;
 import net.jps.nuke.atom.sax.HandlerContext;
+import net.jps.nuke.atom.sax.MixedContentHandler;
 import net.jps.nuke.atom.xml.AtomElement;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -164,8 +166,8 @@ public class EntryHandler extends AtomHandler {
 
       contentBuilder.setBase(toUri(attributes.getValue("base")));
       contentBuilder.setLang(attributes.getValue("lang"));
-      contentBuilder.setLang(attributes.getValue("type"));
-      contentBuilder.setLang(attributes.getValue("src"));
+      contentBuilder.setType(attributes.getValue("type"));
+      contentBuilder.setSrc(attributes.getValue("src"));
 
       contextManager.push(element, contentBuilder);
       self.delegateTo(new MixedContentHandler(contentBuilder.getValueBuilder(), self));
@@ -216,16 +218,12 @@ public class EntryHandler extends AtomHandler {
 
    private static void endCategory(DocumentContextManager contextManager) {
       final HandlerContext<CategoryBuilder> category = contextManager.pop(CategoryBuilder.class);
-      final List<Category> categoryList = contextManager.peek(EntryBuilder.class).builder().categories();
-
-      categoryList.add(category.builder().build());
+      contextManager.peek(EntryBuilder.class).builder().addCategory(category.builder().build());
    }
 
    private static void endLink(DocumentContextManager contextManager) {
       final HandlerContext<LinkBuilder> category = contextManager.pop(LinkBuilder.class);
-      final List<Link> linkList = contextManager.peek(EntryBuilder.class).builder().links();
-
-      linkList.add(category.builder().build());
+      contextManager.peek(EntryBuilder.class).builder().addLink(category.builder().build());
    }
 
    private static void endRights(DocumentContextManager contextManager) {

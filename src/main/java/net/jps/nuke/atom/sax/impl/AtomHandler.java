@@ -1,6 +1,5 @@
-package net.jps.nuke.atom.sax.handler;
+package net.jps.nuke.atom.sax.impl;
 
-import net.jps.nuke.atom.xml.ModelHelper;
 import java.net.URI;
 import net.jps.nuke.atom.Result;
 import net.jps.nuke.atom.ParserResultImpl;
@@ -14,7 +13,10 @@ import net.jps.nuke.atom.model.builder.LinkBuilder;
 import net.jps.nuke.atom.model.builder.PersonConstructBuilder;
 import net.jps.nuke.atom.model.builder.TextConstructBuilder;
 import net.jps.nuke.atom.model.builder.DateConstructBuilder;
+import net.jps.nuke.atom.sax.DocumentContextManager;
 import net.jps.nuke.atom.sax.HandlerContext;
+import net.jps.nuke.atom.sax.MixedContentHandler;
+import net.jps.nuke.atom.sax.DelegatingHandler;
 import net.jps.nuke.atom.xml.AtomElement;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -24,9 +26,8 @@ import org.xml.sax.XMLReader;
  *
  * @author zinic
  */
-public class AtomHandler extends ReaderAwareHandler {
+public class AtomHandler extends DelegatingHandler {
 
-   public static final ModelHelper MODEL_HELPER = new ModelHelper();
    protected final DocumentContextManager contextManager;
    protected final ParserResultImpl result;
 
@@ -48,12 +49,59 @@ public class AtomHandler extends ReaderAwareHandler {
       return "".equals(localName) ? qName : localName;
    }
 
+   protected static boolean handleCommonElement(DelegatingHandler handler, DocumentContextManager contextManager, AtomElement currentElement, Attributes attributes) throws SAXException {
+      switch (currentElement) {
+         case ID:
+         case ICON:
+         case LOGO:
+            startLangAwareTextElement(contextManager, currentElement, attributes);
+            break;
+
+         case NAME:
+         case EMAIL:
+         case URI:
+            startFieldContentElement(contextManager, currentElement);
+            break;
+
+         case UPDATED:
+            startDateConstruct(contextManager, currentElement, attributes);
+            break;
+
+         case RIGHTS:
+         case TITLE:
+         case SUBTITLE:
+         case SUMMARY:
+            startTextConstruct(handler, contextManager, currentElement, attributes);
+            break;
+
+         case AUTHOR:
+            startPersonConstruct(contextManager, currentElement, attributes);
+            break;
+
+         case CATEGORY:
+            startCategory(contextManager, attributes);
+            break;
+
+         case GENERATOR:
+            startGenerator(contextManager, attributes);
+            break;
+
+         case LINK:
+            startLink(contextManager, attributes);
+            break;
+
+         default:
+            return false;
+      }
+
+      return true;
+   }
+
    @Override
    public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
       final AtomElement currentElement = AtomElement.find(asLocalName(qName, localName), AtomElement.ROOT_ELEMENTS);
 
       if (currentElement == null) {
-         // TODO:Implement - Error case. Unknown element...
          return;
       }
 
@@ -68,7 +116,7 @@ public class AtomHandler extends ReaderAwareHandler {
       }
    }
 
-   public static String trimSubstring(StringBuilder sb) {
+   protected static String trimSubstring(StringBuilder sb) {
       int first, last;
 
       for (first = 0; first < sb.length(); first++) {
@@ -200,7 +248,7 @@ public class AtomHandler extends ReaderAwareHandler {
       contextManager.push(AtomElement.GENERATOR, generatorBuilder);
    }
 
-   protected static void startTextConstruct(ReaderAwareHandler self, DocumentContextManager contextManager, AtomElement element, Attributes attributes) {
+   protected static void startTextConstruct(DelegatingHandler self, DocumentContextManager contextManager, AtomElement element, Attributes attributes) {
       final TextConstructBuilder textConstructBuilder = TextConstructBuilder.newBuilder();
 
       textConstructBuilder.setBase(toUri(attributes.getValue("base")));

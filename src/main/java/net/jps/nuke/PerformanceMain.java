@@ -5,7 +5,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import net.jps.nuke.atom.sax.SaxAtomParser;
+import net.jps.nuke.atom.sax.impl.SaxAtomParser;
 import net.jps.nuke.atom.stax.StaxAtomWriter;
 
 /**

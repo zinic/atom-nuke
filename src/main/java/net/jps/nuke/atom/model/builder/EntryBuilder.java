@@ -31,7 +31,6 @@ public class EntryBuilder extends EntryImpl {
       builder.contributors = new LinkedList<Contributor>();
       builder.categories = new LinkedList<Category>();
       builder.links = new LinkedList<Link>();
-      builder.entries = new LinkedList<Entry>();
 
       return builder;
    }
@@ -44,8 +43,6 @@ public class EntryBuilder extends EntryImpl {
       contributors = Collections.unmodifiableList(contributors);
       categories = Collections.unmodifiableList(categories);
       links = Collections.unmodifiableList(links);
-      entries = Collections.unmodifiableList(entries);
-
 
       return this;
    }
@@ -64,10 +61,6 @@ public class EntryBuilder extends EntryImpl {
 
    public void addLink(Link link) {
       links.add(link);
-   }
-
-   public void addEntry(Entry entry) {
-      entries.add(entry);
    }
 
    public void setId(ID id) {

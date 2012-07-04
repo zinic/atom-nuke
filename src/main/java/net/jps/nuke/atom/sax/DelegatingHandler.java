@@ -1,4 +1,4 @@
-package net.jps.nuke.atom.sax.handler;
+package net.jps.nuke.atom.sax;
 
 import org.xml.sax.ContentHandler;
 import org.xml.sax.XMLReader;
@@ -8,34 +8,34 @@ import org.xml.sax.helpers.DefaultHandler;
  *
  * @author zinic
  */
-public abstract class ReaderAwareHandler extends DefaultHandler {
+public abstract class DelegatingHandler extends DefaultHandler {
 
    private final ContentHandler parentHandler;
    private final XMLReader readerInstance;
 
-   public ReaderAwareHandler(XMLReader readerInstance) {
+   public DelegatingHandler(XMLReader readerInstance) {
       this.readerInstance = readerInstance;
       parentHandler = null;
    }
 
-   public ReaderAwareHandler(ReaderAwareHandler parentHandler) {
+   public DelegatingHandler(DelegatingHandler parentHandler) {
       this.parentHandler = parentHandler;
       this.readerInstance = parentHandler.getReader();
    }
 
-   protected boolean hasParent() {
-      return parentHandler != null;
-   }
-   
    protected XMLReader getReader() {
       return readerInstance;
    }
-   
-   protected void delegateTo(ContentHandler handler) {
+
+   public boolean hasParent() {
+      return parentHandler != null;
+   }
+
+   public void delegateTo(ContentHandler handler) {
       readerInstance.setContentHandler(handler);
    }
 
-   protected ContentHandler releaseToParent() {
+   public ContentHandler releaseToParent() {
       delegateTo(parentHandler);
       return parentHandler;
    }

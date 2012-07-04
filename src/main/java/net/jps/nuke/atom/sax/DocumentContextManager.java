@@ -1,7 +1,6 @@
-package net.jps.nuke.atom.sax.handler;
+package net.jps.nuke.atom.sax;
 
 import java.util.Stack;
-import net.jps.nuke.atom.sax.HandlerContext;
 import net.jps.nuke.atom.xml.AtomElement;
 
 /**

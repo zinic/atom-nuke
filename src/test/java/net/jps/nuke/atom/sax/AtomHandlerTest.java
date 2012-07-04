@@ -1,5 +1,6 @@
 package net.jps.nuke.atom.sax;
 
+import net.jps.nuke.atom.sax.impl.SaxAtomParser;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -109,6 +110,15 @@ public class AtomHandlerTest {
          final Result result = getParser().read(new ByteArrayInputStream(feedXml.getBytes()));
 
          assertNotNull(result.getFeed());
+      }
+
+      @Test
+      public void shouldReturnFeedWithEmptyEntry() throws Exception {
+         final String feedXml = "<feed><entry></entry></feed>";
+         final Result result = getParser().read(new ByteArrayInputStream(feedXml.getBytes()));
+
+         assertNotNull(result.getFeed());
+         assertTrue(1 == result.getFeed().entries().size());
       }
 
       @Test

@@ -1,9 +1,6 @@
-package net.jps.nuke.atom.sax.handler;
+package net.jps.nuke.atom.sax.impl;
 
-import java.util.List;
 import net.jps.nuke.atom.ParserResultImpl;
-import net.jps.nuke.atom.model.Category;
-import net.jps.nuke.atom.model.Link;
 import net.jps.nuke.atom.model.builder.CategoryBuilder;
 import net.jps.nuke.atom.model.builder.FeedBuilder;
 import net.jps.nuke.atom.model.builder.GeneratorBuilder;
@@ -12,6 +9,8 @@ import net.jps.nuke.atom.model.builder.LinkBuilder;
 import net.jps.nuke.atom.model.builder.PersonConstructBuilder;
 import net.jps.nuke.atom.model.builder.TextConstructBuilder;
 import net.jps.nuke.atom.model.builder.DateConstructBuilder;
+import net.jps.nuke.atom.model.builder.EntryBuilder;
+import net.jps.nuke.atom.sax.DocumentContextManager;
 import net.jps.nuke.atom.sax.HandlerContext;
 import net.jps.nuke.atom.xml.AtomElement;
 import org.xml.sax.Attributes;
@@ -31,7 +30,7 @@ public class FeedHandler extends AtomHandler {
    public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
       final AtomElement currentElement = AtomElement.find(asLocalName(qName, localName), AtomElement.FEED_ELEMENTS);
 
-      if (currentElement == null) {
+      if (currentElement == null || handleCommonElement(this, contextManager, currentElement, attributes)) {
          return;
       }
 
@@ -40,44 +39,12 @@ public class FeedHandler extends AtomHandler {
             startEntry(this, contextManager, attributes);
             break;
 
-         case AUTHOR:
          case CONTRIBUTOR:
             startPersonConstruct(contextManager, currentElement, attributes);
             break;
 
-         case CATEGORY:
-            startCategory(contextManager, attributes);
-            break;
-
-         case LINK:
-            startLink(contextManager, attributes);
-            break;
-
-         case GENERATOR:
-            startGenerator(contextManager, attributes);
-            break;
-
-         case ID:
-         case ICON:
-         case LOGO:
-            startLangAwareTextElement(contextManager, currentElement, attributes);
-            break;
-
-         case NAME:
-         case EMAIL:
-         case URI:
-            startFieldContentElement(contextManager, currentElement);
-            break;
-
          case UPDATED:
             startDateConstruct(contextManager, currentElement, attributes);
-            break;
-
-         case RIGHTS:
-         case TITLE:
-         case SUBTITLE:
-         case SUMMARY:
-            startTextConstruct(this, contextManager, currentElement, attributes);
             break;
       }
    }
@@ -96,6 +63,10 @@ public class FeedHandler extends AtomHandler {
             endFeed(contextManager, result);
             break;
             
+         case ENTRY:
+            endEntry(contextManager);
+            break;
+
          case AUTHOR:
             endAuthor(contextManager);
             break;
@@ -157,6 +128,11 @@ public class FeedHandler extends AtomHandler {
       result.setFeedBuilder(feedBuilderContext.builder());
    }
 
+   private static void endEntry(DocumentContextManager contextManager) {
+      final HandlerContext<EntryBuilder> entryContext = contextManager.pop(EntryBuilder.class);
+      contextManager.peek(FeedBuilder.class).builder().addEntry(entryContext.builder().build());
+   }
+
    private static void endAuthor(DocumentContextManager contextManager) {
       final HandlerContext<PersonConstructBuilder> personContext = contextManager.pop(PersonConstructBuilder.class);
       contextManager.peek(FeedBuilder.class).builder().addAuthor(personContext.builder().buildAuthor());
@@ -189,16 +165,12 @@ public class FeedHandler extends AtomHandler {
 
    private static void endCategory(DocumentContextManager contextManager) {
       final HandlerContext<CategoryBuilder> category = contextManager.pop(CategoryBuilder.class);
-      final List<Category> categoryList = contextManager.peek(FeedBuilder.class).builder().categories();
-
-      categoryList.add(category.builder().build());
+      contextManager.peek(FeedBuilder.class).builder().addCategory(category.builder().build());
    }
 
    private static void endLink(DocumentContextManager contextManager) {
       final HandlerContext<LinkBuilder> category = contextManager.pop(LinkBuilder.class);
-      final List<Link> linkList = contextManager.peek(FeedBuilder.class).builder().links();
-
-      linkList.add(category.builder().build());
+      contextManager.peek(FeedBuilder.class).builder().addLink(category.builder().build());
    }
 
    private static void endGenerator(DocumentContextManager contextManager) {

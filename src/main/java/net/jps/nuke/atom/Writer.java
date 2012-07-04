@@ -4,7 +4,6 @@ import java.io.OutputStream;
 import javax.xml.stream.XMLStreamException;
 import net.jps.nuke.atom.model.Entry;
 import net.jps.nuke.atom.model.Feed;
-import net.jps.nuke.atom.stax.WriterConfiguration;
 
 /**
  *

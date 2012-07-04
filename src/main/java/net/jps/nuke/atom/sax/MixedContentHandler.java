@@ -1,20 +1,20 @@
-package net.jps.nuke.atom.sax.handler;
+package net.jps.nuke.atom.sax;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 /**
- * Ugh... make this pretty...
+ * TODO: Ugh... make this pretty...
  *
  * @author zinic
  */
-public class MixedContentHandler extends ReaderAwareHandler {
+public class MixedContentHandler extends DelegatingHandler {
 
    private final StringBuilder contentBuilder;
    private int depth;
 
-   public MixedContentHandler(StringBuilder contentBuilder, ReaderAwareHandler parent) {
+   public MixedContentHandler(StringBuilder contentBuilder, DelegatingHandler parent) {
       super(parent);
 
       this.contentBuilder = contentBuilder;

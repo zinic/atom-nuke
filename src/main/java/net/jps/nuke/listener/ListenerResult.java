@@ -6,7 +6,7 @@ import net.jps.nuke.atom.model.Link;
  *
  * @author zinic
  */
-public class ListenerResult {
+public final class ListenerResult {
 
    public static ListenerResult follow(Link linkToFollow) {
       return new ListenerResult("Follow link.", ListenerAction.FOLLOW_LINK, linkToFollow);

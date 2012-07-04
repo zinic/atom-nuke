@@ -25,7 +25,6 @@ public abstract class EntryImpl extends AtomCommonAttributesImpl implements Entr
    protected List<Contributor> contributors;
    protected List<Category> categories;
    protected List<Link> links;
-   protected List<Entry> entries;
    protected ID id;
    protected Rights rights;
    protected Title title;

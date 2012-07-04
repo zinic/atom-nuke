@@ -1,5 +1,6 @@
 package net.jps.nuke.atom.stax;
 
+import net.jps.nuke.atom.WriterConfiguration;
 import net.jps.nuke.atom.Writer;
 import java.io.OutputStream;
 import javax.xml.stream.XMLOutputFactory;
@@ -14,7 +15,7 @@ import net.jps.nuke.atom.model.Feed;
  */
 public class StaxAtomWriter implements Writer {
 
-   private static final WriterConfiguration DEFAULT_CONFIGURATION = new WriterConfiguration(WriterConfiguration.NamespaceLevel.PREFXIED);
+   private static final WriterConfiguration DEFAULT_CONFIGURATION = new WriterConfiguration(WriterConfiguration.NamespaceLevel.NONE);
    
    private final XMLOutputFactory outputFactory;
 

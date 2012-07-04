@@ -10,7 +10,7 @@ import javax.xml.namespace.NamespaceContext;
  *
  * @author zinic
  */
-public class AtomNamespaceContext implements NamespaceContext {
+public final class AtomNamespaceContext implements NamespaceContext {
 
    public static final String XML_NAMESPACE = "http://www.w3.org/XML/1998/namespace";
    public static final String ATOM_NAMESPACE = "http://www.w3.org/2005/Atom";
