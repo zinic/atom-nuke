@@ -59,11 +59,11 @@ public class AtomHandler extends ReaderAwareHandler {
 
       switch (currentElement) {
          case FEED:
-            startFeed(attributes);
+            startFeed(this, contextManager, attributes);
             break;
 
          case ENTRY:
-            startEntry(attributes);
+            startEntry(this, contextManager, attributes);
             break;
       }
    }
@@ -121,6 +121,10 @@ public class AtomHandler extends ReaderAwareHandler {
       }
    }
 
+   public Result getResult() {
+      return result;
+   }
+
    /**
     * Null safe.
     *
@@ -151,36 +155,32 @@ public class AtomHandler extends ReaderAwareHandler {
       return st == null ? null : Type.find(st);
    }
 
-   public Result getResult() {
-      return result;
-   }
-
-   protected void startFieldContentElement(AtomElement element) {
+   protected static void startFieldContentElement(DocumentContextManager contextManager, AtomElement element) {
       final HandlerContext previous = contextManager.peek();
       contextManager.push(element, previous.builder());
    }
 
-   private void startFeed(Attributes attributes) {
+   private static void startFeed(AtomHandler self, DocumentContextManager contextManager, Attributes attributes) {
       final FeedBuilder feedBuilder = FeedBuilder.newBuilder();
 
       feedBuilder.setBase(toUri(attributes.getValue("base")));
       feedBuilder.setLang(attributes.getValue("lang"));
 
       contextManager.push(AtomElement.FEED, feedBuilder);
-      delegateTo(new FeedHandler(this));
+      self.delegateTo(new FeedHandler(self));
    }
 
-   protected void startEntry(Attributes attributes) {
+   protected static void startEntry(AtomHandler self, DocumentContextManager contextManager, Attributes attributes) {
       final EntryBuilder entryBuilder = EntryBuilder.newBuilder();
 
       entryBuilder.setBase(toUri(attributes.getValue("base")));
       entryBuilder.setLang(attributes.getValue("lang"));
 
       contextManager.push(AtomElement.ENTRY, entryBuilder);
-      delegateTo(new EntryHandler(this));
+      self.delegateTo(new EntryHandler(self));
    }
 
-   protected void startPersonConstruct(AtomElement element, Attributes attributes) {
+   protected static void startPersonConstruct(DocumentContextManager contextManager, AtomElement element, Attributes attributes) {
       final PersonConstructBuilder personConstructBuilder = PersonConstructBuilder.newBuilder();
 
       personConstructBuilder.setBase(toUri(attributes.getValue("base")));
@@ -189,7 +189,7 @@ public class AtomHandler extends ReaderAwareHandler {
       contextManager.push(element, personConstructBuilder);
    }
 
-   protected void startGenerator(Attributes attributes) {
+   protected static void startGenerator(DocumentContextManager contextManager, Attributes attributes) {
       final GeneratorBuilder generatorBuilder = GeneratorBuilder.newBuilder();
 
       generatorBuilder.setBase(toUri(attributes.getValue("base")));
@@ -200,7 +200,7 @@ public class AtomHandler extends ReaderAwareHandler {
       contextManager.push(AtomElement.GENERATOR, generatorBuilder);
    }
 
-   protected void startTextConstruct(AtomElement element, Attributes attributes) {
+   protected static void startTextConstruct(ReaderAwareHandler self, DocumentContextManager contextManager, AtomElement element, Attributes attributes) {
       final TextConstructBuilder textConstructBuilder = TextConstructBuilder.newBuilder();
 
       textConstructBuilder.setBase(toUri(attributes.getValue("base")));
@@ -208,10 +208,10 @@ public class AtomHandler extends ReaderAwareHandler {
       textConstructBuilder.setType(toType(attributes.getValue("type")));
 
       contextManager.push(element, textConstructBuilder);
-      delegateTo(new MixedContentHandler(textConstructBuilder.getValueBuilder(), this));
+      self.delegateTo(new MixedContentHandler(textConstructBuilder.getValueBuilder(), self));
    }
 
-   protected void startDateConstruct(AtomElement element, Attributes attributes) {
+   protected static void startDateConstruct(DocumentContextManager contextManager, AtomElement element, Attributes attributes) {
       final DateConstructBuilder dateConstructBuilder = DateConstructBuilder.newBuilder();
 
       dateConstructBuilder.setBase(toUri(attributes.getValue("base")));
@@ -220,7 +220,7 @@ public class AtomHandler extends ReaderAwareHandler {
       contextManager.push(element, dateConstructBuilder);
    }
 
-   protected void startLink(Attributes attributes) {
+   protected static void startLink(DocumentContextManager contextManager, Attributes attributes) {
       final LinkBuilder linkBuilder = LinkBuilder.newBuilder();
 
       linkBuilder.setBase(toUri(attributes.getValue("base")));
@@ -235,7 +235,7 @@ public class AtomHandler extends ReaderAwareHandler {
       contextManager.push(AtomElement.LINK, linkBuilder);
    }
 
-   protected void startCategory(Attributes attributes) {
+   protected static void startCategory(DocumentContextManager contextManager, Attributes attributes) {
       final CategoryBuilder categoryBuilder = CategoryBuilder.newBuilder();
 
       categoryBuilder.setBase(toUri(attributes.getValue("base")));
@@ -247,7 +247,7 @@ public class AtomHandler extends ReaderAwareHandler {
       contextManager.push(AtomElement.CATEGORY, categoryBuilder);
    }
 
-   protected void startLangAwareTextElement(AtomElement element, Attributes attributes) {
+   protected static void startLangAwareTextElement(DocumentContextManager contextManager, AtomElement element, Attributes attributes) {
       final LangAwareTextElementBuilder textElementBuilder = LangAwareTextElementBuilder.newBuilder();
 
       textElementBuilder.setBase(toUri(attributes.getValue("base")));

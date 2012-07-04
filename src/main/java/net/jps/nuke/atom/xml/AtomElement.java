@@ -88,7 +88,7 @@ public enum AtomElement {
 
    public static AtomElement find(String elementName, AtomElement[] elements) {
       for (int i = 0; i < elements.length; i++) {
-         if (elements[i].getElementName().equals(elementName)) {
+         if (elements[i].elementName().equals(elementName)) {
             return elements[i];
          }
       }
@@ -102,7 +102,7 @@ public enum AtomElement {
       this.elementName = elementName;
    }
 
-   public String getElementName() {
+   public String elementName() {
       return elementName;
    }
 }
