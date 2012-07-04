@@ -1,7 +1,5 @@
 package net.jps.nuke.atom.model.impl;
 
-import java.net.URI;
-import java.util.LinkedList;
 import java.util.List;
 import net.jps.nuke.atom.model.Author;
 import net.jps.nuke.atom.model.Category;

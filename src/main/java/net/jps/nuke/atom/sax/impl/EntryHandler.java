@@ -1,9 +1,6 @@
 package net.jps.nuke.atom.sax.impl;
 
-import java.util.List;
 import net.jps.nuke.atom.ParserResultImpl;
-import net.jps.nuke.atom.model.Category;
-import net.jps.nuke.atom.model.Link;
 import net.jps.nuke.atom.model.builder.CategoryBuilder;
 import net.jps.nuke.atom.model.builder.ContentBuilder;
 import net.jps.nuke.atom.model.builder.EntryBuilder;
