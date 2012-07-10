@@ -46,6 +46,6 @@ public final class AtomNamespaceContext implements NamespaceContext {
    }
 
    public Iterator getPrefixes(String namespaceURI) {
-      return Collections.emptyIterator();
+      return Collections.EMPTY_LIST.iterator();
    }
 }
