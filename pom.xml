@@ -13,9 +13,16 @@
    <url>https://github.com/zinic/atom-nuke</url>
 
    <description>
-      Nuke is a simple ATOM implementation built ontop of a SAX parser and a StAX
-      writer designed for simplicity, immutibility and memory efficiency. The
-      project also aspires to maintain a minimal dependency footprint.
+      Nuke is a collection of utilities built on a simple, fast ATOM implementation.
+      
+      The ATOM implementation has its own model and utilizes a SAX parser and a StAX
+      writer. The implementation was designed for immutibility, maximum simplicity 
+      and memory efficiency.
+      
+      Nuke also contains a smart feed crawler implementation that's built ontop of
+      the ATOM implementation.
+      
+      Lastly, the project aspires to maintain a minimal dependency footprint.
    </description>
 
    <properties>
@@ -105,7 +112,7 @@
       <dependency>
          <groupId>com.rackspace.papi.commons</groupId>
          <artifactId>utilities</artifactId>
-         <version>2.1.1</version>
+         <version>2.1.7</version>
       </dependency>
       
       <dependency>

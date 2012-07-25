@@ -8,10 +8,12 @@ import net.jps.nuke.listener.FeedListener;
 import net.jps.nuke.listener.ListenerResult;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.util.concurrent.TimeUnit;
 import net.jps.nuke.atom.model.Entry;
 import net.jps.nuke.atom.model.Feed;
 import net.jps.nuke.atom.model.Link;
 import net.jps.nuke.atom.Writer;
+import net.jps.nuke.util.TimeValue;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
@@ -45,6 +47,12 @@ public class HDFSFeedListener implements FeedListener {
       writeHeader = false;
    }
 
+   @Override
+   public TimeValue listenerInterval() {
+      return new TimeValue(15, TimeUnit.SECONDS);
+   }
+
+   @Override
    public void init() {
       try {
          hdfs = FileSystem.get(configuration);
@@ -57,6 +65,7 @@ public class HDFSFeedListener implements FeedListener {
       }
    }
 
+   @Override
    public void destroy() {
       try {
          fileWriter.close();
@@ -67,6 +76,7 @@ public class HDFSFeedListener implements FeedListener {
       }
    }
 
+   @Override
    public ListenerResult readPage(Feed page) {
       try {
          if (writeHeader) {

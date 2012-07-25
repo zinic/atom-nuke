@@ -1,10 +1,13 @@
 package net.jps.nuke.crawler;
 
+import net.jps.nuke.crawler.task.CrawlerTask;
+import net.jps.nuke.listener.FeedListener;
+
 /**
  *
  * @author zinic
  */
 public interface FeedCrawler {
 
-   void crawl(String origin);
+   CrawlerTask newTask(FeedListener listener, String origin);
 }
