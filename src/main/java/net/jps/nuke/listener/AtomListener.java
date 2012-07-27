@@ -13,7 +13,7 @@ public interface AtomListener {
 
    void destroy() throws AtomListenerException;
 
-   ListenerResult readEntry(Entry entry) throws AtomListenerException;
+   ListenerResult entry(Entry entry) throws AtomListenerException;
 
-   ListenerResult readPage(Feed page) throws AtomListenerException;
+   ListenerResult feedPage(Feed page) throws AtomListenerException;
 }

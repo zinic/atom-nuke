@@ -10,8 +10,8 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import net.jps.nuke.atom.model.Entry;
 import net.jps.nuke.atom.model.Feed;
-import net.jps.nuke.atom.model.Link;
 import net.jps.nuke.atom.Writer;
+import net.jps.nuke.listener.AtomListenerException;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
@@ -45,30 +45,31 @@ public class HDFSFeedListener implements AtomListener {
    }
 
    @Override
-   public void init() {
+   public void init() throws AtomListenerException {
       try {
          hdfs = FileSystem.get(configuration);
 
          writeHeader = !hdfs.exists(targetPath);
          fileWriter = SequenceFile.createWriter(hdfs, configuration, targetPath, Text.class, Text.class);
       } catch (IOException ioe) {
-         ioe.printStackTrace(System.err);
-         throw new RuntimeException(ioe);
+         // TODO:Log
+         throw new AtomListenerException(ioe);
       }
    }
 
    @Override
-   public void destroy() {
+   public void destroy() throws AtomListenerException {
       try {
          fileWriter.close();
          hdfs.close();
       } catch (IOException ioe) {
-         ioe.printStackTrace(System.err);
-         throw new RuntimeException(ioe);
+         // TODO:Log
+         throw new AtomListenerException(ioe);
       }
    }
 
-   public ListenerResult readEntry(Entry entry) {
+   @Override
+   public ListenerResult entry(Entry entry) throws AtomListenerException {
       try {
          final ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
@@ -83,7 +84,7 @@ public class HDFSFeedListener implements AtomListener {
    }
 
    @Override
-   public ListenerResult readPage(Feed page) {
+   public ListenerResult feedPage(Feed page) throws AtomListenerException {
       try {
          if (writeHeader) {
             writeFeedHeader(page);

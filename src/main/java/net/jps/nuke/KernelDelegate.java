@@ -15,6 +15,7 @@ import net.jps.nuke.util.TimeValue;
  */
 public class KernelDelegate implements Runnable {
 
+   private static final long ONE_SECOND_IN_MILLIS = 1000;
    private final CancellationRemote crawlerCancellationRemote;
    private final ExecutionManager executionManager;
    private final List<ManagedTask> crawlerTasks;
@@ -50,30 +51,24 @@ public class KernelDelegate implements Runnable {
             final ManagedTask managedTask = itr.next();
 
             if (!managedTask.canceled()) {
+               final TimeValue nextPollTime = managedTask.nextPollTime();
+
+               // Sould this task be scheduled? If so, is the task already in the execution queue?
+               if (nextPollTime.isLessThan(now) && !executionManager.submitted(managedTask)) {
+                  // If we just scheduled this task to be run then it shouldn't
+                  // be considered for the closest polling time
+
+                  executionManager.submit(managedTask);
+               } else if (closestPollTime == null || closestPollTime.isGreatherThan(nextPollTime)) {
+                  // If the closest polling time is null or later than this task's
+                  // next polling time, it becomes the next time the kernel wakes
+
+                  closestPollTime = nextPollTime;
+               }
+
                // Remove this task from the list copy so it doesn't get removed 
                // from active duty in the cleanup phase of this run method
                itr.remove();
-
-               final TimeValue nextPollTime = managedTask.nextPollTime();
-
-               // Sould this task be scheduled?
-               if (nextPollTime.isLessThan(now)) {
-
-                  // Is the task already in the execution queue?
-                  if (!executionManager.submitted(managedTask)) {
-                     executionManager.submit(managedTask);
-
-                     // If we just scheduled this task to be run then it shouldn't
-                     // be considered for the closest polling time
-                     continue;
-                  }
-               }
-
-               // If the closest polling time is null or later than this task's
-               // next polling time, it becomes the next time the kernel wakes
-               if (closestPollTime == null || closestPollTime.isGreatherThan(nextPollTime)) {
-                  closestPollTime = nextPollTime;
-               }
             }
          }
 
@@ -81,7 +76,7 @@ public class KernelDelegate implements Runnable {
          removeTasks(tasks);
 
          // Sleep till the next polling time or for a couple of milliseconds
-         final long sleepTime = closestPollTime != null ? now.subtract(closestPollTime).value(TimeUnit.MILLISECONDS) : 1000;
+         final long sleepTime = closestPollTime != null ? now.subtract(closestPollTime).value(TimeUnit.MILLISECONDS) : ONE_SECOND_IN_MILLIS;
 
          try {
             // Sleeeeep...

@@ -185,7 +185,7 @@ public class FeedHandler extends AtomHandler {
 
    private static void endTitle(DocumentContextManager contextManager) {
       final HandlerContext<TextConstructBuilder> textConstructContext = contextManager.pop(TextConstructBuilder.class);
-      contextManager.peek(FeedBuilder.class).builder().setTitle(textConstructContext.builder().buildTitle());;
+      contextManager.peek(FeedBuilder.class).builder().setTitle(textConstructContext.builder().buildTitle());
    }
 
    private static void endSubtitle(DocumentContextManager contextManager) {

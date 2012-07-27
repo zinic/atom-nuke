@@ -6,7 +6,6 @@ import net.jps.nuke.NukeKernel;
 import net.jps.nuke.atom.stax.StaxAtomWriter;
 import net.jps.nuke.task.Task;
 import net.jps.nuke.examples.listener.hadoop.HDFSFeedListener;
-import net.jps.nuke.source.crawler.FeedCrawlerSource;
 import net.jps.nuke.source.crawler.FeedCrawlerSourceFactory;
 import net.jps.nuke.util.TimeValue;
 

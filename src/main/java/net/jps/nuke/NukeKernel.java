@@ -27,14 +27,15 @@ public class NukeKernel implements Nuke {
       this(new ThreadPoolExecutor(2, 8, 1, TimeUnit.MINUTES, new LinkedBlockingQueue<Runnable>()));
    }
 
-   public NukeKernel(ExecutorService executorService1) {
+   public NukeKernel(ExecutorService executorService) {
+      this.executorService = executorService;
+      
       crawlerCancellationRemote = new CancellationRemoteImpl();
-      executorService = new ThreadPoolExecutor(2, 8, 1, TimeUnit.MINUTES, new LinkedBlockingQueue<Runnable>());
       logic = new KernelDelegate(crawlerCancellationRemote, new ExecutionManagerImpl(executorService));
-
       controlThread = new Thread(logic);
    }
 
+   @Override
    public void start() {
       if (controlThread.getState() != Thread.State.NEW) {
          throw new IllegalStateException("Crawler already started or destroyed.");

@@ -29,7 +29,8 @@ public class SaxAtomParser implements Reader {
    public SaxAtomParser(SAXParserFactory parserFactoryInst) {
       this.parserFactory = parserFactoryInst;
       this.parserPool = new GenericBlockingResourcePool<SAXParser>(new ConstructionStrategy<SAXParser>() {
-         public SAXParser construct() throws ResourceConstructionException {
+         @Override
+         public SAXParser construct() {
             try {
                return parserFactory.newSAXParser();
             } catch (Exception ex) {
@@ -42,20 +43,19 @@ public class SaxAtomParser implements Reader {
    public Result read(final InputStream source) throws AtomParserException {
       try {
          return parserPool.use(new ResourceContext<SAXParser, Result>() {
-            public Result perform(SAXParser parser) throws ResourceContextException {
+            @Override
+            public Result perform(SAXParser parser) {
                try {
                   final AtomHandler handler = new AtomHandler(parser.getXMLReader());
                   parser.parse(source, handler);
 
                   return handler.getResult();
                } catch (Exception ex) {
-                  ex.printStackTrace();
                   throw new ResourceContextException(ex.getMessage(), ex);
                }
             }
          });
       } catch (Exception e) {
-         e.printStackTrace();
          throw new AtomParserException(e.getMessage(), e.getCause());
       }
    }

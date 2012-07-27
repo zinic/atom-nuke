@@ -51,9 +51,9 @@ public class AtomListenerDriver implements RegisteredListenerDriver {
    private ListenerResult drive(AtomListener listener) {
       try {
          if (feed != null) {
-            return listener.readPage(feed);
+            return listener.feedPage(feed);
          } else if (entry != null) {
-            return listener.readEntry(entry);
+            return listener.entry(entry);
          }
       } catch (Exception ex) {
          // TODO:Log
