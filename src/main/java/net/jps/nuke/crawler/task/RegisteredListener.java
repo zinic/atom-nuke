@@ -1,7 +1,7 @@
 package net.jps.nuke.crawler.task;
 
 import net.jps.nuke.crawler.remote.CancellationRemote;
-import net.jps.nuke.listener.FeedListener;
+import net.jps.nuke.listener.AtomListener;
 
 /**
  *
@@ -10,9 +10,9 @@ import net.jps.nuke.listener.FeedListener;
 public class RegisteredListener {
 
    private final CancellationRemote cancellationRemote;
-   private final FeedListener listener;
+   private final AtomListener listener;
 
-   public RegisteredListener(FeedListener listener, CancellationRemote cancellationRemote) {
+   public RegisteredListener(AtomListener listener, CancellationRemote cancellationRemote) {
       this.cancellationRemote = cancellationRemote;
       this.listener = listener;
    }
@@ -21,7 +21,7 @@ public class RegisteredListener {
       return cancellationRemote;
    }
 
-   public FeedListener listener() {
+   public AtomListener listener() {
       return listener;
    }
 }

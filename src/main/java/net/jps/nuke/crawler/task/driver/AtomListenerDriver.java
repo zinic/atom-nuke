@@ -1,22 +1,33 @@
 package net.jps.nuke.crawler.task.driver;
 
+import net.jps.nuke.atom.model.Entry;
 import net.jps.nuke.atom.model.Feed;
 import net.jps.nuke.crawler.task.RegisteredListener;
-import net.jps.nuke.listener.FeedListener;
+import net.jps.nuke.listener.AtomListener;
 import net.jps.nuke.listener.ListenerResult;
 
 /**
  *
  * @author zinic
  */
-public class NukeFeedListenerDriver implements RegisteredListenerDriver {
+public class AtomListenerDriver implements RegisteredListenerDriver {
 
    private final RegisteredListener registeredListener;
    private final Feed feed;
+   private final Entry entry;
 
-   public NukeFeedListenerDriver(RegisteredListener registeredListener, Feed feed) {
+   public AtomListenerDriver(RegisteredListener registeredListener, Entry entry) {
+      this(registeredListener, null, entry);
+   }
+
+   public AtomListenerDriver(RegisteredListener registeredListener, Feed feed) {
+      this(registeredListener, feed, null);
+   }
+
+   private AtomListenerDriver(RegisteredListener registeredListener, Feed feed, Entry entry) {
       this.registeredListener = registeredListener;
       this.feed = feed;
+      this.entry = entry;
    }
 
    public void run() {
@@ -35,14 +46,20 @@ public class NukeFeedListenerDriver implements RegisteredListenerDriver {
       }
    }
 
-   private ListenerResult drive(FeedListener listener) {
+   private ListenerResult drive(AtomListener listener) {
       try {
-         return feed != null ? listener.readPage(feed) : ListenerResult.halt("Feed document was null.");
+         if (feed != null) {
+            return listener.readPage(feed);
+         } else if (entry != null) {
+            return listener.readEntry(entry);
+         }
       } catch (Exception ex) {
          // TODO:Log
          ex.printStackTrace(System.err);
 
          return ListenerResult.halt(ex.getMessage());
       }
+
+      return ListenerResult.halt("Feed document was null.");
    }
 }

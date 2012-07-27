@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import net.jps.nuke.crawler.remote.CancellationRemote;
 import net.jps.nuke.crawler.remote.CancellationRemoteImpl;
-import net.jps.nuke.listener.FeedListener;
+import net.jps.nuke.listener.AtomListener;
 import net.jps.nuke.util.TimeValue;
 
 /**
@@ -61,7 +61,7 @@ public abstract class CrawlerTaskImpl implements CrawlerTask {
    }
 
    @Override
-   public CancellationRemote addListener(FeedListener listener) {
+   public CancellationRemote addListener(AtomListener listener) {
       final CancellationRemote listenerCancelationRemote = new CancellationRemoteImpl();
       addListener(listener, listenerCancelationRemote);
 
@@ -69,7 +69,7 @@ public abstract class CrawlerTaskImpl implements CrawlerTask {
    }
 
    @Override
-   public synchronized void addListener(FeedListener listener, CancellationRemote listenerCancelationRemote) {
+   public synchronized void addListener(AtomListener listener, CancellationRemote listenerCancelationRemote) {
       assignedListeners.add(new RegisteredListener(listener, listenerCancelationRemote));
    }
 

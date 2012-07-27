@@ -15,7 +15,7 @@ import net.jps.nuke.atom.Result;
 import net.jps.nuke.atom.model.Feed;
 import net.jps.nuke.atom.sax.impl.SaxAtomParser;
 import net.jps.nuke.crawler.task.driver.RegisteredListenerDriver;
-import net.jps.nuke.crawler.task.driver.NukeFeedListenerDriver;
+import net.jps.nuke.crawler.task.driver.AtomListenerDriver;
 import net.jps.nuke.util.TimeValue;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -97,7 +97,7 @@ public class ManagedTaskImpl extends CrawlerTaskImpl implements ManagedTask {
          final Feed nextPage = read(location());
 
          for (RegisteredListener listener : activeListeners()) {
-            final RegisteredListenerDriver listenerDriver = new NukeFeedListenerDriver(listener, nextPage);
+            final RegisteredListenerDriver listenerDriver = new AtomListenerDriver(listener, nextPage);
 
             executorService.submit(listenerDriver);
          }

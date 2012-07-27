@@ -9,5 +9,5 @@ import net.jps.nuke.atom.Writer;
  */
 public interface FeedListenerFactory {
 
-   FeedListener newListener(Reader reader, Writer writer);
+   AtomListener newListener(Reader reader, Writer writer);
 }

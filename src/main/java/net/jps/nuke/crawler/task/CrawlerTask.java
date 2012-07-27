@@ -2,7 +2,7 @@ package net.jps.nuke.crawler.task;
 
 import net.jps.nuke.crawler.remote.CancellationRemote;
 import net.jps.nuke.util.TimeValue;
-import net.jps.nuke.listener.FeedListener;
+import net.jps.nuke.listener.AtomListener;
 
 /**
  *
@@ -24,7 +24,7 @@ public interface CrawlerTask {
 
    TimeValue interval();
 
-   CancellationRemote addListener(FeedListener listener);
+   CancellationRemote addListener(AtomListener listener);
 
-   void addListener(FeedListener listener, CancellationRemote listenerCancelationRemote);
+   void addListener(AtomListener listener, CancellationRemote listenerCancelationRemote);
 }

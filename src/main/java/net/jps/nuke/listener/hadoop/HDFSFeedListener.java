@@ -4,7 +4,7 @@ import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
-import net.jps.nuke.listener.FeedListener;
+import net.jps.nuke.listener.AtomListener;
 import net.jps.nuke.listener.ListenerResult;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -22,12 +22,13 @@ import org.apache.hadoop.io.Text;
  *
  * @author zinic
  */
-public class HDFSFeedListener implements FeedListener {
+public class HDFSFeedListener implements AtomListener {
 
    private final Configuration configuration;
    private final Path targetPath;
    private final String feedName;
    private final Writer writer;
+   
    private SequenceFile.Writer fileWriter;
    private boolean writeHeader;
    private FileSystem hdfs;
@@ -68,6 +69,20 @@ public class HDFSFeedListener implements FeedListener {
       }
    }
 
+   public ListenerResult readEntry(Entry entry) {
+      try {
+         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+         writer.write(baos, entry);
+         append(new Text(entry.id().value()), new Text(baos.toByteArray()));
+      } catch (Exception ioe) {
+         // TODO:Log
+         ioe.printStackTrace(System.err);
+      }
+      
+      return ListenerResult.noAction();
+   }
+
    @Override
    public ListenerResult readPage(Feed page) {
       try {
@@ -82,6 +97,7 @@ public class HDFSFeedListener implements FeedListener {
             append(new Text(e.id().value()), new Text(baos.toByteArray()));
          }
       } catch (Exception ioe) {
+         // TODO:Log
          ioe.printStackTrace(System.err);
       }
 

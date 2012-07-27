@@ -15,6 +15,11 @@ public final class ListenerResult {
    public static ListenerResult halt(String message) {
       return new ListenerResult(message, ListenerAction.HALT, null);
    }
+
+   public static ListenerResult noAction() {
+      return new ListenerResult("No action.", ListenerAction.NO_ACTION, null);
+   }
+   
    private final ListenerAction action;
    private final String message;
    private final Link followLink;
