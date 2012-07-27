@@ -8,6 +8,8 @@ import net.jps.nuke.listener.ListenerResult;
 
 /**
  *
+ * TODO:Refactor - Recompose this into three classes: abstract, feed and entry.
+ *
  * @author zinic
  */
 public class AtomListenerDriver implements RegisteredListenerDriver {
