@@ -9,11 +9,11 @@ import net.jps.nuke.atom.model.Feed;
  */
 public interface AtomListener {
 
-   void init();
+   void init() throws AtomListenerException;
 
-   void destroy();
+   void destroy() throws AtomListenerException;
 
-   ListenerResult readEntry(Entry entry);
+   ListenerResult readEntry(Entry entry) throws AtomListenerException;
 
-   ListenerResult readPage(Feed page);
+   ListenerResult readPage(Feed page) throws AtomListenerException;
 }

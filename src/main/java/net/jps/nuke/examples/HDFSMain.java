@@ -1,11 +1,13 @@
-package net.jps.nuke;
+package net.jps.nuke.examples;
 
 import java.util.concurrent.TimeUnit;
+import net.jps.nuke.Nuke;
+import net.jps.nuke.NukeKernel;
 import net.jps.nuke.atom.stax.StaxAtomWriter;
-import net.jps.nuke.crawler.FeedCrawler;
-import net.jps.nuke.crawler.NukeCrawlerKernel;
-import net.jps.nuke.crawler.task.CrawlerTask;
-import net.jps.nuke.listener.hadoop.HDFSFeedListener;
+import net.jps.nuke.task.Task;
+import net.jps.nuke.examples.listener.hadoop.HDFSFeedListener;
+import net.jps.nuke.source.crawler.FeedCrawlerSource;
+import net.jps.nuke.source.crawler.FeedCrawlerSourceFactory;
 import net.jps.nuke.util.TimeValue;
 
 /**
@@ -31,23 +33,26 @@ public class HDFSMain {
        * 
        */
 
-      // Create the crawler
-      final FeedCrawler crawler = new NukeCrawlerKernel();
+      // Create the nuke kernel
+      final Nuke nuke = new NukeKernel();
 
-      // Start the crawler
-      crawler.start();
+      // Start nuke up
+      nuke.start();
+
+      // We want to crawl feeds in this case so let's register a few crawlers
+      final FeedCrawlerSourceFactory crawlerFactory = new FeedCrawlerSourceFactory();
 
       // Polls for the default of once per minute
-      final CrawlerTask task1 = crawler.follow("http://feed.com/feed1");
+      final Task task1 = nuke.follow(crawlerFactory.newCrawlerSource("http://feed.com/feed1"));
       task1.addListener(listener2);
 
       // Sets the polling interval to five minutes
-      final CrawlerTask task2 = crawler.follow("http://feed.com/feed2", new TimeValue(5, TimeUnit.MINUTES));
+      final Task task2 = nuke.follow(crawlerFactory.newCrawlerSource("http://feed.com/feed2"), new TimeValue(5, TimeUnit.MINUTES));
       task2.addListener(listener);
       task2.addListener(listener2);
 
       // Sets the polling interval to one hour
-      final CrawlerTask task3 = crawler.follow("http://feed.com/feed3", new TimeValue(1, TimeUnit.HOURS));
+      final Task task3 = nuke.follow(crawlerFactory.newCrawlerSource("http://feed.com/feed3"), new TimeValue(1, TimeUnit.HOURS));
       task3.addListener(listener);
    }
 }

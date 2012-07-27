@@ -1,6 +1,6 @@
-package net.jps.nuke.crawler.threading;
+package net.jps.nuke.task.threading;
 
-import net.jps.nuke.crawler.task.ManagedTask;
+import net.jps.nuke.task.ManagedTask;
 import com.rackspace.papi.commons.util.Destroyable;
 
 /**

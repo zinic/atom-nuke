@@ -1,10 +1,11 @@
-package net.jps.nuke.crawler.task;
+package net.jps.nuke.task;
 
+import net.jps.nuke.listener.RegisteredListener;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import net.jps.nuke.crawler.remote.CancellationRemote;
-import net.jps.nuke.crawler.remote.CancellationRemoteImpl;
+import net.jps.nuke.util.remote.CancellationRemote;
+import net.jps.nuke.util.remote.CancellationRemoteImpl;
 import net.jps.nuke.listener.AtomListener;
 import net.jps.nuke.util.TimeValue;
 
@@ -12,33 +13,27 @@ import net.jps.nuke.util.TimeValue;
  *
  * @author zinic
  */
-public abstract class CrawlerTaskImpl implements CrawlerTask {
+public abstract class TaskImpl implements Task {
 
    private final List<RegisteredListener> assignedListeners;
    private final CancellationRemote cancelationRemote;
    private final TimeValue interval;
    private TimeValue timestamp;
-   private String location;
 
-   public CrawlerTaskImpl(TimeValue interval) {
+   public TaskImpl(TimeValue interval) {
       this(interval, new CancellationRemoteImpl());
    }
 
-   public CrawlerTaskImpl(TimeValue interval, CancellationRemote cancelationRemote) {
+   public TaskImpl(TimeValue interval, CancellationRemote cancelationRemote) {
       this.cancelationRemote = cancelationRemote;
       this.assignedListeners = new LinkedList<RegisteredListener>();
 
       this.interval = interval;
       this.timestamp = new TimeValue(0, TimeUnit.MILLISECONDS);
-      this.location = "";
    }
 
    protected void setTimestamp(TimeValue timestamp) {
       this.timestamp = timestamp;
-   }
-
-   protected void setLocation(String location) {
-      this.location = location;
    }
 
    protected List<RegisteredListener> listeners() {
@@ -53,11 +48,6 @@ public abstract class CrawlerTaskImpl implements CrawlerTask {
    @Override
    public void cancel() {
       cancelationRemote.cancel();
-   }
-
-   @Override
-   public String location() {
-      return location;
    }
 
    @Override

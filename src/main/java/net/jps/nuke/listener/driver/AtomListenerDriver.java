@@ -1,8 +1,8 @@
-package net.jps.nuke.crawler.task.driver;
+package net.jps.nuke.listener.driver;
 
 import net.jps.nuke.atom.model.Entry;
 import net.jps.nuke.atom.model.Feed;
-import net.jps.nuke.crawler.task.RegisteredListener;
+import net.jps.nuke.listener.RegisteredListener;
 import net.jps.nuke.listener.AtomListener;
 import net.jps.nuke.listener.ListenerResult;
 

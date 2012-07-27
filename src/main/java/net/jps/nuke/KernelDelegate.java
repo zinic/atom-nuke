@@ -1,25 +1,25 @@
-package net.jps.nuke.crawler;
+package net.jps.nuke;
 
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import net.jps.nuke.crawler.remote.CancellationRemote;
-import net.jps.nuke.crawler.task.ManagedTask;
-import net.jps.nuke.crawler.threading.ExecutionManager;
+import net.jps.nuke.util.remote.CancellationRemote;
+import net.jps.nuke.task.ManagedTask;
+import net.jps.nuke.task.threading.ExecutionManager;
 import net.jps.nuke.util.TimeValue;
 
 /**
  *
  * @author zinic
  */
-public class CrawlerKernelDelegate implements Runnable {
+public class KernelDelegate implements Runnable {
 
    private final CancellationRemote crawlerCancellationRemote;
    private final ExecutionManager executionManager;
    private final List<ManagedTask> crawlerTasks;
 
-   public CrawlerKernelDelegate(CancellationRemote crawlerCancellationRemote, ExecutionManager executionManager) {
+   public KernelDelegate(CancellationRemote crawlerCancellationRemote, ExecutionManager executionManager) {
       this.crawlerCancellationRemote = crawlerCancellationRemote;
       this.executionManager = executionManager;
 

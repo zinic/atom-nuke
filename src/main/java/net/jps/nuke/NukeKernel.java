@@ -1,35 +1,36 @@
-package net.jps.nuke.crawler;
+package net.jps.nuke;
 
 import net.jps.nuke.util.TimeValue;
-import net.jps.nuke.crawler.threading.ExecutionManagerImpl;
-import net.jps.nuke.crawler.task.ManagedTaskImpl;
-import net.jps.nuke.crawler.task.CrawlerTask;
-import net.jps.nuke.crawler.remote.CancellationRemote;
-import net.jps.nuke.crawler.remote.CancellationRemoteImpl;
+import net.jps.nuke.task.threading.ExecutionManagerImpl;
+import net.jps.nuke.task.ManagedTaskImpl;
+import net.jps.nuke.task.Task;
+import net.jps.nuke.util.remote.CancellationRemote;
+import net.jps.nuke.util.remote.CancellationRemoteImpl;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import net.jps.nuke.source.AtomSource;
 
 /**
  *
  * @author zinic
  */
-public class NukeCrawlerKernel implements FeedCrawler {
+public class NukeKernel implements Nuke {
 
    private final CancellationRemote crawlerCancellationRemote;
    private final ExecutorService executorService;
-   private final CrawlerKernelDelegate logic;
+   private final KernelDelegate logic;
    private final Thread controlThread;
 
-   public NukeCrawlerKernel() {
+   public NukeKernel() {
       this(new ThreadPoolExecutor(2, 8, 1, TimeUnit.MINUTES, new LinkedBlockingQueue<Runnable>()));
    }
 
-   public NukeCrawlerKernel(ExecutorService executorService1) {
+   public NukeKernel(ExecutorService executorService1) {
       crawlerCancellationRemote = new CancellationRemoteImpl();
       executorService = new ThreadPoolExecutor(2, 8, 1, TimeUnit.MINUTES, new LinkedBlockingQueue<Runnable>());
-      logic = new CrawlerKernelDelegate(crawlerCancellationRemote, new ExecutionManagerImpl(executorService));
+      logic = new KernelDelegate(crawlerCancellationRemote, new ExecutionManagerImpl(executorService));
 
       controlThread = new Thread(logic);
    }
@@ -55,15 +56,13 @@ public class NukeCrawlerKernel implements FeedCrawler {
    }
 
    @Override
-   public CrawlerTask follow(String location) {
-      return follow(location, new TimeValue(1, TimeUnit.MINUTES));
+   public Task follow(AtomSource source) {
+      return follow(source, new TimeValue(1, TimeUnit.MINUTES));
    }
 
    @Override
-   public CrawlerTask follow(String location, TimeValue pollingInterval) {
-      final ManagedTaskImpl managedTask = new ManagedTaskImpl(pollingInterval, executorService);
-      managedTask.followNow(location);
-
+   public Task follow(AtomSource source, TimeValue pollingInterval) {
+      final ManagedTaskImpl managedTask = new ManagedTaskImpl(pollingInterval, executorService, source);
       logic.addTask(managedTask);
 
       return managedTask;

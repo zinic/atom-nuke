@@ -1,4 +1,4 @@
-package net.jps.nuke.crawler.remote;
+package net.jps.nuke.util.remote;
 
 /**
  *

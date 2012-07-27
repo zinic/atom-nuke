@@ -1,4 +1,4 @@
-package net.jps.nuke.listener.hadoop;
+package net.jps.nuke.examples.listener.hadoop;
 
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
@@ -28,7 +28,6 @@ public class HDFSFeedListener implements AtomListener {
    private final Path targetPath;
    private final String feedName;
    private final Writer writer;
-   
    private SequenceFile.Writer fileWriter;
    private boolean writeHeader;
    private FileSystem hdfs;
@@ -79,8 +78,8 @@ public class HDFSFeedListener implements AtomListener {
          // TODO:Log
          ioe.printStackTrace(System.err);
       }
-      
-      return ListenerResult.noAction();
+
+      return ListenerResult.ok();
    }
 
    @Override
@@ -101,13 +100,7 @@ public class HDFSFeedListener implements AtomListener {
          ioe.printStackTrace(System.err);
       }
 
-      for (Link link : page.links()) {
-         if (link.rel().equals("previous")) {
-            return ListenerResult.follow(link);
-         }
-      }
-
-      return ListenerResult.halt("End of feed.");
+      return ListenerResult.ok();
    }
 
    private void append(String key, String value) throws IOException {

@@ -16,7 +16,7 @@ public final class ListenerResult {
       return new ListenerResult(message, ListenerAction.HALT, null);
    }
 
-   public static ListenerResult noAction() {
+   public static ListenerResult ok() {
       return new ListenerResult("No action.", ListenerAction.NO_ACTION, null);
    }
    

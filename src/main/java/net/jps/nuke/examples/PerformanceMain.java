@@ -1,4 +1,4 @@
-package net.jps.nuke;
+package net.jps.nuke.examples;
 
 import com.rackspace.papi.commons.util.io.RawInputStreamReader;
 import java.io.ByteArrayInputStream;
