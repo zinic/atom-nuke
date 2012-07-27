@@ -30,11 +30,11 @@ By default Nuke comes with an [ATOM source](https://github.com/zinic/atom-nuke/b
 that is useful for crawling feeds. The crawler is designed specifically to work 
 with [AtomHopper](http://atomhopper.org/).
 
+[Using the Feed Crawler](https://github.com/zinic/atom-nuke/blob/master/src/main/java/net/jps/nuke/examples/HDFSMain.java)
+
 ###Other Java Code Exmaples###
 
-[Using the Crawler](https://github.com/zinic/atom-nuke/blob/master/src/main/java/net/jps/nuke/HDFSMain.java)
-
-[HDFS Example Listener](https://github.com/zinic/atom-nuke/blob/master/src/main/java/net/jps/nuke/listener/hadoop/HDFSFeedListener.java)
+[HDFS Example Listener](https://github.com/zinic/atom-nuke/blob/master/src/main/java/net/jps/nuke/examples/listener/hadoop/HDFSFeedListener.java)
 
 ##Features Missing##
 
