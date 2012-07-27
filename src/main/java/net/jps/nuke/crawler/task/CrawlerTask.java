@@ -11,8 +11,8 @@ import net.jps.nuke.listener.FeedListener;
 public interface CrawlerTask {
 
    /**
-    * Cancels the crawler's next execution. This stops all of the listeners assigned
-    * to this crawler.
+    * Cancels the crawler's next execution. This stops all of the listeners
+    * assigned to this crawler.
     */
    void cancel();
 

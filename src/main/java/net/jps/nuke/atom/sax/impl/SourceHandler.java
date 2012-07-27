@@ -36,7 +36,7 @@ public class SourceHandler extends AtomHandler {
       if (currentElement == null) {
          return;
       }
-      
+
       handleCommonElement(this, contextManager, currentElement, attributes);
    }
 

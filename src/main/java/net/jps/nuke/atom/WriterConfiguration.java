@@ -11,7 +11,6 @@ public class WriterConfiguration {
       PREFXIED,
       NONE
    }
-
    private final NamespaceLevel namespaceLevel;
 
    public WriterConfiguration(NamespaceLevel namespaceLevel) {

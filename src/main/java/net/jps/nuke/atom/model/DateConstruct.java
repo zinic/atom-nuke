@@ -17,10 +17,10 @@ public interface DateConstruct extends AtomCommonAtributes {
    Calendar asCalendar();
 
    /**
-    * Returns the string representation of the date construct. This preserves the 
-    * toString method for other features.
-    * 
-    * @return 
+    * Returns the string representation of the date construct. This preserves
+    * the toString method for other features.
+    *
+    * @return
     */
    String asText();
 }

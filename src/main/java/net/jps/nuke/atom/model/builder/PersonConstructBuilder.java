@@ -26,7 +26,7 @@ public class PersonConstructBuilder extends PersonConstructImpl {
    public Contributor buildContributor() {
       return this;
    }
-   
+
    public PersonConstruct build() {
       return this;
    }

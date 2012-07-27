@@ -19,7 +19,7 @@ public abstract class DateConstructImpl extends AtomCommonAttributesImpl impleme
       if (date == null) {
          date = DatatypeConverter.parseDate(dateStringBuilder.toString());
       }
-      
+
       return date;
    }
 

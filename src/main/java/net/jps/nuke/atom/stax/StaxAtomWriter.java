@@ -16,7 +16,6 @@ import net.jps.nuke.atom.model.Feed;
 public class StaxAtomWriter implements Writer {
 
    private static final WriterConfiguration DEFAULT_CONFIGURATION = new WriterConfiguration(WriterConfiguration.NamespaceLevel.NONE);
-   
    private final XMLOutputFactory outputFactory;
 
    public StaxAtomWriter() {

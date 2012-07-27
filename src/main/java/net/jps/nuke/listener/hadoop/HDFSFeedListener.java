@@ -28,7 +28,6 @@ public class HDFSFeedListener implements FeedListener {
    private final Path targetPath;
    private final String feedName;
    private final Writer writer;
-   
    private SequenceFile.Writer fileWriter;
    private boolean writeHeader;
    private FileSystem hdfs;

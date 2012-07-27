@@ -22,7 +22,7 @@ public class CrawlerKernelDelegate implements Runnable {
    public CrawlerKernelDelegate(CancellationRemote crawlerCancellationRemote, ExecutionManager executionManager) {
       this.crawlerCancellationRemote = crawlerCancellationRemote;
       this.executionManager = executionManager;
-      
+
       this.crawlerTasks = new LinkedList<ManagedTask>();
    }
 

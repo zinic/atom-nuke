@@ -20,7 +20,6 @@ public enum Type {
 
       return INVALID;
    }
-   
    private String formattedName;
 
    private Type() {

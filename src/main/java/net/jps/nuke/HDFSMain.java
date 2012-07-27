@@ -33,10 +33,10 @@ public class HDFSMain {
 
       // Create the crawler
       final FeedCrawler crawler = new NukeCrawlerKernel();
-      
+
       // Start the crawler
       crawler.start();
-      
+
       // Polls for the default of once per minute
       final CrawlerTask task1 = crawler.follow("http://feed.com/feed1");
       task1.addListener(listener2);

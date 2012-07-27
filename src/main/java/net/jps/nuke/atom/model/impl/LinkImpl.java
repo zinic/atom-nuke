@@ -14,7 +14,7 @@ public abstract class LinkImpl extends AtomCommonAttributesImpl implements Link 
    protected String hreflang;
    protected String title;
    protected Integer length;
-   
+
    public String href() {
       return href;
    }

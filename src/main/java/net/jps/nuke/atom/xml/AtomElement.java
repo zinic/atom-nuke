@@ -95,7 +95,6 @@ public enum AtomElement {
 
       return null;
    }
-   
    private final String elementName;
 
    private AtomElement(String elementName) {

@@ -62,7 +62,7 @@ public class FeedHandler extends AtomHandler {
          case FEED:
             endFeed(contextManager, result);
             break;
-            
+
          case ENTRY:
             endEntry(contextManager);
             break;

@@ -16,13 +16,11 @@ public final class AtomNamespaceContext implements NamespaceContext {
    public static final String ATOM_NAMESPACE = "http://www.w3.org/2005/Atom";
    public static final String XML_PREFIX = "xml";
    public static final String ATOM_PREFIX = "atom";
-   
    private static final AtomNamespaceContext INSTANCE = new AtomNamespaceContext();
 
    public static NamespaceContext instance() {
       return INSTANCE;
    }
-   
    private final Map<String, String> uriToPrefixMap;
    private final Map<String, String> prefixToUriMap;
 
