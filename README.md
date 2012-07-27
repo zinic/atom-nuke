@@ -1,23 +1,36 @@
 #Nuke#
-###The Fast, Simple ATOM Implementation###
+###The Fast, Simple ATOM Framework###
 
 ##What is it?##
 
-Nuke is a collection of utilities built on a simple, fast ATOM implementation.
+Nuke is a collection of utilities built on a simple, fast ATOM implementation
+that aims for a minimal dependency footprint.
 
 The ATOM implementation has its own model and utilizes a SAX parser and a StAX
-writer. The implementation was designed for immutibility, maximum simplicity 
+writer. The implementation was designed for immutability, maximum simplicity 
 and memory efficiency.
 
-Nuke also contains a smart ATOM feed crawler implementation that's built ontop of
-the ATOM implementation. The ATOM feed crawler is designed specifically to work 
-with [AtomHopper](http://atomhopper.org/).
+Nuke also contains a polling event framework that can poll multiple sources. Each
+source may be registered will a configured polling interval that will govern how
+often the source is polled during normal operation.
 
-Lastly, the project aspires to maintain a minimal dependency footprint.
+Task polling uses the configured interval in two cases:
+* If a feed page encountered has zero entries in it.
+* When reading individual ATOM entries.
+
+Each source registered in Nuke may have any number of [ATOM listeners](https://github.com/zinic/atom-nuke/blob/master/src/main/java/net/jps/nuke/listener/AtomListener.java)
+added to its dispatch list. These listeners will begin receiving events on the
+next scheduled poll.
 
 ##How do I use it?##
 
-###Java Code Exmaples###
+###Feed Crawler###
+
+By default Nuke comes with an [ATOM source](https://github.com/zinic/atom-nuke/blob/master/src/main/java/net/jps/nuke/source/AtomSource.java)
+that is useful for crawling feeds. The crawler is designed specifically to work 
+with [AtomHopper](http://atomhopper.org/).
+
+###Other Java Code Exmaples###
 
 [Using the Crawler](https://github.com/zinic/atom-nuke/blob/master/src/main/java/net/jps/nuke/HDFSMain.java)
 

@@ -1,7 +1,6 @@
 package net.jps.nuke.listener;
 
 import net.jps.nuke.util.remote.CancellationRemote;
-import net.jps.nuke.listener.AtomListener;
 
 /**
  *
