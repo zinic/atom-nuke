@@ -53,6 +53,17 @@ public class TimeValue implements Comparable<TimeValue> {
       return new TimeValue(otherTimeValue.value(unit()) + value(), unit());
    }
    
+   /**
+    * Subtracts the time value from this value and returns the result. This method does
+    * not mutate object state.
+    * 
+    * @param otherTimeValue
+    * @return 
+    */
+   public TimeValue subtract(TimeValue otherTimeValue) {
+      return new TimeValue(otherTimeValue.value(unit()) - value(), unit());
+   }
+   
    public boolean isGreatherThan(TimeValue otherTimeValue) {
       return compareTo(otherTimeValue) > 0;
    }

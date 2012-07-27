@@ -1,13 +1,18 @@
 package net.jps.nuke.crawler;
 
+import com.rackspace.papi.commons.util.Destroyable;
 import net.jps.nuke.crawler.task.CrawlerTask;
-import net.jps.nuke.listener.FeedListener;
+import net.jps.nuke.util.TimeValue;
 
 /**
  *
  * @author zinic
  */
-public interface FeedCrawler {
+public interface FeedCrawler extends Destroyable {
 
-   CrawlerTask newTask(FeedListener listener, String origin);
+   void start();
+
+   CrawlerTask follow(String origin);
+
+   CrawlerTask follow(String origin, TimeValue pollingInterval);
 }

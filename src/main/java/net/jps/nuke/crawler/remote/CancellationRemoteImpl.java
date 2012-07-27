@@ -4,11 +4,11 @@ package net.jps.nuke.crawler.remote;
  *
  * @author zinic
  */
-public class CancelationRemoteImpl implements CancelationRemote {
+public class CancellationRemoteImpl implements CancellationRemote {
 
    private boolean canceled;
 
-   public CancelationRemoteImpl() {
+   public CancellationRemoteImpl() {
       canceled = false;
    }
 

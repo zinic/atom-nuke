@@ -1,7 +1,6 @@
 package net.jps.nuke.listener;
 
 import net.jps.nuke.atom.model.Feed;
-import net.jps.nuke.util.TimeValue;
 
 /**
  *
@@ -14,6 +13,4 @@ public interface FeedListener {
    void destroy();
 
    ListenerResult readPage(Feed page);
-   
-   TimeValue listenerInterval();
 }

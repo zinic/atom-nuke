@@ -1,10 +1,12 @@
 package net.jps.nuke.crawler.task;
 
-import net.jps.nuke.crawler.remote.CancelationRemote;
-import net.jps.nuke.crawler.remote.CancelationRemoteImpl;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
-import net.jps.nuke.util.TimeValue;
+import net.jps.nuke.crawler.remote.CancellationRemote;
+import net.jps.nuke.crawler.remote.CancellationRemoteImpl;
 import net.jps.nuke.listener.FeedListener;
+import net.jps.nuke.util.TimeValue;
 
 /**
  *
@@ -12,21 +14,35 @@ import net.jps.nuke.listener.FeedListener;
  */
 public abstract class CrawlerTaskImpl implements CrawlerTask {
 
-   private final CancelationRemote cancelationRemote;
-   private final FeedListener listener;
+   private final List<RegisteredListener> assignedListeners;
+   private final CancellationRemote cancelationRemote;
+   private final TimeValue interval;
    private TimeValue timestamp;
    private String location;
 
-   public CrawlerTaskImpl(FeedListener listener) {
-      this(new CancelationRemoteImpl(), listener);
+   public CrawlerTaskImpl(TimeValue interval) {
+      this(interval, new CancellationRemoteImpl());
    }
 
-   public CrawlerTaskImpl(CancelationRemote cancelationRemote, FeedListener listener) {
+   public CrawlerTaskImpl(TimeValue interval, CancellationRemote cancelationRemote) {
       this.cancelationRemote = cancelationRemote;
-      this.listener = listener;
+      this.assignedListeners = new LinkedList<RegisteredListener>();
 
+      this.interval = interval;
       this.timestamp = new TimeValue(0, TimeUnit.MILLISECONDS);
       this.location = "";
+   }
+
+   protected void setTimestamp(TimeValue timestamp) {
+      this.timestamp = timestamp;
+   }
+
+   protected void setLocation(String location) {
+      this.location = location;
+   }
+
+   protected List<RegisteredListener> listeners() {
+      return assignedListeners;
    }
 
    @Override
@@ -45,18 +61,25 @@ public abstract class CrawlerTaskImpl implements CrawlerTask {
    }
 
    @Override
-   public FeedListener listener() {
-      return listener;
+   public CancellationRemote addListener(FeedListener listener) {
+      final CancellationRemote listenerCancelationRemote = new CancellationRemoteImpl();
+      addListener(listener, listenerCancelationRemote);
+
+      return listenerCancelationRemote;
+   }
+
+   @Override
+   public synchronized void addListener(FeedListener listener, CancellationRemote listenerCancelationRemote) {
+      assignedListeners.add(new RegisteredListener(listener, listenerCancelationRemote));
+   }
+
+   @Override
+   public TimeValue interval() {
+      return interval;
    }
 
    @Override
    public TimeValue nextPollTime() {
-      return timestamp.add(listener.listenerInterval());
-   }
-
-   @Override
-   public void nextLocation(String location) {
-      this.timestamp = TimeValue.now();
-      this.location = location;
+      return timestamp.add(interval());
    }
 }

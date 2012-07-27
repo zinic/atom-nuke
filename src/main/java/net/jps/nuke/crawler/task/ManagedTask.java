@@ -1,13 +1,16 @@
 package net.jps.nuke.crawler.task;
 
-import net.jps.nuke.crawler.task.CrawlerTask;
 import java.util.UUID;
 
 /**
  *
  * @author zinic
  */
-public interface ManagedTask extends CrawlerTask {
+public interface ManagedTask extends CrawlerTask, Runnable {
 
    UUID id();
+
+   void followNow(String location);
+
+   void followLater(String location);
 }

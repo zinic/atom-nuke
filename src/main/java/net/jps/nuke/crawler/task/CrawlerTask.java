@@ -1,5 +1,6 @@
 package net.jps.nuke.crawler.task;
 
+import net.jps.nuke.crawler.remote.CancellationRemote;
 import net.jps.nuke.util.TimeValue;
 import net.jps.nuke.listener.FeedListener;
 
@@ -10,17 +11,20 @@ import net.jps.nuke.listener.FeedListener;
 public interface CrawlerTask {
 
    /**
-    * Cancels the crawler's next execution.
+    * Cancels the crawler's next execution. This stops all of the listeners assigned
+    * to this crawler.
     */
    void cancel();
 
    boolean canceled();
 
-   void nextLocation(String location);
-
    String location();
 
-   FeedListener listener();
-
    TimeValue nextPollTime();
+
+   TimeValue interval();
+
+   CancellationRemote addListener(FeedListener listener);
+
+   void addListener(FeedListener listener, CancellationRemote listenerCancelationRemote);
 }

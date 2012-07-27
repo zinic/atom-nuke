@@ -4,7 +4,7 @@ package net.jps.nuke.crawler.remote;
  *
  * @author zinic
  */
-public interface CancelationRemote {
+public interface CancellationRemote {
 
    void cancel();
 

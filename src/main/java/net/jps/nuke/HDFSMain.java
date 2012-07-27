@@ -1,9 +1,12 @@
 package net.jps.nuke;
 
+import java.util.concurrent.TimeUnit;
 import net.jps.nuke.atom.stax.StaxAtomWriter;
 import net.jps.nuke.crawler.FeedCrawler;
-import net.jps.nuke.crawler.NukeCrawlerController;
+import net.jps.nuke.crawler.NukeCrawlerKernel;
+import net.jps.nuke.crawler.task.CrawlerTask;
 import net.jps.nuke.listener.hadoop.HDFSFeedListener;
+import net.jps.nuke.util.TimeValue;
 
 /**
  *
@@ -12,7 +15,8 @@ import net.jps.nuke.listener.hadoop.HDFSFeedListener;
 public class HDFSMain {
 
    public static void main(String[] args) throws Exception {
-      final HDFSFeedListener listener = new HDFSFeedListener("feed-name", new StaxAtomWriter());
+      final HDFSFeedListener listener = new HDFSFeedListener("example-1.feed", new StaxAtomWriter());
+      final HDFSFeedListener listener2 = new HDFSFeedListener("example-2.feed", new StaxAtomWriter());
 
       /*
        * Still todo...
@@ -27,11 +31,23 @@ public class HDFSMain {
        * 
        */
 
-      final FeedCrawler crawler = new NukeCrawlerController();
+      // Create the crawler
+      final FeedCrawler crawler = new NukeCrawlerKernel();
+      
+      // Start the crawler
+      crawler.start();
+      
+      // Polls for the default of once per minute
+      final CrawlerTask task1 = crawler.follow("http://feed.com/feed1");
+      task1.addListener(listener2);
 
-      crawler.newTask(listener, "http://feed.com/feed1");
-      crawler.newTask(listener, "http://feed.com/feed2");
-      crawler.newTask(listener, "http://feed.com/feed3");
-      crawler.newTask(listener, "http://feed.com/feed4");
+      // Sets the polling interval to five minutes
+      final CrawlerTask task2 = crawler.follow("http://feed.com/feed2", new TimeValue(5, TimeUnit.MINUTES));
+      task2.addListener(listener);
+      task2.addListener(listener2);
+
+      // Sets the polling interval to one hour
+      final CrawlerTask task3 = crawler.follow("http://feed.com/feed3", new TimeValue(1, TimeUnit.HOURS));
+      task3.addListener(listener);
    }
 }
