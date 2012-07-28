@@ -18,9 +18,27 @@ public class EventGeneratorMain {
       final Nuke nukeInstance = new NukeKernel();
       nukeInstance.start();
       
-      final Task task1 = nukeInstance.follow(new EventGeneratorImpl(true), new TimeValue(1, TimeUnit.NANOSECONDS));
+      final Task task1 = nukeInstance.follow(new EventGeneratorImpl(true), new TimeValue(1, TimeUnit.MILLISECONDS));
       task1.addListener(new PrintStreamOutputListener(System.out, "Task 1 - Listener 1"));
-
+      task1.addListener(new PrintStreamOutputListener(System.out, "Task 1 - Listener 2"));
+      task1.addListener(new PrintStreamOutputListener(System.out, "Task 1 - Listener 3"));
+      task1.addListener(new PrintStreamOutputListener(System.out, "Task 1 - Listener 4"));
+      task1.addListener(new PrintStreamOutputListener(System.out, "Task 1 - Listener 5"));
+      
+      final Task task2 = nukeInstance.follow(new EventGeneratorImpl(true), new TimeValue(1, TimeUnit.MICROSECONDS));
+      task2.addListener(new PrintStreamOutputListener(System.out, "Task 2 - Listener 1"));
+      task2.addListener(new PrintStreamOutputListener(System.out, "Task 2 - Listener 2"));
+      task2.addListener(new PrintStreamOutputListener(System.out, "Task 2 - Listener 3"));
+      task2.addListener(new PrintStreamOutputListener(System.out, "Task 2 - Listener 4"));
+      task2.addListener(new PrintStreamOutputListener(System.out, "Task 2 - Listener 5"));
+      
+      final Task task3 = nukeInstance.follow(new EventGeneratorImpl(true), new TimeValue(1, TimeUnit.NANOSECONDS));
+      task3.addListener(new PrintStreamOutputListener(System.out, "Task 3 - Listener 1"));
+      task3.addListener(new PrintStreamOutputListener(System.out, "Task 3 - Listener 2"));
+      task3.addListener(new PrintStreamOutputListener(System.out, "Task 3 - Listener 3"));
+      task3.addListener(new PrintStreamOutputListener(System.out, "Task 3 - Listener 4"));
+      task3.addListener(new PrintStreamOutputListener(System.out, "Task 3 - Listener 5"));
+      
       Thread.sleep(50000);
    }
 }
