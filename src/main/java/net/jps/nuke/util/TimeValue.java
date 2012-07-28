@@ -69,7 +69,7 @@ public class TimeValue implements Comparable<TimeValue> {
       return new TimeValue(myNanos - theirNanos, TimeUnit.NANOSECONDS);
    }
 
-   public boolean isGreatherThan(TimeValue otherTimeValue) {
+   public boolean isGreaterThan(TimeValue otherTimeValue) {
       return compareTo(otherTimeValue) > 0;
    }
 

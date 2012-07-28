@@ -43,18 +43,10 @@ public class KernelDelegate implements Runnable {
       return new LinkedList<ManagedTask>(crawlerTasks);
    }
    
-//   long iterations = 0;
-
    @Override
    public void run() {
       // Run until canceled
       while (!crawlerCancellationRemote.canceled()) {
-//         iterations++;
-
-//         if (iterations % 10000 == 0) {
-//            System.out.println("Polled 10,000 more times...");
-//         }
-
          final List<ManagedTask> tasks = copyTasks();
          final TimeValue now = TimeValue.now();
          TimeValue closestPollTime = null;
@@ -65,17 +57,15 @@ public class KernelDelegate implements Runnable {
             if (!managedTask.canceled()) {
                final TimeValue nextPollTime = managedTask.nextPollTime();
 
-//               System.out.println("Now:" + now + "Next poll time: " + nextPollTime + " - Should schedule: " + nextPollTime.isLessThan(now));
-
                // Sould this task be scheduled? If so, is the task already in the execution queue?
-               if (nextPollTime.isLessThan(now)) {
+               if (now.isGreaterThan(nextPollTime)) {
                   
                   // If we just scheduled this task to be run then it shouldn't
                   // be considered for the closest polling time
                   if (!executionManager.submitted(managedTask)) {
                      executionManager.submit(managedTask);
                   }
-               } else if (closestPollTime == null || closestPollTime.isGreatherThan(nextPollTime)) {
+               } else if (closestPollTime == null || closestPollTime.isGreaterThan(nextPollTime)) {
                   // If the closest polling time is null or later than this task's
                   // next polling time, it becomes the next time the kernel wakes
 
@@ -88,10 +78,6 @@ public class KernelDelegate implements Runnable {
             }
          }
          
-//         if (closestPollTime == null) {
-//            System.out.println("null");
-//         }
-
          // Remove canceled tasks
          removeTasks(tasks);
 
@@ -99,8 +85,6 @@ public class KernelDelegate implements Runnable {
          final TimeValue sleepTime = closestPollTime != null ? now.subtract(closestPollTime) : ZERO_NANOSECONDS;
 
          if (sleepTime.value() > 0) {
-//            System.out.println("Now: " + now + " - Closest polling time was: " + closestPollTime + " - Sleeps for: " + sleepTime);
-
             try {
                // Sleeeeep...
                sleepTime.sleep();

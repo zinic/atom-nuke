@@ -41,7 +41,7 @@ public class PrintStreamOutputListener implements AtomListener {
       final long nowInMillis = System.currentTimeMillis();
 
       if (events % 1000 == 0) {
-         out.println((nowInMillis - creationTime) + "ms elapsed. Events received: " + events + " - Events per ms: " + (events / (nowInMillis - creationTime)));
+         out.println((nowInMillis - creationTime) + "ms elapsed. Events received: " + events + " - Events per 10ms: " + (events / ((nowInMillis - creationTime) / 10)));
       }
    }
 
