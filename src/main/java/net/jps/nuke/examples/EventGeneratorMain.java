@@ -20,18 +20,7 @@ public class EventGeneratorMain {
       
       final Task task1 = nukeInstance.follow(new EventGeneratorImpl(true), new TimeValue(1, TimeUnit.NANOSECONDS));
       task1.addListener(new PrintStreamOutputListener(System.out, "Task 1 - Listener 1"));
-//      task1.addListener(new PrintStreamOutputListener(System.out, "Task 1 - Listener 2"));
-//      task1.addListener(new PrintStreamOutputListener(System.out, "Task 1 - Listener 3"));
-//      task1.addListener(new PrintStreamOutputListener(System.out, "Task 1 - Listener 4"));
-//      task1.addListener(new PrintStreamOutputListener(System.out, "Task 1 - Listener 5"));
-//      
-//      final Task task2 = nukeInstance.follow(new EventGeneratorImpl(true), new TimeValue(1, TimeUnit.MILLISECONDS));
-//      task2.addListener(new PrintStreamOutputListener(System.out, "Task 2 - Listener 1"));
-//      task2.addListener(new PrintStreamOutputListener(System.out, "Task 2 - Listener 2"));
-//      task2.addListener(new PrintStreamOutputListener(System.out, "Task 2 - Listener 3"));
-//      task2.addListener(new PrintStreamOutputListener(System.out, "Task 2 - Listener 4"));
-//      task2.addListener(new PrintStreamOutputListener(System.out, "Task 2 - Listener 5"));
-      
+
       Thread.sleep(50000);
    }
 }

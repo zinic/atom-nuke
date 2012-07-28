@@ -30,11 +30,21 @@ By default Nuke comes with an [ATOM source](https://github.com/zinic/atom-nuke/b
 that is useful for crawling feeds. The crawler is designed specifically to work 
 with [AtomHopper](http://atomhopper.org/).
 
-[Using the Feed Crawler](https://github.com/zinic/atom-nuke/blob/master/src/main/java/net/jps/nuke/examples/HDFSMain.java)
+* [Using the Feed Crawler](https://github.com/zinic/atom-nuke/blob/master/src/main/java/net/jps/nuke/examples/HDFSMain.java)
+
+###As an Event Bus###
+
+Nuke contains a high performance event dispatch kernel that's backed by an
+execution pool. The Nuke kernel supports nanosecond polling granularity.
+
+* [Using an event generator](https://github.com/zinic/atom-nuke/blob/master/src/main/java/net/jps/nuke/examples/EventGeneratorMain.java)
+
+For more information see the [Nuke kernel](https://github.com/zinic/atom-nuke/blob/master/src/main/java/net/jps/nuke/NukeKernel.java)
+and the [Nuke kernel run delegate](https://github.com/zinic/atom-nuke/blob/master/src/main/java/net/jps/nuke/KernelDelegate.java).
 
 ###Other Java Code Exmaples###
 
-[HDFS Example Listener](https://github.com/zinic/atom-nuke/blob/master/src/main/java/net/jps/nuke/examples/listener/hadoop/HDFSFeedListener.java)
+* [HDFS Example Listener](https://github.com/zinic/atom-nuke/blob/master/src/main/java/net/jps/nuke/examples/listener/hadoop/HDFSFeedListener.java)
 
 ##Features Missing##
 
