@@ -1,5 +1,5 @@
 #Nuke#
-###The Fast, Simple ATOM Framework###
+###The Fast ATOM Framework###
 
 ##What is it?##
 
