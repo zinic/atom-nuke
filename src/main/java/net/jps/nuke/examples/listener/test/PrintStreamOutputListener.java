@@ -15,7 +15,7 @@ import net.jps.nuke.listener.ListenerResult;
 public class PrintStreamOutputListener implements AtomListener {
 
    private final PrintStream out;
-   private final String msg;
+   private String msg;
    private long creationTime;
    private AtomicLong atomicLong;
 
@@ -41,7 +41,7 @@ public class PrintStreamOutputListener implements AtomListener {
       final long nowInMillis = System.currentTimeMillis();
 
       if (events % 1000 == 0) {
-         out.println((nowInMillis - creationTime) + "ms elapsed. Events received: " + events + " - Events per 10ms: " + (events / ((nowInMillis - creationTime) / 10)));
+         out.println((nowInMillis - creationTime) + "ms elapsed. Events received: " + events + " - Events per 10ms: " + (events / ((nowInMillis - creationTime) / 10)) + " - (" + msg + ")");
       }
    }
 
