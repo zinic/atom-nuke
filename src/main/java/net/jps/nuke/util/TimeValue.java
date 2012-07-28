@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit;
 public class TimeValue implements Comparable<TimeValue> {
 
    public static TimeValue now() {
-      return new TimeValue(System.currentTimeMillis(), TimeUnit.MILLISECONDS);
+      return new TimeValue(System.nanoTime(), TimeUnit.NANOSECONDS);
    }
 
    public static TimeValue now(TimeUnit unit) {
@@ -49,7 +49,10 @@ public class TimeValue implements Comparable<TimeValue> {
     * @return
     */
    public TimeValue add(TimeValue otherTimeValue) {
-      return new TimeValue(otherTimeValue.value(unit()) + value(), unit());
+      final long myNanos = value(TimeUnit.NANOSECONDS);
+      final long theirNanos = otherTimeValue.value(TimeUnit.NANOSECONDS);
+
+      return new TimeValue(myNanos + theirNanos, TimeUnit.NANOSECONDS);
    }
 
    /**
@@ -60,7 +63,10 @@ public class TimeValue implements Comparable<TimeValue> {
     * @return
     */
    public TimeValue subtract(TimeValue otherTimeValue) {
-      return new TimeValue(otherTimeValue.value(unit()) - value(), unit());
+      final long myNanos = value(TimeUnit.NANOSECONDS);
+      final long theirNanos = otherTimeValue.value(TimeUnit.NANOSECONDS);
+
+      return new TimeValue(myNanos - theirNanos, TimeUnit.NANOSECONDS);
    }
 
    public boolean isGreatherThan(TimeValue otherTimeValue) {
@@ -71,10 +77,15 @@ public class TimeValue implements Comparable<TimeValue> {
       return compareTo(otherTimeValue) < 0;
    }
 
-   public int compareTo(TimeValue otherTimeValue) {
-      final long compareValue = value(otherTimeValue.unit()) - otherTimeValue.value();
+   public void sleep() throws InterruptedException {
+      unit().sleep(value);
+   }
 
-      return compareValue > 0 ? 1 : compareValue < 0 ? -1 : 0;
+   @Override
+   public int compareTo(TimeValue otherTimeValue) {
+      final TimeValue compareValue = subtract(otherTimeValue);
+
+      return compareValue.value() > 0 ? 1 : compareValue.value() < 0 ? -1 : 0;
    }
 
    @Override
@@ -94,5 +105,10 @@ public class TimeValue implements Comparable<TimeValue> {
       }
 
       return false;
+   }
+
+   @Override
+   public String toString() {
+      return "TimeValue{" + "unit=" + unit + ", value=" + value + '}';
    }
 }

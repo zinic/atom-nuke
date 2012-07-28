@@ -29,7 +29,7 @@ public abstract class TaskImpl implements Task {
       this.assignedListeners = new LinkedList<RegisteredListener>();
 
       this.interval = interval;
-      this.timestamp = new TimeValue(0, TimeUnit.MILLISECONDS);
+      this.timestamp = TimeValue.now();
    }
 
    protected void setTimestamp(TimeValue timestamp) {
@@ -70,6 +70,8 @@ public abstract class TaskImpl implements Task {
 
    @Override
    public TimeValue nextPollTime() {
+//      System.out.println("Interval: " + interval + " - Timestamp: " + timestamp + " - Addition Result: " + timestamp.add(interval()));
+      
       return timestamp.add(interval());
    }
 }

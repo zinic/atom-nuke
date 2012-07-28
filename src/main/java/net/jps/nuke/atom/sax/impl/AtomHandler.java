@@ -1,7 +1,7 @@
 package net.jps.nuke.atom.sax.impl;
 
 import java.net.URI;
-import net.jps.nuke.atom.Result;
+import net.jps.nuke.atom.ParserResult;
 import net.jps.nuke.atom.ParserResultImpl;
 import net.jps.nuke.atom.model.Type;
 import net.jps.nuke.atom.model.builder.CategoryBuilder;
@@ -169,7 +169,7 @@ public class AtomHandler extends DelegatingHandler {
       }
    }
 
-   public Result getResult() {
+   public ParserResult getResult() {
       return result;
    }
 

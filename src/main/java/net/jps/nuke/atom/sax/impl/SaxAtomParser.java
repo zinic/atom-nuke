@@ -10,7 +10,7 @@ import java.io.InputStream;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import net.jps.nuke.atom.AtomParserException;
-import net.jps.nuke.atom.Result;
+import net.jps.nuke.atom.ParserResult;
 import net.jps.nuke.atom.Reader;
 
 /**
@@ -40,11 +40,11 @@ public class SaxAtomParser implements Reader {
       });
    }
 
-   public Result read(final InputStream source) throws AtomParserException {
+   public ParserResult read(final InputStream source) throws AtomParserException {
       try {
-         return parserPool.use(new ResourceContext<SAXParser, Result>() {
+         return parserPool.use(new ResourceContext<SAXParser, ParserResult>() {
             @Override
-            public Result perform(SAXParser parser) {
+            public ParserResult perform(SAXParser parser) {
                try {
                   final AtomHandler handler = new AtomHandler(parser.getXMLReader());
                   parser.parse(source, handler);

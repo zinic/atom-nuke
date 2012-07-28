@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.TimeUnit;
 import net.jps.nuke.util.remote.CancellationRemoteImpl;
 import net.jps.nuke.source.AtomSource;
 import net.jps.nuke.source.AtomSourceResult;
@@ -24,7 +25,7 @@ public class ManagedTaskImpl extends TaskImpl implements ManagedTask {
    private final UUID id;
 
    public ManagedTaskImpl(TimeValue interval, ExecutorService executorService, AtomSource atomSource) {
-      super(interval, new CancellationRemoteImpl());
+      super(interval.convert(TimeUnit.NANOSECONDS), new CancellationRemoteImpl());
 
       this.executorService = executorService;
       this.atomSource = atomSource;
@@ -50,9 +51,9 @@ public class ManagedTaskImpl extends TaskImpl implements ManagedTask {
    /**
     * Returns true if the poll result was either an ATOM entry or an ATOM feed
     * page with zero entries in it.
-    * 
+    *
     * @param pollResult
-    * @return 
+    * @return
     */
    private static boolean shouldUpdateTimestamp(AtomSourceResult pollResult) {
       return !pollResult.isFeedPage() || pollResult.feed().entries().isEmpty();
@@ -60,29 +61,34 @@ public class ManagedTaskImpl extends TaskImpl implements ManagedTask {
 
    @Override
    public void run() {
-      try {
-         final AtomSourceResult pollResult = atomSource.poll();
+      final List<RegisteredListener> activeListeners = activeListeners();
 
-         for (RegisteredListener listener : activeListeners()) {
-            RegisteredListenerDriver listenerDriver;
+      // Only poll if we have listeners
+      if (!activeListeners.isEmpty()) {
+         try {
+            final AtomSourceResult pollResult = atomSource.poll();
 
-            if (pollResult.isFeedPage()) {
-               listenerDriver = new AtomListenerDriver(listener, pollResult.feed());
-            } else {
-               listenerDriver = new AtomListenerDriver(listener, pollResult.entry());
+            for (RegisteredListener listener : activeListeners()) {
+               RegisteredListenerDriver listenerDriver;
+
+               if (pollResult.isFeedPage()) {
+                  listenerDriver = new AtomListenerDriver(listener, pollResult.feed());
+               } else {
+                  listenerDriver = new AtomListenerDriver(listener, pollResult.entry());
+               }
+
+               executorService.submit(listenerDriver);
             }
 
-            executorService.submit(listenerDriver);
+            // Updating our timestamp will mean waiting our scheduled interval until
+            // next polling interval
+            if (shouldUpdateTimestamp(pollResult)) {
+               setTimestamp(TimeValue.now());
+            }
+         } catch (Exception ex) {
+            // TODO:Log
+            ex.printStackTrace(System.err);
          }
-
-         // Updating our timestamp will mean waiting our scheduled interval until
-         // next polling interval
-         if (shouldUpdateTimestamp(pollResult)) {
-            setTimestamp(TimeValue.now());
-         }
-      } catch (Exception ex) {
-         // TODO:Log
-         ex.printStackTrace(System.err);
       }
    }
 

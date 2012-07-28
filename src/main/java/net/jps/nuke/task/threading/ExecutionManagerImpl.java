@@ -27,6 +27,10 @@ public class ExecutionManagerImpl implements ExecutionManager {
 
    @Override
    public synchronized void submit(ManagedTask task) {
+      if (submitted(task)) {
+         throw new IllegalStateException("Task already in execution queue.");
+      }
+      
       final Future execFuture = executorService.submit(task);
       executionStates.put(task, execFuture);
    }

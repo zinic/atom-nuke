@@ -1,6 +1,6 @@
 package net.jps.nuke.source.impl;
 
-import net.jps.nuke.atom.Result;
+import net.jps.nuke.atom.ParserResult;
 import net.jps.nuke.atom.model.Entry;
 import net.jps.nuke.atom.model.Feed;
 import net.jps.nuke.source.AtomSourceResult;
@@ -11,21 +11,34 @@ import net.jps.nuke.source.AtomSourceResult;
  */
 public class AtomSourceResultImpl implements AtomSourceResult {
 
-   private final Result readResult;
+   private final Feed feed;
+   private final Entry entry;
 
-   public AtomSourceResultImpl(Result readResult) {
-      this.readResult = readResult;
+   public AtomSourceResultImpl(Feed feed) {
+      this(feed, null);
    }
 
+   public AtomSourceResultImpl(Entry entry) {
+      this(null, entry);
+   }
+
+   private AtomSourceResultImpl(Feed feed, Entry entry) {
+      this.feed = feed;
+      this.entry = entry;
+   }
+
+   @Override
    public boolean isFeedPage() {
-      return readResult.getFeed() != null;
+      return feed != null;
    }
 
+   @Override
    public Feed feed() {
-      return readResult.getFeed();
+      return feed;
    }
 
+   @Override
    public Entry entry() {
-      return readResult.getEntry();
+      return entry;
    }
 }

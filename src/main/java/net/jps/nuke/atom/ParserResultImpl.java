@@ -9,7 +9,7 @@ import net.jps.nuke.atom.model.builder.FeedBuilder;
  *
  * @author zinic
  */
-public class ParserResultImpl implements Result {
+public class ParserResultImpl implements ParserResult {
 
    private FeedBuilder feed;
    private EntryBuilder entry;
@@ -22,10 +22,12 @@ public class ParserResultImpl implements Result {
       this.entry = entry;
    }
 
+   @Override
    public Feed getFeed() {
       return feed != null ? feed.build() : null;
    }
 
+   @Override
    public Entry getEntry() {
       return entry != null ? entry.build() : null;
    }

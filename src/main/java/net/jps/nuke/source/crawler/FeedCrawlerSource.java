@@ -8,7 +8,7 @@ import net.jps.nuke.atom.model.Link;
 import net.jps.nuke.source.AtomSource;
 import net.jps.nuke.source.AtomSourceException;
 import net.jps.nuke.source.AtomSourceResult;
-import net.jps.nuke.source.impl.AtomSourceResultImpl;
+import net.jps.nuke.source.impl.ParserSourceResultImpl;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -57,7 +57,7 @@ public class FeedCrawlerSource implements AtomSource {
          final HttpResponse response = httpClient.execute(httpGet);
          final HttpEntity entity = response.getEntity();
 
-         return new AtomSourceResultImpl(atomReader.read(entity.getContent()));
+         return new ParserSourceResultImpl(atomReader.read(entity.getContent()));
       } finally {
          if (inputStream != null) {
             inputStream.close();

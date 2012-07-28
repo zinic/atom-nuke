@@ -8,5 +8,5 @@ import java.io.InputStream;
  */
 public interface Reader {
 
-   Result read(final InputStream source) throws AtomParserException;
+   ParserResult read(final InputStream source) throws AtomParserException;
 }
