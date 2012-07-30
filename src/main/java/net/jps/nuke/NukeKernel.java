@@ -5,7 +5,7 @@ import net.jps.nuke.task.threading.ExecutionManagerImpl;
 import net.jps.nuke.task.ManagedTaskImpl;
 import net.jps.nuke.task.Task;
 import net.jps.nuke.util.remote.CancellationRemote;
-import net.jps.nuke.util.remote.CancellationRemoteImpl;
+import net.jps.nuke.util.remote.AtomicCancellationRemote;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadFactory;
@@ -68,7 +68,7 @@ public class NukeKernel implements Nuke {
    public NukeKernel(ExecutorService executorService) {
       this.executorService = executorService;
 
-      crawlerCancellationRemote = new CancellationRemoteImpl();
+      crawlerCancellationRemote = new AtomicCancellationRemote();
       logic = new KernelDelegate(crawlerCancellationRemote, new ExecutionManagerImpl(executorService));
       controlThread = new Thread(logic, "nuke-kernel-" + (kid++));
    }

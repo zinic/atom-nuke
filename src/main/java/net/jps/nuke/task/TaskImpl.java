@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import net.jps.nuke.util.remote.CancellationRemote;
-import net.jps.nuke.util.remote.CancellationRemoteImpl;
+import net.jps.nuke.util.remote.AtomicCancellationRemote;
 import net.jps.nuke.listener.AtomListener;
 import net.jps.nuke.util.TimeValue;
 
@@ -21,7 +21,7 @@ public abstract class TaskImpl implements Task {
    private TimeValue timestamp;
 
    public TaskImpl(TimeValue interval) {
-      this(interval, new CancellationRemoteImpl());
+      this(interval, new AtomicCancellationRemote());
    }
 
    public TaskImpl(TimeValue interval, CancellationRemote cancelationRemote) {
@@ -52,7 +52,7 @@ public abstract class TaskImpl implements Task {
 
    @Override
    public CancellationRemote addListener(AtomListener listener) {
-      final CancellationRemote listenerCancelationRemote = new CancellationRemoteImpl();
+      final CancellationRemote listenerCancelationRemote = new AtomicCancellationRemote();
       addListener(listener, listenerCancelationRemote);
 
       return listenerCancelationRemote;

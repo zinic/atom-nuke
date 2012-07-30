@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
-import net.jps.nuke.util.remote.CancellationRemoteImpl;
+import net.jps.nuke.util.remote.AtomicCancellationRemote;
 import net.jps.nuke.source.AtomSource;
 import net.jps.nuke.source.AtomSourceResult;
 import net.jps.nuke.listener.driver.RegisteredListenerDriver;
@@ -25,7 +25,7 @@ public class ManagedTaskImpl extends TaskImpl implements ManagedTask {
    private final UUID id;
 
    public ManagedTaskImpl(TimeValue interval, ExecutorService executorService, AtomSource atomSource) {
-      super(interval.convert(TimeUnit.NANOSECONDS), new CancellationRemoteImpl());
+      super(interval.convert(TimeUnit.NANOSECONDS), new AtomicCancellationRemote());
 
       this.executorService = executorService;
       this.atomSource = atomSource;
