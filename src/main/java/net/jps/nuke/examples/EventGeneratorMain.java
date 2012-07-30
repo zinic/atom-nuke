@@ -4,7 +4,7 @@ import java.util.concurrent.TimeUnit;
 import net.jps.nuke.Nuke;
 import net.jps.nuke.NukeKernel;
 import net.jps.nuke.examples.listener.test.PrintStreamOutputListener;
-import net.jps.nuke.source.event.EventGeneratorImpl;
+import net.jps.nuke.examples.source.EventGeneratorImpl;
 import net.jps.nuke.task.Task;
 import net.jps.nuke.util.TimeValue;
 
@@ -16,10 +16,9 @@ public class EventGeneratorMain {
 
     public static void main(String[] args) throws InterruptedException {
         final Nuke nukeInstance = new NukeKernel();
-        
 
         for (int taskId = 1; taskId <= 30; taskId++) {
-            final Task task = nukeInstance.follow(new EventGeneratorImpl(true), new TimeValue(1000, TimeUnit.NANOSECONDS));
+            final Task task = nukeInstance.follow(new EventGeneratorImpl(true), new TimeValue(1000 * taskId, TimeUnit.NANOSECONDS));
 
             task.addListener(new PrintStreamOutputListener(System.out, "Task " + taskId + " - Listener 1"));
             task.addListener(new PrintStreamOutputListener(System.out, "Task " + taskId + " - Listener 2"));

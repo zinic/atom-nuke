@@ -23,7 +23,7 @@ public class AtomWriterTest {
          final Writer writer = new StaxAtomWriter();
          final ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
-         writer.write(baos, FeedBuilder.newBuilder().build());
+         writer.write(baos, new FeedBuilder());
          assertEquals("<?xml version='1.0' encoding='UTF-8'?><feed xmlns=\"http://www.w3.org/2005/Atom\"/>", new String(baos.toByteArray()));
       }
    }

@@ -1,7 +1,6 @@
 package net.jps.nuke.atom.model.builder;
 
 import java.net.URI;
-import net.jps.nuke.atom.model.Content;
 import net.jps.nuke.atom.model.impl.ContentImpl;
 
 /**
@@ -10,16 +9,8 @@ import net.jps.nuke.atom.model.impl.ContentImpl;
  */
 public class ContentBuilder extends ContentImpl {
 
-   public static ContentBuilder newBuilder() {
-      return new ContentBuilder();
-   }
-
-   protected ContentBuilder() {
+   public ContentBuilder() {
       value = new StringBuilder();
-   }
-
-   public Content build() {
-      return this;
    }
 
    public void setType(String type) {

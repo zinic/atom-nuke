@@ -9,18 +9,10 @@ import net.jps.nuke.atom.model.impl.LangAwareTextElement;
  */
 public class LangAwareTextElementBuilder extends LangAwareTextElement {
 
-   public static LangAwareTextElementBuilder newBuilder() {
-      return new LangAwareTextElementBuilder();
-   }
-
-   protected LangAwareTextElementBuilder() {
+   public LangAwareTextElementBuilder() {
       value = new StringBuilder();
    }
-
-   public LangAwareTextElement build() {
-      return this;
-   }
-
+   
    public void setValue(String value) {
       this.value = new StringBuilder(value);
    }

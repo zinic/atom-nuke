@@ -149,7 +149,7 @@ public class EntryHandler extends AtomHandler {
    }
 
    private static void startSource(EntryHandler self, DocumentContextManager contextManager, Attributes attributes) {
-      final SourceBuilder sourceBuilder = SourceBuilder.newBuilder();
+      final SourceBuilder sourceBuilder = new SourceBuilder();
 
       sourceBuilder.setBase(toUri(attributes.getValue("base")));
       sourceBuilder.setLang(attributes.getValue("lang"));
@@ -159,7 +159,7 @@ public class EntryHandler extends AtomHandler {
    }
 
    private static void startContent(EntryHandler self, DocumentContextManager contextManager, AtomElement element, Attributes attributes) {
-      final ContentBuilder contentBuilder = ContentBuilder.newBuilder();
+      final ContentBuilder contentBuilder = new ContentBuilder();
 
       contentBuilder.setBase(toUri(attributes.getValue("base")));
       contentBuilder.setLang(attributes.getValue("lang"));
@@ -175,7 +175,7 @@ public class EntryHandler extends AtomHandler {
 
       if (contextManager.hasContext()) {
          final HandlerContext<FeedBuilder> feedBuilderContext = contextManager.peek(FeedBuilder.class);
-         feedBuilderContext.builder().addEntry(entryContext.builder().build());
+         feedBuilderContext.builder().addEntry(entryContext.builder());
       } else {
          result.setEntryBuilder(entryContext.builder());
       }
@@ -185,56 +185,56 @@ public class EntryHandler extends AtomHandler {
 
    private static void endAuthor(DocumentContextManager contextManager) {
       final HandlerContext<PersonConstructBuilder> personContext = contextManager.pop(PersonConstructBuilder.class);
-      contextManager.peek(EntryBuilder.class).builder().addAuthor(personContext.builder().buildAuthor());
+      contextManager.peek(EntryBuilder.class).builder().addAuthor(personContext.builder());
    }
 
    private static void endContributor(DocumentContextManager contextManager) {
       final HandlerContext<PersonConstructBuilder> personContext = contextManager.pop(PersonConstructBuilder.class);
-      contextManager.peek(EntryBuilder.class).builder().addContributor(personContext.builder().buildContributor());
+      contextManager.peek(EntryBuilder.class).builder().addContributor(personContext.builder());
    }
 
    private static void endId(DocumentContextManager contextManager) {
       final HandlerContext<LangAwareTextElementBuilder> idContext = contextManager.pop(LangAwareTextElementBuilder.class);
-      contextManager.peek(EntryBuilder.class).builder().setId(idContext.builder().build());
+      contextManager.peek(EntryBuilder.class).builder().setId(idContext.builder());
    }
 
    private static void endUpdated(DocumentContextManager contextManager) {
       final HandlerContext<DateConstructBuilder> updatedContext = contextManager.pop(DateConstructBuilder.class);
-      contextManager.peek(EntryBuilder.class).builder().setUpdated(updatedContext.builder().buildUpdated());
+      contextManager.peek(EntryBuilder.class).builder().setUpdated(updatedContext.builder());
    }
 
    private static void endPublished(DocumentContextManager contextManager) {
       final HandlerContext<DateConstructBuilder> publishedContext = contextManager.pop(DateConstructBuilder.class);
-      contextManager.peek(EntryBuilder.class).builder().setPublished(publishedContext.builder().buildPublished());
+      contextManager.peek(EntryBuilder.class).builder().setPublished(publishedContext.builder());
    }
 
    private static void endContent(DocumentContextManager contextManager) {
       final HandlerContext<ContentBuilder> content = contextManager.pop(ContentBuilder.class);
-      contextManager.peek(EntryBuilder.class).builder().setContent(content.builder().build());
+      contextManager.peek(EntryBuilder.class).builder().setContent(content.builder());
    }
 
    private static void endCategory(DocumentContextManager contextManager) {
       final HandlerContext<CategoryBuilder> category = contextManager.pop(CategoryBuilder.class);
-      contextManager.peek(EntryBuilder.class).builder().addCategory(category.builder().build());
+      contextManager.peek(EntryBuilder.class).builder().addCategory(category.builder());
    }
 
    private static void endLink(DocumentContextManager contextManager) {
       final HandlerContext<LinkBuilder> category = contextManager.pop(LinkBuilder.class);
-      contextManager.peek(EntryBuilder.class).builder().addLink(category.builder().build());
+      contextManager.peek(EntryBuilder.class).builder().addLink(category.builder());
    }
 
    private static void endRights(DocumentContextManager contextManager) {
       final HandlerContext<TextConstructBuilder> textConstructContext = contextManager.pop(TextConstructBuilder.class);
-      contextManager.peek(EntryBuilder.class).builder().setRights(textConstructContext.builder().buildRights());
+      contextManager.peek(EntryBuilder.class).builder().setRights(textConstructContext.builder());
    }
 
    private static void endSummary(DocumentContextManager contextManager) {
       final HandlerContext<TextConstructBuilder> textConstructContext = contextManager.pop(TextConstructBuilder.class);
-      contextManager.peek(EntryBuilder.class).builder().setSummary(textConstructContext.builder().buildSummary());
+      contextManager.peek(EntryBuilder.class).builder().setSummary(textConstructContext.builder());
    }
 
    private static void endTitle(DocumentContextManager contextManager) {
       final HandlerContext<TextConstructBuilder> textConstructContext = contextManager.pop(TextConstructBuilder.class);
-      contextManager.peek(EntryBuilder.class).builder().setTitle(textConstructContext.builder().buildTitle());
+      contextManager.peek(EntryBuilder.class).builder().setTitle(textConstructContext.builder());
    }
 }

@@ -1,13 +1,11 @@
 package net.jps.nuke.atom.model.builder;
 
 import java.net.URI;
-import java.util.Collections;
 import java.util.LinkedList;
 import net.jps.nuke.atom.model.Author;
 import net.jps.nuke.atom.model.Category;
 import net.jps.nuke.atom.model.Contributor;
 import net.jps.nuke.atom.model.Entry;
-import net.jps.nuke.atom.model.Feed;
 import net.jps.nuke.atom.model.Generator;
 import net.jps.nuke.atom.model.ID;
 import net.jps.nuke.atom.model.Icon;
@@ -25,29 +23,12 @@ import net.jps.nuke.atom.model.impl.FeedImpl;
  */
 public class FeedBuilder extends FeedImpl {
 
-   public static FeedBuilder newBuilder() {
-      final FeedBuilder builder = new FeedBuilder();
-
-      builder.authors = new LinkedList<Author>();
-      builder.contributors = new LinkedList<Contributor>();
-      builder.categories = new LinkedList<Category>();
-      builder.links = new LinkedList<Link>();
-      builder.entries = new LinkedList<Entry>();
-
-      return builder;
-   }
-
-   protected FeedBuilder() {
-   }
-
-   public Feed build() {
-      authors = Collections.unmodifiableList(authors);
-      contributors = Collections.unmodifiableList(contributors);
-      categories = Collections.unmodifiableList(categories);
-      links = Collections.unmodifiableList(links);
-      entries = Collections.unmodifiableList(entries);
-
-      return this;
+   public FeedBuilder() {
+      authors = new LinkedList<Author>();
+      contributors = new LinkedList<Contributor>();
+      categories = new LinkedList<Category>();
+      links = new LinkedList<Link>();
+      entries = new LinkedList<Entry>();
    }
 
    public void addAuthor(Author author) {

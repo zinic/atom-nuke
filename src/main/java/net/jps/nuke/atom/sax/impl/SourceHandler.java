@@ -14,7 +14,6 @@ import net.jps.nuke.atom.model.builder.TextConstructBuilder;
 import net.jps.nuke.atom.model.builder.DateConstructBuilder;
 import net.jps.nuke.atom.sax.DocumentContextManager;
 import net.jps.nuke.atom.sax.HandlerContext;
-import net.jps.nuke.atom.sax.HandlerContext;
 import net.jps.nuke.atom.xml.AtomElement;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -108,67 +107,67 @@ public class SourceHandler extends AtomHandler {
 
    private static void endSource(SourceHandler self, DocumentContextManager contextManager) {
       final HandlerContext<SourceBuilder> sourceBuilder = contextManager.pop(SourceBuilder.class);
-      contextManager.peek(EntryBuilder.class).builder().setSource(sourceBuilder.builder().build());
+      contextManager.peek(EntryBuilder.class).builder().setSource(sourceBuilder.builder());
 
       self.releaseToParent();
    }
 
    private static void endAuthor(DocumentContextManager contextManager) {
       final HandlerContext<PersonConstructBuilder> personContext = contextManager.pop(PersonConstructBuilder.class);
-      contextManager.peek(SourceBuilder.class).builder().addAuthor(personContext.builder().buildAuthor());
+      contextManager.peek(SourceBuilder.class).builder().addAuthor(personContext.builder());
    }
 
    private static void endId(DocumentContextManager contextManager) {
       final HandlerContext<LangAwareTextElementBuilder> idContext = contextManager.pop(LangAwareTextElementBuilder.class);
-      contextManager.peek(SourceBuilder.class).builder().setId(idContext.builder().build());
+      contextManager.peek(SourceBuilder.class).builder().setId(idContext.builder());
    }
 
    private static void endLogo(DocumentContextManager contextManager) {
       final HandlerContext<LangAwareTextElementBuilder> logoContext = contextManager.pop(LangAwareTextElementBuilder.class);
-      contextManager.peek(SourceBuilder.class).builder().setLogo(logoContext.builder().build());
+      contextManager.peek(SourceBuilder.class).builder().setLogo(logoContext.builder());
    }
 
    private static void endIcon(DocumentContextManager contextManager) {
       final HandlerContext<LangAwareTextElementBuilder> iconContext = contextManager.pop(LangAwareTextElementBuilder.class);
-      contextManager.peek(SourceBuilder.class).builder().setIcon(iconContext.builder().build());
+      contextManager.peek(SourceBuilder.class).builder().setIcon(iconContext.builder());
    }
 
    private static void endUpdated(DocumentContextManager contextManager) {
       final HandlerContext<DateConstructBuilder> updatedContext = contextManager.pop(DateConstructBuilder.class);
-      contextManager.peek(SourceBuilder.class).builder().setUpdated(updatedContext.builder().buildUpdated());
+      contextManager.peek(SourceBuilder.class).builder().setUpdated(updatedContext.builder());
    }
 
    private static void endCategory(DocumentContextManager contextManager) {
       final HandlerContext<CategoryBuilder> category = contextManager.pop(CategoryBuilder.class);
       final List<Category> categoryList = contextManager.peek(SourceBuilder.class).builder().categories();
 
-      categoryList.add(category.builder().build());
+      categoryList.add(category.builder());
    }
 
    private static void endLink(DocumentContextManager contextManager) {
       final HandlerContext<LinkBuilder> category = contextManager.pop(LinkBuilder.class);
       final List<Link> linkList = contextManager.peek(SourceBuilder.class).builder().links();
 
-      linkList.add(category.builder().build());
+      linkList.add(category.builder());
    }
 
    private static void endGenerator(DocumentContextManager contextManager) {
       final HandlerContext<GeneratorBuilder> generatorContext = contextManager.pop(GeneratorBuilder.class);
-      contextManager.peek(SourceBuilder.class).builder().setGenerator(generatorContext.builder().build());
+      contextManager.peek(SourceBuilder.class).builder().setGenerator(generatorContext.builder());
    }
 
    private static void endRights(DocumentContextManager contextManager) {
       final HandlerContext<TextConstructBuilder> textConstructContext = contextManager.pop(TextConstructBuilder.class);
-      contextManager.peek(SourceBuilder.class).builder().setRights(textConstructContext.builder().buildRights());
+      contextManager.peek(SourceBuilder.class).builder().setRights(textConstructContext.builder());
    }
 
    private static void endTitle(DocumentContextManager contextManager) {
       final HandlerContext<TextConstructBuilder> textConstructContext = contextManager.pop(TextConstructBuilder.class);
-      contextManager.peek(SourceBuilder.class).builder().setTitle(textConstructContext.builder().buildTitle());
+      contextManager.peek(SourceBuilder.class).builder().setTitle(textConstructContext.builder());
    }
 
    private static void endSubtitle(DocumentContextManager contextManager) {
       final HandlerContext<TextConstructBuilder> textConstructContext = contextManager.pop(TextConstructBuilder.class);
-      contextManager.peek(SourceBuilder.class).builder().setSubtitle(textConstructContext.builder().buildSubtitle());
+      contextManager.peek(SourceBuilder.class).builder().setSubtitle(textConstructContext.builder());
    }
 }

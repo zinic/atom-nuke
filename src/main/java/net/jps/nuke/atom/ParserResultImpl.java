@@ -24,11 +24,11 @@ public class ParserResultImpl implements ParserResult {
 
    @Override
    public Feed getFeed() {
-      return feed != null ? feed.build() : null;
+      return feed != null ? feed : null;
    }
 
    @Override
    public Entry getEntry() {
-      return entry != null ? entry.build() : null;
+      return entry != null ? entry : null;
    }
 }

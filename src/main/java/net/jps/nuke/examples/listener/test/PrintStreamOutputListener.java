@@ -6,7 +6,7 @@ import net.jps.nuke.atom.model.Entry;
 import net.jps.nuke.atom.model.Feed;
 import net.jps.nuke.listener.AtomListener;
 import net.jps.nuke.listener.AtomListenerException;
-import net.jps.nuke.listener.ListenerResultImpl;
+import net.jps.nuke.listener.AtomListenerResult;
 
 /**
  *
@@ -17,13 +17,13 @@ public class PrintStreamOutputListener implements AtomListener {
     private final PrintStream out;
     private String msg;
     private long creationTime;
-    private AtomicLong atomicLong;
+    private AtomicLong eventsCaught;
 
     public PrintStreamOutputListener(PrintStream out, String msg) {
         this.msg = msg;
         this.out = out;
         this.creationTime = System.currentTimeMillis();
-        this.atomicLong = new AtomicLong(0);
+        this.eventsCaught = new AtomicLong(0);
     }
 
     @Override
@@ -37,30 +37,25 @@ public class PrintStreamOutputListener implements AtomListener {
     }
 
     private void newEvent() {
-        final long events = atomicLong.incrementAndGet();
+        final long events = eventsCaught.incrementAndGet();
         final long nowInMillis = System.currentTimeMillis();
 
-        if (events % 10000 == 0) {
+        if (events % 1000 == 0) {
             out.println((nowInMillis - creationTime) + "ms elapsed. Events received: " + events + " - Events per 10ms: " + (events / ((nowInMillis - creationTime) / 10)) + " - (" + msg + ")");
         }
-
-        try {
-            Thread.sleep(20);
-        } catch (InterruptedException ie) {
-        }
     }
 
     @Override
-    public ListenerResultImpl entry(Entry entry) throws AtomListenerException {
+    public AtomListenerResult entry(Entry entry) throws AtomListenerException {
         newEvent();
 
-        return ListenerResultImpl.ok();
+        return AtomListenerResult.ok();
     }
 
     @Override
-    public ListenerResultImpl feedPage(Feed page) throws AtomListenerException {
+    public AtomListenerResult feedPage(Feed page) throws AtomListenerException {
         newEvent();
 
-        return ListenerResultImpl.ok();
+        return AtomListenerResult.ok();
     }
 }

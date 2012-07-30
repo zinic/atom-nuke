@@ -1,7 +1,9 @@
-package net.jps.nuke.source.event;
+package net.jps.nuke.examples.source;
 
+import net.jps.nuke.atom.model.builder.AuthorBuilder;
 import net.jps.nuke.atom.model.builder.EntryBuilder;
 import net.jps.nuke.atom.model.builder.FeedBuilder;
+import net.jps.nuke.atom.model.builder.TitleBuilder;
 import net.jps.nuke.source.AtomSource;
 import net.jps.nuke.source.AtomSourceException;
 import net.jps.nuke.source.AtomSourceResult;
@@ -22,13 +24,21 @@ public class EventGeneratorImpl implements AtomSource {
    @Override
    public AtomSourceResult poll() throws AtomSourceException {
       if (generateFeed) {
-         final FeedBuilder feedBuilder = FeedBuilder.newBuilder();
+         final FeedBuilder feed = new FeedBuilder();
 
-         return new AtomSourceResultImpl(feedBuilder.build());
+         final TitleBuilder title = new TitleBuilder();
+         title.getValueBuilder().append("Example Feed");
+         feed.setTitle(title);
+         
+         final AuthorBuilder author = new AuthorBuilder();
+         author.setName("Author");
+         feed.addAuthor(author);
+
+         return new AtomSourceResultImpl(feed);
       } else {
-         final EntryBuilder entryBuilder = EntryBuilder.newBuilder();
+         final EntryBuilder entryBuilder = new EntryBuilder();
 
-         return new AtomSourceResultImpl(entryBuilder.build());
+         return new AtomSourceResultImpl(entryBuilder);
       }
    }
 }

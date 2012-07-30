@@ -1,9 +1,6 @@
 package net.jps.nuke.atom.model.builder;
 
 import java.net.URI;
-import net.jps.nuke.atom.model.Author;
-import net.jps.nuke.atom.model.Contributor;
-import net.jps.nuke.atom.model.PersonConstruct;
 import net.jps.nuke.atom.model.impl.PersonConstructImpl;
 
 /**
@@ -12,23 +9,7 @@ import net.jps.nuke.atom.model.impl.PersonConstructImpl;
  */
 public class PersonConstructBuilder extends PersonConstructImpl {
 
-   public static PersonConstructBuilder newBuilder() {
-      return new PersonConstructBuilder();
-   }
-
-   protected PersonConstructBuilder() {
-   }
-
-   public Author buildAuthor() {
-      return this;
-   }
-
-   public Contributor buildContributor() {
-      return this;
-   }
-
-   public PersonConstruct build() {
-      return this;
+   public PersonConstructBuilder() {
    }
 
    public void setName(String name) {

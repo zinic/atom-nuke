@@ -1,7 +1,6 @@
 package net.jps.nuke.atom.model.builder;
 
 import java.net.URI;
-import net.jps.nuke.atom.model.Category;
 import net.jps.nuke.atom.model.impl.CategoryImpl;
 
 /**
@@ -10,15 +9,7 @@ import net.jps.nuke.atom.model.impl.CategoryImpl;
  */
 public class CategoryBuilder extends CategoryImpl {
 
-   public static CategoryBuilder newBuilder() {
-      return new CategoryBuilder();
-   }
-
-   protected CategoryBuilder() {
-   }
-
-   public Category build() {
-      return this;
+   public CategoryBuilder() {
    }
 
    public void setTerm(String term) {

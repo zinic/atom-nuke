@@ -1,8 +1,6 @@
 package net.jps.nuke.atom.model.builder;
 
 import java.net.URI;
-import net.jps.nuke.atom.model.Published;
-import net.jps.nuke.atom.model.Updated;
 import net.jps.nuke.atom.model.impl.DateConstructImpl;
 
 /**
@@ -11,20 +9,8 @@ import net.jps.nuke.atom.model.impl.DateConstructImpl;
  */
 public class DateConstructBuilder extends DateConstructImpl {
 
-   public static DateConstructBuilder newBuilder() {
-      return new DateConstructBuilder();
-   }
-
-   protected DateConstructBuilder() {
+   public DateConstructBuilder() {
       dateStringBuilder = new StringBuilder();
-   }
-
-   public Published buildPublished() {
-      return this;
-   }
-
-   public Updated buildUpdated() {
-      return this;
    }
 
    public StringBuilder getDateStringBuilder() {

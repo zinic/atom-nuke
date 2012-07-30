@@ -1,7 +1,6 @@
 package net.jps.nuke.atom.model.builder;
 
 import java.net.URI;
-import net.jps.nuke.atom.model.Generator;
 import net.jps.nuke.atom.model.impl.GeneratorImpl;
 
 /**
@@ -10,16 +9,8 @@ import net.jps.nuke.atom.model.impl.GeneratorImpl;
  */
 public class GeneratorBuilder extends GeneratorImpl {
 
-   public static GeneratorBuilder newBuilder() {
-      return new GeneratorBuilder();
-   }
-
-   protected GeneratorBuilder() {
+   public GeneratorBuilder() {
       value = new StringBuilder();
-   }
-
-   public Generator build() {
-      return this;
    }
 
    public void setUri(String uri) {

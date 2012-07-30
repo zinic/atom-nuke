@@ -1,7 +1,6 @@
 package net.jps.nuke.atom.model.builder;
 
 import java.net.URI;
-import java.util.Collections;
 import java.util.LinkedList;
 import net.jps.nuke.atom.model.Author;
 import net.jps.nuke.atom.model.Category;
@@ -22,25 +21,10 @@ import net.jps.nuke.atom.model.impl.SourceImpl;
  */
 public class SourceBuilder extends SourceImpl {
 
-   public static SourceBuilder newBuilder() {
-      final SourceBuilder builder = new SourceBuilder();
-
-      builder.authors = new LinkedList<Author>();
-      builder.categories = new LinkedList<Category>();
-      builder.links = new LinkedList<Link>();
-
-      return builder;
-   }
-
-   protected SourceBuilder() {
-   }
-
-   public SourceBuilder build() {
-      authors = Collections.unmodifiableList(authors);
-      categories = Collections.unmodifiableList(categories);
-      links = Collections.unmodifiableList(links);
-
-      return this;
+   public SourceBuilder() {
+      authors = new LinkedList<Author>();
+      categories = new LinkedList<Category>();
+      links = new LinkedList<Link>();
    }
 
    public void addAuthor(Author author) {

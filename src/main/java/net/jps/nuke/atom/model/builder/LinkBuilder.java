@@ -9,15 +9,7 @@ import net.jps.nuke.atom.model.impl.LinkImpl;
  */
 public class LinkBuilder extends LinkImpl {
 
-   public static LinkBuilder newBuilder() {
-      return new LinkBuilder();
-   }
-
-   protected LinkBuilder() {
-   }
-
-   public LinkBuilder build() {
-      return this;
+   public LinkBuilder() {
    }
 
    public void setHref(String href) {

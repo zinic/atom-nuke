@@ -5,7 +5,7 @@ import net.jps.nuke.atom.model.Feed;
 import net.jps.nuke.listener.RegisteredListener;
 import net.jps.nuke.listener.AtomListener;
 import net.jps.nuke.listener.ListenerResult;
-import net.jps.nuke.listener.ListenerResultImpl;
+import net.jps.nuke.listener.AtomListenerResult;
 
 /**
  *
@@ -60,9 +60,9 @@ public class AtomListenerDriver implements RegisteredListenerDriver {
          // TODO:Log
          ex.printStackTrace(System.err);
 
-         return ListenerResultImpl.halt(ex.getMessage());
+         return AtomListenerResult.halt(ex.getMessage());
       }
 
-      return ListenerResultImpl.halt("Feed document was null.");
+      return AtomListenerResult.halt("Feed document was null.");
    }
 }

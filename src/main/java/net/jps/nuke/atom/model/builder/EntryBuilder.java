@@ -1,13 +1,11 @@
 package net.jps.nuke.atom.model.builder;
 
 import java.net.URI;
-import java.util.Collections;
 import java.util.LinkedList;
 import net.jps.nuke.atom.model.Author;
 import net.jps.nuke.atom.model.Category;
 import net.jps.nuke.atom.model.Content;
 import net.jps.nuke.atom.model.Contributor;
-import net.jps.nuke.atom.model.Entry;
 import net.jps.nuke.atom.model.ID;
 import net.jps.nuke.atom.model.Link;
 import net.jps.nuke.atom.model.Published;
@@ -24,27 +22,11 @@ import net.jps.nuke.atom.model.impl.EntryImpl;
  */
 public class EntryBuilder extends EntryImpl {
 
-   public static EntryBuilder newBuilder() {
-      final EntryBuilder builder = new EntryBuilder();
-
-      builder.authors = new LinkedList<Author>();
-      builder.contributors = new LinkedList<Contributor>();
-      builder.categories = new LinkedList<Category>();
-      builder.links = new LinkedList<Link>();
-
-      return builder;
-   }
-
-   protected EntryBuilder() {
-   }
-
-   public Entry build() {
-      authors = Collections.unmodifiableList(authors);
-      contributors = Collections.unmodifiableList(contributors);
-      categories = Collections.unmodifiableList(categories);
-      links = Collections.unmodifiableList(links);
-
-      return this;
+   public EntryBuilder() {
+      authors = new LinkedList<Author>();
+      contributors = new LinkedList<Contributor>();
+      categories = new LinkedList<Category>();
+      links = new LinkedList<Link>();
    }
 
    public void addAuthor(Author author) {

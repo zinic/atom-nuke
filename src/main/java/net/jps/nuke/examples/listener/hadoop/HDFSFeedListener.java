@@ -5,7 +5,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import net.jps.nuke.listener.AtomListener;
-import net.jps.nuke.listener.ListenerResultImpl;
+import net.jps.nuke.listener.AtomListenerResult;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import net.jps.nuke.atom.model.Entry;
@@ -69,7 +69,7 @@ public class HDFSFeedListener implements AtomListener {
    }
 
    @Override
-   public ListenerResultImpl entry(Entry entry) throws AtomListenerException {
+   public AtomListenerResult entry(Entry entry) throws AtomListenerException {
       try {
          final ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
@@ -80,11 +80,11 @@ public class HDFSFeedListener implements AtomListener {
          ioe.printStackTrace(System.err);
       }
 
-      return ListenerResultImpl.ok();
+      return AtomListenerResult.ok();
    }
 
    @Override
-   public ListenerResultImpl feedPage(Feed page) throws AtomListenerException {
+   public AtomListenerResult feedPage(Feed page) throws AtomListenerException {
       try {
          if (writeHeader) {
             writeFeedHeader(page);
@@ -101,7 +101,7 @@ public class HDFSFeedListener implements AtomListener {
          ioe.printStackTrace(System.err);
       }
 
-      return ListenerResultImpl.ok();
+      return AtomListenerResult.ok();
    }
 
    private void append(String key, String value) throws IOException {
