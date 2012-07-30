@@ -211,8 +211,8 @@ public class AtomHandler extends DelegatingHandler {
    private static void startFeed(AtomHandler self, DocumentContextManager contextManager, Attributes attributes) {
       final FeedBuilder feedBuilder = FeedBuilder.newBuilder();
 
-      feedBuilder.setBase(toUri(attributes.getValue("base")));
-      feedBuilder.setLang(attributes.getValue("lang"));
+      feedBuilder.setBase(toUri(attributes.getValue(AtomAttributeConstants.BASE)));
+      feedBuilder.setLang(attributes.getValue(AtomAttributeConstants.LANG));
 
       contextManager.push(AtomElement.FEED, feedBuilder);
       self.delegateTo(new FeedHandler(self));
@@ -221,8 +221,8 @@ public class AtomHandler extends DelegatingHandler {
    protected static void startEntry(AtomHandler self, DocumentContextManager contextManager, Attributes attributes) {
       final EntryBuilder entryBuilder = EntryBuilder.newBuilder();
 
-      entryBuilder.setBase(toUri(attributes.getValue("base")));
-      entryBuilder.setLang(attributes.getValue("lang"));
+      entryBuilder.setBase(toUri(attributes.getValue(AtomAttributeConstants.BASE)));
+      entryBuilder.setLang(attributes.getValue(AtomAttributeConstants.LANG));
 
       contextManager.push(AtomElement.ENTRY, entryBuilder);
       self.delegateTo(new EntryHandler(self));
@@ -231,8 +231,8 @@ public class AtomHandler extends DelegatingHandler {
    protected static void startPersonConstruct(DocumentContextManager contextManager, AtomElement element, Attributes attributes) {
       final PersonConstructBuilder personConstructBuilder = PersonConstructBuilder.newBuilder();
 
-      personConstructBuilder.setBase(toUri(attributes.getValue("base")));
-      personConstructBuilder.setLang(attributes.getValue("lang"));
+      personConstructBuilder.setBase(toUri(attributes.getValue(AtomAttributeConstants.BASE)));
+      personConstructBuilder.setLang(attributes.getValue(AtomAttributeConstants.LANG));
 
       contextManager.push(element, personConstructBuilder);
    }
@@ -240,10 +240,10 @@ public class AtomHandler extends DelegatingHandler {
    protected static void startGenerator(DocumentContextManager contextManager, Attributes attributes) {
       final GeneratorBuilder generatorBuilder = GeneratorBuilder.newBuilder();
 
-      generatorBuilder.setBase(toUri(attributes.getValue("base")));
-      generatorBuilder.setLang(attributes.getValue("lang"));
-      generatorBuilder.setUri(attributes.getValue("uri"));
-      generatorBuilder.setVersion(attributes.getValue("version"));
+      generatorBuilder.setBase(toUri(attributes.getValue(AtomAttributeConstants.BASE)));
+      generatorBuilder.setLang(attributes.getValue(AtomAttributeConstants.LANG));
+      generatorBuilder.setUri(attributes.getValue(AtomAttributeConstants.URI));
+      generatorBuilder.setVersion(attributes.getValue(AtomAttributeConstants.VERSION));
 
       contextManager.push(AtomElement.GENERATOR, generatorBuilder);
    }
@@ -251,9 +251,9 @@ public class AtomHandler extends DelegatingHandler {
    protected static void startTextConstruct(DelegatingHandler self, DocumentContextManager contextManager, AtomElement element, Attributes attributes) {
       final TextConstructBuilder textConstructBuilder = TextConstructBuilder.newBuilder();
 
-      textConstructBuilder.setBase(toUri(attributes.getValue("base")));
-      textConstructBuilder.setLang(attributes.getValue("lang"));
-      textConstructBuilder.setType(toType(attributes.getValue("type")));
+      textConstructBuilder.setBase(toUri(attributes.getValue(AtomAttributeConstants.BASE)));
+      textConstructBuilder.setLang(attributes.getValue(AtomAttributeConstants.LANG));
+      textConstructBuilder.setType(toType(attributes.getValue(AtomAttributeConstants.TYPE)));
 
       contextManager.push(element, textConstructBuilder);
       self.delegateTo(new MixedContentHandler(textConstructBuilder.getValueBuilder(), self));
@@ -262,8 +262,8 @@ public class AtomHandler extends DelegatingHandler {
    protected static void startDateConstruct(DocumentContextManager contextManager, AtomElement element, Attributes attributes) {
       final DateConstructBuilder dateConstructBuilder = DateConstructBuilder.newBuilder();
 
-      dateConstructBuilder.setBase(toUri(attributes.getValue("base")));
-      dateConstructBuilder.setLang(attributes.getValue("lang"));
+      dateConstructBuilder.setBase(toUri(attributes.getValue(AtomAttributeConstants.BASE)));
+      dateConstructBuilder.setLang(attributes.getValue(AtomAttributeConstants.LANG));
 
       contextManager.push(element, dateConstructBuilder);
    }
@@ -271,14 +271,14 @@ public class AtomHandler extends DelegatingHandler {
    protected static void startLink(DocumentContextManager contextManager, Attributes attributes) {
       final LinkBuilder linkBuilder = LinkBuilder.newBuilder();
 
-      linkBuilder.setBase(toUri(attributes.getValue("base")));
-      linkBuilder.setLang(attributes.getValue("lang"));
-      linkBuilder.setHref(attributes.getValue("href"));
-      linkBuilder.setHreflang(attributes.getValue("hreflang"));
-      linkBuilder.setRel(attributes.getValue("rel"));
-      linkBuilder.setTitle(attributes.getValue("title"));
-      linkBuilder.setType(attributes.getValue("type"));
-      linkBuilder.setLength(toInteger(attributes.getValue("length")));
+      linkBuilder.setBase(toUri(attributes.getValue(AtomAttributeConstants.BASE)));
+      linkBuilder.setLang(attributes.getValue(AtomAttributeConstants.LANG));
+      linkBuilder.setHref(attributes.getValue(AtomAttributeConstants.HREF));
+      linkBuilder.setHreflang(attributes.getValue(AtomAttributeConstants.HREFLANG));
+      linkBuilder.setRel(attributes.getValue(AtomAttributeConstants.REL));
+      linkBuilder.setTitle(attributes.getValue(AtomAttributeConstants.TITLE));
+      linkBuilder.setType(attributes.getValue(AtomAttributeConstants.TYPE));
+      linkBuilder.setLength(toInteger(AtomAttributeConstants.LENGTH));
 
       contextManager.push(AtomElement.LINK, linkBuilder);
    }
@@ -286,11 +286,11 @@ public class AtomHandler extends DelegatingHandler {
    protected static void startCategory(DocumentContextManager contextManager, Attributes attributes) {
       final CategoryBuilder categoryBuilder = CategoryBuilder.newBuilder();
 
-      categoryBuilder.setBase(toUri(attributes.getValue("base")));
-      categoryBuilder.setLang(attributes.getValue("lang"));
-      categoryBuilder.setScheme(attributes.getValue("scheme"));
-      categoryBuilder.setTerm(attributes.getValue("term"));
-      categoryBuilder.setLabel(attributes.getValue("label"));
+      categoryBuilder.setBase(toUri(attributes.getValue(AtomAttributeConstants.BASE)));
+      categoryBuilder.setLang(attributes.getValue(AtomAttributeConstants.LANG));
+      categoryBuilder.setScheme(attributes.getValue(AtomAttributeConstants.SCHEME));
+      categoryBuilder.setTerm(attributes.getValue(AtomAttributeConstants.TERM));
+      categoryBuilder.setLabel(attributes.getValue(AtomAttributeConstants.LABEL));
 
       contextManager.push(AtomElement.CATEGORY, categoryBuilder);
    }
@@ -298,8 +298,8 @@ public class AtomHandler extends DelegatingHandler {
    protected static void startLangAwareTextElement(DocumentContextManager contextManager, AtomElement element, Attributes attributes) {
       final LangAwareTextElementBuilder textElementBuilder = LangAwareTextElementBuilder.newBuilder();
 
-      textElementBuilder.setBase(toUri(attributes.getValue("base")));
-      textElementBuilder.setLang(attributes.getValue("lang"));
+      textElementBuilder.setBase(toUri(attributes.getValue(AtomAttributeConstants.BASE)));
+      textElementBuilder.setLang(attributes.getValue(AtomAttributeConstants.LANG));
 
       contextManager.push(element, textElementBuilder);
    }
