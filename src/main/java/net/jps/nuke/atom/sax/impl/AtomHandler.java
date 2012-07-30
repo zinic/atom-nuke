@@ -278,7 +278,7 @@ public class AtomHandler extends DelegatingHandler {
       linkBuilder.setRel(attributes.getValue(AtomAttributeConstants.REL));
       linkBuilder.setTitle(attributes.getValue(AtomAttributeConstants.TITLE));
       linkBuilder.setType(attributes.getValue(AtomAttributeConstants.TYPE));
-      linkBuilder.setLength(toInteger(AtomAttributeConstants.LENGTH));
+      linkBuilder.setLength(toInteger(attributes.getValue(AtomAttributeConstants.LENGTH)));
 
       contextManager.push(AtomElement.LINK, linkBuilder);
    }
