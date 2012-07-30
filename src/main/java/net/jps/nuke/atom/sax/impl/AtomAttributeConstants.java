@@ -6,17 +6,17 @@ package net.jps.nuke.atom.sax.impl;
  */
 public interface AtomAttributeConstants {
 
-   static final String BASE = "base";
-   static final String LANG = "lang";
-   static final String URI = "uri";
-   static final String HREF = "href";
-   static final String VERSION = "version";
-   static final String TYPE = "type";
-   static final String TITLE = "title";
-   static final String HREFLANG = "hreflang";
-   static final String REL = "rel";
-   static final String LENGTH = "length";
-   static final String LABEL = "label";
-   static final String SCHEME = "scheme";
-   static final String TERM = "term";
+   final String BASE = "base";
+   final String LANG = "lang";
+   final String URI = "uri";
+   final String HREF = "href";
+   final String VERSION = "version";
+   final String TYPE = "type";
+   final String TITLE = "title";
+   final String HREFLANG = "hreflang";
+   final String REL = "rel";
+   final String LENGTH = "length";
+   final String LABEL = "label";
+   final String SCHEME = "scheme";
+   final String TERM = "term";
 }
