@@ -1,13 +1,15 @@
 package net.jps.nuke.examples;
 
+import java.io.File;
 import java.util.concurrent.TimeUnit;
 import net.jps.nuke.Nuke;
 import net.jps.nuke.NukeKernel;
 import net.jps.nuke.atom.model.Entry;
+import net.jps.nuke.examples.handler.FeedFileWriterHandler;
 import net.jps.nuke.examples.source.EventGenerator;
-import net.jps.nuke.listener.eps.handler.EventProcessingException;
+import net.jps.nuke.listener.eps.handler.AtomEventHandlerException;
 import net.jps.nuke.listener.eps.Relay;
-import net.jps.nuke.listener.eps.handler.AtomEventHandler;
+import net.jps.nuke.listener.eps.handler.AtomEventHandlerPartial;
 import net.jps.nuke.listener.eps.selectors.CategorySelector;
 import net.jps.nuke.task.Task;
 import net.jps.nuke.util.TimeValue;
@@ -30,14 +32,15 @@ import net.jps.nuke.util.TimeValue;
  */
 public class EPSMain {
 
-   public static void main(String[] args) {
+   public static void main(String[] args) throws Exception {
       // First relay for selecting feeds that have the category 'test' and only
       // the entries inside that feed that also have the category 'test'
       final Relay relay1 = new Relay();
 
-      relay1.enlistHandler(new AtomEventHandler() {
+      // Event handler partial makes delegate creation more simple
+      relay1.enlistHandler(new AtomEventHandlerPartial() {
          @Override
-         public void entry(Entry entry) throws EventProcessingException {
+         public void entry(Entry entry) throws AtomEventHandlerException {
             System.out.println("Relay 1 - Entry: " + entry.id().value());
          }
       }, new CategorySelector(new String[]{"test"}, new String[]{"test"}));
@@ -47,12 +50,9 @@ public class EPSMain {
       // the entries inside that feed that have the category 'other-cat'
       final Relay relay2 = new Relay();
 
-      relay2.enlistHandler(new AtomEventHandler() {
-         @Override
-         public void entry(Entry entry) throws EventProcessingException {
-            System.out.println("Relay 2 - Entry: " + entry.id().value());
-         }
-      }, new CategorySelector(new String[]{"test"}, new String[]{"other-cat"}));
+      // Creating your own handler allows you to implement the init and destroy
+      // methods however you like
+      relay2.enlistHandler(new FeedFileWriterHandler(new File("/tmp/test.feed")), new CategorySelector(new String[]{"test"}, new String[]{"other-cat"}));
 
 
       // Set up Nuke
@@ -69,5 +69,9 @@ public class EPSMain {
       task3.addListener(relay1);
 
       nukeKernel.start();
+      
+      Thread.sleep(10000);
+
+      nukeKernel.destroy();
    }
 }

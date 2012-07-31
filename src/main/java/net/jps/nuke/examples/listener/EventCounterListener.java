@@ -1,4 +1,4 @@
-package net.jps.nuke.examples.listener.test;
+package net.jps.nuke.examples.listener;
 
 import java.util.concurrent.atomic.AtomicLong;
 import net.jps.nuke.atom.model.Entry;
@@ -6,6 +6,8 @@ import net.jps.nuke.atom.model.Feed;
 import net.jps.nuke.listener.AtomListener;
 import net.jps.nuke.listener.AtomListenerException;
 import net.jps.nuke.listener.AtomListenerResult;
+import net.jps.nuke.service.ServiceDestructionException;
+import net.jps.nuke.service.ServiceInitializationException;
 
 /**
  *
@@ -20,11 +22,11 @@ public class EventCounterListener implements AtomListener {
    }
 
    @Override
-   public void init() throws AtomListenerException {
+   public void init() throws ServiceInitializationException {
    }
 
    @Override
-   public void destroy() throws AtomListenerException {
+   public void destroy() throws ServiceDestructionException {
    }
 
    @Override

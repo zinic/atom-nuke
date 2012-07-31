@@ -1,4 +1,4 @@
-package net.jps.nuke.examples.listener.hadoop;
+package net.jps.nuke.examples.listener;
 
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
@@ -12,6 +12,8 @@ import net.jps.nuke.atom.model.Entry;
 import net.jps.nuke.atom.model.Feed;
 import net.jps.nuke.atom.Writer;
 import net.jps.nuke.listener.AtomListenerException;
+import net.jps.nuke.service.ServiceDestructionException;
+import net.jps.nuke.service.ServiceInitializationException;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
@@ -28,6 +30,7 @@ public class HDFSFeedListener implements AtomListener {
    private final Path targetPath;
    private final String feedName;
    private final Writer writer;
+   
    private SequenceFile.Writer fileWriter;
    private boolean writeHeader;
    private FileSystem hdfs;
@@ -45,26 +48,24 @@ public class HDFSFeedListener implements AtomListener {
    }
 
    @Override
-   public void init() throws AtomListenerException {
+   public void init() throws ServiceInitializationException {
       try {
          hdfs = FileSystem.get(configuration);
 
          writeHeader = !hdfs.exists(targetPath);
          fileWriter = SequenceFile.createWriter(hdfs, configuration, targetPath, Text.class, Text.class);
       } catch (IOException ioe) {
-         // TODO:Log
-         throw new AtomListenerException(ioe);
+         throw new ServiceInitializationException(ioe);
       }
    }
 
    @Override
-   public void destroy() throws AtomListenerException {
+   public void destroy() throws ServiceDestructionException {
       try {
          fileWriter.close();
          hdfs.close();
       } catch (IOException ioe) {
-         // TODO:Log
-         throw new AtomListenerException(ioe);
+         throw new ServiceDestructionException(ioe);
       }
    }
 
@@ -76,8 +77,7 @@ public class HDFSFeedListener implements AtomListener {
          writer.write(baos, entry);
          append(new Text(entry.id().value()), new Text(baos.toByteArray()));
       } catch (Exception ioe) {
-         // TODO:Log
-         ioe.printStackTrace(System.err);
+         throw new AtomListenerException(ioe);
       }
 
       return AtomListenerResult.ok();
@@ -97,8 +97,7 @@ public class HDFSFeedListener implements AtomListener {
             append(new Text(e.id().value()), new Text(baos.toByteArray()));
          }
       } catch (Exception ioe) {
-         // TODO:Log
-         ioe.printStackTrace(System.err);
+         throw new AtomListenerException(ioe);
       }
 
       return AtomListenerResult.ok();

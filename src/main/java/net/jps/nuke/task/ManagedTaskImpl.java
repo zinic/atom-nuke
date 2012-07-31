@@ -12,7 +12,10 @@ import net.jps.nuke.source.AtomSource;
 import net.jps.nuke.source.AtomSourceResult;
 import net.jps.nuke.listener.driver.RegisteredListenerDriver;
 import net.jps.nuke.listener.driver.AtomListenerDriver;
+import net.jps.nuke.service.ServiceDestructionException;
 import net.jps.nuke.util.TimeValue;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -20,6 +23,8 @@ import net.jps.nuke.util.TimeValue;
  */
 public class ManagedTaskImpl extends TaskImpl implements ManagedTask {
 
+   private static final Logger LOG = LoggerFactory.getLogger(ManagedTaskImpl.class);
+   
    private final ExecutorService executorService;
    private final AtomSource atomSource;
    private final UUID id;
@@ -46,6 +51,19 @@ public class ManagedTaskImpl extends TaskImpl implements ManagedTask {
       }
 
       return activeListeners;
+   }
+
+   @Override
+   public synchronized void destroy() {
+      for (RegisteredListener registeredListener : listeners()) {
+         try {
+            registeredListener.listener().destroy();
+         } catch (ServiceDestructionException sde) {
+            LOG.error(sde.getMessage(), sde);
+         }
+      }
+
+      listeners().clear();
    }
 
    /**

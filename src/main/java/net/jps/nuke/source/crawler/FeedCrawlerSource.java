@@ -10,6 +10,8 @@ import java.io.InputStream;
 import net.jps.nuke.atom.AtomParserException;
 import net.jps.nuke.atom.Reader;
 import net.jps.nuke.atom.model.Link;
+import net.jps.nuke.service.ServiceDestructionException;
+import net.jps.nuke.service.ServiceInitializationException;
 import net.jps.nuke.source.AtomSource;
 import net.jps.nuke.source.AtomSourceException;
 import net.jps.nuke.source.AtomSourceResult;
@@ -29,7 +31,6 @@ public class FeedCrawlerSource implements AtomSource {
 
    private static final Logger LOG = LoggerFactory.getLogger(FeedCrawlerSource.class);
    private static final String STATE_FILE_EXTENSION = ".state";
-   
    private final HttpClient httpClient;
    private final File stateFile;
    private final Reader atomReader;
@@ -40,8 +41,16 @@ public class FeedCrawlerSource implements AtomSource {
       this.stateFile = new File(stateDirectory, name + STATE_FILE_EXTENSION);
       this.atomReader = atomReader;
       this.location = initialLocation;
+   }
 
+   @Override
+   public void init() throws ServiceInitializationException {
       loadState();
+   }
+
+   @Override
+   public void destroy() throws ServiceDestructionException {
+      writeState();
    }
 
    private void loadState() {

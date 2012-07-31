@@ -8,5 +8,9 @@ import net.jps.nuke.atom.model.Entry;
  */
 public interface AtomEventHandler {
 
-   void entry(Entry entry) throws EventProcessingException;
+   void init() throws AtomEventHandlerException;
+
+   void destroy() throws AtomEventHandlerException;
+
+   void entry(Entry entry) throws AtomEventHandlerException;
 }

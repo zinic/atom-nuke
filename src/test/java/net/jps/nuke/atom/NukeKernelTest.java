@@ -4,7 +4,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 import net.jps.nuke.Nuke;
 import net.jps.nuke.NukeKernel;
-import net.jps.nuke.examples.listener.test.EventCounterListener;
+import net.jps.nuke.examples.listener.EventCounterListener;
 import net.jps.nuke.examples.source.EventGenerator;
 import net.jps.nuke.task.Task;
 import net.jps.nuke.util.TimeValue;

@@ -1,6 +1,6 @@
 package net.jps.nuke.listener.eps;
 
-import net.jps.nuke.listener.eps.handler.EventProcessingException;
+import net.jps.nuke.listener.eps.handler.AtomEventHandlerException;
 import net.jps.nuke.atom.model.Entry;
 import net.jps.nuke.atom.model.Feed;
 import net.jps.nuke.listener.eps.handler.AtomEventHandler;
@@ -13,15 +13,20 @@ import org.slf4j.LoggerFactory;
  *
  * @author zinic
  */
-public class Conduit {
+public class HandlerConduit {
 
-   private static final Logger LOG = LoggerFactory.getLogger(Conduit.class);
+   private static final Logger LOG = LoggerFactory.getLogger(HandlerConduit.class);
+   
    private final AtomEventHandler eventHandler;
    private final Selector selector;
 
-   public Conduit(AtomEventHandler eventHandler, Selector selector) {
+   public HandlerConduit(AtomEventHandler eventHandler, Selector selector) {
       this.eventHandler = eventHandler;
       this.selector = selector;
+   }
+   
+   public void destroy() throws AtomEventHandlerException {
+      eventHandler.destroy();
    }
 
    public SelectorResult select(Feed page) {
@@ -42,7 +47,7 @@ public class Conduit {
       if (result == SelectorResult.PROCESS) {
          try {
             eventHandler.entry(entry);
-         } catch (EventProcessingException epe) {
+         } catch (AtomEventHandlerException epe) {
             LOG.error(epe.getMessage(), epe);
          }
       }

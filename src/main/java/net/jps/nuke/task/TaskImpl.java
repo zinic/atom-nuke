@@ -3,7 +3,6 @@ package net.jps.nuke.task;
 import net.jps.nuke.listener.RegisteredListener;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import net.jps.nuke.util.remote.CancellationRemote;
 import net.jps.nuke.util.remote.AtomicCancellationRemote;
 import net.jps.nuke.listener.AtomListener;

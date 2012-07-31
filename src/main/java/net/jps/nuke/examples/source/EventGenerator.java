@@ -9,6 +9,8 @@ import net.jps.nuke.atom.model.builder.EntryBuilder;
 import net.jps.nuke.atom.model.builder.FeedBuilder;
 import net.jps.nuke.atom.model.builder.IdBuilder;
 import net.jps.nuke.atom.model.builder.TitleBuilder;
+import net.jps.nuke.service.ServiceDestructionException;
+import net.jps.nuke.service.ServiceInitializationException;
 import net.jps.nuke.source.AtomSource;
 import net.jps.nuke.source.AtomSourceException;
 import net.jps.nuke.source.AtomSourceResult;
@@ -37,6 +39,14 @@ public class EventGenerator implements AtomSource {
       this.generatorPrefix = generatorPrefix;
       this.generateFeed = generateFeed;
       this.generateForever = generateForever;
+   }
+
+   @Override
+   public void init() throws ServiceInitializationException {
+   }
+
+   @Override
+   public void destroy() throws ServiceDestructionException {
    }
 
    private Entry buildEntry(String id) {

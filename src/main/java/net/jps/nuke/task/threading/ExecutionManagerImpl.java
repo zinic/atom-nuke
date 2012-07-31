@@ -21,7 +21,11 @@ public class ExecutionManagerImpl implements ExecutionManager {
    }
 
    @Override
-   public void destroy() {
+   public synchronized void destroy() {
+      for (ManagedTask task : executionStates.keySet()) {
+         task.destroy();
+      }
+      
       executorService.shutdown();
    }
 
