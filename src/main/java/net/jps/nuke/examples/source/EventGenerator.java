@@ -20,8 +20,10 @@ import net.jps.nuke.source.impl.AtomSourceResultImpl;
 public class EventGenerator implements AtomSource {
 
    private final boolean generateFeed;
+   private final String generatorPrefix;
 
-   public EventGenerator(boolean generateFeed) {
+   public EventGenerator(String generatorPrefix, boolean generateFeed) {
+      this.generatorPrefix = generatorPrefix;
       this.generateFeed = generateFeed;
    }
 
@@ -47,7 +49,8 @@ public class EventGenerator implements AtomSource {
       final FeedBuilder feed = new FeedBuilder();
 
       final TitleBuilder title = new TitleBuilder();
-      title.getValueBuilder().append("Example Feed");
+      title.getValueBuilder().append(generatorPrefix);
+      title.getValueBuilder().append(" Example Feed");
       feed.setTitle(title);
 
       final AuthorBuilder author = new AuthorBuilder();
@@ -59,7 +62,7 @@ public class EventGenerator implements AtomSource {
       feed.addCategory(category);
 
       for (int entryNum = 1; entryNum <= 50; entryNum++) {
-         feed.addEntry(buildEntry("urn:entryid:" + entryNum));
+         feed.addEntry(buildEntry("urn:entryid:" + generatorPrefix + "-" + entryNum));
       }
 
       return feed;
@@ -70,7 +73,7 @@ public class EventGenerator implements AtomSource {
       if (generateFeed) {
          return new AtomSourceResultImpl(buildFeed());
       } else {
-         return new AtomSourceResultImpl(buildEntry("urn:entryid:0"));
+         return new AtomSourceResultImpl(buildEntry("urn:entryid:" + generatorPrefix + "-0"));
       }
    }
 }

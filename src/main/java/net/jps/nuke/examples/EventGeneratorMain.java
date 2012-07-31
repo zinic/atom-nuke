@@ -18,7 +18,7 @@ public class EventGeneratorMain {
         final Nuke nukeInstance = new NukeKernel();
 
         for (int taskId = 1; taskId <= 30; taskId++) {
-            final Task task = nukeInstance.follow(new EventGenerator(true), new TimeValue(1000 * taskId, TimeUnit.NANOSECONDS));
+            final Task task = nukeInstance.follow(new EventGenerator("Task " + taskId, true), new TimeValue(1000 * taskId, TimeUnit.NANOSECONDS));
 
             task.addListener(new PrintStreamOutputListener(System.out, "Task " + taskId + " - Listener 1"));
             task.addListener(new PrintStreamOutputListener(System.out, "Task " + taskId + " - Listener 2"));

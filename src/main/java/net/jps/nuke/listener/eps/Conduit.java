@@ -15,7 +15,6 @@ import org.slf4j.LoggerFactory;
 public class Conduit {
 
    private static final Logger LOG = LoggerFactory.getLogger(Conduit.class);
-   
    private final AtomEventHandler eventHandler;
    private final Selector selector;
 

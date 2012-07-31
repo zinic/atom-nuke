@@ -9,5 +9,5 @@ import net.jps.nuke.listener.eps.EventProcessingException;
  */
 public interface AtomEventHandler {
 
-   Entry entry(Entry entry) throws EventProcessingException;
+   void entry(Entry entry) throws EventProcessingException;
 }
