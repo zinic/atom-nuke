@@ -1,5 +1,6 @@
 package net.jps.nuke.listener.eps.selectors;
 
+import java.util.Arrays;
 import java.util.List;
 import net.jps.nuke.atom.model.Category;
 import net.jps.nuke.atom.model.Entry;
@@ -21,8 +22,8 @@ public class CategorySelector implements Selector {
    }
 
    public CategorySelector(String[] feedTerms, String[] entryTerms) {
-      this.feedTerms = feedTerms;
-      this.entryTerms = entryTerms;
+      this.feedTerms = Arrays.copyOf(feedTerms, feedTerms.length);
+      this.entryTerms = Arrays.copyOf(entryTerms, entryTerms.length);
    }
 
    public static boolean hasCategoryTerm(String[] termsToSearchThrough, List<Category> categories) {
