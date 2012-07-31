@@ -5,8 +5,8 @@ import java.util.List;
 import net.jps.nuke.atom.model.Category;
 import net.jps.nuke.atom.model.Entry;
 import net.jps.nuke.atom.model.Feed;
-import net.jps.nuke.listener.eps.handler.Selector;
-import net.jps.nuke.listener.eps.handler.SelectorResult;
+import net.jps.nuke.listener.eps.selector.Selector;
+import net.jps.nuke.listener.eps.selector.SelectorResult;
 
 /**
  *

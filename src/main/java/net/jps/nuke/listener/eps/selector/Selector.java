@@ -1,4 +1,4 @@
-package net.jps.nuke.listener.eps.handler;
+package net.jps.nuke.listener.eps.selector;
 
 import net.jps.nuke.atom.model.Entry;
 import net.jps.nuke.atom.model.Feed;

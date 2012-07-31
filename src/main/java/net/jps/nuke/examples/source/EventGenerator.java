@@ -9,8 +9,8 @@ import net.jps.nuke.atom.model.builder.EntryBuilder;
 import net.jps.nuke.atom.model.builder.FeedBuilder;
 import net.jps.nuke.atom.model.builder.IdBuilder;
 import net.jps.nuke.atom.model.builder.TitleBuilder;
-import net.jps.nuke.service.ServiceDestructionException;
-import net.jps.nuke.service.ServiceInitializationException;
+import net.jps.nuke.service.DestructionException;
+import net.jps.nuke.service.InitializationException;
 import net.jps.nuke.source.AtomSource;
 import net.jps.nuke.source.AtomSourceException;
 import net.jps.nuke.source.AtomSourceResult;
@@ -42,11 +42,11 @@ public class EventGenerator implements AtomSource {
    }
 
    @Override
-   public void init() throws ServiceInitializationException {
+   public void init() throws InitializationException {
    }
 
    @Override
-   public void destroy() throws ServiceDestructionException {
+   public void destroy() throws DestructionException {
    }
 
    private Entry buildEntry(String id) {

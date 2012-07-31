@@ -1,8 +1,8 @@
 package net.jps.nuke.listener.eps;
 
-import net.jps.nuke.listener.eps.handler.AtomEventHandler;
-import net.jps.nuke.listener.eps.handler.AtomEventHandlerException;
-import net.jps.nuke.listener.eps.handler.Selector;
+import net.jps.nuke.listener.eps.handler.AtomEventlet;
+import net.jps.nuke.listener.eps.selector.Selector;
+import net.jps.nuke.service.InitializationException;
 
 /**
  *
@@ -10,5 +10,7 @@ import net.jps.nuke.listener.eps.handler.Selector;
  */
 public interface AtomEventHandlerRelay {
 
-   void enlistHandler(AtomEventHandler handler, Selector selector) throws AtomEventHandlerException;
+   void enlistHandler(AtomEventlet handler) throws InitializationException;
+
+   void enlistHandler(AtomEventlet handler, Selector selector) throws InitializationException;
 }

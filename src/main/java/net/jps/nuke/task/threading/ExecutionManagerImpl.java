@@ -1,10 +1,14 @@
 package net.jps.nuke.task.threading;
 
-import net.jps.nuke.task.ManagedTask;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import net.jps.nuke.task.ManagedTask;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -12,46 +16,81 @@ import java.util.concurrent.Future;
  */
 public class ExecutionManagerImpl implements ExecutionManager {
 
-   private final Map<ManagedTask, Future> executionStates;
+   private static final Logger LOG = LoggerFactory.getLogger(ExecutionManagerImpl.class);
+   
+   private final List<ExecutingTask> executionStates;
    private final ExecutorService executorService;
+   private final int executionCap;
 
-   public ExecutionManagerImpl(ExecutorService executorService) {
+   public ExecutionManagerImpl(int executionCap, ExecutorService executorService) {
+      this.executionCap = executionCap;
       this.executorService = executorService;
-      executionStates = new HashMap<ManagedTask, Future>();
+      executionStates = new LinkedList<ExecutingTask>();
+   }
+
+   private synchronized List<ExecutingTask> copyExecutionStates() {
+      for (Iterator<ExecutingTask> itr = executionStates.iterator(); itr.hasNext();) {
+         final ExecutingTask nextTask = itr.next();
+
+         if (nextTask.done()) {
+            itr.remove();
+         }
+      }
+
+      return new LinkedList<ExecutingTask>(executionStates);
+   }
+
+   private synchronized void track(ManagedTask task, Future future) {
+      executionStates.add(new ExecutingTask(task, future));
    }
 
    @Override
    public synchronized void destroy() {
-      for (ManagedTask task : executionStates.keySet()) {
+      // Shut down the execution pool
+      executorService.shutdown();
+
+      // Cancel all of the tasks
+      for (ExecutingTask task : executionStates) {
+         task.cancel();
+      }
+
+      try {
+         // Try to wait for things to settle
+         executorService.awaitTermination(5, TimeUnit.SECONDS);
+      } catch (InterruptedException ie) {
+         LOG.warn("Interrupted while waiting for task delegates to finish. This may introduce bad state.");
+         executorService.shutdownNow();
+      }
+
+      // Destroy the tasks
+      for (ExecutingTask task : executionStates) {
          task.destroy();
       }
-      
-      executorService.shutdown();
    }
 
    @Override
    public synchronized void submit(ManagedTask task) {
-      if (submitted(task)) {
-         throw new IllegalStateException("Task already in execution queue.");
-      }
-      
-      final Future execFuture = executorService.submit(task);
-      executionStates.put(task, execFuture);
-   }
-
-   @Override
-   public synchronized boolean submitted(ManagedTask task) {
-      final Future taskFuture = executionStates.get(task);
-      boolean submitted = false;
-
-      if (taskFuture != null) {
-         if (taskFuture.isDone()) {
-            executionStates.remove(task);
-         } else {
-            submitted = true;
+      while (copyExecutionStates().size() >= executionCap) {
+         try {
+            Thread.yield();
+            wait(0, 10000);
+         } catch (InterruptedException ie) {
+            LOG.warn("Interrupted while waiting for task delegates to free-up. Task will not be scheduled.");
+            return;
          }
       }
 
-      return submitted;
+      track(task, executorService.submit(task));
+   }
+
+   @Override
+   public boolean submitted(ManagedTask task) {
+      for (ExecutingTask executingTask : copyExecutionStates()) {
+         if (executingTask.managedTask().equals(task)) {
+            return true;
+         }
+      }
+      
+      return false;
    }
 }

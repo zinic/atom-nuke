@@ -1,5 +1,6 @@
 package net.jps.nuke.examples.handler;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -7,14 +8,16 @@ import javax.xml.stream.XMLStreamException;
 import net.jps.nuke.atom.Writer;
 import net.jps.nuke.atom.model.Entry;
 import net.jps.nuke.atom.stax.StaxAtomWriter;
-import net.jps.nuke.listener.eps.handler.AtomEventHandler;
+import net.jps.nuke.listener.eps.handler.AtomEventlet;
 import net.jps.nuke.listener.eps.handler.AtomEventHandlerException;
+import net.jps.nuke.service.DestructionException;
+import net.jps.nuke.service.InitializationException;
 
 /**
  *
  * @author zinic
  */
-public class FeedFileWriterHandler implements AtomEventHandler {
+public class FeedFileWriterHandler implements AtomEventlet {
 
    private static final byte[] NEWLINE = "\n".getBytes();
    
@@ -24,33 +27,42 @@ public class FeedFileWriterHandler implements AtomEventHandler {
 
    public FeedFileWriterHandler(File feedFile) {
       this.feedFile = feedFile;
-      
+
       atomWriter = new StaxAtomWriter();
    }
 
+   private synchronized void write(byte[] entry) throws XMLStreamException, IOException {
+      fileOutput.write(entry);
+      fileOutput.write(NEWLINE);
+      fileOutput.flush();
+   }
+
    @Override
-   public void init() throws AtomEventHandlerException {
+   public void init() throws InitializationException {
       try {
          fileOutput = new FileOutputStream(feedFile);
       } catch (IOException ioe) {
-         throw new AtomEventHandlerException("IOException caught while trying to open feed file \"" + feedFile.getAbsolutePath() + "\"", ioe);
+         throw new InitializationException("IOException caught while trying to open feed file \"" + feedFile.getAbsolutePath() + "\"", ioe);
       }
    }
 
    @Override
-   public void destroy() throws AtomEventHandlerException {
+   public void destroy() throws DestructionException {
       try {
+         fileOutput.flush();
          fileOutput.close();
       } catch (IOException ioe) {
-         throw new AtomEventHandlerException("IOException caught while trying to close feed file \"" + feedFile.getAbsolutePath() + "\"", ioe);
+         throw new DestructionException("IOException caught while trying to close feed file \"" + feedFile.getAbsolutePath() + "\"", ioe);
       }
    }
 
    @Override
    public void entry(Entry entry) throws AtomEventHandlerException {
+      final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
       try {
-         atomWriter.write(fileOutput, entry);
-         fileOutput.write(NEWLINE);
+         atomWriter.write(baos, entry);
+         write(baos.toByteArray());
       } catch (XMLStreamException xmlse) {
          throw new AtomEventHandlerException("XMLStreamException caught while trying to write to feed file \"" + feedFile.getAbsolutePath() + "\"", xmlse);
       } catch (IOException ioe) {

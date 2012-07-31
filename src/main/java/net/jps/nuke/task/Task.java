@@ -13,6 +13,8 @@ import net.jps.nuke.util.remote.CancellationRemote;
  */
 public interface Task {
 
+   boolean isReentrant();
+
    /**
     * Cancels the task's next execution. This stops all of the listeners
     * assigned to this task.

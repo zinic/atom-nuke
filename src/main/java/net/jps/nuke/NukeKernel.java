@@ -31,7 +31,7 @@ public class NukeKernel implements Nuke {
    private static final int NUM_PROCESSORS = Runtime.getRuntime().availableProcessors();
    private static long kid = 0;
    
-   private final CancellationRemote crawlerCancellationRemote;
+   private final CancellationRemote kernelCancellationRemote;
    private final ExecutorService executorService;
    private final KernelDelegate logic;
    private final Thread controlThread;
@@ -58,7 +58,7 @@ public class NukeKernel implements Nuke {
     * pool may spawn.
     */
    public NukeKernel(int corePoolSize, int maxPoolsize) {
-      this(new ThreadPoolExecutor(corePoolSize, maxPoolsize, 30, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(), DEFAULT_THREAD_FACTORY, new NukeRejectionHandler()));
+      this(new ThreadPoolExecutor(corePoolSize, maxPoolsize, 30, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(), DEFAULT_THREAD_FACTORY, new NukeRejectionHandler()), maxPoolsize);
    }
 
    /**
@@ -67,11 +67,11 @@ public class NukeKernel implements Nuke {
     * @param executorService sets the execution service that the kernel will
     * utilize for scheduling.
     */
-   public NukeKernel(ExecutorService executorService) {
+   public NukeKernel(ExecutorService executorService, int maxPoolsize) {
       this.executorService = executorService;
 
-      crawlerCancellationRemote = new AtomicCancellationRemote();
-      logic = new KernelDelegate(crawlerCancellationRemote, new ExecutionManagerImpl(executorService));
+      kernelCancellationRemote = new AtomicCancellationRemote();
+      logic = new KernelDelegate(kernelCancellationRemote, new ExecutionManagerImpl(maxPoolsize, executorService));
       controlThread = new Thread(logic, "nuke-kernel-" + (kid++));
    }
 
@@ -86,13 +86,12 @@ public class NukeKernel implements Nuke {
 
    @Override
    public void destroy() {
-      crawlerCancellationRemote.cancel();
-      controlThread.interrupt();
+      kernelCancellationRemote.cancel();
 
       try {
          controlThread.join();
       } catch (InterruptedException ie) {
-         // TODO:Log
+         controlThread.interrupt();
       }
    }
 

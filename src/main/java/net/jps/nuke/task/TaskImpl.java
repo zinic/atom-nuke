@@ -1,12 +1,14 @@
 package net.jps.nuke.task;
 
-import net.jps.nuke.listener.RegisteredListener;
 import java.util.LinkedList;
 import java.util.List;
-import net.jps.nuke.util.remote.CancellationRemote;
+import java.util.concurrent.atomic.AtomicBoolean;
 import net.jps.nuke.util.remote.AtomicCancellationRemote;
 import net.jps.nuke.listener.AtomListener;
+import net.jps.nuke.listener.ReentrantAtomListener;
+import net.jps.nuke.listener.RegisteredListener;
 import net.jps.nuke.util.TimeValue;
+import net.jps.nuke.util.remote.CancellationRemote;
 
 /**
  *
@@ -16,6 +18,7 @@ public abstract class TaskImpl implements Task {
 
    private final List<RegisteredListener> assignedListeners;
    private final CancellationRemote cancelationRemote;
+   private final AtomicBoolean reentrant;
    private final TimeValue interval;
    private TimeValue timestamp;
 
@@ -29,6 +32,7 @@ public abstract class TaskImpl implements Task {
 
       this.interval = interval;
       this.timestamp = TimeValue.now();
+      reentrant = new AtomicBoolean(true);
    }
 
    protected void setTimestamp(TimeValue timestamp) {
@@ -37,6 +41,11 @@ public abstract class TaskImpl implements Task {
 
    protected List<RegisteredListener> listeners() {
       return assignedListeners;
+   }
+
+   @Override
+   public boolean isReentrant() {
+      return reentrant.get();
    }
 
    @Override
@@ -51,6 +60,10 @@ public abstract class TaskImpl implements Task {
 
    @Override
    public CancellationRemote addListener(AtomListener listener) {
+      if (!(listener instanceof ReentrantAtomListener)) {
+         reentrant.set(false);
+      }
+
       final CancellationRemote listenerCancelationRemote = new AtomicCancellationRemote();
       addListener(listener, listenerCancelationRemote);
 
@@ -69,8 +82,6 @@ public abstract class TaskImpl implements Task {
 
    @Override
    public TimeValue nextPollTime() {
-//      System.out.println("Interval: " + interval + " - Timestamp: " + timestamp + " - Addition Result: " + timestamp.add(interval()));
-      
       return timestamp.add(interval());
    }
 }

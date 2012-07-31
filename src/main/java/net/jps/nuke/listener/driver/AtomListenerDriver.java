@@ -9,8 +9,6 @@ import net.jps.nuke.listener.AtomListenerResult;
 
 /**
  *
- * TODO:Refactor - Recompose this into three classes: abstract, feed and entry.
- *
  * @author zinic
  */
 public class AtomListenerDriver implements RegisteredListenerDriver {
@@ -33,6 +31,7 @@ public class AtomListenerDriver implements RegisteredListenerDriver {
       this.entry = entry;
    }
 
+   @Override
    public void run() {
       final ListenerResult result = drive(registeredListener.listener());
 

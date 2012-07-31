@@ -6,7 +6,7 @@ package net.jps.nuke.service;
  */
 public interface Service {
 
-   void init() throws ServiceInitializationException;
+   void init() throws InitializationException;
 
-   void destroy() throws ServiceDestructionException;
+   void destroy() throws DestructionException;
 }

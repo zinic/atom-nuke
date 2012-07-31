@@ -9,6 +9,6 @@ import java.util.UUID;
 public interface ManagedTask extends Task, Runnable {
 
    UUID id();
-   
+
    void destroy();
 }

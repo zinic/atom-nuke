@@ -8,11 +8,12 @@ import net.jps.nuke.listener.AtomListener;
 import net.jps.nuke.listener.AtomListenerException;
 import net.jps.nuke.listener.AtomListenerResult;
 import net.jps.nuke.listener.ListenerResult;
-import net.jps.nuke.listener.eps.handler.AtomEventHandler;
-import net.jps.nuke.listener.eps.handler.AtomEventHandlerException;
-import net.jps.nuke.listener.eps.handler.Selector;
-import net.jps.nuke.service.ServiceDestructionException;
-import net.jps.nuke.service.ServiceInitializationException;
+import net.jps.nuke.listener.ReentrantAtomListener;
+import net.jps.nuke.listener.eps.handler.AtomEventlet;
+import net.jps.nuke.listener.eps.selector.DefaultSelector;
+import net.jps.nuke.listener.eps.selector.Selector;
+import net.jps.nuke.service.DestructionException;
+import net.jps.nuke.service.InitializationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,8 +39,8 @@ public class Relay implements AtomListener, AtomEventHandlerRelay {
    private static void destroyConduit(HandlerConduit conduit) {
       try {
          conduit.destroy();
-      } catch (AtomEventHandlerException aehe) {
-         LOG.error("Exception caught while destroying AtomEventHandler. Reason: " + aehe.getMessage(), aehe);
+      } catch (DestructionException de) {
+         LOG.error("Exception caught while destroying AtomEventHandler. Reason: " + de.getMessage(), de);
       }
    }
 
@@ -54,19 +55,24 @@ public class Relay implements AtomListener, AtomEventHandlerRelay {
    }
 
    @Override
-   public synchronized void enlistHandler(AtomEventHandler handler, Selector selector) throws AtomEventHandlerException {
+   public void enlistHandler(AtomEventlet handler) throws InitializationException {
+      enlistHandler(handler, DefaultSelector.INSTANCE);
+   }
+
+   @Override
+   public synchronized void enlistHandler(AtomEventlet handler, Selector selector) throws InitializationException {
       handler.init();
 
       epsConduits.add(new HandlerConduit(handler, selector));
    }
 
    @Override
-   public void init() throws ServiceInitializationException {
+   public void init() throws InitializationException {
       LOG.info("Relay(" + this + ") started.");
    }
 
    @Override
-   public void destroy() throws ServiceDestructionException {
+   public void destroy() throws DestructionException {
       for (HandlerConduit conduit : epsConduits) {
          destroyConduit(conduit);
       }

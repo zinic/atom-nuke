@@ -4,8 +4,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 import net.jps.nuke.Nuke;
 import net.jps.nuke.NukeKernel;
-import net.jps.nuke.examples.listener.EventCounterListener;
+import net.jps.nuke.examples.listener.EventCounterAtomEventelt;
 import net.jps.nuke.examples.source.EventGenerator;
+import net.jps.nuke.listener.eps.Relay;
 import net.jps.nuke.task.Task;
 import net.jps.nuke.util.TimeValue;
 import org.junit.Test;
@@ -24,11 +25,14 @@ public class NukeKernelTest {
       for (int taskId = 1; taskId <= 30; taskId++) {
          final Task task = nukeKernel.follow(new EventGenerator("Task " + taskId, true), new TimeValue(1000 * taskId, TimeUnit.NANOSECONDS));
 
-         task.addListener(new EventCounterListener(eventsProcessed));
-         task.addListener(new EventCounterListener(eventsProcessed));
-         task.addListener(new EventCounterListener(eventsProcessed));
-         task.addListener(new EventCounterListener(eventsProcessed));
-         task.addListener(new EventCounterListener(eventsProcessed));
+         final Relay relay = new Relay();
+         relay.enlistHandler(new EventCounterAtomEventelt(eventsProcessed));
+         relay.enlistHandler(new EventCounterAtomEventelt(eventsProcessed));
+         relay.enlistHandler(new EventCounterAtomEventelt(eventsProcessed));
+         relay.enlistHandler(new EventCounterAtomEventelt(eventsProcessed));
+         relay.enlistHandler(new EventCounterAtomEventelt(eventsProcessed));
+         
+         task.addListener(relay);
       }
       
       nukeKernel.start();

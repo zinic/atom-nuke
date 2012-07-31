@@ -1,19 +1,19 @@
 package net.jps.nuke.task;
 
-import net.jps.nuke.listener.RegisteredListener;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
-import net.jps.nuke.util.remote.AtomicCancellationRemote;
+import net.jps.nuke.listener.RegisteredListener;
 import net.jps.nuke.source.AtomSource;
 import net.jps.nuke.source.AtomSourceResult;
 import net.jps.nuke.listener.driver.RegisteredListenerDriver;
 import net.jps.nuke.listener.driver.AtomListenerDriver;
-import net.jps.nuke.service.ServiceDestructionException;
+import net.jps.nuke.service.DestructionException;
 import net.jps.nuke.util.TimeValue;
+import net.jps.nuke.util.remote.AtomicCancellationRemote;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,7 +58,7 @@ public class ManagedTaskImpl extends TaskImpl implements ManagedTask {
       for (RegisteredListener registeredListener : listeners()) {
          try {
             registeredListener.listener().destroy();
-         } catch (ServiceDestructionException sde) {
+         } catch (DestructionException sde) {
             LOG.error(sde.getMessage(), sde);
          }
       }

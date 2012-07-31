@@ -3,9 +3,10 @@ package net.jps.nuke.listener.eps;
 import net.jps.nuke.listener.eps.handler.AtomEventHandlerException;
 import net.jps.nuke.atom.model.Entry;
 import net.jps.nuke.atom.model.Feed;
-import net.jps.nuke.listener.eps.handler.AtomEventHandler;
-import net.jps.nuke.listener.eps.handler.Selector;
-import net.jps.nuke.listener.eps.handler.SelectorResult;
+import net.jps.nuke.listener.eps.handler.AtomEventlet;
+import net.jps.nuke.listener.eps.selector.Selector;
+import net.jps.nuke.listener.eps.selector.SelectorResult;
+import net.jps.nuke.service.DestructionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,15 +18,15 @@ public class HandlerConduit {
 
    private static final Logger LOG = LoggerFactory.getLogger(HandlerConduit.class);
    
-   private final AtomEventHandler eventHandler;
+   private final AtomEventlet eventHandler;
    private final Selector selector;
 
-   public HandlerConduit(AtomEventHandler eventHandler, Selector selector) {
+   public HandlerConduit(AtomEventlet eventHandler, Selector selector) {
       this.eventHandler = eventHandler;
       this.selector = selector;
    }
    
-   public void destroy() throws AtomEventHandlerException {
+   public void destroy() throws DestructionException {
       eventHandler.destroy();
    }
 

@@ -12,8 +12,8 @@ import net.jps.nuke.atom.model.Entry;
 import net.jps.nuke.atom.model.Feed;
 import net.jps.nuke.atom.Writer;
 import net.jps.nuke.listener.AtomListenerException;
-import net.jps.nuke.service.ServiceDestructionException;
-import net.jps.nuke.service.ServiceInitializationException;
+import net.jps.nuke.service.DestructionException;
+import net.jps.nuke.service.InitializationException;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
@@ -48,24 +48,24 @@ public class HDFSFeedListener implements AtomListener {
    }
 
    @Override
-   public void init() throws ServiceInitializationException {
+   public void init() throws InitializationException {
       try {
          hdfs = FileSystem.get(configuration);
 
          writeHeader = !hdfs.exists(targetPath);
          fileWriter = SequenceFile.createWriter(hdfs, configuration, targetPath, Text.class, Text.class);
       } catch (IOException ioe) {
-         throw new ServiceInitializationException(ioe);
+         throw new InitializationException(ioe);
       }
    }
 
    @Override
-   public void destroy() throws ServiceDestructionException {
+   public void destroy() throws DestructionException {
       try {
          fileWriter.close();
          hdfs.close();
       } catch (IOException ioe) {
-         throw new ServiceDestructionException(ioe);
+         throw new DestructionException(ioe);
       }
    }
 

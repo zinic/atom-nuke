@@ -39,6 +39,7 @@ public class EPSMain {
 
       // Event handler partial makes delegate creation more simple
       relay1.enlistHandler(new AtomEventHandlerPartial() {
+         
          @Override
          public void entry(Entry entry) throws AtomEventHandlerException {
             System.out.println("Relay 1 - Entry: " + entry.id().value());
