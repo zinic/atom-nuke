@@ -1,6 +1,7 @@
 package net.jps.nuke.examples.source;
 
-import net.jps.nuke.atom.model.Id;
+import net.jps.nuke.atom.model.Entry;
+import net.jps.nuke.atom.model.Feed;
 import net.jps.nuke.atom.model.builder.AuthorBuilder;
 import net.jps.nuke.atom.model.builder.CategoryBuilder;
 import net.jps.nuke.atom.model.builder.EntryBuilder;
@@ -24,42 +25,52 @@ public class EventGenerator implements AtomSource {
       this.generateFeed = generateFeed;
    }
 
+   private Entry buildEntry(String id) {
+      final EntryBuilder entry = new EntryBuilder();
+
+      final IdBuilder idBuilder = new IdBuilder();
+      idBuilder.appendValue(id);
+      entry.setId(idBuilder);
+
+      final CategoryBuilder testCat = new CategoryBuilder();
+      testCat.setTerm("test");
+      entry.addCategory(testCat);
+
+      final CategoryBuilder otherCat = new CategoryBuilder();
+      otherCat.setTerm("other-cat");
+      entry.addCategory(otherCat);
+
+      return entry;
+   }
+
+   private Feed buildFeed() {
+      final FeedBuilder feed = new FeedBuilder();
+
+      final TitleBuilder title = new TitleBuilder();
+      title.getValueBuilder().append("Example Feed");
+      feed.setTitle(title);
+
+      final AuthorBuilder author = new AuthorBuilder();
+      author.setName("Author");
+      feed.addAuthor(author);
+
+      final CategoryBuilder category = new CategoryBuilder();
+      category.setTerm("test");
+      feed.addCategory(category);
+
+      for (int entryNum = 1; entryNum <= 50; entryNum++) {
+         feed.addEntry(buildEntry("urn:entryid:" + entryNum));
+      }
+
+      return feed;
+   }
+
    @Override
    public AtomSourceResult poll() throws AtomSourceException {
       if (generateFeed) {
-         final FeedBuilder feed = new FeedBuilder();
-
-         final TitleBuilder title = new TitleBuilder();
-         title.getValueBuilder().append("Example Feed");
-         feed.setTitle(title);
-
-         final AuthorBuilder author = new AuthorBuilder();
-         author.setName("Author");
-         feed.addAuthor(author);
-
-         final CategoryBuilder category = new CategoryBuilder();
-         category.setTerm("test");
-         feed.addCategory(category);
-
-         for (int entryNum = 1; entryNum <= 50; entryNum++) {
-            final EntryBuilder entry = new EntryBuilder();
-            
-            final IdBuilder id = new IdBuilder();
-            id.appendValue("urn:" + entryNum + "-entryId");
-            entry.setId(id);
-            
-            final CategoryBuilder entryCategory = new CategoryBuilder();
-            entryCategory.setTerm("test");
-            entry.addCategory(entryCategory);
-            
-            feed.addEntry(entry);
-         }
-
-         return new AtomSourceResultImpl(feed);
+         return new AtomSourceResultImpl(buildFeed());
       } else {
-         final EntryBuilder entryBuilder = new EntryBuilder();
-
-         return new AtomSourceResultImpl(entryBuilder);
+         return new AtomSourceResultImpl(buildEntry("urn:entryid:0"));
       }
    }
 }

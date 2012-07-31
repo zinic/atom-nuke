@@ -1,5 +1,6 @@
 package net.jps.nuke.listener.eps.selectors;
 
+import java.util.List;
 import net.jps.nuke.atom.model.Category;
 import net.jps.nuke.atom.model.Entry;
 import net.jps.nuke.atom.model.Feed;
@@ -12,22 +13,44 @@ import net.jps.nuke.listener.eps.handler.SelectorResult;
  */
 public class CategorySelector implements Selector {
 
-   private final String[] categoryTerms;
+   private final String[] feedTerms;
+   private final String[] entryTerms;
 
-   public CategorySelector(String[] categoryTerms) {
-      this.categoryTerms = categoryTerms;
+   public CategorySelector(String[] entryTerms) {
+      this(new String[0], entryTerms);
+   }
+
+   public CategorySelector(String[] feedTerms, String[] entryTerms) {
+      this.feedTerms = feedTerms;
+      this.entryTerms = entryTerms;
+   }
+
+   public static boolean hasCategoryTerm(String[] termsToSearchThrough, List<Category> categories) {
+      for (Category category : categories) {
+         if (hasCategoryTerm(termsToSearchThrough, category.term())) {
+            return true;
+         }
+      }
+
+      return false;
+   }
+
+   public static boolean hasCategoryTerm(String[] termsToSearchThrough, String termToFind) {
+      if (termToFind != null) {
+         for (String targetCategory : termsToSearchThrough) {
+            if (targetCategory.equals(termToFind)) {
+               return true;
+            }
+         }
+      }
+
+      return false;
    }
 
    @Override
    public SelectorResult select(Feed feed) {
-      for (Category category : feed.categories()) {
-         if (category.term() != null) {
-            for (String targetCategory : categoryTerms) {
-               if (targetCategory.equals(category.term())) {
-                  return SelectorResult.PROCESS;
-               }
-            }
-         }
+      if (feedTerms.length == 0 || hasCategoryTerm(feedTerms, feed.categories())) {
+         return SelectorResult.PROCESS;
       }
 
       return SelectorResult.PASS;
@@ -35,14 +58,8 @@ public class CategorySelector implements Selector {
 
    @Override
    public SelectorResult select(Entry entry) {
-      for (Category category : entry.categories()) {
-         if (category.term() != null) {
-            for (String targetCategory : categoryTerms) {
-               if (targetCategory.equals(category.term())) {
-                  return SelectorResult.PROCESS;
-               }
-            }
-         }
+      if (entryTerms.length == 0 || hasCategoryTerm(entryTerms, entry.categories())) {
+         return SelectorResult.PROCESS;
       }
 
       return SelectorResult.PASS;
