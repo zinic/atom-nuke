@@ -65,14 +65,13 @@ public class KernelDelegate implements Runnable {
          try {
             // Sleep if there's nothing to poll at the moment
             if (sleepTime.value() > 0) {
-               LOG.warn("KernelDelegate sleeping now.");
                sleepTime.sleep();
             } else {
                // Yield if we're not going to sleep
                Thread.yield();
             }
          } catch (InterruptedException ie) {
-            LOG.warn("KernelDelegate interrupted. Shutting down right now.");
+            LOG.warn("KernelDelegate interrupted. Shutting down right now.", ie);
             break;
          }
       }
@@ -92,14 +91,9 @@ public class KernelDelegate implements Runnable {
             // Sould this task be scheduled? If so, is the task already in the execution queue?
             if (now.isGreaterThan(nextPollTime)) {
 
-               // If we just scheduled this task to be run then it shouldn't
-               // be considered for the closest polling time
-//               if (!executionManager.submitted(managedTask)) {
-               if (!managedTask.isReentrant()) {
-                  LOG.info("Task is not reentrant.");
-               }
-               
-               if (!executionManager.submitted(managedTask)) {
+               // Reentrant tasks are always eligible to run if their next polling
+               // time has arrived.
+               if (managedTask.isReentrant() || !executionManager.submitted(managedTask)) {
                   executionManager.submit(managedTask);
                }
             } else if (closestPollTime == null || closestPollTime.isGreaterThan(nextPollTime)) {
