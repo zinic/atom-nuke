@@ -340,7 +340,7 @@ public final class AtomWriter {
    }
 
    private static void writeEntry(WriterContext context, Entry entry) throws XMLStreamException {
-      if (entry != null) {
+      if (entry == null) {
          return;
       }
 

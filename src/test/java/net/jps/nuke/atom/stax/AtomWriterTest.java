@@ -1,8 +1,12 @@
 package net.jps.nuke.atom.stax;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import net.jps.nuke.atom.ParserResult;
+import net.jps.nuke.atom.Reader;
 import net.jps.nuke.atom.Writer;
 import net.jps.nuke.atom.model.builder.FeedBuilder;
+import net.jps.nuke.atom.sax.impl.SaxAtomParser;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
@@ -20,11 +24,20 @@ public class AtomWriterTest {
 
       @Test
       public void shouldWriteEmptyFeed() throws Exception {
+         final Reader reader = new SaxAtomParser();
+         final ParserResult result = reader.read(AtomWriterTest.class.getResourceAsStream("/META-INF/examples/atom/PerformanceTestContents.xml"));
+
          final Writer writer = new StaxAtomWriter();
          final ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
-         writer.write(baos, new FeedBuilder());
-         assertEquals("<?xml version='1.0' encoding='UTF-8'?><feed xmlns=\"http://www.w3.org/2005/Atom\"/>", new String(baos.toByteArray()));
+         writer.write(baos, result.getFeed());
+
+         final ParserResult rereadResult = reader.read(new ByteArrayInputStream(baos.toByteArray()));
+
+         assertEquals(result.getFeed().authors().size(), rereadResult.getFeed().authors().size());
+         assertEquals(result.getFeed().categories().size(), rereadResult.getFeed().categories().size());
+         assertEquals(result.getFeed().links().size(), rereadResult.getFeed().links().size());
+         assertEquals(result.getFeed().entries().size(), rereadResult.getFeed().entries().size());
       }
    }
 }
