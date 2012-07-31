@@ -24,6 +24,16 @@ next scheduled poll.
 
 ##How do I use it?##
 
+###As an Event Bus###
+
+Nuke contains a high performance event dispatch kernel that's backed by an
+execution pool. The Nuke kernel supports nanosecond polling granularity.
+
+* [Event generator example](https://github.com/zinic/atom-nuke/blob/master/src/main/java/net/jps/nuke/examples/EventGeneratorMain.java)
+
+For more information see the [Nuke kernel](https://github.com/zinic/atom-nuke/blob/master/src/main/java/net/jps/nuke/NukeKernel.java)
+and the [Nuke kernel run delegate](https://github.com/zinic/atom-nuke/blob/master/src/main/java/net/jps/nuke/KernelDelegate.java).
+
 ###Feed Crawler###
 
 By default Nuke comes with an [ATOM source](https://github.com/zinic/atom-nuke/blob/master/src/main/java/net/jps/nuke/source/AtomSource.java)
@@ -32,15 +42,12 @@ with [AtomHopper](http://atomhopper.org/).
 
 * [Using the Feed Crawler](https://github.com/zinic/atom-nuke/blob/master/src/main/java/net/jps/nuke/examples/HDFSMain.java)
 
-###As an Event Bus###
+###Using ATOM Event Selection###
 
-Nuke contains a high performance event dispatch kernel that's backed by an
-execution pool. The Nuke kernel supports nanosecond polling granularity.
+Nuke contains a framework for turning ATOM feeds and entries into selectable
+events. This framework is called the [event processing system or EPS](https://github.com/zinic/atom-nuke/tree/master/src/main/java/net/jps/nuke/listener/eps) for short.
 
-* [Using an event generator](https://github.com/zinic/atom-nuke/blob/master/src/main/java/net/jps/nuke/examples/EventGeneratorMain.java)
-
-For more information see the [Nuke kernel](https://github.com/zinic/atom-nuke/blob/master/src/main/java/net/jps/nuke/NukeKernel.java)
-and the [Nuke kernel run delegate](https://github.com/zinic/atom-nuke/blob/master/src/main/java/net/jps/nuke/KernelDelegate.java).
+* [Using an EPS Relay](https://github.com/zinic/atom-nuke/blob/master/src/main/java/net/jps/nuke/examples/EPSMain.java)
 
 ###Other Java Code Exmaples###
 
