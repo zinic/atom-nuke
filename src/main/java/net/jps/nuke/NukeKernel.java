@@ -27,8 +27,10 @@ public class NukeKernel implements Nuke {
          return new Thread(r, "nuke-worker-" + (tid++));
       }
    };
+   
    private static final int NUM_PROCESSORS = Runtime.getRuntime().availableProcessors();
    private static long kid = 0;
+   
    private final CancellationRemote crawlerCancellationRemote;
    private final ExecutorService executorService;
    private final KernelDelegate logic;
@@ -56,7 +58,7 @@ public class NukeKernel implements Nuke {
     * pool may spawn.
     */
    public NukeKernel(int corePoolSize, int maxPoolsize) {
-      this(new ThreadPoolExecutor(corePoolSize, maxPoolsize, 30, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(), DEFAULT_THREAD_FACTORY));
+      this(new ThreadPoolExecutor(corePoolSize, maxPoolsize, 30, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(), DEFAULT_THREAD_FACTORY, new NukeRejectionHandler()));
    }
 
    /**

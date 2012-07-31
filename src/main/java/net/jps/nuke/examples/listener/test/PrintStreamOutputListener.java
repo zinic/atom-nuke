@@ -4,7 +4,6 @@ import java.io.PrintStream;
 import java.util.concurrent.atomic.AtomicLong;
 import net.jps.nuke.atom.model.Entry;
 import net.jps.nuke.atom.model.Feed;
-import net.jps.nuke.listener.AtomListener;
 import net.jps.nuke.listener.AtomListenerException;
 import net.jps.nuke.listener.AtomListenerResult;
 
@@ -12,50 +11,50 @@ import net.jps.nuke.listener.AtomListenerResult;
  *
  * @author zinic
  */
-public class PrintStreamOutputListener implements AtomListener {
+public class PrintStreamOutputListener extends EventCounterListener {
 
-    private final PrintStream out;
-    private String msg;
-    private long creationTime;
-    private AtomicLong eventsCaught;
+   private final PrintStream out;
+   private final String msg;
+   private final long creationTime;
 
-    public PrintStreamOutputListener(PrintStream out, String msg) {
-        this.msg = msg;
-        this.out = out;
-        this.creationTime = System.currentTimeMillis();
-        this.eventsCaught = new AtomicLong(0);
-    }
+   public PrintStreamOutputListener(PrintStream out, String msg, AtomicLong events) {
+      super(events);
 
-    @Override
-    public void init() throws AtomListenerException {
-        out.println("PrintStreamOutputListener(" + toString() + ") initalized.");
-    }
+      this.out = out;
+      this.msg = msg;
+      this.creationTime = System.currentTimeMillis();
+   }
 
-    @Override
-    public void destroy() throws AtomListenerException {
-        out.println("PrintStreamOutputListener(" + toString() + ") destroyed.");
-    }
+   @Override
+   public void init() throws AtomListenerException {
+      out.println("PrintStreamOutputListener(" + toString() + ") initalized.");
+   }
 
-    private void newEvent() {
-        final long events = eventsCaught.incrementAndGet();
-        final long nowInMillis = System.currentTimeMillis();
+   @Override
+   public void destroy() throws AtomListenerException {
+      out.println("PrintStreamOutputListener(" + toString() + ") destroyed.");
+   }
 
-        if (events % 1000 == 0) {
-            out.println((nowInMillis - creationTime) + "ms elapsed. Events received: " + events + " - Events per 10ms: " + (events / ((nowInMillis - creationTime) / 10)) + " - (" + msg + ")");
-        }
-    }
+   private void newEvent() {
+      final long eventsCaught = events.incrementAndGet();
+      final long nowInMillis = System.currentTimeMillis();
 
-    @Override
-    public AtomListenerResult entry(Entry entry) throws AtomListenerException {
-        newEvent();
+      if (eventsCaught % 10000 == 0) {
+         out.println((nowInMillis - creationTime) + "ms elapsed. Events received: " + eventsCaught + " - Events per 10ms: " + (eventsCaught / ((nowInMillis - creationTime) / 10)) + " - (" + msg + ")");
+      }
+   }
 
-        return AtomListenerResult.ok();
-    }
+   @Override
+   public AtomListenerResult entry(Entry entry) throws AtomListenerException {
+      newEvent();
 
-    @Override
-    public AtomListenerResult feedPage(Feed page) throws AtomListenerException {
-        newEvent();
+      return AtomListenerResult.ok();
+   }
 
-        return AtomListenerResult.ok();
-    }
+   @Override
+   public AtomListenerResult feedPage(Feed page) throws AtomListenerException {
+      newEvent();
+
+      return AtomListenerResult.ok();
+   }
 }

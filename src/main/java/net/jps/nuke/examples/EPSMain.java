@@ -23,15 +23,9 @@ import net.jps.nuke.util.TimeValue;
  * logic. The relay will then relay atom events to the AtomEventHandler based on
  * the selection result.
  *
- * The following enlistment will only select events that come from a feed that
- * has a category element with a term equal to 'test'
- *
  * When a feed is selected, its entries are processed in order. Each entry must
  * be selected.
- *
- * The following enlistment will only select entries that have a category
- * element specified with a term equal to 'test'
- *
+ * 
  * @author zinic
  */
 public class EPSMain {

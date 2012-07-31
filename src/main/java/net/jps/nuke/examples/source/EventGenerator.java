@@ -1,5 +1,6 @@
 package net.jps.nuke.examples.source;
 
+import java.util.concurrent.atomic.AtomicLong;
 import net.jps.nuke.atom.model.Entry;
 import net.jps.nuke.atom.model.Feed;
 import net.jps.nuke.atom.model.builder.AuthorBuilder;
@@ -19,12 +20,23 @@ import net.jps.nuke.source.impl.AtomSourceResultImpl;
  */
 public class EventGenerator implements AtomSource {
 
-   private final boolean generateFeed;
+   private final boolean generateFeed, generateForever;
    private final String generatorPrefix;
+   private final AtomicLong remainingEvents;
 
    public EventGenerator(String generatorPrefix, boolean generateFeed) {
+      this(0, generatorPrefix, generateFeed, true);
+   }
+
+   public EventGenerator(long remainingEvents, String generatorPrefix, boolean generateFeed) {
+      this(0, generatorPrefix, generateFeed, false);
+   }
+
+   private EventGenerator(long remainingEvents, String generatorPrefix, boolean generateFeed, boolean generateForever) {
+      this.remainingEvents = new AtomicLong(remainingEvents);
       this.generatorPrefix = generatorPrefix;
       this.generateFeed = generateFeed;
+      this.generateForever = generateForever;
    }
 
    private Entry buildEntry(String id) {
@@ -72,6 +84,10 @@ public class EventGenerator implements AtomSource {
 
    @Override
    public AtomSourceResult poll() throws AtomSourceException {
+      if (!generateForever && remainingEvents.decrementAndGet() < 0) {
+         throw new AtomSourceException("Out of messages!");
+      }
+
       if (generateFeed) {
          return new AtomSourceResultImpl(buildFeed());
       } else {
