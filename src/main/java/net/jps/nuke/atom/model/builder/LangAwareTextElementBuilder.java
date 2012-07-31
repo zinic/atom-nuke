@@ -7,25 +7,31 @@ import net.jps.nuke.atom.model.impl.LangAwareTextElement;
  *
  * @author zinic
  */
-public class LangAwareTextElementBuilder extends LangAwareTextElement {
+public class LangAwareTextElementBuilder extends LangAwareTextElement implements ValueBuilder<LangAwareTextElementBuilder> {
 
    public LangAwareTextElementBuilder() {
       value = new StringBuilder();
    }
    
-   public void setValue(String value) {
+   @Override
+   public LangAwareTextElementBuilder setValue(String value) {
       this.value = new StringBuilder(value);
+      return this;
    }
 
-   public void appendValue(String value) {
+   @Override
+   public LangAwareTextElementBuilder appendValue(String value) {
       this.value.append(value);
+      return this;
    }
 
-   public void setBase(URI base) {
+   public LangAwareTextElementBuilder setBase(URI base) {
       this.base = base;
+      return this;
    }
 
-   public void setLang(String lang) {
+   public LangAwareTextElementBuilder setLang(String lang) {
       this.lang = lang;
+      return this;
    }
 }

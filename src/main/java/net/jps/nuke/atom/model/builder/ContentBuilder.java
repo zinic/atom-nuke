@@ -7,29 +7,41 @@ import net.jps.nuke.atom.model.impl.ContentImpl;
  *
  * @author zinic
  */
-public class ContentBuilder extends ContentImpl {
+public class ContentBuilder extends ContentImpl implements ValueBuilder<ContentBuilder> {
 
    public ContentBuilder() {
       value = new StringBuilder();
    }
 
-   public void setType(String type) {
+   public ContentBuilder setType(String type) {
       this.type = type;
+      return this;
    }
 
-   public void setSrc(String src) {
+   public ContentBuilder setSrc(String src) {
       this.src = src;
+      return this;
    }
 
-   public StringBuilder getValueBuilder() {
-      return this.value;
+   @Override
+   public ContentBuilder setValue(String value) {
+      this.value = new StringBuilder(value);
+      return this;
    }
 
-   public void setBase(URI base) {
+   @Override
+   public ContentBuilder appendValue(String value) {
+      this.value.append(value);
+      return this;
+   }
+
+   public ContentBuilder setBase(URI base) {
       this.base = base;
+      return this;
    }
 
-   public void setLang(String lang) {
+   public ContentBuilder setLang(String lang) {
       this.lang = lang;
+      return this;
    }
 }

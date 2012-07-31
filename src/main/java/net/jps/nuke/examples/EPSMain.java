@@ -25,7 +25,7 @@ import net.jps.nuke.util.TimeValue;
  *
  * When a feed is selected, its entries are processed in order. Each entry must
  * be selected.
- * 
+ *
  * @author zinic
  */
 public class EPSMain {

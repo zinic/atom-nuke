@@ -27,55 +27,68 @@ public class SourceBuilder extends SourceImpl {
       links = new LinkedList<Link>();
    }
 
-   public void addAuthor(Author author) {
+   public SourceBuilder addAuthor(Author author) {
       authors.add(author);
+      return this;
    }
 
-   public void addCategory(Category category) {
+   public SourceBuilder addCategory(Category category) {
       categories.add(category);
+      return this;
    }
 
-   public void addLink(Link link) {
+   public SourceBuilder addLink(Link link) {
       links.add(link);
+      return this;
    }
 
-   public void setGenerator(Generator generator) {
+   public SourceBuilder setGenerator(Generator generator) {
       this.generator = generator;
+      return this;
    }
 
-   public void setIcon(Icon icon) {
+   public SourceBuilder setIcon(Icon icon) {
       this.icon = icon;
+      return this;
    }
 
-   public void setId(Id id) {
+   public SourceBuilder setId(Id id) {
       this.id = id;
+      return this;
    }
 
-   public void setLogo(Logo logo) {
+   public SourceBuilder setLogo(Logo logo) {
       this.logo = logo;
+      return this;
    }
 
-   public void setRights(Rights rights) {
+   public SourceBuilder setRights(Rights rights) {
       this.rights = rights;
+      return this;
    }
 
-   public void setSubtitle(Subtitle subtitle) {
+   public SourceBuilder setSubtitle(Subtitle subtitle) {
       this.subtitle = subtitle;
+      return this;
    }
 
-   public void setTitle(Title title) {
+   public SourceBuilder setTitle(Title title) {
       this.title = title;
+      return this;
    }
 
-   public void setUpdated(Updated updated) {
+   public SourceBuilder setUpdated(Updated updated) {
       this.updated = updated;
+      return this;
    }
 
-   public void setBase(URI base) {
+   public SourceBuilder setBase(URI base) {
       this.base = base;
+      return this;
    }
 
-   public void setLang(String lang) {
+   public SourceBuilder setLang(String lang) {
       this.lang = lang;
+      return this;
    }
 }

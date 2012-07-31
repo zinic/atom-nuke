@@ -8,25 +8,36 @@ import net.jps.nuke.atom.model.impl.TextConstructImpl;
  *
  * @author zinic
  */
-public class TextConstructBuilder extends TextConstructImpl {
+public class TextConstructBuilder extends TextConstructImpl implements ValueBuilder<TextConstructBuilder> {
 
    public TextConstructBuilder() {
       this.value = new StringBuilder();
    }
 
-   public void setType(Type type) {
+   public TextConstructBuilder setType(Type type) {
       this.type = type;
+      return this;
    }
 
-   public StringBuilder getValueBuilder() {
-      return value;
+   @Override
+   public TextConstructBuilder setValue(String value) {
+      this.value = new StringBuilder(value);
+      return this;
    }
 
-   public void setBase(URI base) {
+   @Override
+   public TextConstructBuilder appendValue(String value) {
+      this.value.append(value);
+      return this;
+   }
+
+   public TextConstructBuilder setBase(URI base) {
       this.base = base;
+      return this;
    }
 
-   public void setLang(String lang) {
+   public TextConstructBuilder setLang(String lang) {
       this.lang = lang;
+      return this;
    }
 }

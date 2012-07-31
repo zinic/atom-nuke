@@ -9,26 +9,28 @@ import net.jps.nuke.atom.model.impl.CategoryImpl;
  */
 public class CategoryBuilder extends CategoryImpl {
 
-   public CategoryBuilder() {
-   }
-
-   public void setTerm(String term) {
+   public CategoryBuilder setTerm(String term) {
       this.term = term;
+      return this;
    }
 
-   public void setScheme(String scheme) {
+   public CategoryBuilder setScheme(String scheme) {
       this.scheme = scheme;
+      return this;
    }
 
-   public void setLabel(String label) {
+   public CategoryBuilder setLabel(String label) {
       this.label = label;
+      return this;
    }
 
-   public void setBase(URI base) {
+   public CategoryBuilder setBase(URI base) {
       this.base = base;
+      return this;
    }
 
-   public void setLang(String lang) {
+   public CategoryBuilder setLang(String lang) {
       this.lang = lang;
+      return this;
    }
 }

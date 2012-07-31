@@ -29,59 +29,73 @@ public class EntryBuilder extends EntryImpl {
       links = new LinkedList<Link>();
    }
 
-   public void addAuthor(Author author) {
+   public EntryBuilder addAuthor(Author author) {
       authors.add(author);
+      return this;
    }
 
-   public void addContributor(Contributor contributor) {
+   public EntryBuilder addContributor(Contributor contributor) {
       contributors.add(contributor);
+      return this;
    }
 
-   public void addCategory(Category category) {
+   public EntryBuilder addCategory(Category category) {
       categories.add(category);
+      return this;
    }
 
-   public void addLink(Link link) {
+   public EntryBuilder addLink(Link link) {
       links.add(link);
+      return this;
    }
 
-   public void setId(Id id) {
+   public EntryBuilder setId(Id id) {
       this.id = id;
+      return this;
    }
 
-   public void setRights(Rights rights) {
+   public EntryBuilder setRights(Rights rights) {
       this.rights = rights;
+      return this;
    }
 
-   public void setTitle(Title title) {
+   public EntryBuilder setTitle(Title title) {
       this.title = title;
+      return this;
    }
 
-   public void setUpdated(Updated updated) {
+   public EntryBuilder setUpdated(Updated updated) {
       this.updated = updated;
+      return this;
    }
 
-   public void setContent(Content content) {
+   public EntryBuilder setContent(Content content) {
       this.content = content;
+      return this;
    }
 
-   public void setSummary(Summary summary) {
+   public EntryBuilder setSummary(Summary summary) {
       this.summary = summary;
+      return this;
    }
 
-   public void setPublished(Published published) {
+   public EntryBuilder setPublished(Published published) {
       this.published = published;
+      return this;
    }
 
-   public void setSource(Source source) {
+   public EntryBuilder setSource(Source source) {
       this.source = source;
+      return this;
    }
 
-   public void setBase(URI base) {
+   public EntryBuilder setBase(URI base) {
       this.base = base;
+      return this;
    }
 
-   public void setLang(String lang) {
+   public EntryBuilder setLang(String lang) {
       this.lang = lang;
+      return this;
    }
 }

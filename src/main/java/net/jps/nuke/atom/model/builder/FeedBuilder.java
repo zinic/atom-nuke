@@ -31,63 +31,78 @@ public class FeedBuilder extends FeedImpl {
       entries = new LinkedList<Entry>();
    }
 
-   public void addAuthor(Author author) {
+   public FeedBuilder addAuthor(Author author) {
       authors.add(author);
+      return this;
    }
 
-   public void addContributor(Contributor contributor) {
+   public FeedBuilder addContributor(Contributor contributor) {
       contributors.add(contributor);
+      return this;
    }
 
-   public void addCategory(Category category) {
+   public FeedBuilder addCategory(Category category) {
       categories.add(category);
+      return this;
    }
 
-   public void addLink(Link link) {
+   public FeedBuilder addLink(Link link) {
       links.add(link);
+      return this;
    }
 
-   public void addEntry(Entry entry) {
+   public FeedBuilder addEntry(Entry entry) {
       entries.add(entry);
+      return this;
    }
 
-   public void setGenerator(Generator generator) {
+   public FeedBuilder setGenerator(Generator generator) {
       this.generator = generator;
+      return this;
    }
 
-   public void setIcon(Icon icon) {
+   public FeedBuilder setIcon(Icon icon) {
       this.icon = icon;
+      return this;
    }
 
-   public void setId(Id id) {
+   public FeedBuilder setId(Id id) {
       this.id = id;
+      return this;
    }
 
-   public void setLogo(Logo logo) {
+   public FeedBuilder setLogo(Logo logo) {
       this.logo = logo;
+      return this;
    }
 
-   public void setRights(Rights rights) {
+   public FeedBuilder setRights(Rights rights) {
       this.rights = rights;
+      return this;
    }
 
-   public void setSubtitle(Subtitle subtitle) {
+   public FeedBuilder setSubtitle(Subtitle subtitle) {
       this.subtitle = subtitle;
+      return this;
    }
 
-   public void setTitle(Title title) {
+   public FeedBuilder setTitle(Title title) {
       this.title = title;
+      return this;
    }
 
-   public void setUpdated(Updated updated) {
+   public FeedBuilder setUpdated(Updated updated) {
       this.updated = updated;
+      return this;
    }
 
-   public void setBase(URI base) {
+   public FeedBuilder setBase(URI base) {
       this.base = base;
+      return this;
    }
 
-   public void setLang(String lang) {
+   public FeedBuilder setLang(String lang) {
       this.lang = lang;
+      return this;
    }
 }

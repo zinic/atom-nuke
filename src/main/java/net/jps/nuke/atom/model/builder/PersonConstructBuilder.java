@@ -12,23 +12,28 @@ public class PersonConstructBuilder extends PersonConstructImpl {
    public PersonConstructBuilder() {
    }
 
-   public void setName(String name) {
+   public PersonConstructBuilder setName(String name) {
       this.name = name;
+      return this;
    }
 
-   public void setEmail(String email) {
+   public PersonConstructBuilder setEmail(String email) {
       this.email = email;
+      return this;
    }
 
-   public void setUri(String uri) {
+   public PersonConstructBuilder setUri(String uri) {
       this.uri = uri;
+      return this;
    }
 
-   public void setBase(URI base) {
+   public PersonConstructBuilder setBase(URI base) {
       this.base = base;
+      return this;
    }
 
-   public void setLang(String lang) {
+   public PersonConstructBuilder setLang(String lang) {
       this.lang = lang;
+      return this;
    }
 }

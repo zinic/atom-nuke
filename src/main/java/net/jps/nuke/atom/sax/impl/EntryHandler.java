@@ -13,7 +13,6 @@ import net.jps.nuke.atom.model.builder.TextConstructBuilder;
 import net.jps.nuke.atom.model.builder.DateConstructBuilder;
 import net.jps.nuke.atom.sax.DocumentContextManager;
 import net.jps.nuke.atom.sax.HandlerContext;
-import net.jps.nuke.atom.sax.MixedContentHandler;
 import net.jps.nuke.atom.xml.AtomElement;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -167,7 +166,7 @@ public class EntryHandler extends AtomHandler {
       contentBuilder.setSrc(attributes.getValue("src"));
 
       contextManager.push(element, contentBuilder);
-      self.delegateTo(new MixedContentHandler(contentBuilder.getValueBuilder(), self));
+      self.delegateTo(new MixedContentHandler(contentBuilder, self));
    }
 
    private static void endEntry(EntryHandler self, DocumentContextManager contextManager, ParserResultImpl result) {

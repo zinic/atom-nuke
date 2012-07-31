@@ -1,5 +1,7 @@
-package net.jps.nuke.atom.sax;
+package net.jps.nuke.atom.sax.impl;
 
+import net.jps.nuke.atom.model.builder.ValueBuilder;
+import net.jps.nuke.atom.sax.DelegatingHandler;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -9,12 +11,12 @@ import org.xml.sax.SAXException;
  *
  * @author zinic
  */
-public class MixedContentHandler extends DelegatingHandler {
+public class MixedContentHandler<T extends ValueBuilder> extends DelegatingHandler {
 
-   private final StringBuilder contentBuilder;
+   private final T contentBuilder;
    private int depth;
 
-   public MixedContentHandler(StringBuilder contentBuilder, DelegatingHandler parent) {
+   public MixedContentHandler(T contentBuilder, DelegatingHandler parent) {
       super(parent);
 
       this.contentBuilder = contentBuilder;
@@ -41,27 +43,27 @@ public class MixedContentHandler extends DelegatingHandler {
 
    @Override
    public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
-      contentBuilder.append("<");
-      contentBuilder.append(asFullName(qName, localName));
+      contentBuilder.appendValue("<");
+      contentBuilder.appendValue(asFullName(qName, localName));
 
       for (int i = 0; i < attributes.getLength(); i++) {
-         contentBuilder.append(" ");
-         contentBuilder.append(asFullName(attributes.getQName(i), attributes.getLocalName(i)));
-         contentBuilder.append('"');
-         contentBuilder.append(StringEscapeUtils.escapeXml(attributes.getValue(i)));
-         contentBuilder.append('"');
+         contentBuilder.appendValue(" ");
+         contentBuilder.appendValue(asFullName(attributes.getQName(i), attributes.getLocalName(i)));
+         contentBuilder.appendValue("\"");
+         contentBuilder.appendValue(StringEscapeUtils.escapeXml(attributes.getValue(i)));
+         contentBuilder.appendValue("\"");
       }
 
-      contentBuilder.append(">");
+      contentBuilder.appendValue(">");
       depth++;
    }
 
    @Override
    public void endElement(String uri, String localName, String qName) throws SAXException {
       if (depth > 0) {
-         contentBuilder.append("</");
-         contentBuilder.append(asFullName(qName, localName));
-         contentBuilder.append(">");
+         contentBuilder.appendValue("</");
+         contentBuilder.appendValue(asFullName(qName, localName));
+         contentBuilder.appendValue(">");
       }
 
       if (--depth < 0) {
@@ -71,6 +73,6 @@ public class MixedContentHandler extends DelegatingHandler {
 
    @Override
    public void characters(char[] ch, int start, int length) throws SAXException {
-      contentBuilder.append(new String(ch, start, length).trim());
+      contentBuilder.appendValue(new String(ch, start, length).trim());
    }
 }

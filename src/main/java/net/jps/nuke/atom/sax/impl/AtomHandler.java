@@ -15,7 +15,6 @@ import net.jps.nuke.atom.model.builder.TextConstructBuilder;
 import net.jps.nuke.atom.model.builder.DateConstructBuilder;
 import net.jps.nuke.atom.sax.DocumentContextManager;
 import net.jps.nuke.atom.sax.HandlerContext;
-import net.jps.nuke.atom.sax.MixedContentHandler;
 import net.jps.nuke.atom.sax.DelegatingHandler;
 import net.jps.nuke.atom.xml.AtomElement;
 import org.xml.sax.Attributes;
@@ -153,7 +152,7 @@ public class AtomHandler extends DelegatingHandler {
             break;
 
          case GENERATOR:
-            contextManager.peek(GeneratorBuilder.class).builder().getValueBuilder().append(trimSubstring(characters));
+            contextManager.peek(GeneratorBuilder.class).builder().appendValue(trimSubstring(characters));
             break;
 
          case ID:
@@ -256,7 +255,7 @@ public class AtomHandler extends DelegatingHandler {
       textConstructBuilder.setType(toType(attributes.getValue(AtomAttributeConstants.TYPE)));
 
       contextManager.push(element, textConstructBuilder);
-      self.delegateTo(new MixedContentHandler(textConstructBuilder.getValueBuilder(), self));
+      self.delegateTo(new MixedContentHandler(textConstructBuilder, self));
    }
 
    protected static void startDateConstruct(DocumentContextManager contextManager, AtomElement element, Attributes attributes) {

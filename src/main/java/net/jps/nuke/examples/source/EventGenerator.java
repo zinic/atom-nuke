@@ -63,8 +63,7 @@ public class EventGenerator implements AtomSource {
       final FeedBuilder feed = new FeedBuilder();
 
       final TitleBuilder title = new TitleBuilder();
-      title.getValueBuilder().append(generatorPrefix);
-      title.getValueBuilder().append(" Example Feed");
+      title.appendValue(generatorPrefix).appendValue(" Example Feed");
       feed.setTitle(title);
 
       final AuthorBuilder author = new AuthorBuilder();

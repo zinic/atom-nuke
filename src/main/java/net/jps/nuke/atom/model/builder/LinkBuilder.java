@@ -12,35 +12,43 @@ public class LinkBuilder extends LinkImpl {
    public LinkBuilder() {
    }
 
-   public void setHref(String href) {
+   public LinkBuilder setHref(String href) {
       this.href = href;
+      return this;
    }
 
-   public void setRel(String rel) {
+   public LinkBuilder setRel(String rel) {
       this.rel = rel;
+      return this;
    }
 
-   public void setHreflang(String hreflang) {
+   public LinkBuilder setHreflang(String hreflang) {
       this.hreflang = hreflang;
+      return this;
    }
 
-   public void setTitle(String title) {
+   public LinkBuilder setTitle(String title) {
       this.title = title;
+      return this;
    }
 
-   public void setLength(Integer length) {
+   public LinkBuilder setLength(Integer length) {
       this.length = length;
+      return this;
    }
 
-   public void setType(String type) {
+   public LinkBuilder setType(String type) {
       this.type = type;
+      return this;
    }
 
-   public void setBase(URI base) {
+   public LinkBuilder setBase(URI base) {
       this.base = base;
+      return this;
    }
 
-   public void setLang(String lang) {
+   public LinkBuilder setLang(String lang) {
       this.lang = lang;
+      return this;
    }
 }
