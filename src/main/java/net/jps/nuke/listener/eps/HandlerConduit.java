@@ -1,6 +1,6 @@
 package net.jps.nuke.listener.eps;
 
-import net.jps.nuke.listener.eps.handler.AtomEventHandlerException;
+import net.jps.nuke.listener.eps.handler.AtomEventletException;
 import net.jps.nuke.atom.model.Entry;
 import net.jps.nuke.atom.model.Feed;
 import net.jps.nuke.listener.eps.handler.AtomEventlet;
@@ -48,7 +48,7 @@ public class HandlerConduit {
       if (result == SelectorResult.PROCESS) {
          try {
             eventHandler.entry(entry);
-         } catch (AtomEventHandlerException epe) {
+         } catch (AtomEventletException epe) {
             LOG.error(epe.getMessage(), epe);
          }
       }

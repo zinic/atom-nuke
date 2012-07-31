@@ -6,6 +6,7 @@ import net.jps.nuke.Nuke;
 import net.jps.nuke.NukeKernel;
 import net.jps.nuke.examples.listener.EventCounterAtomEventelt;
 import net.jps.nuke.examples.source.EventGenerator;
+import net.jps.nuke.listener.eps.ReentrantRelay;
 import net.jps.nuke.listener.eps.Relay;
 import net.jps.nuke.task.Task;
 import net.jps.nuke.util.TimeValue;
@@ -25,7 +26,7 @@ public class NukeKernelTest {
       for (int taskId = 1; taskId <= 30; taskId++) {
          final Task task = nukeKernel.follow(new EventGenerator("Task " + taskId, true), new TimeValue(1000 * taskId, TimeUnit.NANOSECONDS));
 
-         final Relay relay = new Relay();
+         final Relay relay = new ReentrantRelay();
          relay.enlistHandler(new EventCounterAtomEventelt(eventsProcessed));
          relay.enlistHandler(new EventCounterAtomEventelt(eventsProcessed));
          relay.enlistHandler(new EventCounterAtomEventelt(eventsProcessed));

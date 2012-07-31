@@ -2,8 +2,8 @@ package net.jps.nuke.examples.listener;
 
 import java.util.concurrent.atomic.AtomicLong;
 import net.jps.nuke.atom.model.Entry;
+import net.jps.nuke.listener.eps.handler.AtomEventletException;
 import net.jps.nuke.listener.eps.handler.AtomEventlet;
-import net.jps.nuke.listener.eps.handler.AtomEventHandlerException;
 import net.jps.nuke.service.DestructionException;
 import net.jps.nuke.service.InitializationException;
 
@@ -28,7 +28,7 @@ public class EventCounterAtomEventelt implements AtomEventlet {
    }
 
    @Override
-   public void entry(Entry entry) throws AtomEventHandlerException {
+   public void entry(Entry entry) throws AtomEventletException {
       entryEvents.incrementAndGet();
    }
 }

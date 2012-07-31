@@ -7,7 +7,7 @@ import net.jps.nuke.service.InitializationException;
  *
  * @author zinic
  */
-public abstract class AtomEventHandlerPartial implements AtomEventlet {
+public abstract class AtomEventletPartial implements AtomEventlet {
 
    @Override
    public void init() throws InitializationException {

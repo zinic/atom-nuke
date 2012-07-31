@@ -8,7 +8,7 @@ import javax.xml.stream.XMLStreamException;
 import net.jps.nuke.atom.Writer;
 import net.jps.nuke.atom.model.Entry;
 import net.jps.nuke.atom.stax.StaxAtomWriter;
-import net.jps.nuke.listener.eps.handler.AtomEventHandlerException;
+import net.jps.nuke.listener.eps.handler.AtomEventletException;
 import net.jps.nuke.listener.eps.handler.AtomEventlet;
 import net.jps.nuke.service.DestructionException;
 import net.jps.nuke.service.InitializationException;
@@ -57,16 +57,16 @@ public class FeedFileWriterHandler implements AtomEventlet {
    }
 
    @Override
-   public void entry(Entry entry) throws AtomEventHandlerException {
+   public void entry(Entry entry) throws AtomEventletException {
       final ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
       try {
          atomWriter.write(baos, entry);
          write(baos.toByteArray());
       } catch (XMLStreamException xmlse) {
-         throw new AtomEventHandlerException("XMLStreamException caught while trying to write to feed file \"" + feedFile.getAbsolutePath() + "\"", xmlse);
+         throw new AtomEventletException("XMLStreamException caught while trying to write to feed file \"" + feedFile.getAbsolutePath() + "\"", xmlse);
       } catch (IOException ioe) {
-         throw new AtomEventHandlerException("IOException caught while trying to write to feed file \"" + feedFile.getAbsolutePath() + "\"", ioe);
+         throw new AtomEventletException("IOException caught while trying to write to feed file \"" + feedFile.getAbsolutePath() + "\"", ioe);
       }
    }
 }

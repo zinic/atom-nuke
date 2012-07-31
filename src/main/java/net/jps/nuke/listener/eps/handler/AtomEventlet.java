@@ -9,5 +9,5 @@ import net.jps.nuke.service.Service;
  */
 public interface AtomEventlet extends Service {
 
-   void entry(Entry entry) throws AtomEventHandlerException;
+   void entry(Entry entry) throws AtomEventletException;
 }

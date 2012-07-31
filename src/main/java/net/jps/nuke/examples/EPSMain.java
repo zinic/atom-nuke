@@ -7,9 +7,9 @@ import net.jps.nuke.NukeKernel;
 import net.jps.nuke.atom.model.Entry;
 import net.jps.nuke.examples.handler.FeedFileWriterHandler;
 import net.jps.nuke.examples.source.EventGenerator;
-import net.jps.nuke.listener.eps.handler.AtomEventHandlerException;
 import net.jps.nuke.listener.eps.Relay;
-import net.jps.nuke.listener.eps.handler.AtomEventHandlerPartial;
+import net.jps.nuke.listener.eps.handler.AtomEventletException;
+import net.jps.nuke.listener.eps.handler.AtomEventletPartial;
 import net.jps.nuke.listener.eps.selectors.CategorySelector;
 import net.jps.nuke.task.Task;
 import net.jps.nuke.util.TimeValue;
@@ -37,11 +37,11 @@ public class EPSMain {
       // the entries inside that feed that also have the category 'test'
       final Relay relay1 = new Relay();
 
-      // Event handler partial makes delegate creation more simple
-      relay1.enlistHandler(new AtomEventHandlerPartial() {
+      // Event eventlet partial makes delegate creation more simple
+      relay1.enlistHandler(new AtomEventletPartial() {
          
          @Override
-         public void entry(Entry entry) throws AtomEventHandlerException {
+         public void entry(Entry entry) throws AtomEventletException {
             System.out.println("Relay 1 - Entry: " + entry.id().value());
          }
       }, new CategorySelector(new String[]{"test"}, new String[]{"test"}));
