@@ -1,6 +1,5 @@
 package net.jps.nuke.source.impl;
 
-import net.jps.nuke.atom.ParserResult;
 import net.jps.nuke.atom.model.Entry;
 import net.jps.nuke.atom.model.Feed;
 import net.jps.nuke.source.AtomSourceResult;

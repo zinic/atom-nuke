@@ -1,7 +1,5 @@
 package net.jps.nuke.atom.model.builder;
 
-import java.net.URI;
-
 /**
  *
  * @author zinic

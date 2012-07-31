@@ -6,7 +6,7 @@ package net.jps.nuke.atom.model.builder;
  */
 public interface ValueBuilder<T extends ValueBuilder> {
 
-   public T setValue(String value);
+   T setValue(String value);
 
-   public T appendValue(String value);
+   T appendValue(String value);
 }
