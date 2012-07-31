@@ -38,9 +38,11 @@ public class EventGenerator implements AtomSource {
       testCat.setTerm("test");
       entry.addCategory(testCat);
 
-      final CategoryBuilder otherCat = new CategoryBuilder();
-      otherCat.setTerm("other-cat");
-      entry.addCategory(otherCat);
+      if (Math.random() > 0.5) {
+         final CategoryBuilder otherCat = new CategoryBuilder();
+         otherCat.setTerm("other-cat");
+         entry.addCategory(otherCat);
+      }
 
       return entry;
    }
