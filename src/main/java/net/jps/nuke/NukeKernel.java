@@ -11,6 +11,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
 import net.jps.nuke.source.AtomSource;
 
 /**
@@ -20,16 +21,14 @@ import net.jps.nuke.source.AtomSource;
 public class NukeKernel implements Nuke {
 
    private static final ThreadFactory DEFAULT_THREAD_FACTORY = new ThreadFactory() {
-      private long tid = 0;
-
       @Override
       public Thread newThread(Runnable r) {
-         return new Thread(r, "nuke-worker-" + (tid++));
+         return new Thread(r, "nuke-worker-" + TID.incrementAndGet());
       }
    };
    
    private static final int NUM_PROCESSORS = Runtime.getRuntime().availableProcessors();
-   private static long kid = 0;
+   private static final AtomicLong TID = new AtomicLong(0);
    
    private final CancellationRemote kernelCancellationRemote;
    private final ExecutorService executorService;
@@ -72,7 +71,7 @@ public class NukeKernel implements Nuke {
 
       kernelCancellationRemote = new AtomicCancellationRemote();
       logic = new KernelDelegate(kernelCancellationRemote, new ExecutionManagerImpl(maxPoolsize, executorService));
-      controlThread = new Thread(logic, "nuke-kernel-" + (kid++));
+      controlThread = new Thread(logic, "nuke-kernel-" + TID.incrementAndGet());
    }
 
    @Override
