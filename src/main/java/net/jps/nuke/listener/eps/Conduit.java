@@ -1,5 +1,6 @@
 package net.jps.nuke.listener.eps;
 
+import net.jps.nuke.listener.eps.handler.EventProcessingException;
 import net.jps.nuke.atom.model.Entry;
 import net.jps.nuke.atom.model.Feed;
 import net.jps.nuke.listener.eps.handler.AtomEventHandler;
