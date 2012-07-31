@@ -13,10 +13,10 @@ import net.jps.nuke.atom.stax.StaxAtomWriter;
  *
  * @author zinic
  */
-public class PerformanceMain {
+public class ParserPerformance {
 
    public static InputStream open(String name) throws IOException {
-      return PerformanceMain.class.getResourceAsStream("/META-INF/examples/atom/" + name);
+      return ParserPerformance.class.getResourceAsStream("/META-INF/examples/atom/" + name);
    }
 
    public static void main(String[] args) throws Exception {

@@ -6,8 +6,8 @@ import java.util.concurrent.atomic.AtomicLong;
 import net.jps.nuke.Nuke;
 import net.jps.nuke.NukeKernel;
 import net.jps.nuke.examples.handler.FeedFileWriterHandler;
+import net.jps.nuke.examples.listener.ClasspathSource;
 import net.jps.nuke.examples.listener.EventCounterAtomEventelt;
-import net.jps.nuke.examples.source.EventGenerator;
 import net.jps.nuke.listener.eps.ReentrantRelay;
 import net.jps.nuke.listener.eps.Relay;
 import net.jps.nuke.listener.eps.selectors.CategorySelector;
@@ -18,7 +18,7 @@ import net.jps.nuke.util.TimeValue;
  *
  * @author zinic
  */
-public class FileWriterPerformanceMain {
+public class CombinedParserSelector {
 
    public static void main(String[] args) throws Exception {
       final AtomicLong events = new AtomicLong(0);
@@ -29,7 +29,7 @@ public class FileWriterPerformanceMain {
       
       final Nuke nukeKernel = new NukeKernel();
 
-      final Task task = nukeKernel.follow(new EventGenerator("Task 1", true), new TimeValue(1, TimeUnit.NANOSECONDS));
+      final Task task = nukeKernel.follow(new ClasspathSource("/META-INF/examples/atom/PerformanceTestContents.xml"), new TimeValue(1, TimeUnit.NANOSECONDS));
       task.addListener(relay);
 
       nukeKernel.start();

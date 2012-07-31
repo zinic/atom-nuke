@@ -21,6 +21,8 @@
    <category lang="en" term="a" scheme="http" label="Category A" />
    
    <entry>
+      <id>1</id>
+      
       <source lang="en">
          <author>
             <name>John Doe</name>
@@ -57,14 +59,34 @@
          <updated>2002-05-30T09:30:10Z</updated>
       </source>
       
-      <content>
-         <p>
-            <span id="a">This is some random</span> html within a content tag.
-         </p>
+      <content type="text/json">
+         {
+         "field-a": 1,
+         "field-b": 2.5,
+         "field-c": "value-c",
+         "field-d": "value-d",
+         "field-e": "value-e",
+
+         "object": {
+         "field-a": 1,
+         "field-b": 2.5,
+         "field-c": "value-c",
+         "field-d": "value-d",
+         "field-e": "value-e"
+         },
+
+         "array": [
+         {
+         "key": "value"
+         }
+         ]
+         }
       </content>
    </entry>
    
    <entry>
+      <id>2</id>
+      
       <source lang="en">
          <author>
             <name>John Doe</name>
@@ -101,14 +123,34 @@
          <updated>2002-05-30T09:30:10Z</updated>
       </source>
       
-      <content>
-         <p>
-            <span id="a">This is some random</span> html within a content tag.
-         </p>
+      <content type="text/json">
+         {
+         "field-a": 1,
+         "field-b": 2.5,
+         "field-c": "value-c",
+         "field-d": "value-d",
+         "field-e": "value-e",
+
+         "object": {
+         "field-a": 1,
+         "field-b": 2.5,
+         "field-c": "value-c",
+         "field-d": "value-d",
+         "field-e": "value-e"
+         },
+
+         "array": [
+         {
+         "key": "value"
+         }
+         ]
+         }
       </content>
    </entry>
    
    <entry>
+      <id>3</id>
+      
       <source lang="en">
          <author>
             <name>John Doe</name>
@@ -145,14 +187,34 @@
          <updated>2002-05-30T09:30:10Z</updated>
       </source>
       
-      <content>
-         <p>
-            <span id="a">This is some random</span> html within a content tag.
-         </p>
+      <content type="text/json">
+         {
+         "field-a": 1,
+         "field-b": 2.5,
+         "field-c": "value-c",
+         "field-d": "value-d",
+         "field-e": "value-e",
+
+         "object": {
+         "field-a": 1,
+         "field-b": 2.5,
+         "field-c": "value-c",
+         "field-d": "value-d",
+         "field-e": "value-e"
+         },
+
+         "array": [
+         {
+         "key": "value"
+         }
+         ]
+         }
       </content>
    </entry>
    
    <entry>
+      <id>4</id>
+      
       <source lang="en">
          <author>
             <name>John Doe</name>
@@ -189,10 +251,412 @@
          <updated>2002-05-30T09:30:10Z</updated>
       </source>
       
-      <content>
-         <p>
-            <span id="a">This is some random</span> html within a content tag.
-         </p>
+      <content type="text/json">
+         {
+         "field-a": 1,
+         "field-b": 2.5,
+         "field-c": "value-c",
+         "field-d": "value-d",
+         "field-e": "value-e",
+
+         "object": {
+         "field-a": 1,
+         "field-b": 2.5,
+         "field-c": "value-c",
+         "field-d": "value-d",
+         "field-e": "value-e"
+         },
+
+         "array": [
+         {
+         "key": "value"
+         }
+         ]
+         }
+      </content>
+   </entry>
+   
+   <entry>
+      <id>5</id>
+      
+      <source lang="en">
+         <author>
+            <name>John Doe</name>
+            <uri>http://john.doe.example.domain/</uri>
+            <email>john.doe@example.domain</email>
+         </author>
+   
+         <author>
+            <name>John Doe</name>
+            <uri>http://john.doe.example.domain/</uri>
+            <email>john.doe@example.domain</email>
+         </author>
+
+         <author>
+            <name>John Doe</name>
+            <uri>http://john.doe.example.domain/</uri>
+            <email>john.doe@example.domain</email>
+         </author>
+      
+         <category lang="en" term="a" scheme="http" label="Category A" />
+         <category lang="en" term="a" scheme="http" label="Category A" />
+         <category lang="en" term="a" scheme="http" label="Category A" />
+      
+         <link href="http://example.domain/12345" rel="self" type="application/atom+xml" title="me" hreflang="en" length="52153" />
+         <link href="http://example.domain/12345" rel="self" type="application/atom+xml" title="me" hreflang="en" length="52153" />
+         <link href="http://example.domain/12345" rel="self" type="application/atom+xml" title="me" hreflang="en" length="52153" />
+      
+         <icon>http://example.domain/images/icon.jpg</icon>
+         <logo>http://example.domain/images/logo.jpg</logo>
+      
+         <title>The source.</title>
+         <subtitle>Where everyone goes to get what they need.</subtitle>
+      
+         <updated>2002-05-30T09:30:10Z</updated>
+      </source>
+      
+      <content type="text/json">
+         {
+         "field-a": 1,
+         "field-b": 2.5,
+         "field-c": "value-c",
+         "field-d": "value-d",
+         "field-e": "value-e",
+
+         "object": {
+         "field-a": 1,
+         "field-b": 2.5,
+         "field-c": "value-c",
+         "field-d": "value-d",
+         "field-e": "value-e"
+         },
+
+         "array": [
+         {
+         "key": "value"
+         }
+         ]
+         }
+      </content>
+   </entry>
+   
+   <entry>
+      <id>6</id>
+      
+      <source lang="en">
+         <author>
+            <name>John Doe</name>
+            <uri>http://john.doe.example.domain/</uri>
+            <email>john.doe@example.domain</email>
+         </author>
+   
+         <author>
+            <name>John Doe</name>
+            <uri>http://john.doe.example.domain/</uri>
+            <email>john.doe@example.domain</email>
+         </author>
+
+         <author>
+            <name>John Doe</name>
+            <uri>http://john.doe.example.domain/</uri>
+            <email>john.doe@example.domain</email>
+         </author>
+      
+         <category lang="en" term="a" scheme="http" label="Category A" />
+         <category lang="en" term="a" scheme="http" label="Category A" />
+         <category lang="en" term="a" scheme="http" label="Category A" />
+      
+         <link href="http://example.domain/12345" rel="self" type="application/atom+xml" title="me" hreflang="en" length="52153" />
+         <link href="http://example.domain/12345" rel="self" type="application/atom+xml" title="me" hreflang="en" length="52153" />
+         <link href="http://example.domain/12345" rel="self" type="application/atom+xml" title="me" hreflang="en" length="52153" />
+      
+         <icon>http://example.domain/images/icon.jpg</icon>
+         <logo>http://example.domain/images/logo.jpg</logo>
+      
+         <title>The source.</title>
+         <subtitle>Where everyone goes to get what they need.</subtitle>
+      
+         <updated>2002-05-30T09:30:10Z</updated>
+      </source>
+      
+      <content type="text/json">
+         {
+         "field-a": 1,
+         "field-b": 2.5,
+         "field-c": "value-c",
+         "field-d": "value-d",
+         "field-e": "value-e",
+
+         "object": {
+         "field-a": 1,
+         "field-b": 2.5,
+         "field-c": "value-c",
+         "field-d": "value-d",
+         "field-e": "value-e"
+         },
+
+         "array": [
+         {
+         "key": "value"
+         }
+         ]
+         }
+      </content>
+   </entry>
+   
+   <entry>
+      <id>7</id>
+      
+      <source lang="en">
+         <author>
+            <name>John Doe</name>
+            <uri>http://john.doe.example.domain/</uri>
+            <email>john.doe@example.domain</email>
+         </author>
+   
+         <author>
+            <name>John Doe</name>
+            <uri>http://john.doe.example.domain/</uri>
+            <email>john.doe@example.domain</email>
+         </author>
+
+         <author>
+            <name>John Doe</name>
+            <uri>http://john.doe.example.domain/</uri>
+            <email>john.doe@example.domain</email>
+         </author>
+      
+         <category lang="en" term="a" scheme="http" label="Category A" />
+         <category lang="en" term="a" scheme="http" label="Category A" />
+         <category lang="en" term="a" scheme="http" label="Category A" />
+      
+         <link href="http://example.domain/12345" rel="self" type="application/atom+xml" title="me" hreflang="en" length="52153" />
+         <link href="http://example.domain/12345" rel="self" type="application/atom+xml" title="me" hreflang="en" length="52153" />
+         <link href="http://example.domain/12345" rel="self" type="application/atom+xml" title="me" hreflang="en" length="52153" />
+      
+         <icon>http://example.domain/images/icon.jpg</icon>
+         <logo>http://example.domain/images/logo.jpg</logo>
+      
+         <title>The source.</title>
+         <subtitle>Where everyone goes to get what they need.</subtitle>
+      
+         <updated>2002-05-30T09:30:10Z</updated>
+      </source>
+      
+      <content type="text/json">
+         {
+         "field-a": 1,
+         "field-b": 2.5,
+         "field-c": "value-c",
+         "field-d": "value-d",
+         "field-e": "value-e",
+
+         "object": {
+         "field-a": 1,
+         "field-b": 2.5,
+         "field-c": "value-c",
+         "field-d": "value-d",
+         "field-e": "value-e"
+         },
+
+         "array": [
+         {
+         "key": "value"
+         }
+         ]
+         }
+      </content>
+   </entry>
+   
+   <entry>
+      <id>8</id>
+      
+      <source lang="en">
+         <author>
+            <name>John Doe</name>
+            <uri>http://john.doe.example.domain/</uri>
+            <email>john.doe@example.domain</email>
+         </author>
+   
+         <author>
+            <name>John Doe</name>
+            <uri>http://john.doe.example.domain/</uri>
+            <email>john.doe@example.domain</email>
+         </author>
+
+         <author>
+            <name>John Doe</name>
+            <uri>http://john.doe.example.domain/</uri>
+            <email>john.doe@example.domain</email>
+         </author>
+      
+         <category lang="en" term="a" scheme="http" label="Category A" />
+         <category lang="en" term="a" scheme="http" label="Category A" />
+         <category lang="en" term="a" scheme="http" label="Category A" />
+      
+         <link href="http://example.domain/12345" rel="self" type="application/atom+xml" title="me" hreflang="en" length="52153" />
+         <link href="http://example.domain/12345" rel="self" type="application/atom+xml" title="me" hreflang="en" length="52153" />
+         <link href="http://example.domain/12345" rel="self" type="application/atom+xml" title="me" hreflang="en" length="52153" />
+      
+         <icon>http://example.domain/images/icon.jpg</icon>
+         <logo>http://example.domain/images/logo.jpg</logo>
+      
+         <title>The source.</title>
+         <subtitle>Where everyone goes to get what they need.</subtitle>
+      
+         <updated>2002-05-30T09:30:10Z</updated>
+      </source>
+      
+      <content type="text/json">
+         {
+         "field-a": 1,
+         "field-b": 2.5,
+         "field-c": "value-c",
+         "field-d": "value-d",
+         "field-e": "value-e",
+
+         "object": {
+         "field-a": 1,
+         "field-b": 2.5,
+         "field-c": "value-c",
+         "field-d": "value-d",
+         "field-e": "value-e"
+         },
+
+         "array": [
+         {
+         "key": "value"
+         }
+         ]
+         }
+      </content>
+   </entry>
+   
+   <entry>
+      <id>9</id>
+      
+      <source lang="en">
+         <author>
+            <name>John Doe</name>
+            <uri>http://john.doe.example.domain/</uri>
+            <email>john.doe@example.domain</email>
+         </author>
+   
+         <author>
+            <name>John Doe</name>
+            <uri>http://john.doe.example.domain/</uri>
+            <email>john.doe@example.domain</email>
+         </author>
+
+         <author>
+            <name>John Doe</name>
+            <uri>http://john.doe.example.domain/</uri>
+            <email>john.doe@example.domain</email>
+         </author>
+      
+         <category lang="en" term="a" scheme="http" label="Category A" />
+         <category lang="en" term="a" scheme="http" label="Category A" />
+         <category lang="en" term="a" scheme="http" label="Category A" />
+      
+         <link href="http://example.domain/12345" rel="self" type="application/atom+xml" title="me" hreflang="en" length="52153" />
+         <link href="http://example.domain/12345" rel="self" type="application/atom+xml" title="me" hreflang="en" length="52153" />
+         <link href="http://example.domain/12345" rel="self" type="application/atom+xml" title="me" hreflang="en" length="52153" />
+      
+         <icon>http://example.domain/images/icon.jpg</icon>
+         <logo>http://example.domain/images/logo.jpg</logo>
+      
+         <title>The source.</title>
+         <subtitle>Where everyone goes to get what they need.</subtitle>
+      
+         <updated>2002-05-30T09:30:10Z</updated>
+      </source>
+      
+      <content type="text/json">
+         {
+         "field-a": 1,
+         "field-b": 2.5,
+         "field-c": "value-c",
+         "field-d": "value-d",
+         "field-e": "value-e",
+
+         "object": {
+         "field-a": 1,
+         "field-b": 2.5,
+         "field-c": "value-c",
+         "field-d": "value-d",
+         "field-e": "value-e"
+         },
+
+         "array": [
+         {
+         "key": "value"
+         }
+         ]
+         }
+      </content>
+   </entry>
+   
+   <entry>
+      <id>10</id>
+      
+      <source lang="en">
+         <author>
+            <name>John Doe</name>
+            <uri>http://john.doe.example.domain/</uri>
+            <email>john.doe@example.domain</email>
+         </author>
+   
+         <author>
+            <name>John Doe</name>
+            <uri>http://john.doe.example.domain/</uri>
+            <email>john.doe@example.domain</email>
+         </author>
+
+         <author>
+            <name>John Doe</name>
+            <uri>http://john.doe.example.domain/</uri>
+            <email>john.doe@example.domain</email>
+         </author>
+      
+         <category lang="en" term="a" scheme="http" label="Category A" />
+         <category lang="en" term="a" scheme="http" label="Category A" />
+         <category lang="en" term="a" scheme="http" label="Category A" />
+      
+         <link href="http://example.domain/12345" rel="self" type="application/atom+xml" title="me" hreflang="en" length="52153" />
+         <link href="http://example.domain/12345" rel="self" type="application/atom+xml" title="me" hreflang="en" length="52153" />
+         <link href="http://example.domain/12345" rel="self" type="application/atom+xml" title="me" hreflang="en" length="52153" />
+      
+         <icon>http://example.domain/images/icon.jpg</icon>
+         <logo>http://example.domain/images/logo.jpg</logo>
+      
+         <title>The source.</title>
+         <subtitle>Where everyone goes to get what they need.</subtitle>
+      
+         <updated>2002-05-30T09:30:10Z</updated>
+      </source>
+      
+      <content type="text/json">
+         {
+         "field-a": 1,
+         "field-b": 2.5,
+         "field-c": "value-c",
+         "field-d": "value-d",
+         "field-e": "value-e",
+
+         "object": {
+         "field-a": 1,
+         "field-b": 2.5,
+         "field-c": "value-c",
+         "field-d": "value-d",
+         "field-e": "value-e"
+         },
+
+         "array": [
+         {
+         "key": "value"
+         }
+         ]
+         }
       </content>
    </entry>
 </feed>
