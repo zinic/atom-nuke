@@ -6,7 +6,7 @@ import net.jps.nuke.atom.model.Author;
 import net.jps.nuke.atom.model.Category;
 import net.jps.nuke.atom.model.Content;
 import net.jps.nuke.atom.model.Contributor;
-import net.jps.nuke.atom.model.ID;
+import net.jps.nuke.atom.model.Id;
 import net.jps.nuke.atom.model.Link;
 import net.jps.nuke.atom.model.Published;
 import net.jps.nuke.atom.model.Rights;
@@ -45,7 +45,7 @@ public class EntryBuilder extends EntryImpl {
       links.add(link);
    }
 
-   public void setId(ID id) {
+   public void setId(Id id) {
       this.id = id;
    }
 

@@ -4,7 +4,7 @@ import java.util.List;
 import net.jps.nuke.atom.model.Author;
 import net.jps.nuke.atom.model.Category;
 import net.jps.nuke.atom.model.Generator;
-import net.jps.nuke.atom.model.ID;
+import net.jps.nuke.atom.model.Id;
 import net.jps.nuke.atom.model.Icon;
 import net.jps.nuke.atom.model.Link;
 import net.jps.nuke.atom.model.Logo;
@@ -25,7 +25,7 @@ public abstract class SourceImpl extends AtomCommonAttributesImpl implements Sou
    protected List<Link> links;
    protected Generator generator;
    protected Icon icon;
-   protected ID id;
+   protected Id id;
    protected Logo logo;
    protected Rights rights;
    protected Subtitle subtitle;
@@ -48,7 +48,7 @@ public abstract class SourceImpl extends AtomCommonAttributesImpl implements Sou
       return icon;
    }
 
-   public ID id() {
+   public Id id() {
       return id;
    }
 

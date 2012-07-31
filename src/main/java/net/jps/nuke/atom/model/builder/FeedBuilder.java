@@ -7,7 +7,7 @@ import net.jps.nuke.atom.model.Category;
 import net.jps.nuke.atom.model.Contributor;
 import net.jps.nuke.atom.model.Entry;
 import net.jps.nuke.atom.model.Generator;
-import net.jps.nuke.atom.model.ID;
+import net.jps.nuke.atom.model.Id;
 import net.jps.nuke.atom.model.Icon;
 import net.jps.nuke.atom.model.Link;
 import net.jps.nuke.atom.model.Logo;
@@ -59,7 +59,7 @@ public class FeedBuilder extends FeedImpl {
       this.icon = icon;
    }
 
-   public void setId(ID id) {
+   public void setId(Id id) {
       this.id = id;
    }
 

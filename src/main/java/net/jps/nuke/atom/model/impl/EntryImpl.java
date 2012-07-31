@@ -6,7 +6,7 @@ import net.jps.nuke.atom.model.Category;
 import net.jps.nuke.atom.model.Content;
 import net.jps.nuke.atom.model.Contributor;
 import net.jps.nuke.atom.model.Entry;
-import net.jps.nuke.atom.model.ID;
+import net.jps.nuke.atom.model.Id;
 import net.jps.nuke.atom.model.Link;
 import net.jps.nuke.atom.model.Published;
 import net.jps.nuke.atom.model.Rights;
@@ -25,7 +25,7 @@ public abstract class EntryImpl extends AtomCommonAttributesImpl implements Entr
    protected List<Contributor> contributors;
    protected List<Category> categories;
    protected List<Link> links;
-   protected ID id;
+   protected Id id;
    protected Rights rights;
    protected Title title;
    protected Updated updated;
@@ -50,7 +50,7 @@ public abstract class EntryImpl extends AtomCommonAttributesImpl implements Entr
       return contributors;
    }
 
-   public ID id() {
+   public Id id() {
       return id;
    }
 

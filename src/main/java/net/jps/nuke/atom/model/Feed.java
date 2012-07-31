@@ -21,7 +21,7 @@ public interface Feed extends AtomCommonAtributes {
    Icon icon();
 
    @Required
-   ID id();
+   Id id();
 
    List<Link> links();
 

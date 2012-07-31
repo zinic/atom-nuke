@@ -8,7 +8,7 @@ import net.jps.nuke.atom.model.constraint.AtomUriConstraint;
  *
  * @author zinic
  */
-public interface ID extends AtomCommonAtributes {
+public interface Id extends AtomCommonAtributes {
 
    @ElementValue
    @ComplexConstraint(AtomUriConstraint.class)

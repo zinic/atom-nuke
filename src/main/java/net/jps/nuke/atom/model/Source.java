@@ -16,7 +16,7 @@ public interface Source extends AtomCommonAtributes {
 
    Icon icon();
 
-   ID id();
+   Id id();
 
    List<Link> links();
 

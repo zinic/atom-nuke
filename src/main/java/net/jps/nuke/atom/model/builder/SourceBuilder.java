@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import net.jps.nuke.atom.model.Author;
 import net.jps.nuke.atom.model.Category;
 import net.jps.nuke.atom.model.Generator;
-import net.jps.nuke.atom.model.ID;
+import net.jps.nuke.atom.model.Id;
 import net.jps.nuke.atom.model.Icon;
 import net.jps.nuke.atom.model.Link;
 import net.jps.nuke.atom.model.Logo;
@@ -47,7 +47,7 @@ public class SourceBuilder extends SourceImpl {
       this.icon = icon;
    }
 
-   public void setId(ID id) {
+   public void setId(Id id) {
       this.id = id;
    }
 

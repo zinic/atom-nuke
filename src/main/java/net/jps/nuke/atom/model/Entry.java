@@ -18,7 +18,7 @@ public interface Entry extends AtomCommonAtributes {
    List<Contributor> contributors();
 
    @Required
-   ID id();
+   Id id();
 
    List<Link> links();
 

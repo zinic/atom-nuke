@@ -7,7 +7,7 @@ import net.jps.nuke.atom.model.Contributor;
 import net.jps.nuke.atom.model.Entry;
 import net.jps.nuke.atom.model.Feed;
 import net.jps.nuke.atom.model.Generator;
-import net.jps.nuke.atom.model.ID;
+import net.jps.nuke.atom.model.Id;
 import net.jps.nuke.atom.model.Icon;
 import net.jps.nuke.atom.model.Link;
 import net.jps.nuke.atom.model.Logo;
@@ -29,7 +29,7 @@ public abstract class FeedImpl extends AtomCommonAttributesImpl implements Feed 
    protected List<Entry> entries;
    protected Generator generator;
    protected Icon icon;
-   protected ID id;
+   protected Id id;
    protected Logo logo;
    protected Rights rights;
    protected Subtitle subtitle;
@@ -64,7 +64,7 @@ public abstract class FeedImpl extends AtomCommonAttributesImpl implements Feed 
       return icon;
    }
 
-   public ID id() {
+   public Id id() {
       return id;
    }
 

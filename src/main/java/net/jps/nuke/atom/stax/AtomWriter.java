@@ -11,7 +11,7 @@ import net.jps.nuke.atom.model.DateConstruct;
 import net.jps.nuke.atom.model.Entry;
 import net.jps.nuke.atom.model.Feed;
 import net.jps.nuke.atom.model.Generator;
-import net.jps.nuke.atom.model.ID;
+import net.jps.nuke.atom.model.Id;
 import net.jps.nuke.atom.model.Icon;
 import net.jps.nuke.atom.model.Link;
 import net.jps.nuke.atom.model.Logo;
@@ -203,7 +203,7 @@ public final class AtomWriter {
       writeEndElement(context);
    }
 
-   private static void writeId(WriterContext context, ID id) throws XMLStreamException {
+   private static void writeId(WriterContext context, Id id) throws XMLStreamException {
       if (id == null) {
          return;
       }
