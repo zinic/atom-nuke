@@ -1,5 +1,6 @@
 package net.jps.nuke.examples;
 
+import java.io.File;
 import java.util.concurrent.TimeUnit;
 import net.jps.nuke.Nuke;
 import net.jps.nuke.NukeKernel;
@@ -26,10 +27,6 @@ public class HDFSMain {
        *    Might not implement this one due to the execution pattern I took. Still
        *    investigating the model.
        * 
-       * - Consider using a default dir for state management that's configurable
-       *    Have to re-add state management now that the execution model has been
-       *    solidified.
-       * 
        */
 
       // Create the nuke kernel
@@ -42,16 +39,16 @@ public class HDFSMain {
       final FeedCrawlerSourceFactory crawlerFactory = new FeedCrawlerSourceFactory();
 
       // Polls for the default of once per minute
-      final Task task1 = nuke.follow(crawlerFactory.newCrawlerSource("http://feed.com/feed1"));
+      final Task task1 = nuke.follow(crawlerFactory.newCrawlerSource("feed-1", "http://feed.com/feed1"));
       task1.addListener(listener2);
 
       // Sets the polling interval to five minutes
-      final Task task2 = nuke.follow(crawlerFactory.newCrawlerSource("http://feed.com/feed2"), new TimeValue(5, TimeUnit.MINUTES));
+      final Task task2 = nuke.follow(crawlerFactory.newCrawlerSource("feed-2", "http://feed.com/feed2"), new TimeValue(5, TimeUnit.MINUTES));
       task2.addListener(listener);
       task2.addListener(listener2);
 
       // Sets the polling interval to one hour
-      final Task task3 = nuke.follow(crawlerFactory.newCrawlerSource("http://feed.com/feed3"), new TimeValue(1, TimeUnit.HOURS));
+      final Task task3 = nuke.follow(crawlerFactory.newCrawlerSource("feed-3", "http://feed.com/feed3"), new TimeValue(1, TimeUnit.HOURS));
       task3.addListener(listener);
    }
 }

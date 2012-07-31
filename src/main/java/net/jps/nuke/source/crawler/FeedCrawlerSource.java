@@ -1,5 +1,10 @@
 package net.jps.nuke.source.crawler;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import net.jps.nuke.atom.AtomParserException;
@@ -13,6 +18,8 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -20,16 +27,49 @@ import org.apache.http.client.methods.HttpGet;
  */
 public class FeedCrawlerSource implements AtomSource {
 
+   private static final Logger LOG = LoggerFactory.getLogger(FeedCrawlerSource.class);
+   private static final String STATE_FILE_EXTENSION = ".state";
+   
    private final HttpClient httpClient;
+   private final File stateFile;
    private final Reader atomReader;
    private String location;
 
-   public FeedCrawlerSource(String location, HttpClient httpClient, Reader atomReader) {
+   public FeedCrawlerSource(String name, String initialLocation, File stateDirectory, HttpClient httpClient, Reader atomReader) {
       this.httpClient = httpClient;
+      this.stateFile = new File(stateDirectory, name + STATE_FILE_EXTENSION);
       this.atomReader = atomReader;
-      this.location = location;
+      this.location = initialLocation;
+
+      loadState();
    }
 
+   private void loadState() {
+      try {
+         final BufferedReader fin = new BufferedReader(new FileReader(stateFile));
+         location = fin.readLine();
+
+         fin.close();
+      } catch (FileNotFoundException fnfe) {
+         // Suppress this
+      } catch (IOException ioe) {
+         LOG.error("Failed to load statefile \"" + stateFile.getAbsolutePath() + "\" - Reason: " + ioe.getMessage());
+      }
+   }
+
+   private void writeState() {
+      try {
+         final FileWriter fout = new FileWriter(stateFile);
+         fout.append(location);
+         fout.append("\n");
+
+         fout.close();
+      } catch (IOException ioe) {
+         LOG.error("Failed to write statefile \"" + stateFile.getAbsolutePath() + "\" - Reason: " + ioe.getMessage());
+      }
+   }
+
+   @Override
    public AtomSourceResult poll() throws AtomSourceException {
       try {
          final AtomSourceResult result = read(location);
@@ -38,6 +78,7 @@ public class FeedCrawlerSource implements AtomSource {
             for (Link pageLink : result.feed().links()) {
                if (pageLink.rel().equalsIgnoreCase("previous")) {
                   location = pageLink.href();
+                  writeState();
                   break;
                }
             }
