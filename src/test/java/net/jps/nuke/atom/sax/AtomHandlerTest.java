@@ -12,6 +12,7 @@ import net.jps.nuke.atom.ParserResult;
 import net.jps.nuke.atom.model.Author;
 import net.jps.nuke.atom.model.Category;
 import net.jps.nuke.atom.model.Contributor;
+import net.jps.nuke.atom.model.Content;
 import net.jps.nuke.atom.model.Entry;
 import net.jps.nuke.atom.model.Feed;
 import net.jps.nuke.atom.model.Link;
@@ -99,6 +100,11 @@ public class AtomHandlerTest {
             assertEquals("me", l.title());
             assertEquals("application/atom+xml", l.type());
          }
+      }
+
+      protected void checkContentAttributes(final Content content) {
+        assertEquals("something.txt", content.src());
+        assertEquals("text", content.type());
       }
    }
 
@@ -265,6 +271,7 @@ public class AtomHandlerTest {
 
          final Entry e = result.getEntry();
          assertEquals("Text content.", e.content().value());
+         checkContentAttributes(e.content());
       }
 
       @Test
