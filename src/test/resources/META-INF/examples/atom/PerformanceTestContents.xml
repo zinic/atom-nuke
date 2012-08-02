@@ -1,54 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <feed>
-   <author>
+   <author base="test" lang="en">
       <name>John Doe</name>
       <uri>http://john.doe.example.domain/</uri>
       <email>john.doe@example.domain</email>
    </author>
 
-   <contributor>
+   <contributor base="test" lang="en">
       <name>John Doe</name>
       <uri>http://john.doe.example.domain/</uri>
       <email>john.doe@example.domain</email>
    </contributor>
    
-   <link href="http://example.domain/12345" rel="self" type="application/atom+xml" title="me" hreflang="en" length="52153" />
-   <link href="http://example.domain/12345" rel="self" type="application/atom+xml" title="me" hreflang="en" length="52153" />
+   <link href="http://example.domain/12345" rel="self" hreflang="en" type="application/atom+xml" title="me" base="test" lang="en" length="52153" />
+   <link href="http://example.domain/12345" rel="self" hreflang="en" type="application/atom+xml" title="me" base="test" lang="en" length="52153" />
       
-   <category lang="en" term="a" scheme="http" label="Category A" />
-   <category lang="en" term="a" scheme="http" label="Category A" />
-   <category lang="en" term="a" scheme="http" label="Category A" />
+   <category base="test" lang="en" term="a" scheme="http" label="Category A" />
+   <category base="test" lang="en" term="a" scheme="http" label="Category A" />
+   <category base="test" lang="en" term="a" scheme="http" label="Category A" />
    
    <entry>
       <id>1</id>
       
-      <source lang="en">
-         <author>
+      <source base="test" lang="en">
+         <author base="test" lang="en">
             <name>John Doe</name>
             <uri>http://john.doe.example.domain/</uri>
             <email>john.doe@example.domain</email>
          </author>
    
-         <author>
+         <author base="test" lang="en">
             <name>John Doe</name>
             <uri>http://john.doe.example.domain/</uri>
             <email>john.doe@example.domain</email>
          </author>
 
-         <author>
+         <author base="test" lang="en">
             <name>John Doe</name>
             <uri>http://john.doe.example.domain/</uri>
             <email>john.doe@example.domain</email>
          </author>
       
-         <category lang="en" term="a" scheme="http" label="Category A" />
-         <category lang="en" term="a" scheme="http" label="Category A" />
-         <category lang="en" term="a" scheme="http" label="Category A" />
+         <category base="test" lang="en" term="a" scheme="http" label="Category A" />
+         <category base="test" lang="en" term="a" scheme="http" label="Category B" />
+         <category base="test" lang="en" term="a" scheme="http" label="Category C" />
       
-         <link href="http://example.domain/12345" rel="self" type="application/atom+xml" title="me" hreflang="en" length="52153" />
-         <link href="http://example.domain/12345" rel="self" type="application/atom+xml" title="me" hreflang="en" length="52153" />
-         <link href="http://example.domain/12345" rel="self" type="application/atom+xml" title="me" hreflang="en" length="52153" />
+         <link href="http://example.domain/12344" rel="self" hreflang="en" type="application/atom+xml" title="me" base="test" lang="en" length="52153" />
+         <link href="http://example.domain/12345" rel="self" hreflang="en" type="application/atom+xml" title="me" base="test" lang="en" length="52153" />
+         <link href="http://example.domain/12346" rel="self" hreflang="en" type="application/atom+xml" title="me" base="test" lang="en" length="52153" />
       
          <icon>http://example.domain/images/icon.jpg</icon>
          <logo>http://example.domain/images/logo.jpg</logo>
@@ -87,32 +87,32 @@
    <entry>
       <id>2</id>
       
-      <source lang="en">
-         <author>
+      <source base="test" lang="en">
+         <author base="test" lang="en">
             <name>John Doe</name>
             <uri>http://john.doe.example.domain/</uri>
             <email>john.doe@example.domain</email>
          </author>
    
-         <author>
+         <author base="test" lang="en">
             <name>John Doe</name>
             <uri>http://john.doe.example.domain/</uri>
             <email>john.doe@example.domain</email>
          </author>
 
-         <author>
+         <author base="test" lang="en">
             <name>John Doe</name>
             <uri>http://john.doe.example.domain/</uri>
             <email>john.doe@example.domain</email>
          </author>
       
-         <category lang="en" term="a" scheme="http" label="Category A" />
-         <category lang="en" term="a" scheme="http" label="Category A" />
-         <category lang="en" term="a" scheme="http" label="Category A" />
+         <category base="test" lang="en" term="a" scheme="http" label="Category A" />
+         <category base="test" lang="en" term="a" scheme="http" label="Category A" />
+         <category base="test" lang="en" term="a" scheme="http" label="Category A" />
       
-         <link href="http://example.domain/12345" rel="self" type="application/atom+xml" title="me" hreflang="en" length="52153" />
-         <link href="http://example.domain/12345" rel="self" type="application/atom+xml" title="me" hreflang="en" length="52153" />
-         <link href="http://example.domain/12345" rel="self" type="application/atom+xml" title="me" hreflang="en" length="52153" />
+         <link href="http://example.domain/12345" rel="self" hreflang="en" type="application/atom+xml" title="me" base="test" lang="en" length="52153" />
+         <link href="http://example.domain/12345" rel="self" hreflang="en" type="application/atom+xml" title="me" base="test" lang="en" length="52153" />
+         <link href="http://example.domain/12345" rel="self" hreflang="en" type="application/atom+xml" title="me" base="test" lang="en" length="52153" />
       
          <icon>http://example.domain/images/icon.jpg</icon>
          <logo>http://example.domain/images/logo.jpg</logo>
@@ -151,32 +151,32 @@
    <entry>
       <id>3</id>
       
-      <source lang="en">
-         <author>
+      <source base="test" lang="en">
+         <author base="test" lang="en">
             <name>John Doe</name>
             <uri>http://john.doe.example.domain/</uri>
             <email>john.doe@example.domain</email>
          </author>
    
-         <author>
+         <author base="test" lang="en">
             <name>John Doe</name>
             <uri>http://john.doe.example.domain/</uri>
             <email>john.doe@example.domain</email>
          </author>
 
-         <author>
+         <author base="test" lang="en">
             <name>John Doe</name>
             <uri>http://john.doe.example.domain/</uri>
             <email>john.doe@example.domain</email>
          </author>
       
-         <category lang="en" term="a" scheme="http" label="Category A" />
-         <category lang="en" term="a" scheme="http" label="Category A" />
-         <category lang="en" term="a" scheme="http" label="Category A" />
+         <category base="test" lang="en" term="a" scheme="http" label="Category A" />
+         <category base="test" lang="en" term="a" scheme="http" label="Category A" />
+         <category base="test" lang="en" term="a" scheme="http" label="Category A" />
       
-         <link href="http://example.domain/12345" rel="self" type="application/atom+xml" title="me" hreflang="en" length="52153" />
-         <link href="http://example.domain/12345" rel="self" type="application/atom+xml" title="me" hreflang="en" length="52153" />
-         <link href="http://example.domain/12345" rel="self" type="application/atom+xml" title="me" hreflang="en" length="52153" />
+         <link href="http://example.domain/12345" rel="self" hreflang="en" type="application/atom+xml" title="me" base="test" lang="en" length="52153" />
+         <link href="http://example.domain/12345" rel="self" hreflang="en" type="application/atom+xml" title="me" base="test" lang="en" length="52153" />
+         <link href="http://example.domain/12345" rel="self" hreflang="en" type="application/atom+xml" title="me" base="test" lang="en" length="52153" />
       
          <icon>http://example.domain/images/icon.jpg</icon>
          <logo>http://example.domain/images/logo.jpg</logo>
@@ -215,32 +215,32 @@
    <entry>
       <id>4</id>
       
-      <source lang="en">
-         <author>
+      <source base="test" lang="en">
+         <author base="test" lang="en">
             <name>John Doe</name>
             <uri>http://john.doe.example.domain/</uri>
             <email>john.doe@example.domain</email>
          </author>
    
-         <author>
+         <author base="test" lang="en">
             <name>John Doe</name>
             <uri>http://john.doe.example.domain/</uri>
             <email>john.doe@example.domain</email>
          </author>
 
-         <author>
+         <author base="test" lang="en">
             <name>John Doe</name>
             <uri>http://john.doe.example.domain/</uri>
             <email>john.doe@example.domain</email>
          </author>
       
-         <category lang="en" term="a" scheme="http" label="Category A" />
-         <category lang="en" term="a" scheme="http" label="Category A" />
-         <category lang="en" term="a" scheme="http" label="Category A" />
+         <category base="test" lang="en" term="a" scheme="http" label="Category A" />
+         <category base="test" lang="en" term="a" scheme="http" label="Category A" />
+         <category base="test" lang="en" term="a" scheme="http" label="Category A" />
       
-         <link href="http://example.domain/12345" rel="self" type="application/atom+xml" title="me" hreflang="en" length="52153" />
-         <link href="http://example.domain/12345" rel="self" type="application/atom+xml" title="me" hreflang="en" length="52153" />
-         <link href="http://example.domain/12345" rel="self" type="application/atom+xml" title="me" hreflang="en" length="52153" />
+         <link href="http://example.domain/12345" rel="self" hreflang="en" type="application/atom+xml" title="me" base="test" lang="en" length="52153" />
+         <link href="http://example.domain/12345" rel="self" hreflang="en" type="application/atom+xml" title="me" base="test" lang="en" length="52153" />
+         <link href="http://example.domain/12345" rel="self" hreflang="en" type="application/atom+xml" title="me" base="test" lang="en" length="52153" />
       
          <icon>http://example.domain/images/icon.jpg</icon>
          <logo>http://example.domain/images/logo.jpg</logo>
@@ -279,32 +279,32 @@
    <entry>
       <id>5</id>
       
-      <source lang="en">
-         <author>
+      <source base="test" lang="en">
+         <author base="test" lang="en">
             <name>John Doe</name>
             <uri>http://john.doe.example.domain/</uri>
             <email>john.doe@example.domain</email>
          </author>
    
-         <author>
+         <author base="test" lang="en">
             <name>John Doe</name>
             <uri>http://john.doe.example.domain/</uri>
             <email>john.doe@example.domain</email>
          </author>
 
-         <author>
+         <author base="test" lang="en">
             <name>John Doe</name>
             <uri>http://john.doe.example.domain/</uri>
             <email>john.doe@example.domain</email>
          </author>
       
-         <category lang="en" term="a" scheme="http" label="Category A" />
-         <category lang="en" term="a" scheme="http" label="Category A" />
-         <category lang="en" term="a" scheme="http" label="Category A" />
+         <category base="test" lang="en" term="a" scheme="http" label="Category A" />
+         <category base="test" lang="en" term="a" scheme="http" label="Category A" />
+         <category base="test" lang="en" term="a" scheme="http" label="Category A" />
       
-         <link href="http://example.domain/12345" rel="self" type="application/atom+xml" title="me" hreflang="en" length="52153" />
-         <link href="http://example.domain/12345" rel="self" type="application/atom+xml" title="me" hreflang="en" length="52153" />
-         <link href="http://example.domain/12345" rel="self" type="application/atom+xml" title="me" hreflang="en" length="52153" />
+         <link href="http://example.domain/12345" rel="self" hreflang="en" type="application/atom+xml" title="me" base="test" lang="en" length="52153" />
+         <link href="http://example.domain/12345" rel="self" hreflang="en" type="application/atom+xml" title="me" base="test" lang="en" length="52153" />
+         <link href="http://example.domain/12345" rel="self" hreflang="en" type="application/atom+xml" title="me" base="test" lang="en" length="52153" />
       
          <icon>http://example.domain/images/icon.jpg</icon>
          <logo>http://example.domain/images/logo.jpg</logo>
@@ -343,32 +343,32 @@
    <entry>
       <id>6</id>
       
-      <source lang="en">
-         <author>
+      <source base="test" lang="en">
+         <author base="test" lang="en">
             <name>John Doe</name>
             <uri>http://john.doe.example.domain/</uri>
             <email>john.doe@example.domain</email>
          </author>
    
-         <author>
+         <author base="test" lang="en">
             <name>John Doe</name>
             <uri>http://john.doe.example.domain/</uri>
             <email>john.doe@example.domain</email>
          </author>
 
-         <author>
+         <author base="test" lang="en">
             <name>John Doe</name>
             <uri>http://john.doe.example.domain/</uri>
             <email>john.doe@example.domain</email>
          </author>
       
-         <category lang="en" term="a" scheme="http" label="Category A" />
-         <category lang="en" term="a" scheme="http" label="Category A" />
-         <category lang="en" term="a" scheme="http" label="Category A" />
+         <category base="test" lang="en" term="a" scheme="http" label="Category A" />
+         <category base="test" lang="en" term="a" scheme="http" label="Category A" />
+         <category base="test" lang="en" term="a" scheme="http" label="Category A" />
       
-         <link href="http://example.domain/12345" rel="self" type="application/atom+xml" title="me" hreflang="en" length="52153" />
-         <link href="http://example.domain/12345" rel="self" type="application/atom+xml" title="me" hreflang="en" length="52153" />
-         <link href="http://example.domain/12345" rel="self" type="application/atom+xml" title="me" hreflang="en" length="52153" />
+         <link href="http://example.domain/12345" rel="self" hreflang="en" type="application/atom+xml" title="me" base="test" lang="en" length="52153" />
+         <link href="http://example.domain/12345" rel="self" hreflang="en" type="application/atom+xml" title="me" base="test" lang="en" length="52153" />
+         <link href="http://example.domain/12345" rel="self" hreflang="en" type="application/atom+xml" title="me" base="test" lang="en" length="52153" />
       
          <icon>http://example.domain/images/icon.jpg</icon>
          <logo>http://example.domain/images/logo.jpg</logo>
@@ -407,32 +407,32 @@
    <entry>
       <id>7</id>
       
-      <source lang="en">
-         <author>
+      <source base="test" lang="en">
+         <author base="test" lang="en">
             <name>John Doe</name>
             <uri>http://john.doe.example.domain/</uri>
             <email>john.doe@example.domain</email>
          </author>
    
-         <author>
+         <author base="test" lang="en">
             <name>John Doe</name>
             <uri>http://john.doe.example.domain/</uri>
             <email>john.doe@example.domain</email>
          </author>
 
-         <author>
+         <author base="test" lang="en">
             <name>John Doe</name>
             <uri>http://john.doe.example.domain/</uri>
             <email>john.doe@example.domain</email>
          </author>
       
-         <category lang="en" term="a" scheme="http" label="Category A" />
-         <category lang="en" term="a" scheme="http" label="Category A" />
-         <category lang="en" term="a" scheme="http" label="Category A" />
+         <category base="test" lang="en" term="a" scheme="http" label="Category A" />
+         <category base="test" lang="en" term="a" scheme="http" label="Category A" />
+         <category base="test" lang="en" term="a" scheme="http" label="Category A" />
       
-         <link href="http://example.domain/12345" rel="self" type="application/atom+xml" title="me" hreflang="en" length="52153" />
-         <link href="http://example.domain/12345" rel="self" type="application/atom+xml" title="me" hreflang="en" length="52153" />
-         <link href="http://example.domain/12345" rel="self" type="application/atom+xml" title="me" hreflang="en" length="52153" />
+         <link href="http://example.domain/12345" rel="self" hreflang="en" type="application/atom+xml" title="me" base="test" lang="en" length="52153" />
+         <link href="http://example.domain/12345" rel="self" hreflang="en" type="application/atom+xml" title="me" base="test" lang="en" length="52153" />
+         <link href="http://example.domain/12345" rel="self" hreflang="en" type="application/atom+xml" title="me" base="test" lang="en" length="52153" />
       
          <icon>http://example.domain/images/icon.jpg</icon>
          <logo>http://example.domain/images/logo.jpg</logo>
@@ -471,32 +471,32 @@
    <entry>
       <id>8</id>
       
-      <source lang="en">
-         <author>
+      <source base="test" lang="en">
+         <author base="test" lang="en">
             <name>John Doe</name>
             <uri>http://john.doe.example.domain/</uri>
             <email>john.doe@example.domain</email>
          </author>
    
-         <author>
+         <author base="test" lang="en">
             <name>John Doe</name>
             <uri>http://john.doe.example.domain/</uri>
             <email>john.doe@example.domain</email>
          </author>
 
-         <author>
+         <author base="test" lang="en">
             <name>John Doe</name>
             <uri>http://john.doe.example.domain/</uri>
             <email>john.doe@example.domain</email>
          </author>
       
-         <category lang="en" term="a" scheme="http" label="Category A" />
-         <category lang="en" term="a" scheme="http" label="Category A" />
-         <category lang="en" term="a" scheme="http" label="Category A" />
+         <category base="test" lang="en" term="a" scheme="http" label="Category A" />
+         <category base="test" lang="en" term="a" scheme="http" label="Category A" />
+         <category base="test" lang="en" term="a" scheme="http" label="Category A" />
       
-         <link href="http://example.domain/12345" rel="self" type="application/atom+xml" title="me" hreflang="en" length="52153" />
-         <link href="http://example.domain/12345" rel="self" type="application/atom+xml" title="me" hreflang="en" length="52153" />
-         <link href="http://example.domain/12345" rel="self" type="application/atom+xml" title="me" hreflang="en" length="52153" />
+         <link href="http://example.domain/12345" rel="self" hreflang="en" type="application/atom+xml" title="me" base="test" lang="en" length="52153" />
+         <link href="http://example.domain/12345" rel="self" hreflang="en" type="application/atom+xml" title="me" base="test" lang="en" length="52153" />
+         <link href="http://example.domain/12345" rel="self" hreflang="en" type="application/atom+xml" title="me" base="test" lang="en" length="52153" />
       
          <icon>http://example.domain/images/icon.jpg</icon>
          <logo>http://example.domain/images/logo.jpg</logo>
@@ -535,32 +535,32 @@
    <entry>
       <id>9</id>
       
-      <source lang="en">
-         <author>
+      <source base="test" lang="en">
+         <author base="test" lang="en">
             <name>John Doe</name>
             <uri>http://john.doe.example.domain/</uri>
             <email>john.doe@example.domain</email>
          </author>
    
-         <author>
+         <author base="test" lang="en">
             <name>John Doe</name>
             <uri>http://john.doe.example.domain/</uri>
             <email>john.doe@example.domain</email>
          </author>
 
-         <author>
+         <author base="test" lang="en">
             <name>John Doe</name>
             <uri>http://john.doe.example.domain/</uri>
             <email>john.doe@example.domain</email>
          </author>
       
-         <category lang="en" term="a" scheme="http" label="Category A" />
-         <category lang="en" term="a" scheme="http" label="Category A" />
-         <category lang="en" term="a" scheme="http" label="Category A" />
+         <category base="test" lang="en" term="a" scheme="http" label="Category A" />
+         <category base="test" lang="en" term="a" scheme="http" label="Category A" />
+         <category base="test" lang="en" term="a" scheme="http" label="Category A" />
       
-         <link href="http://example.domain/12345" rel="self" type="application/atom+xml" title="me" hreflang="en" length="52153" />
-         <link href="http://example.domain/12345" rel="self" type="application/atom+xml" title="me" hreflang="en" length="52153" />
-         <link href="http://example.domain/12345" rel="self" type="application/atom+xml" title="me" hreflang="en" length="52153" />
+         <link href="http://example.domain/12345" rel="self" hreflang="en" type="application/atom+xml" title="me" base="test" lang="en" length="52153" />
+         <link href="http://example.domain/12345" rel="self" hreflang="en" type="application/atom+xml" title="me" base="test" lang="en" length="52153" />
+         <link href="http://example.domain/12345" rel="self" hreflang="en" type="application/atom+xml" title="me" base="test" lang="en" length="52153" />
       
          <icon>http://example.domain/images/icon.jpg</icon>
          <logo>http://example.domain/images/logo.jpg</logo>
@@ -599,32 +599,32 @@
    <entry>
       <id>10</id>
       
-      <source lang="en">
-         <author>
+      <source base="test" lang="en">
+         <author base="test" lang="en">
             <name>John Doe</name>
             <uri>http://john.doe.example.domain/</uri>
             <email>john.doe@example.domain</email>
          </author>
    
-         <author>
+         <author base="test" lang="en">
             <name>John Doe</name>
             <uri>http://john.doe.example.domain/</uri>
             <email>john.doe@example.domain</email>
          </author>
 
-         <author>
+         <author base="test" lang="en">
             <name>John Doe</name>
             <uri>http://john.doe.example.domain/</uri>
             <email>john.doe@example.domain</email>
          </author>
       
-         <category lang="en" term="a" scheme="http" label="Category A" />
-         <category lang="en" term="a" scheme="http" label="Category A" />
-         <category lang="en" term="a" scheme="http" label="Category A" />
+         <category base="test" lang="en" term="a" scheme="http" label="Category A" />
+         <category base="test" lang="en" term="a" scheme="http" label="Category A" />
+         <category base="test" lang="en" term="a" scheme="http" label="Category A" />
       
-         <link href="http://example.domain/12345" rel="self" type="application/atom+xml" title="me" hreflang="en" length="52153" />
-         <link href="http://example.domain/12345" rel="self" type="application/atom+xml" title="me" hreflang="en" length="52153" />
-         <link href="http://example.domain/12345" rel="self" type="application/atom+xml" title="me" hreflang="en" length="52153" />
+         <link href="http://example.domain/12345" rel="self" hreflang="en" type="application/atom+xml" title="me" base="test" lang="en" length="52153" />
+         <link href="http://example.domain/12345" rel="self" hreflang="en" type="application/atom+xml" title="me" base="test" lang="en" length="52153" />
+         <link href="http://example.domain/12345" rel="self" hreflang="en" type="application/atom+xml" title="me" base="test" lang="en" length="52153" />
       
          <icon>http://example.domain/images/icon.jpg</icon>
          <logo>http://example.domain/images/logo.jpg</logo>
