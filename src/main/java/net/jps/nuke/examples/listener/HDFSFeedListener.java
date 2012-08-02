@@ -12,7 +12,7 @@ import net.jps.nuke.atom.model.Entry;
 import net.jps.nuke.atom.model.Feed;
 import net.jps.nuke.atom.Writer;
 import net.jps.nuke.listener.AtomListenerException;
-import net.jps.nuke.task.TaskContext;
+import net.jps.nuke.task.context.TaskContext;
 import net.jps.nuke.task.lifecycle.DestructionException;
 import net.jps.nuke.task.lifecycle.InitializationException;
 import org.apache.hadoop.conf.Configuration;

@@ -1,7 +1,6 @@
 package net.jps.nuke.task.context;
 
 import net.jps.nuke.Nuke;
-import net.jps.nuke.task.TaskContext;
 
 /**
  *

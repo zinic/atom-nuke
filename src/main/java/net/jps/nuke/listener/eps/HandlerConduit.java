@@ -7,7 +7,7 @@ import net.jps.nuke.listener.eps.eventlet.AtomEventlet;
 import net.jps.nuke.listener.eps.selector.Selector;
 import net.jps.nuke.listener.eps.selector.SelectorResult;
 import net.jps.nuke.task.lifecycle.DestructionException;
-import net.jps.nuke.task.TaskContext;
+import net.jps.nuke.task.context.TaskContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

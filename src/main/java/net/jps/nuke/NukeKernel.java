@@ -13,7 +13,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 import net.jps.nuke.source.AtomSource;
-import net.jps.nuke.task.TaskContext;
+import net.jps.nuke.task.context.TaskContext;
 import net.jps.nuke.task.context.TaskContextImpl;
 
 /**

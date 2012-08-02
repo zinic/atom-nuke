@@ -1,6 +1,6 @@
 package net.jps.nuke.task.lifecycle;
 
-import net.jps.nuke.task.TaskContext;
+import net.jps.nuke.task.context.TaskContext;
 
 /**
  *

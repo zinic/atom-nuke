@@ -1,6 +1,6 @@
 package net.jps.nuke.listener.eps.eventlet;
 
-import net.jps.nuke.task.TaskContext;
+import net.jps.nuke.task.context.TaskContext;
 import net.jps.nuke.task.lifecycle.DestructionException;
 import net.jps.nuke.task.lifecycle.InitializationException;
 

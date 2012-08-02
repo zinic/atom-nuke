@@ -1,6 +1,6 @@
 package net.jps.nuke.listener;
 
-import net.jps.nuke.task.TaskContext;
+import net.jps.nuke.task.context.TaskContext;
 import net.jps.nuke.util.remote.CancellationRemote;
 
 /**

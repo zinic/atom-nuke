@@ -16,7 +16,7 @@ import net.jps.nuke.source.AtomSource;
 import net.jps.nuke.source.AtomSourceException;
 import net.jps.nuke.source.AtomSourceResult;
 import net.jps.nuke.source.impl.ParserSourceResultImpl;
-import net.jps.nuke.task.TaskContext;
+import net.jps.nuke.task.context.TaskContext;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;

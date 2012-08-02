@@ -4,7 +4,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import net.jps.nuke.atom.model.Entry;
 import net.jps.nuke.listener.eps.eventlet.AtomEventlet;
 import net.jps.nuke.listener.eps.eventlet.AtomEventletException;
-import net.jps.nuke.task.TaskContext;
+import net.jps.nuke.task.context.TaskContext;
 import net.jps.nuke.task.lifecycle.DestructionException;
 import net.jps.nuke.task.lifecycle.InitializationException;
 
