@@ -1,4 +1,4 @@
-package net.jps.nuke.task.threading;
+package net.jps.nuke.threading;
 
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -6,7 +6,10 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import net.jps.nuke.listener.driver.RegisteredListenerDriver;
 import net.jps.nuke.task.ManagedTask;
+import net.jps.nuke.task.context.TaskContext;
+import net.jps.nuke.task.lifecycle.DestructionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,7 +20,6 @@ import org.slf4j.LoggerFactory;
 public class ExecutionManagerImpl implements ExecutionManager {
 
    private static final Logger LOG = LoggerFactory.getLogger(ExecutionManagerImpl.class);
-   
    private final List<ExecutingTask> executionStates;
    private final ExecutorService executorService;
    private final int executionCap;
@@ -41,18 +43,13 @@ public class ExecutionManagerImpl implements ExecutionManager {
    }
 
    private synchronized void track(ManagedTask task, Future future) {
-      executionStates.add(new ExecutingTask(task, future));
+      executionStates.add(new ExecutingTask(future, task));
    }
 
    @Override
    public synchronized void destroy() {
       // Shut down the execution pool
       executorService.shutdown();
-
-      // Cancel all of the tasks
-      for (ExecutingTask task : executionStates) {
-         task.cancel();
-      }
 
       try {
          // Try to wait for things to settle
@@ -61,11 +58,11 @@ public class ExecutionManagerImpl implements ExecutionManager {
          LOG.warn("Interrupted while waiting for task delegates to finish. This may introduce bad state.");
          executorService.shutdownNow();
       }
+   }
 
-      // Destroy the tasks
-      for (ExecutingTask task : executionStates) {
-         task.destroy();
-      }
+   @Override
+   public void submit(RegisteredListenerDriver listenerDriver) {
+      executorService.submit(listenerDriver);
    }
 
    @Override
@@ -86,11 +83,11 @@ public class ExecutionManagerImpl implements ExecutionManager {
    @Override
    public boolean submitted(ManagedTask task) {
       for (ExecutingTask executingTask : copyExecutionStates()) {
-         if (executingTask.managedTask().equals(task)) {
+         if (executingTask.taskLifeCycle().equals(task)) {
             return true;
          }
       }
-      
+
       return false;
    }
 }

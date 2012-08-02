@@ -1,18 +1,18 @@
 package net.jps.nuke.task;
 
-import net.jps.nuke.task.context.TaskContext;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 import net.jps.nuke.listener.RegisteredListener;
+import net.jps.nuke.listener.driver.AtomListenerDriver;
+import net.jps.nuke.listener.driver.RegisteredListenerDriver;
 import net.jps.nuke.source.AtomSource;
 import net.jps.nuke.source.AtomSourceResult;
-import net.jps.nuke.listener.driver.RegisteredListenerDriver;
-import net.jps.nuke.listener.driver.AtomListenerDriver;
+import net.jps.nuke.task.context.TaskContext;
 import net.jps.nuke.task.lifecycle.DestructionException;
+import net.jps.nuke.threading.ExecutionManager;
 import net.jps.nuke.util.TimeValue;
 import net.jps.nuke.util.remote.AtomicCancellationRemote;
 import org.slf4j.Logger;
@@ -25,16 +25,15 @@ import org.slf4j.LoggerFactory;
 public class ManagedTaskImpl extends TaskImpl implements ManagedTask {
 
    private static final Logger LOG = LoggerFactory.getLogger(ManagedTaskImpl.class);
-   private final ExecutorService executorService;
+   
+   private final ExecutionManager executorService;
    private final AtomSource atomSource;
-   private final UUID id;
 
-   public ManagedTaskImpl(TaskContext taskContext, TimeValue interval, ExecutorService executorService, AtomSource atomSource) {
+   public ManagedTaskImpl(TaskContext taskContext, TimeValue interval, ExecutionManager executorService, AtomSource atomSource) {
       super(taskContext, interval.convert(TimeUnit.NANOSECONDS), new AtomicCancellationRemote());
 
       this.executorService = executorService;
       this.atomSource = atomSource;
-      this.id = UUID.randomUUID();
    }
 
    private synchronized List<RegisteredListener> activeListeners() {
@@ -54,7 +53,11 @@ public class ManagedTaskImpl extends TaskImpl implements ManagedTask {
    }
 
    @Override
-   public synchronized void destroy() {
+   public void init(TaskContext taskContext) {
+   }
+
+   @Override
+   public synchronized void destroy(TaskContext taskContext) {
       for (RegisteredListener registeredListener : listeners()) {
          try {
             registeredListener.listener().destroy(taskContext());
@@ -108,28 +111,5 @@ public class ManagedTaskImpl extends TaskImpl implements ManagedTask {
             ex.printStackTrace(System.err);
          }
       }
-   }
-
-   @Override
-   public UUID id() {
-      return id;
-   }
-
-   @Override
-   public int hashCode() {
-      int hash = 5;
-      hash = 59 * hash + id().hashCode();
-      return hash;
-   }
-
-   @Override
-   public boolean equals(Object obj) {
-      if (obj != null && ManagedTask.class == obj.getClass()) {
-         final ManagedTask other = (ManagedTask) obj;
-
-         return id().equals(other.id());
-      }
-
-      return false;
    }
 }

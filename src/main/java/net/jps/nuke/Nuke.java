@@ -1,14 +1,16 @@
 package net.jps.nuke;
 
-import net.jps.nuke.task.submission.TaskSubmitter;
+import net.jps.nuke.task.submission.Tasker;
 
 /**
  *
  * @author zinic
  */
-public interface Nuke extends TaskSubmitter {
+public interface Nuke {
 
    void start();
 
    void destroy();
+
+   Tasker submitter();
 }

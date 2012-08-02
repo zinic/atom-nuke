@@ -1,9 +1,6 @@
 package net.jps.nuke;
 
-import net.jps.nuke.util.TimeValue;
-import net.jps.nuke.task.threading.ExecutionManagerImpl;
-import net.jps.nuke.task.ManagedTaskImpl;
-import net.jps.nuke.task.Task;
+import net.jps.nuke.threading.ExecutionManagerImpl;
 import net.jps.nuke.util.remote.CancellationRemote;
 import net.jps.nuke.util.remote.AtomicCancellationRemote;
 import java.util.concurrent.ExecutorService;
@@ -12,9 +9,10 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
-import net.jps.nuke.source.AtomSource;
-import net.jps.nuke.task.context.TaskContext;
-import net.jps.nuke.task.context.TaskContextImpl;
+import net.jps.nuke.task.submission.TaskManager;
+import net.jps.nuke.task.submission.TaskManagerImpl;
+import net.jps.nuke.task.submission.Tasker;
+import net.jps.nuke.threading.ExecutionManager;
 
 /**
  *
@@ -28,12 +26,11 @@ public class NukeKernel implements Nuke {
          return new Thread(r, "nuke-worker-" + TID.incrementAndGet());
       }
    };
-   
    private static final int NUM_PROCESSORS = Runtime.getRuntime().availableProcessors();
    private static final AtomicLong TID = new AtomicLong(0);
    private final CancellationRemote kernelCancellationRemote;
-   private final ExecutorService executorService;
-   private final TaskContext taskContext;
+   private final ExecutionManager executionManager;
+   private final TaskManager taskManager;
    private final KernelDelegate logic;
    private final Thread controlThread;
 
@@ -69,13 +66,16 @@ public class NukeKernel implements Nuke {
     * utilize for scheduling.
     */
    public NukeKernel(ExecutorService executorService, int maxPoolsize) {
-      this.executorService = executorService;
-
-      kernelCancellationRemote = new AtomicCancellationRemote();
-      logic = new KernelDelegate(kernelCancellationRemote, new ExecutionManagerImpl(maxPoolsize, executorService));
+      kernelCancellationRemote = new AtomicCancellationRemote();      
+      executionManager = new ExecutionManagerImpl(maxPoolsize, executorService);
+      taskManager = new TaskManagerImpl(executionManager);
+      logic = new KernelDelegate(kernelCancellationRemote, taskManager, executionManager);
       controlThread = new Thread(logic, "nuke-kernel-" + TID.incrementAndGet());
+   }
 
-      taskContext = new TaskContextImpl(this);
+   @Override
+   public Tasker submitter() {
+      return taskManager;
    }
 
    @Override
@@ -96,18 +96,8 @@ public class NukeKernel implements Nuke {
       } catch (InterruptedException ie) {
          controlThread.interrupt();
       }
-   }
-
-   @Override
-   public Task follow(AtomSource source) {
-      return follow(source, new TimeValue(1, TimeUnit.MINUTES));
-   }
-
-   @Override
-   public Task follow(AtomSource source, TimeValue pollingInterval) {
-      final ManagedTaskImpl managedTask = new ManagedTaskImpl(taskContext, pollingInterval, executorService, source);
-      logic.addTask(managedTask);
-
-      return managedTask;
+      
+      executionManager.destroy();
+      taskManager.destroy();
    }
 }

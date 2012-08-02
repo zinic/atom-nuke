@@ -2,6 +2,7 @@ package net.jps.nuke.task;
 
 import net.jps.nuke.listener.AtomListener;
 import net.jps.nuke.task.lifecycle.InitializationException;
+import net.jps.nuke.task.lifecycle.TaskLifeCycle;
 import net.jps.nuke.util.TimeValue;
 import net.jps.nuke.util.remote.CancellationRemote;
 
@@ -12,10 +13,9 @@ import net.jps.nuke.util.remote.CancellationRemote;
  *
  * @author zinic
  */
-public interface Task {
+public interface Task extends TaskLifeCycle {
 
    boolean isReentrant();
-
    /**
     * Cancels the task's next execution. This stops all of the listeners
     * assigned to this task.
@@ -28,7 +28,7 @@ public interface Task {
     * @return
     */
    boolean canceled();
-
+   
    /**
     * Returns the next scheduled polling time.
     *

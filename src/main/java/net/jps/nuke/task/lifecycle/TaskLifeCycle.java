@@ -1,5 +1,6 @@
 package net.jps.nuke.task.lifecycle;
 
+import java.util.UUID;
 import net.jps.nuke.task.context.TaskContext;
 
 /**

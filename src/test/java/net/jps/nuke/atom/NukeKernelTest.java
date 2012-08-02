@@ -24,7 +24,7 @@ public class NukeKernelTest {
       final AtomicLong eventsProcessed = new AtomicLong(0);
 
       for (int taskId = 1; taskId <= 30; taskId++) {
-         final Task task = nukeKernel.follow(new EventGenerator("Task " + taskId, true), new TimeValue(1000 * taskId, TimeUnit.NANOSECONDS));
+         final Task task = nukeKernel.submitter().follow(new EventGenerator("Task " + taskId, true), new TimeValue(1000 * taskId, TimeUnit.NANOSECONDS));
 
          final Relay relay = new ReentrantRelay();
          relay.enlistHandler(new EventCounterAtomEventelt(eventsProcessed));

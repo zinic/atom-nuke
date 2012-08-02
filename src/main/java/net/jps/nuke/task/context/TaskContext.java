@@ -1,6 +1,6 @@
 package net.jps.nuke.task.context;
 
-import net.jps.nuke.task.submission.TaskSubmitter;
+import net.jps.nuke.task.submission.Tasker;
 
 /**
  *
@@ -8,5 +8,5 @@ import net.jps.nuke.task.submission.TaskSubmitter;
  */
 public interface TaskContext {
 
-   TaskSubmitter submitter();
+   Tasker submitter();
 }

@@ -21,7 +21,7 @@ public class EventGeneratorMain {
       final AtomicLong eventsProcessed = new AtomicLong(0);
 
       for (int taskId = 1; taskId <= 30; taskId++) {
-         final Task task = nukeKernel.follow(new EventGenerator("Task " + taskId, true), new TimeValue(100 * taskId, TimeUnit.NANOSECONDS));
+         final Task task = nukeKernel.submitter().follow(new EventGenerator("Task " + taskId, true), new TimeValue(100 * taskId, TimeUnit.NANOSECONDS));
          final Relay relay = new Relay();
 
          relay.enlistHandler(new PrintStreamOutputListener(System.out, "Task " + taskId + " - Listener 1", eventsProcessed));

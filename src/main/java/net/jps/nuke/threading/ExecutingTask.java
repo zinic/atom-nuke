@@ -1,7 +1,8 @@
-package net.jps.nuke.task.threading;
+package net.jps.nuke.threading;
 
 import java.util.concurrent.Future;
-import net.jps.nuke.task.ManagedTask;
+import net.jps.nuke.task.Task;
+import net.jps.nuke.task.lifecycle.TaskLifeCycle;
 
 /**
  *
@@ -9,24 +10,20 @@ import net.jps.nuke.task.ManagedTask;
  */
 public class ExecutingTask {
 
-   private final ManagedTask task;
    private final Future future;
+   private final Task task;
 
-   public ExecutingTask(ManagedTask task, Future future) {
-      this.task = task;
+   public ExecutingTask(Future future, Task task) {
       this.future = future;
+      this.task = task;
    }
 
-   public ManagedTask managedTask() {
+   public TaskLifeCycle taskLifeCycle() {
       return task;
    }
 
    public void cancel() {
       task.cancel();
-   }
-
-   public void destroy() {
-      task.destroy();
    }
 
    public boolean done() {

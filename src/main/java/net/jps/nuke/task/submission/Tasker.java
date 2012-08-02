@@ -8,7 +8,7 @@ import net.jps.nuke.util.TimeValue;
  *
  * @author zinic
  */
-public interface TaskSubmitter {
+public interface Tasker {
 
    Task follow(AtomSource source);
 

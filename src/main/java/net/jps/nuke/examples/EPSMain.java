@@ -59,14 +59,14 @@ public class EPSMain {
       // Set up Nuke
       final Nuke nukeKernel = new NukeKernel();
 
-      final Task task1 = nukeKernel.follow(new EventGenerator("Task 1", true), new TimeValue(500, TimeUnit.MILLISECONDS));
+      final Task task1 = nukeKernel.submitter().follow(new EventGenerator("Task 1", true), new TimeValue(500, TimeUnit.MILLISECONDS));
       task1.addListener(relay1);
 
-      final Task task2 = nukeKernel.follow(new EventGenerator("Task 2", true), new TimeValue(1, TimeUnit.SECONDS));
+      final Task task2 = nukeKernel.submitter().follow(new EventGenerator("Task 2", true), new TimeValue(1, TimeUnit.SECONDS));
       task2.addListener(relay1);
       task2.addListener(relay2);
 
-      final Task task3 = nukeKernel.follow(new EventGenerator("Task 3", true), new TimeValue(2, TimeUnit.SECONDS));
+      final Task task3 = nukeKernel.submitter().follow(new EventGenerator("Task 3", true), new TimeValue(2, TimeUnit.SECONDS));
       task3.addListener(relay1);
 
       nukeKernel.start();
