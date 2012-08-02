@@ -121,7 +121,7 @@ public final class AtomWriter {
 
          writeStringElement(context, "name", person.name());
          writeStringElement(context, "email", person.email());
-         writeUriElement(context, element);
+         writeUriElement(context, person.uri());
 
          writeEndElement(context);
       }
