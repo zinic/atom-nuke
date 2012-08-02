@@ -21,6 +21,8 @@ import net.jps.nuke.util.TimeValue;
 public class FileWriterPerformance {
 
    public static void main(String[] args) throws Exception {
+      Thread.sleep(10000);
+      
       final AtomicLong events = new AtomicLong(0);
 
       final Relay relay = new ReentrantRelay();

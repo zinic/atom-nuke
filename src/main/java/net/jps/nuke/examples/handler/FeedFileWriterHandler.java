@@ -34,9 +34,9 @@ public class FeedFileWriterHandler implements AtomEventlet {
    }
 
    private synchronized void write(byte[] entry) throws XMLStreamException, IOException {
-      fileOutput.write(entry);
-      fileOutput.write(NEWLINE);
-      fileOutput.flush();
+//      fileOutput.write(entry);
+//      fileOutput.write(NEWLINE);
+//      fileOutput.flush();
    }
 
    @Override

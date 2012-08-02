@@ -55,11 +55,12 @@ public class ExecutionManagerImpl implements ExecutionManager {
 
    @Override
    public void destroy() {
+      // Kill all of the queued tasks
+      LOG.info("Clearing: " + runQueue.size() + " tasks");
+      runQueue.clear();
+      
       // Shut down the execution pool
       executorService.shutdown();
-
-      // Kill all of the queued tasks
-      runQueue.clear();
 
       try {
          // Try to wait for things to settle
