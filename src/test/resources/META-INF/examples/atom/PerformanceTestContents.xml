@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<feed>
+<feed base="test" lang="en">
+   <id base="test" lang="en">the feed</id>
+      
    <author base="test" lang="en">
       <name>John Doe</name>
       <uri>http://john.doe.example.domain/</uri>
@@ -25,6 +27,13 @@
    <generator base="test" lang="en" uri="http://github.com/zinic/atom-nuke" version="awesome">
       This is the most awesome generator ever, yo.
    </generator>
+   
+   <icon base="test" lang="en">http://example.domain/images/icon.jpg</icon>
+   <logo base="test" lang="en">http://example.domain/images/logo.jpg</logo>
+      
+   <title base="test" lang="en" type="text">The source.</title>
+   <subtitle base="test" lang="en" type="text">Where everyone goes to get what they need.</subtitle>
+   <rights base="test" lang="en" type="text">Copyright or something</rights>
 
    <entry base="test" lang="en">
       <id base="test" lang="en">1</id>
@@ -37,6 +46,8 @@
       <updated base="test" lang="en">2002-05-30T09:30:10Z</updated>
       
       <source base="test" lang="en">
+         <id base="test" lang="en">1 source</id>
+         
          <author base="test" lang="en">
             <name>John Doe</name>
             <uri>http://john.doe.example.domain/</uri>
@@ -54,7 +65,11 @@
             <uri>http://john.doe.example.domain/</uri>
             <email>john.doe@example.domain</email>
          </author>
-      
+         
+         <generator base="test" lang="en" uri="http://github.com/zinic/atom-nuke" version="awesome">
+            This is the most awesome generator ever, yo.
+         </generator>
+         
          <category base="test" lang="en" term="a" scheme="http" label="Category A" />
          <category base="test" lang="en" term="a" scheme="http" label="Category B" />
          <category base="test" lang="en" term="a" scheme="http" label="Category C" />
@@ -68,11 +83,12 @@
       
          <title base="test" lang="en" type="text">The source.</title>
          <subtitle base="test" lang="en" type="text">Where everyone goes to get what they need.</subtitle>
+         <rights base="test" lang="en" type="text">Copyright or something</rights>
       
          <updated base="test" lang="en">2002-05-30T09:30:10Z</updated>
       </source>
       
-      <content type="text/json">
+      <content base="test" lang="en" src="1.json" type="text/json">
          {
          "field-a": 1,
          "field-b": 2.5,

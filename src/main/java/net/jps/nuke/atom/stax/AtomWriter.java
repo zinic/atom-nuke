@@ -108,6 +108,10 @@ public final class AtomWriter {
       writeAttribute(context, AtomNamespaceContext.XML_NAMESPACE, "type", type);
    }
 
+   private static void writeSrc(WriterContext context, String src) throws XMLStreamException {
+      writeAttribute(context, AtomNamespaceContext.XML_NAMESPACE, "src", src);
+   }
+
    private static void writeUriElement(WriterContext context, String uri) throws XMLStreamException {
       writeStringElement(context, "uri", uri);
    }
@@ -327,6 +331,7 @@ public final class AtomWriter {
       writeLang(context, content.lang());
       writeBase(context, content.base());
       writeType(context, content.type());
+      writeSrc(context, content.src());
 
       context.getWriter().writeCharacters(content.value());
 

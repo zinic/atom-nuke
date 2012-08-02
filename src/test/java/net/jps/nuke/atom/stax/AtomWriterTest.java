@@ -17,6 +17,7 @@ import net.jps.nuke.atom.model.Id;
 import net.jps.nuke.atom.model.Link;
 import net.jps.nuke.atom.model.PersonConstruct;
 import net.jps.nuke.atom.model.Source;
+import net.jps.nuke.atom.model.TextConstruct;
 import net.jps.nuke.atom.sax.impl.SaxAtomParser;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
@@ -66,6 +67,18 @@ public class AtomWriterTest {
 
          originalSource = originalEntry.source();
          rereadSource = rereadEntry.source();
+      }
+
+      public void assertTextConstructsAreEqual(TextConstruct originalTC, TextConstruct rereadTC) {
+         assertNotNull(rereadTC.base());
+         assertNotNull(rereadTC.lang());
+         assertNotNull(rereadTC.type());
+         assertNotNull(rereadTC.value());
+
+         assertEquals(originalTC.base(), rereadTC.base());
+         assertEquals(originalTC.lang(), rereadTC.lang());
+         assertEquals(originalTC.type(), rereadTC.type());
+         assertEquals(originalTC.value(), rereadTC.value());
       }
 
       public void assertDateConstructsAreEqual(DateConstruct originalDC, DateConstruct rereadDC) {
@@ -173,6 +186,23 @@ public class AtomWriterTest {
    public static class WhenWritingFeeds extends TestParent {
 
       @Test
+      public void shouldWriteFeeds() {
+         assertNotNull(rereadFeed.base());
+         assertNotNull(rereadFeed.generator());
+         assertNotNull(rereadFeed.icon());
+         assertNotNull(rereadFeed.id());
+         assertNotNull(rereadFeed.lang());
+         assertNotNull(rereadFeed.logo());
+         assertNotNull(rereadFeed.rights());
+         assertNotNull(rereadFeed.subtitle());
+         assertNotNull(rereadFeed.title());
+         assertNotNull(rereadFeed.updated());
+         
+         assertEquals(originalFeed.base(), rereadFeed.base());
+         assertEquals(originalFeed.lang(), rereadFeed.lang());
+      }
+
+      @Test
       public void shouldWriteAuthors() {
          assertPersonConstructsAreEqual(originalFeed.authors(), rereadFeed.authors());
       }
@@ -218,6 +248,23 @@ public class AtomWriterTest {
    public static class WhenWritingEntries extends TestParent {
 
       @Test
+      public void shouldWriteEntries() {
+         assertNotNull(rereadEntry.base());
+         assertNotNull(rereadEntry.content());
+         assertNotNull(rereadEntry.id());
+         assertNotNull(rereadEntry.lang());
+         assertNotNull(rereadEntry.published());
+         assertNotNull(rereadEntry.rights());
+         assertNotNull(rereadEntry.source());
+         assertNotNull(rereadEntry.summary());
+         assertNotNull(rereadEntry.title());
+         assertNotNull(rereadEntry.updated());
+
+         assertEquals(originalEntry.base(), rereadEntry.base());
+         assertEquals(originalEntry.lang(), rereadEntry.lang());
+      }
+
+      @Test
       public void shouldWriteLinks() {
          assertLinksAreEqual(originalEntry.links(), rereadEntry.links());
       }
@@ -236,27 +283,6 @@ public class AtomWriterTest {
       public void shouldWriteContributors() {
          assertPersonConstructsAreEqual(originalEntry.contributors(), rereadEntry.contributors());
       }
-   }
-
-   @Ignore
-   public static class WhenWritingSources extends TestParent {
-
-      @Test
-      public void shouldWriteEntries() {
-         assertNotNull(rereadEntry.base());
-         assertNotNull(rereadEntry.content());
-         assertNotNull(rereadEntry.id());
-         assertNotNull(rereadEntry.lang());
-         assertNotNull(rereadEntry.published());
-         assertNotNull(rereadEntry.rights());
-         assertNotNull(rereadEntry.source());
-         assertNotNull(rereadEntry.summary());
-         assertNotNull(rereadEntry.title());
-         assertNotNull(rereadEntry.updated());
-
-         assertEquals(originalEntry.base(), rereadEntry.base());
-         assertEquals(originalEntry.lang(), rereadEntry.lang());
-      }
 
       @Test
       public void shouldWriteId() {
@@ -269,6 +295,21 @@ public class AtomWriterTest {
          assertEquals(originalId.base(), rereadId.base());
          assertEquals(originalId.lang(), rereadId.lang());
          assertEquals(originalId.value(), rereadId.value());
+      }
+
+      @Test
+      public void shouldWriteRights() {
+         assertTextConstructsAreEqual(originalEntry.rights(), rereadEntry.rights());
+      }
+
+      @Test
+      public void shouldWriteSummary() {
+         assertTextConstructsAreEqual(originalEntry.summary(), rereadEntry.summary());
+      }
+
+      @Test
+      public void shouldWriteTitle() {
+         assertTextConstructsAreEqual(originalEntry.title(), rereadEntry.title());
       }
 
       @Test
@@ -297,20 +338,45 @@ public class AtomWriterTest {
          assertEquals(originalContent.type(), rereadContent.type());
          assertEquals(originalContent.value(), rereadContent.value());
       }
+   }
+
+   public static class WhenWritingSources extends TestParent {
 
       @Test
-      public void shouldWriteLinks() {
-         assertLinksAreEqual(originalSource.links(), rereadSource.links());
+      public void shouldWriteSources() {
+         assertNotNull(rereadSource.base());
+         assertNotNull(rereadSource.generator());
+         assertNotNull(rereadSource.icon());
+         assertNotNull(rereadSource.id());
+         assertNotNull(rereadSource.lang());
+         assertNotNull(rereadSource.logo());
+         assertNotNull(rereadSource.rights());
+         assertNotNull(rereadSource.subtitle());
+         assertNotNull(rereadSource.title());
+         assertNotNull(rereadSource.updated());
+
+         assertEquals(originalSource.base(), rereadSource.base());
+         assertEquals(originalSource.lang(), rereadSource.lang());
       }
 
       @Test
       public void shouldWriteAuthors() {
-         assertPersonConstructsAreEqual(originalEntry.authors(), rereadSource.authors());
+         assertPersonConstructsAreEqual(originalFeed.authors(), rereadFeed.authors());
+      }
+
+      @Test
+      public void shouldWriteLinks() {
+         assertLinksAreEqual(originalFeed.links(), rereadFeed.links());
+      }
+
+      @Test
+      public void shouldWriteContributors() {
+         assertPersonConstructsAreEqual(originalFeed.contributors(), rereadFeed.contributors());
       }
 
       @Test
       public void shouldWriteCategories() {
-         assertCategoriesAreEqual(originalEntry.categories(), rereadSource.categories());
+         assertCategoriesAreEqual(originalFeed.categories(), rereadFeed.categories());
       }
    }
 }
