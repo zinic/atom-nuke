@@ -1,6 +1,6 @@
 package net.jps.nuke;
 
-import net.jps.nuke.task.TaskSubmitter;
+import net.jps.nuke.task.submission.TaskSubmitter;
 
 /**
  *

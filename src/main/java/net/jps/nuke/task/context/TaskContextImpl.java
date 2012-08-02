@@ -1,6 +1,6 @@
 package net.jps.nuke.task.context;
 
-import net.jps.nuke.Nuke;
+import net.jps.nuke.task.submission.TaskSubmitter;
 
 /**
  *
@@ -8,14 +8,14 @@ import net.jps.nuke.Nuke;
  */
 public class TaskContextImpl implements TaskContext {
 
-   private final Nuke nuke;
+   private final TaskSubmitter submitter;
 
-   public TaskContextImpl(Nuke nuke) {
-      this.nuke = nuke;
+   public TaskContextImpl(TaskSubmitter submitter) {
+      this.submitter = submitter;
    }
 
    @Override
-   public Nuke submitter() {
-      return nuke;
+   public TaskSubmitter submitter() {
+      return submitter;
    }
 }
