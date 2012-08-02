@@ -15,7 +15,7 @@ public class TaskContextImpl implements TaskContext {
    }
 
    @Override
-   public Nuke nuke() {
+   public Nuke submitter() {
       return nuke;
    }
 }
