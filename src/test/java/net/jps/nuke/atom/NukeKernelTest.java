@@ -38,7 +38,7 @@ public class NukeKernelTest {
       
       nukeKernel.start();
 
-      Thread.sleep(10000);
+      Thread.sleep(1000);
       
       nukeKernel.destroy();
       
