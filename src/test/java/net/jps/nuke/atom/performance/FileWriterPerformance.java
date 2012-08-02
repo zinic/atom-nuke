@@ -31,7 +31,7 @@ public class FileWriterPerformance {
       
       final Nuke nukeKernel = new NukeKernel();
 
-      final Task task = nukeKernel.tasker().follow(new EventGenerator("Task 1", true), new TimeValue(1, TimeUnit.NANOSECONDS));
+      final Task task = nukeKernel.follow(new EventGenerator("Task 1", true), new TimeValue(1, TimeUnit.NANOSECONDS));
       task.addListener(relay);
 
       nukeKernel.start();

@@ -1,6 +1,8 @@
 package net.jps.nuke;
 
-import net.jps.nuke.task.Tasker;
+import net.jps.nuke.source.AtomSource;
+import net.jps.nuke.task.Task;
+import net.jps.nuke.util.TimeValue;
 
 /**
  *
@@ -12,5 +14,7 @@ public interface Nuke {
 
    void destroy();
 
-   Tasker tasker();
+   Task follow(AtomSource source);
+
+   Task follow(AtomSource source, TimeValue pollingInterval);
 }

@@ -9,10 +9,12 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
+import net.jps.nuke.source.AtomSource;
+import net.jps.nuke.task.Task;
 import net.jps.nuke.task.manager.TaskManager;
 import net.jps.nuke.task.manager.TaskManagerImpl;
-import net.jps.nuke.task.Tasker;
 import net.jps.nuke.task.threading.ExecutionManager;
+import net.jps.nuke.util.TimeValue;
 
 /**
  *
@@ -69,10 +71,15 @@ public class NukeKernel implements Nuke {
    }
 
    @Override
-   public Tasker tasker() {
-      return taskManager;
+   public Task follow(AtomSource source) {
+      return taskManager.follow(source);
    }
 
+   @Override
+   public Task follow(AtomSource source, TimeValue pollingInterval) {
+      return taskManager.follow(source, pollingInterval);
+   }
+   
    @Override
    public void start() {
       if (controlThread.getState() != Thread.State.NEW) {

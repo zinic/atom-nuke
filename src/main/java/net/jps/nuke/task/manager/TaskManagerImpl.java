@@ -23,6 +23,7 @@ import org.slf4j.LoggerFactory;
 public class TaskManagerImpl implements TaskManager {
 
    private static final Logger LOG = LoggerFactory.getLogger(TaskManagerImpl.class);
+   
    private final ExecutionManager executionManager;
    private final List<ManagedTask> pollingTasks;
    private final TaskContext taskContext;
@@ -37,10 +38,13 @@ public class TaskManagerImpl implements TaskManager {
    }
 
    public synchronized void addTask(ManagedTask state) {
-      if (allowSubmission) {
-//         throw new IllegalStateException("This object has been destroyed and can no longer enlist tasks.");
-         pollingTasks.add(state);
+      if (!allowSubmission) {
+         // TODO:Implement - Consider returning a boolean value to communicate shutdown
+         LOG.warn("This object has been destroyed and can no longer enlist tasks.");
+
       }
+
+      pollingTasks.add(state);
    }
 
    @Override
