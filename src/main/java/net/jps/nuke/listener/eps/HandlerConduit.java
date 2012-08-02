@@ -1,9 +1,9 @@
 package net.jps.nuke.listener.eps;
 
-import net.jps.nuke.listener.eps.handler.AtomEventletException;
+import net.jps.nuke.listener.eps.eventlet.AtomEventletException;
 import net.jps.nuke.atom.model.Entry;
 import net.jps.nuke.atom.model.Feed;
-import net.jps.nuke.listener.eps.handler.AtomEventlet;
+import net.jps.nuke.listener.eps.eventlet.AtomEventlet;
 import net.jps.nuke.listener.eps.selector.Selector;
 import net.jps.nuke.listener.eps.selector.SelectorResult;
 import net.jps.nuke.service.DestructionException;

@@ -8,7 +8,7 @@ import net.jps.nuke.listener.AtomListener;
 import net.jps.nuke.listener.AtomListenerException;
 import net.jps.nuke.listener.AtomListenerResult;
 import net.jps.nuke.listener.ListenerResult;
-import net.jps.nuke.listener.eps.handler.AtomEventlet;
+import net.jps.nuke.listener.eps.eventlet.AtomEventlet;
 import net.jps.nuke.listener.eps.selector.DefaultSelector;
 import net.jps.nuke.listener.eps.selector.Selector;
 import net.jps.nuke.service.DestructionException;

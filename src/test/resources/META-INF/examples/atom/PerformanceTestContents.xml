@@ -136,4 +136,820 @@
          }
       </content>
    </entry>
+
+   <entry base="test" lang="en">
+      <id base="test" lang="en">2</id>
+      
+      <author base="test" lang="en">
+         <name>John Doe</name>
+         <uri>http://john.doe.example.domain/</uri>
+         <email>john.doe@example.domain</email>
+      </author>
+
+      <contributor base="test" lang="en">
+         <name>John Doe</name>
+         <uri>http://john.doe.example.domain/</uri>
+         <email>john.doe@example.domain</email>
+      </contributor>
+   
+      <link href="http://example.domain/12345" rel="self" hreflang="en" type="application/atom+xml" title="me" base="test" lang="en" length="52153" />
+      <link href="http://example.domain/12345" rel="self" hreflang="en" type="application/atom+xml" title="me" base="test" lang="en" length="52153" />
+      
+      <category base="test" lang="en" term="a" scheme="http" label="Category A" />
+      <category base="test" lang="en" term="a" scheme="http" label="Category A" />
+      <category base="test" lang="en" term="a" scheme="http" label="Category A" />
+      
+      <title base="test" lang="en" type="text">An Entry</title>
+      <summary base="test" lang="en" type="text">Entry Summary</summary>
+      <rights base="test" lang="en" type="text">Copyright or something</rights>
+      
+      <published base="test" lang="en">2002-05-30T09:30:10Z</published>
+      <updated base="test" lang="en">2002-05-30T09:30:10Z</updated>
+      
+      <source base="test" lang="en">
+         <id base="test" lang="en">1 source</id>
+         
+         <author base="test" lang="en">
+            <name>John Doe</name>
+            <uri>http://john.doe.example.domain/</uri>
+            <email>john.doe@example.domain</email>
+         </author>
+   
+         <author base="test" lang="en">
+            <name>John Doe</name>
+            <uri>http://john.doe.example.domain/</uri>
+            <email>john.doe@example.domain</email>
+         </author>
+
+         <author base="test" lang="en">
+            <name>John Doe</name>
+            <uri>http://john.doe.example.domain/</uri>
+            <email>john.doe@example.domain</email>
+         </author>
+         
+         <generator base="test" lang="en" uri="http://github.com/zinic/atom-nuke" version="awesome">
+            This is the most awesome generator ever, yo.
+         </generator>
+         
+         <category base="test" lang="en" term="a" scheme="http" label="Category A" />
+         <category base="test" lang="en" term="a" scheme="http" label="Category B" />
+         <category base="test" lang="en" term="a" scheme="http" label="Category C" />
+      
+         <link href="http://example.domain/12344" rel="self" hreflang="en" type="application/atom+xml" title="me" base="test" lang="en" length="52153" />
+         <link href="http://example.domain/12345" rel="self" hreflang="en" type="application/atom+xml" title="me" base="test" lang="en" length="52153" />
+         <link href="http://example.domain/12346" rel="self" hreflang="en" type="application/atom+xml" title="me" base="test" lang="en" length="52153" />
+      
+         <icon base="test" lang="en">http://example.domain/images/icon.jpg</icon>
+         <logo base="test" lang="en">http://example.domain/images/logo.jpg</logo>
+      
+         <title base="test" lang="en" type="text/html">
+            <p xmlns="xml">
+               <span style="font-weight: bold;">The source.</span>
+            </p>
+         </title>
+         
+         <subtitle base="test" lang="en" type="text">Where everyone goes to get what they need.</subtitle>
+         <rights base="test" lang="en" type="text">Copyright or something</rights>
+      
+         <updated base="test" lang="en">2002-05-30T09:30:10Z</updated>
+      </source>
+      
+      <content base="test" lang="en" src="1.json" type="text/json">
+         {
+         "field-a": 1,
+         "field-b": 2.5,
+         "field-c": "value-c",
+         "field-d": "value-d",
+         "field-e": "value-e",
+
+         "object": {
+         "field-a": 1,
+         "field-b": 2.5,
+         "field-c": "value-c",
+         "field-d": "value-d",
+         "field-e": "value-e"
+         },
+
+         "array": [
+         {
+         "key": "value"
+         }
+         ]
+         }
+      </content>
+   </entry>
+
+   <entry base="test" lang="en">
+      <id base="test" lang="en">3</id>
+      
+      <author base="test" lang="en">
+         <name>John Doe</name>
+         <uri>http://john.doe.example.domain/</uri>
+         <email>john.doe@example.domain</email>
+      </author>
+
+      <contributor base="test" lang="en">
+         <name>John Doe</name>
+         <uri>http://john.doe.example.domain/</uri>
+         <email>john.doe@example.domain</email>
+      </contributor>
+   
+      <link href="http://example.domain/12345" rel="self" hreflang="en" type="application/atom+xml" title="me" base="test" lang="en" length="52153" />
+      <link href="http://example.domain/12345" rel="self" hreflang="en" type="application/atom+xml" title="me" base="test" lang="en" length="52153" />
+      
+      <category base="test" lang="en" term="a" scheme="http" label="Category A" />
+      <category base="test" lang="en" term="a" scheme="http" label="Category A" />
+      <category base="test" lang="en" term="a" scheme="http" label="Category A" />
+      
+      <title base="test" lang="en" type="text">An Entry</title>
+      <summary base="test" lang="en" type="text">Entry Summary</summary>
+      <rights base="test" lang="en" type="text">Copyright or something</rights>
+      
+      <published base="test" lang="en">2002-05-30T09:30:10Z</published>
+      <updated base="test" lang="en">2002-05-30T09:30:10Z</updated>
+      
+      <source base="test" lang="en">
+         <id base="test" lang="en">1 source</id>
+         
+         <author base="test" lang="en">
+            <name>John Doe</name>
+            <uri>http://john.doe.example.domain/</uri>
+            <email>john.doe@example.domain</email>
+         </author>
+   
+         <author base="test" lang="en">
+            <name>John Doe</name>
+            <uri>http://john.doe.example.domain/</uri>
+            <email>john.doe@example.domain</email>
+         </author>
+
+         <author base="test" lang="en">
+            <name>John Doe</name>
+            <uri>http://john.doe.example.domain/</uri>
+            <email>john.doe@example.domain</email>
+         </author>
+         
+         <generator base="test" lang="en" uri="http://github.com/zinic/atom-nuke" version="awesome">
+            This is the most awesome generator ever, yo.
+         </generator>
+         
+         <category base="test" lang="en" term="a" scheme="http" label="Category A" />
+         <category base="test" lang="en" term="a" scheme="http" label="Category B" />
+         <category base="test" lang="en" term="a" scheme="http" label="Category C" />
+      
+         <link href="http://example.domain/12344" rel="self" hreflang="en" type="application/atom+xml" title="me" base="test" lang="en" length="52153" />
+         <link href="http://example.domain/12345" rel="self" hreflang="en" type="application/atom+xml" title="me" base="test" lang="en" length="52153" />
+         <link href="http://example.domain/12346" rel="self" hreflang="en" type="application/atom+xml" title="me" base="test" lang="en" length="52153" />
+      
+         <icon base="test" lang="en">http://example.domain/images/icon.jpg</icon>
+         <logo base="test" lang="en">http://example.domain/images/logo.jpg</logo>
+      
+         <title base="test" lang="en" type="text/html">
+            <p xmlns="xml">
+               <span style="font-weight: bold;">The source.</span>
+            </p>
+         </title>
+         
+         <subtitle base="test" lang="en" type="text">Where everyone goes to get what they need.</subtitle>
+         <rights base="test" lang="en" type="text">Copyright or something</rights>
+      
+         <updated base="test" lang="en">2002-05-30T09:30:10Z</updated>
+      </source>
+      
+      <content base="test" lang="en" src="1.json" type="text/json">
+         {
+         "field-a": 1,
+         "field-b": 2.5,
+         "field-c": "value-c",
+         "field-d": "value-d",
+         "field-e": "value-e",
+
+         "object": {
+         "field-a": 1,
+         "field-b": 2.5,
+         "field-c": "value-c",
+         "field-d": "value-d",
+         "field-e": "value-e"
+         },
+
+         "array": [
+         {
+         "key": "value"
+         }
+         ]
+         }
+      </content>
+   </entry>
+
+   <entry base="test" lang="en">
+      <id base="test" lang="en">4</id>
+      
+      <author base="test" lang="en">
+         <name>John Doe</name>
+         <uri>http://john.doe.example.domain/</uri>
+         <email>john.doe@example.domain</email>
+      </author>
+
+      <contributor base="test" lang="en">
+         <name>John Doe</name>
+         <uri>http://john.doe.example.domain/</uri>
+         <email>john.doe@example.domain</email>
+      </contributor>
+   
+      <link href="http://example.domain/12345" rel="self" hreflang="en" type="application/atom+xml" title="me" base="test" lang="en" length="52153" />
+      <link href="http://example.domain/12345" rel="self" hreflang="en" type="application/atom+xml" title="me" base="test" lang="en" length="52153" />
+      
+      <category base="test" lang="en" term="a" scheme="http" label="Category A" />
+      <category base="test" lang="en" term="a" scheme="http" label="Category A" />
+      <category base="test" lang="en" term="a" scheme="http" label="Category A" />
+      
+      <title base="test" lang="en" type="text">An Entry</title>
+      <summary base="test" lang="en" type="text">Entry Summary</summary>
+      <rights base="test" lang="en" type="text">Copyright or something</rights>
+      
+      <published base="test" lang="en">2002-05-30T09:30:10Z</published>
+      <updated base="test" lang="en">2002-05-30T09:30:10Z</updated>
+      
+      <source base="test" lang="en">
+         <id base="test" lang="en">1 source</id>
+         
+         <author base="test" lang="en">
+            <name>John Doe</name>
+            <uri>http://john.doe.example.domain/</uri>
+            <email>john.doe@example.domain</email>
+         </author>
+   
+         <author base="test" lang="en">
+            <name>John Doe</name>
+            <uri>http://john.doe.example.domain/</uri>
+            <email>john.doe@example.domain</email>
+         </author>
+
+         <author base="test" lang="en">
+            <name>John Doe</name>
+            <uri>http://john.doe.example.domain/</uri>
+            <email>john.doe@example.domain</email>
+         </author>
+         
+         <generator base="test" lang="en" uri="http://github.com/zinic/atom-nuke" version="awesome">
+            This is the most awesome generator ever, yo.
+         </generator>
+         
+         <category base="test" lang="en" term="a" scheme="http" label="Category A" />
+         <category base="test" lang="en" term="a" scheme="http" label="Category B" />
+         <category base="test" lang="en" term="a" scheme="http" label="Category C" />
+      
+         <link href="http://example.domain/12344" rel="self" hreflang="en" type="application/atom+xml" title="me" base="test" lang="en" length="52153" />
+         <link href="http://example.domain/12345" rel="self" hreflang="en" type="application/atom+xml" title="me" base="test" lang="en" length="52153" />
+         <link href="http://example.domain/12346" rel="self" hreflang="en" type="application/atom+xml" title="me" base="test" lang="en" length="52153" />
+      
+         <icon base="test" lang="en">http://example.domain/images/icon.jpg</icon>
+         <logo base="test" lang="en">http://example.domain/images/logo.jpg</logo>
+      
+         <title base="test" lang="en" type="text/html">
+            <p xmlns="xml">
+               <span style="font-weight: bold;">The source.</span>
+            </p>
+         </title>
+         
+         <subtitle base="test" lang="en" type="text">Where everyone goes to get what they need.</subtitle>
+         <rights base="test" lang="en" type="text">Copyright or something</rights>
+      
+         <updated base="test" lang="en">2002-05-30T09:30:10Z</updated>
+      </source>
+      
+      <content base="test" lang="en" src="1.json" type="text/json">
+         {
+         "field-a": 1,
+         "field-b": 2.5,
+         "field-c": "value-c",
+         "field-d": "value-d",
+         "field-e": "value-e",
+
+         "object": {
+         "field-a": 1,
+         "field-b": 2.5,
+         "field-c": "value-c",
+         "field-d": "value-d",
+         "field-e": "value-e"
+         },
+
+         "array": [
+         {
+         "key": "value"
+         }
+         ]
+         }
+      </content>
+   </entry>
+
+   <entry base="test" lang="en">
+      <id base="test" lang="en">5</id>
+      
+      <author base="test" lang="en">
+         <name>John Doe</name>
+         <uri>http://john.doe.example.domain/</uri>
+         <email>john.doe@example.domain</email>
+      </author>
+
+      <contributor base="test" lang="en">
+         <name>John Doe</name>
+         <uri>http://john.doe.example.domain/</uri>
+         <email>john.doe@example.domain</email>
+      </contributor>
+   
+      <link href="http://example.domain/12345" rel="self" hreflang="en" type="application/atom+xml" title="me" base="test" lang="en" length="52153" />
+      <link href="http://example.domain/12345" rel="self" hreflang="en" type="application/atom+xml" title="me" base="test" lang="en" length="52153" />
+      
+      <category base="test" lang="en" term="a" scheme="http" label="Category A" />
+      <category base="test" lang="en" term="a" scheme="http" label="Category A" />
+      <category base="test" lang="en" term="a" scheme="http" label="Category A" />
+      
+      <title base="test" lang="en" type="text">An Entry</title>
+      <summary base="test" lang="en" type="text">Entry Summary</summary>
+      <rights base="test" lang="en" type="text">Copyright or something</rights>
+      
+      <published base="test" lang="en">2002-05-30T09:30:10Z</published>
+      <updated base="test" lang="en">2002-05-30T09:30:10Z</updated>
+      
+      <source base="test" lang="en">
+         <id base="test" lang="en">1 source</id>
+         
+         <author base="test" lang="en">
+            <name>John Doe</name>
+            <uri>http://john.doe.example.domain/</uri>
+            <email>john.doe@example.domain</email>
+         </author>
+   
+         <author base="test" lang="en">
+            <name>John Doe</name>
+            <uri>http://john.doe.example.domain/</uri>
+            <email>john.doe@example.domain</email>
+         </author>
+
+         <author base="test" lang="en">
+            <name>John Doe</name>
+            <uri>http://john.doe.example.domain/</uri>
+            <email>john.doe@example.domain</email>
+         </author>
+         
+         <generator base="test" lang="en" uri="http://github.com/zinic/atom-nuke" version="awesome">
+            This is the most awesome generator ever, yo.
+         </generator>
+         
+         <category base="test" lang="en" term="a" scheme="http" label="Category A" />
+         <category base="test" lang="en" term="a" scheme="http" label="Category B" />
+         <category base="test" lang="en" term="a" scheme="http" label="Category C" />
+      
+         <link href="http://example.domain/12344" rel="self" hreflang="en" type="application/atom+xml" title="me" base="test" lang="en" length="52153" />
+         <link href="http://example.domain/12345" rel="self" hreflang="en" type="application/atom+xml" title="me" base="test" lang="en" length="52153" />
+         <link href="http://example.domain/12346" rel="self" hreflang="en" type="application/atom+xml" title="me" base="test" lang="en" length="52153" />
+      
+         <icon base="test" lang="en">http://example.domain/images/icon.jpg</icon>
+         <logo base="test" lang="en">http://example.domain/images/logo.jpg</logo>
+      
+         <title base="test" lang="en" type="text/html">
+            <p xmlns="xml">
+               <span style="font-weight: bold;">The source.</span>
+            </p>
+         </title>
+         
+         <subtitle base="test" lang="en" type="text">Where everyone goes to get what they need.</subtitle>
+         <rights base="test" lang="en" type="text">Copyright or something</rights>
+      
+         <updated base="test" lang="en">2002-05-30T09:30:10Z</updated>
+      </source>
+      
+      <content base="test" lang="en" src="1.json" type="text/json">
+         {
+         "field-a": 1,
+         "field-b": 2.5,
+         "field-c": "value-c",
+         "field-d": "value-d",
+         "field-e": "value-e",
+
+         "object": {
+         "field-a": 1,
+         "field-b": 2.5,
+         "field-c": "value-c",
+         "field-d": "value-d",
+         "field-e": "value-e"
+         },
+
+         "array": [
+         {
+         "key": "value"
+         }
+         ]
+         }
+      </content>
+   </entry>
+
+   <entry base="test" lang="en">
+      <id base="test" lang="en">6</id>
+      
+      <author base="test" lang="en">
+         <name>John Doe</name>
+         <uri>http://john.doe.example.domain/</uri>
+         <email>john.doe@example.domain</email>
+      </author>
+
+      <contributor base="test" lang="en">
+         <name>John Doe</name>
+         <uri>http://john.doe.example.domain/</uri>
+         <email>john.doe@example.domain</email>
+      </contributor>
+   
+      <link href="http://example.domain/12345" rel="self" hreflang="en" type="application/atom+xml" title="me" base="test" lang="en" length="52153" />
+      <link href="http://example.domain/12345" rel="self" hreflang="en" type="application/atom+xml" title="me" base="test" lang="en" length="52153" />
+      
+      <category base="test" lang="en" term="a" scheme="http" label="Category A" />
+      <category base="test" lang="en" term="a" scheme="http" label="Category A" />
+      <category base="test" lang="en" term="a" scheme="http" label="Category A" />
+      
+      <title base="test" lang="en" type="text">An Entry</title>
+      <summary base="test" lang="en" type="text">Entry Summary</summary>
+      <rights base="test" lang="en" type="text">Copyright or something</rights>
+      
+      <published base="test" lang="en">2002-05-30T09:30:10Z</published>
+      <updated base="test" lang="en">2002-05-30T09:30:10Z</updated>
+      
+      <source base="test" lang="en">
+         <id base="test" lang="en">1 source</id>
+         
+         <author base="test" lang="en">
+            <name>John Doe</name>
+            <uri>http://john.doe.example.domain/</uri>
+            <email>john.doe@example.domain</email>
+         </author>
+   
+         <author base="test" lang="en">
+            <name>John Doe</name>
+            <uri>http://john.doe.example.domain/</uri>
+            <email>john.doe@example.domain</email>
+         </author>
+
+         <author base="test" lang="en">
+            <name>John Doe</name>
+            <uri>http://john.doe.example.domain/</uri>
+            <email>john.doe@example.domain</email>
+         </author>
+         
+         <generator base="test" lang="en" uri="http://github.com/zinic/atom-nuke" version="awesome">
+            This is the most awesome generator ever, yo.
+         </generator>
+         
+         <category base="test" lang="en" term="a" scheme="http" label="Category A" />
+         <category base="test" lang="en" term="a" scheme="http" label="Category B" />
+         <category base="test" lang="en" term="a" scheme="http" label="Category C" />
+      
+         <link href="http://example.domain/12344" rel="self" hreflang="en" type="application/atom+xml" title="me" base="test" lang="en" length="52153" />
+         <link href="http://example.domain/12345" rel="self" hreflang="en" type="application/atom+xml" title="me" base="test" lang="en" length="52153" />
+         <link href="http://example.domain/12346" rel="self" hreflang="en" type="application/atom+xml" title="me" base="test" lang="en" length="52153" />
+      
+         <icon base="test" lang="en">http://example.domain/images/icon.jpg</icon>
+         <logo base="test" lang="en">http://example.domain/images/logo.jpg</logo>
+      
+         <title base="test" lang="en" type="text/html">
+            <p xmlns="xml">
+               <span style="font-weight: bold;">The source.</span>
+            </p>
+         </title>
+         
+         <subtitle base="test" lang="en" type="text">Where everyone goes to get what they need.</subtitle>
+         <rights base="test" lang="en" type="text">Copyright or something</rights>
+      
+         <updated base="test" lang="en">2002-05-30T09:30:10Z</updated>
+      </source>
+      
+      <content base="test" lang="en" src="1.json" type="text/json">
+         {
+         "field-a": 1,
+         "field-b": 2.5,
+         "field-c": "value-c",
+         "field-d": "value-d",
+         "field-e": "value-e",
+
+         "object": {
+         "field-a": 1,
+         "field-b": 2.5,
+         "field-c": "value-c",
+         "field-d": "value-d",
+         "field-e": "value-e"
+         },
+
+         "array": [
+         {
+         "key": "value"
+         }
+         ]
+         }
+      </content>
+   </entry>
+
+   <entry base="test" lang="en">
+      <id base="test" lang="en">7</id>
+      
+      <author base="test" lang="en">
+         <name>John Doe</name>
+         <uri>http://john.doe.example.domain/</uri>
+         <email>john.doe@example.domain</email>
+      </author>
+
+      <contributor base="test" lang="en">
+         <name>John Doe</name>
+         <uri>http://john.doe.example.domain/</uri>
+         <email>john.doe@example.domain</email>
+      </contributor>
+   
+      <link href="http://example.domain/12345" rel="self" hreflang="en" type="application/atom+xml" title="me" base="test" lang="en" length="52153" />
+      <link href="http://example.domain/12345" rel="self" hreflang="en" type="application/atom+xml" title="me" base="test" lang="en" length="52153" />
+      
+      <category base="test" lang="en" term="a" scheme="http" label="Category A" />
+      <category base="test" lang="en" term="a" scheme="http" label="Category A" />
+      <category base="test" lang="en" term="a" scheme="http" label="Category A" />
+      
+      <title base="test" lang="en" type="text">An Entry</title>
+      <summary base="test" lang="en" type="text">Entry Summary</summary>
+      <rights base="test" lang="en" type="text">Copyright or something</rights>
+      
+      <published base="test" lang="en">2002-05-30T09:30:10Z</published>
+      <updated base="test" lang="en">2002-05-30T09:30:10Z</updated>
+      
+      <source base="test" lang="en">
+         <id base="test" lang="en">1 source</id>
+         
+         <author base="test" lang="en">
+            <name>John Doe</name>
+            <uri>http://john.doe.example.domain/</uri>
+            <email>john.doe@example.domain</email>
+         </author>
+   
+         <author base="test" lang="en">
+            <name>John Doe</name>
+            <uri>http://john.doe.example.domain/</uri>
+            <email>john.doe@example.domain</email>
+         </author>
+
+         <author base="test" lang="en">
+            <name>John Doe</name>
+            <uri>http://john.doe.example.domain/</uri>
+            <email>john.doe@example.domain</email>
+         </author>
+         
+         <generator base="test" lang="en" uri="http://github.com/zinic/atom-nuke" version="awesome">
+            This is the most awesome generator ever, yo.
+         </generator>
+         
+         <category base="test" lang="en" term="a" scheme="http" label="Category A" />
+         <category base="test" lang="en" term="a" scheme="http" label="Category B" />
+         <category base="test" lang="en" term="a" scheme="http" label="Category C" />
+      
+         <link href="http://example.domain/12344" rel="self" hreflang="en" type="application/atom+xml" title="me" base="test" lang="en" length="52153" />
+         <link href="http://example.domain/12345" rel="self" hreflang="en" type="application/atom+xml" title="me" base="test" lang="en" length="52153" />
+         <link href="http://example.domain/12346" rel="self" hreflang="en" type="application/atom+xml" title="me" base="test" lang="en" length="52153" />
+      
+         <icon base="test" lang="en">http://example.domain/images/icon.jpg</icon>
+         <logo base="test" lang="en">http://example.domain/images/logo.jpg</logo>
+      
+         <title base="test" lang="en" type="text/html">
+            <p xmlns="xml">
+               <span style="font-weight: bold;">The source.</span>
+            </p>
+         </title>
+         
+         <subtitle base="test" lang="en" type="text">Where everyone goes to get what they need.</subtitle>
+         <rights base="test" lang="en" type="text">Copyright or something</rights>
+      
+         <updated base="test" lang="en">2002-05-30T09:30:10Z</updated>
+      </source>
+      
+      <content base="test" lang="en" src="1.json" type="text/json">
+         {
+         "field-a": 1,
+         "field-b": 2.5,
+         "field-c": "value-c",
+         "field-d": "value-d",
+         "field-e": "value-e",
+
+         "object": {
+         "field-a": 1,
+         "field-b": 2.5,
+         "field-c": "value-c",
+         "field-d": "value-d",
+         "field-e": "value-e"
+         },
+
+         "array": [
+         {
+         "key": "value"
+         }
+         ]
+         }
+      </content>
+   </entry>
+
+   <entry base="test" lang="en">
+      <id base="test" lang="en">8</id>
+      
+      <author base="test" lang="en">
+         <name>John Doe</name>
+         <uri>http://john.doe.example.domain/</uri>
+         <email>john.doe@example.domain</email>
+      </author>
+
+      <contributor base="test" lang="en">
+         <name>John Doe</name>
+         <uri>http://john.doe.example.domain/</uri>
+         <email>john.doe@example.domain</email>
+      </contributor>
+   
+      <link href="http://example.domain/12345" rel="self" hreflang="en" type="application/atom+xml" title="me" base="test" lang="en" length="52153" />
+      <link href="http://example.domain/12345" rel="self" hreflang="en" type="application/atom+xml" title="me" base="test" lang="en" length="52153" />
+      
+      <category base="test" lang="en" term="a" scheme="http" label="Category A" />
+      <category base="test" lang="en" term="a" scheme="http" label="Category A" />
+      <category base="test" lang="en" term="a" scheme="http" label="Category A" />
+      
+      <title base="test" lang="en" type="text">An Entry</title>
+      <summary base="test" lang="en" type="text">Entry Summary</summary>
+      <rights base="test" lang="en" type="text">Copyright or something</rights>
+      
+      <published base="test" lang="en">2002-05-30T09:30:10Z</published>
+      <updated base="test" lang="en">2002-05-30T09:30:10Z</updated>
+      
+      <source base="test" lang="en">
+         <id base="test" lang="en">1 source</id>
+         
+         <author base="test" lang="en">
+            <name>John Doe</name>
+            <uri>http://john.doe.example.domain/</uri>
+            <email>john.doe@example.domain</email>
+         </author>
+   
+         <author base="test" lang="en">
+            <name>John Doe</name>
+            <uri>http://john.doe.example.domain/</uri>
+            <email>john.doe@example.domain</email>
+         </author>
+
+         <author base="test" lang="en">
+            <name>John Doe</name>
+            <uri>http://john.doe.example.domain/</uri>
+            <email>john.doe@example.domain</email>
+         </author>
+         
+         <generator base="test" lang="en" uri="http://github.com/zinic/atom-nuke" version="awesome">
+            This is the most awesome generator ever, yo.
+         </generator>
+         
+         <category base="test" lang="en" term="a" scheme="http" label="Category A" />
+         <category base="test" lang="en" term="a" scheme="http" label="Category B" />
+         <category base="test" lang="en" term="a" scheme="http" label="Category C" />
+      
+         <link href="http://example.domain/12344" rel="self" hreflang="en" type="application/atom+xml" title="me" base="test" lang="en" length="52153" />
+         <link href="http://example.domain/12345" rel="self" hreflang="en" type="application/atom+xml" title="me" base="test" lang="en" length="52153" />
+         <link href="http://example.domain/12346" rel="self" hreflang="en" type="application/atom+xml" title="me" base="test" lang="en" length="52153" />
+      
+         <icon base="test" lang="en">http://example.domain/images/icon.jpg</icon>
+         <logo base="test" lang="en">http://example.domain/images/logo.jpg</logo>
+      
+         <title base="test" lang="en" type="text/html">
+            <p xmlns="xml">
+               <span style="font-weight: bold;">The source.</span>
+            </p>
+         </title>
+         
+         <subtitle base="test" lang="en" type="text">Where everyone goes to get what they need.</subtitle>
+         <rights base="test" lang="en" type="text">Copyright or something</rights>
+      
+         <updated base="test" lang="en">2002-05-30T09:30:10Z</updated>
+      </source>
+      
+      <content base="test" lang="en" src="1.json" type="text/json">
+         {
+         "field-a": 1,
+         "field-b": 2.5,
+         "field-c": "value-c",
+         "field-d": "value-d",
+         "field-e": "value-e",
+
+         "object": {
+         "field-a": 1,
+         "field-b": 2.5,
+         "field-c": "value-c",
+         "field-d": "value-d",
+         "field-e": "value-e"
+         },
+
+         "array": [
+         {
+         "key": "value"
+         }
+         ]
+         }
+      </content>
+   </entry>
+
+   <entry base="test" lang="en">
+      <id base="test" lang="en">9</id>
+      
+      <author base="test" lang="en">
+         <name>John Doe</name>
+         <uri>http://john.doe.example.domain/</uri>
+         <email>john.doe@example.domain</email>
+      </author>
+
+      <contributor base="test" lang="en">
+         <name>John Doe</name>
+         <uri>http://john.doe.example.domain/</uri>
+         <email>john.doe@example.domain</email>
+      </contributor>
+   
+      <link href="http://example.domain/12345" rel="self" hreflang="en" type="application/atom+xml" title="me" base="test" lang="en" length="52153" />
+      <link href="http://example.domain/12345" rel="self" hreflang="en" type="application/atom+xml" title="me" base="test" lang="en" length="52153" />
+      
+      <category base="test" lang="en" term="a" scheme="http" label="Category A" />
+      <category base="test" lang="en" term="a" scheme="http" label="Category A" />
+      <category base="test" lang="en" term="a" scheme="http" label="Category A" />
+      
+      <title base="test" lang="en" type="text">An Entry</title>
+      <summary base="test" lang="en" type="text">Entry Summary</summary>
+      <rights base="test" lang="en" type="text">Copyright or something</rights>
+      
+      <published base="test" lang="en">2002-05-30T09:30:10Z</published>
+      <updated base="test" lang="en">2002-05-30T09:30:10Z</updated>
+      
+      <source base="test" lang="en">
+         <id base="test" lang="en">1 source</id>
+         
+         <author base="test" lang="en">
+            <name>John Doe</name>
+            <uri>http://john.doe.example.domain/</uri>
+            <email>john.doe@example.domain</email>
+         </author>
+   
+         <author base="test" lang="en">
+            <name>John Doe</name>
+            <uri>http://john.doe.example.domain/</uri>
+            <email>john.doe@example.domain</email>
+         </author>
+
+         <author base="test" lang="en">
+            <name>John Doe</name>
+            <uri>http://john.doe.example.domain/</uri>
+            <email>john.doe@example.domain</email>
+         </author>
+         
+         <generator base="test" lang="en" uri="http://github.com/zinic/atom-nuke" version="awesome">
+            This is the most awesome generator ever, yo.
+         </generator>
+         
+         <category base="test" lang="en" term="a" scheme="http" label="Category A" />
+         <category base="test" lang="en" term="a" scheme="http" label="Category B" />
+         <category base="test" lang="en" term="a" scheme="http" label="Category C" />
+      
+         <link href="http://example.domain/12344" rel="self" hreflang="en" type="application/atom+xml" title="me" base="test" lang="en" length="52153" />
+         <link href="http://example.domain/12345" rel="self" hreflang="en" type="application/atom+xml" title="me" base="test" lang="en" length="52153" />
+         <link href="http://example.domain/12346" rel="self" hreflang="en" type="application/atom+xml" title="me" base="test" lang="en" length="52153" />
+      
+         <icon base="test" lang="en">http://example.domain/images/icon.jpg</icon>
+         <logo base="test" lang="en">http://example.domain/images/logo.jpg</logo>
+      
+         <title base="test" lang="en" type="text/html">
+            <p xmlns="xml">
+               <span style="font-weight: bold;">The source.</span>
+            </p>
+         </title>
+         
+         <subtitle base="test" lang="en" type="text">Where everyone goes to get what they need.</subtitle>
+         <rights base="test" lang="en" type="text">Copyright or something</rights>
+      
+         <updated base="test" lang="en">2002-05-30T09:30:10Z</updated>
+      </source>
+      
+      <content base="test" lang="en" src="1.json" type="text/json">
+         {
+         "field-a": 1,
+         "field-b": 2.5,
+         "field-c": "value-c",
+         "field-d": "value-d",
+         "field-e": "value-e",
+
+         "object": {
+         "field-a": 1,
+         "field-b": 2.5,
+         "field-c": "value-c",
+         "field-d": "value-d",
+         "field-e": "value-e"
+         },
+
+         "array": [
+         {
+         "key": "value"
+         }
+         ]
+         }
+      </content>
+   </entry>
 </feed>

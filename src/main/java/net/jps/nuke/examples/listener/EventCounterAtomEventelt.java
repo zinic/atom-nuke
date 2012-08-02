@@ -2,8 +2,8 @@ package net.jps.nuke.examples.listener;
 
 import java.util.concurrent.atomic.AtomicLong;
 import net.jps.nuke.atom.model.Entry;
-import net.jps.nuke.listener.eps.handler.AtomEventletException;
-import net.jps.nuke.listener.eps.handler.AtomEventlet;
+import net.jps.nuke.listener.eps.eventlet.AtomEventletException;
+import net.jps.nuke.listener.eps.eventlet.AtomEventlet;
 import net.jps.nuke.service.DestructionException;
 import net.jps.nuke.service.InitializationException;
 
