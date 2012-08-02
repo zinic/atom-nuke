@@ -8,8 +8,10 @@ import net.jps.nuke.atom.ParserResult;
 import net.jps.nuke.atom.Reader;
 import net.jps.nuke.atom.Writer;
 import net.jps.nuke.atom.model.Author;
+import net.jps.nuke.atom.model.Category;
 import net.jps.nuke.atom.model.Contributor;
 import net.jps.nuke.atom.model.Feed;
+import net.jps.nuke.atom.model.Generator;
 import net.jps.nuke.atom.model.Link;
 import net.jps.nuke.atom.sax.impl.SaxAtomParser;
 import org.junit.Test;
@@ -30,7 +32,7 @@ public class AtomWriterTest {
    @Ignore
    public static class TestParent {
 
-      protected Feed originalFeed, writtenFeed;
+      protected Feed originalFeed, rereadFeed;
 
       @Before
       public void beforeAny() throws Exception {
@@ -45,7 +47,7 @@ public class AtomWriterTest {
          writer.write(baos, originalFeed);
 
          final ParserResult rereadResult = reader.read(new ByteArrayInputStream(baos.toByteArray()));
-         writtenFeed = rereadResult.getFeed();
+         rereadFeed = rereadResult.getFeed();
       }
    }
 
@@ -53,7 +55,7 @@ public class AtomWriterTest {
 
       @Test
       public void shouldReadAuthors() throws Exception {
-         final List<Author> originalAuthors = originalFeed.authors(), rereadAuthors = writtenFeed.authors();
+         final List<Author> originalAuthors = originalFeed.authors(), rereadAuthors = rereadFeed.authors();
 
          assertEquals(originalAuthors.size(), rereadAuthors.size());
 
@@ -63,7 +65,7 @@ public class AtomWriterTest {
 
                if (originalAuthor.name().equals(rereadAuthor.name())) {
                   authorItr.remove();
-                  
+
                   assertNotNull(rereadAuthor.base());
                   assertNotNull(rereadAuthor.lang());
                   assertNotNull(rereadAuthor.email());
@@ -83,7 +85,7 @@ public class AtomWriterTest {
 
       @Test
       public void shouldReadLinks() throws Exception {
-         final List<Link> originalLinks = originalFeed.links(), rereadLinks = writtenFeed.links();
+         final List<Link> originalLinks = originalFeed.links(), rereadLinks = rereadFeed.links();
 
          assertEquals(originalLinks.size(), rereadLinks.size());
 
@@ -116,10 +118,10 @@ public class AtomWriterTest {
 
          assertTrue("All links must match original set.", rereadLinks.isEmpty());
       }
-      
+
       @Test
       public void shouldReadContributors() throws Exception {
-         final List<Contributor> originalContributors = originalFeed.contributors(), rereadContributors = writtenFeed.contributors();
+         final List<Contributor> originalContributors = originalFeed.contributors(), rereadContributors = rereadFeed.contributors();
 
          assertEquals(originalContributors.size(), rereadContributors.size());
 
@@ -145,6 +147,55 @@ public class AtomWriterTest {
          }
 
          assertTrue("All contributors must match original set.", rereadContributors.isEmpty());
+      }
+
+      @Test
+      public void shouldReadCategories() throws Exception {
+         final List<Category> originalCategories = originalFeed.categories(), rereadCategories = rereadFeed.categories();
+
+         assertEquals(originalCategories.size(), rereadCategories.size());
+
+         for (Category originalCategory : originalCategories) {
+            for (Iterator<Category> categoryItr = rereadCategories.iterator(); categoryItr.hasNext();) {
+               final Category rereadCategory = categoryItr.next();
+
+               if (originalCategory.label().equals(rereadCategory.label())) {
+                  categoryItr.remove();
+
+                  assertNotNull(rereadCategory.base());
+                  assertNotNull(rereadCategory.lang());
+                  assertNotNull(rereadCategory.label());
+                  assertNotNull(rereadCategory.scheme());
+                  assertNotNull(rereadCategory.term());
+
+                  assertEquals(originalCategory.lang(), rereadCategory.lang());
+                  assertEquals(originalCategory.base(), rereadCategory.base());
+                  assertEquals(originalCategory.scheme(), rereadCategory.scheme());
+                  assertEquals(originalCategory.term(), rereadCategory.term());
+                  assertEquals(originalCategory.label(), rereadCategory.label());
+                  break;
+               }
+            }
+         }
+
+         assertTrue("All contributors must match original set.", rereadCategories.isEmpty());
+      }
+
+      @Test
+      public void shouldReadGenerator() throws Exception {
+         final Generator originalGenerator = originalFeed.generator(), rereadGenerator = rereadFeed.generator();
+
+         assertNotNull(rereadGenerator.base());
+         assertNotNull(rereadGenerator.lang());
+         assertNotNull(rereadGenerator.uri());
+         assertNotNull(rereadGenerator.value());
+         assertNotNull(rereadGenerator.version());
+
+         assertEquals(originalGenerator.base(), rereadGenerator.base());
+         assertEquals(originalGenerator.lang(), rereadGenerator.lang());
+         assertEquals(originalGenerator.uri(), rereadGenerator.uri());
+         assertEquals(originalGenerator.value(), rereadGenerator.value());
+         assertEquals(originalGenerator.version(), rereadGenerator.version());
       }
    }
 }

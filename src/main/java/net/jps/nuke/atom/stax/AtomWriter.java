@@ -180,7 +180,7 @@ public final class AtomWriter {
       writeLang(context, generator.lang());
       writeBase(context, generator.base());
 
-      writeUriElement(context, generator.uri());
+      writeAttribute(context, AtomNamespaceContext.ATOM_NAMESPACE, "uri", generator.uri());
       writeAttribute(context, AtomNamespaceContext.ATOM_NAMESPACE, "version", generator.version());
 
       context.getWriter().writeCharacters(generator.value());

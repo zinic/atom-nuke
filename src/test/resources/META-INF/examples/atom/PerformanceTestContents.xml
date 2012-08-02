@@ -20,6 +20,10 @@
    <category base="test" lang="en" term="a" scheme="http" label="Category A" />
    <category base="test" lang="en" term="a" scheme="http" label="Category A" />
    
+   <generator base="test" lang="en" uri="http://github.com/zinic/atom-nuke" version="awesome">
+      This is the most awesome generator ever, yo.
+   </generator>
+   
    <entry>
       <id>1</id>
       
