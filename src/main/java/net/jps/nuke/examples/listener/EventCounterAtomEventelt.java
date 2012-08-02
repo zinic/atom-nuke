@@ -2,10 +2,11 @@ package net.jps.nuke.examples.listener;
 
 import java.util.concurrent.atomic.AtomicLong;
 import net.jps.nuke.atom.model.Entry;
-import net.jps.nuke.listener.eps.eventlet.AtomEventletException;
 import net.jps.nuke.listener.eps.eventlet.AtomEventlet;
-import net.jps.nuke.service.DestructionException;
-import net.jps.nuke.service.InitializationException;
+import net.jps.nuke.listener.eps.eventlet.AtomEventletException;
+import net.jps.nuke.task.TaskContext;
+import net.jps.nuke.task.lifecycle.DestructionException;
+import net.jps.nuke.task.lifecycle.InitializationException;
 
 /**
  *
@@ -20,11 +21,11 @@ public class EventCounterAtomEventelt implements AtomEventlet {
    }
 
    @Override
-   public void init() throws InitializationException {
+   public void init(TaskContext tc) throws InitializationException {
    }
 
    @Override
-   public void destroy() throws DestructionException {
+   public void destroy(TaskContext tc) throws DestructionException {
    }
 
    @Override

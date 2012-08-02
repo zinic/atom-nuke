@@ -1,4 +1,4 @@
-package net.jps.nuke.service;
+package net.jps.nuke.task.lifecycle;
 
 /**
  *

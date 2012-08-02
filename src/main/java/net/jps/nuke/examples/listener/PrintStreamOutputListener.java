@@ -4,8 +4,9 @@ import java.io.PrintStream;
 import java.util.concurrent.atomic.AtomicLong;
 import net.jps.nuke.atom.model.Entry;
 import net.jps.nuke.listener.eps.eventlet.AtomEventletException;
-import net.jps.nuke.service.DestructionException;
-import net.jps.nuke.service.InitializationException;
+import net.jps.nuke.task.TaskContext;
+import net.jps.nuke.task.lifecycle.DestructionException;
+import net.jps.nuke.task.lifecycle.InitializationException;
 
 /**
  *
@@ -26,12 +27,12 @@ public class PrintStreamOutputListener extends EventCounterAtomEventelt {
    }
 
    @Override
-   public void init() throws InitializationException {
+   public void init(TaskContext tc) throws InitializationException {
       out.println("PrintStreamOutputListener(" + toString() + ") initalized.");
    }
 
    @Override
-   public void destroy() throws DestructionException {
+   public void destroy(TaskContext tc) throws DestructionException {
       out.println("PrintStreamOutputListener(" + toString() + ") destroyed.");
    }
 

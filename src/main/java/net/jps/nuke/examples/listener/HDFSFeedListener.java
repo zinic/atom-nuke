@@ -12,8 +12,9 @@ import net.jps.nuke.atom.model.Entry;
 import net.jps.nuke.atom.model.Feed;
 import net.jps.nuke.atom.Writer;
 import net.jps.nuke.listener.AtomListenerException;
-import net.jps.nuke.service.DestructionException;
-import net.jps.nuke.service.InitializationException;
+import net.jps.nuke.task.TaskContext;
+import net.jps.nuke.task.lifecycle.DestructionException;
+import net.jps.nuke.task.lifecycle.InitializationException;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
@@ -48,7 +49,7 @@ public class HDFSFeedListener implements AtomListener {
    }
 
    @Override
-   public void init() throws InitializationException {
+   public void init(TaskContext tc) throws InitializationException {
       try {
          hdfs = FileSystem.get(configuration);
 
@@ -60,7 +61,7 @@ public class HDFSFeedListener implements AtomListener {
    }
 
    @Override
-   public void destroy() throws DestructionException {
+   public void destroy(TaskContext tc) throws DestructionException {
       try {
          fileWriter.close();
          hdfs.close();

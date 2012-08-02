@@ -1,6 +1,7 @@
 package net.jps.nuke.task;
 
 import net.jps.nuke.listener.AtomListener;
+import net.jps.nuke.task.lifecycle.InitializationException;
 import net.jps.nuke.util.TimeValue;
 import net.jps.nuke.util.remote.CancellationRemote;
 
@@ -51,7 +52,7 @@ public interface Task {
     * @param listener
     * @return
     */
-   CancellationRemote addListener(AtomListener listener);
+   CancellationRemote addListener(AtomListener listener) throws InitializationException;
 
    /**
     * Adds an AtomListener to this task. The listener will begin receiving ATOM
@@ -60,5 +61,5 @@ public interface Task {
     * @param listener
     * @param listenerCancelationRemote
     */
-   void addListener(AtomListener listener, CancellationRemote listenerCancelationRemote);
+   void addListener(AtomListener listener, CancellationRemote listenerCancelationRemote) throws InitializationException;
 }

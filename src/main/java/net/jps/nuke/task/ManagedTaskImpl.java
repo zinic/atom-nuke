@@ -11,7 +11,7 @@ import net.jps.nuke.source.AtomSource;
 import net.jps.nuke.source.AtomSourceResult;
 import net.jps.nuke.listener.driver.RegisteredListenerDriver;
 import net.jps.nuke.listener.driver.AtomListenerDriver;
-import net.jps.nuke.service.DestructionException;
+import net.jps.nuke.task.lifecycle.DestructionException;
 import net.jps.nuke.util.TimeValue;
 import net.jps.nuke.util.remote.AtomicCancellationRemote;
 import org.slf4j.Logger;
@@ -24,13 +24,12 @@ import org.slf4j.LoggerFactory;
 public class ManagedTaskImpl extends TaskImpl implements ManagedTask {
 
    private static final Logger LOG = LoggerFactory.getLogger(ManagedTaskImpl.class);
-   
    private final ExecutorService executorService;
    private final AtomSource atomSource;
    private final UUID id;
 
-   public ManagedTaskImpl(TimeValue interval, ExecutorService executorService, AtomSource atomSource) {
-      super(interval.convert(TimeUnit.NANOSECONDS), new AtomicCancellationRemote());
+   public ManagedTaskImpl(TaskContext taskContext, TimeValue interval, ExecutorService executorService, AtomSource atomSource) {
+      super(taskContext, interval.convert(TimeUnit.NANOSECONDS), new AtomicCancellationRemote());
 
       this.executorService = executorService;
       this.atomSource = atomSource;
@@ -57,7 +56,7 @@ public class ManagedTaskImpl extends TaskImpl implements ManagedTask {
    public synchronized void destroy() {
       for (RegisteredListener registeredListener : listeners()) {
          try {
-            registeredListener.listener().destroy();
+            registeredListener.listener().destroy(taskContext());
          } catch (DestructionException sde) {
             LOG.error(sde.getMessage(), sde);
          }

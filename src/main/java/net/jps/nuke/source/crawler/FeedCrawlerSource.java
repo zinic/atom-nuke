@@ -10,12 +10,13 @@ import java.io.InputStream;
 import net.jps.nuke.atom.AtomParserException;
 import net.jps.nuke.atom.Reader;
 import net.jps.nuke.atom.model.Link;
-import net.jps.nuke.service.DestructionException;
-import net.jps.nuke.service.InitializationException;
+import net.jps.nuke.task.lifecycle.DestructionException;
+import net.jps.nuke.task.lifecycle.InitializationException;
 import net.jps.nuke.source.AtomSource;
 import net.jps.nuke.source.AtomSourceException;
 import net.jps.nuke.source.AtomSourceResult;
 import net.jps.nuke.source.impl.ParserSourceResultImpl;
+import net.jps.nuke.task.TaskContext;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -44,12 +45,12 @@ public class FeedCrawlerSource implements AtomSource {
    }
 
    @Override
-   public void init() throws InitializationException {
+   public void init(TaskContext tc) throws InitializationException {
       loadState();
    }
 
    @Override
-   public void destroy() throws DestructionException {
+   public void destroy(TaskContext tc) throws DestructionException {
       writeState();
    }
 

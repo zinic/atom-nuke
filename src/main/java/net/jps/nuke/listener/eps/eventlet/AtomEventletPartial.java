@@ -1,7 +1,8 @@
 package net.jps.nuke.listener.eps.eventlet;
 
-import net.jps.nuke.service.DestructionException;
-import net.jps.nuke.service.InitializationException;
+import net.jps.nuke.task.TaskContext;
+import net.jps.nuke.task.lifecycle.DestructionException;
+import net.jps.nuke.task.lifecycle.InitializationException;
 
 /**
  *
@@ -10,10 +11,10 @@ import net.jps.nuke.service.InitializationException;
 public abstract class AtomEventletPartial implements AtomEventlet {
 
    @Override
-   public void init() throws InitializationException {
+   public void init(TaskContext tc) throws InitializationException {
    }
 
    @Override
-   public void destroy() throws DestructionException {
+   public void destroy(TaskContext tc) throws DestructionException {
    }
 }

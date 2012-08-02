@@ -11,8 +11,9 @@ import net.jps.nuke.listener.ListenerResult;
 import net.jps.nuke.listener.eps.eventlet.AtomEventlet;
 import net.jps.nuke.listener.eps.selector.DefaultSelector;
 import net.jps.nuke.listener.eps.selector.Selector;
-import net.jps.nuke.service.DestructionException;
-import net.jps.nuke.service.InitializationException;
+import net.jps.nuke.task.TaskContext;
+import net.jps.nuke.task.lifecycle.DestructionException;
+import net.jps.nuke.task.lifecycle.InitializationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,14 +31,15 @@ public class Relay implements AtomListener, AtomEventHandlerRelay {
 
    private static final Logger LOG = LoggerFactory.getLogger(Relay.class);
    private final List<HandlerConduit> epsConduits;
+   private TaskContext taskCtx;
 
    public Relay() {
       epsConduits = new LinkedList<HandlerConduit>();
    }
 
-   private static void destroyConduit(HandlerConduit conduit) {
+   private static void destroyConduit(TaskContext tc, HandlerConduit conduit) {
       try {
-         conduit.destroy();
+         conduit.destroy(tc);
       } catch (DestructionException de) {
          LOG.error("Exception caught while destroying AtomEventHandler. Reason: " + de.getMessage(), de);
       }
@@ -48,7 +50,7 @@ public class Relay implements AtomListener, AtomEventHandlerRelay {
    }
 
    private synchronized boolean removeConduit(HandlerConduit conduit) {
-      destroyConduit(conduit);
+      destroyConduit(taskCtx, conduit);
 
       return epsConduits.remove(conduit);
    }
@@ -60,20 +62,20 @@ public class Relay implements AtomListener, AtomEventHandlerRelay {
 
    @Override
    public synchronized void enlistHandler(AtomEventlet handler, Selector selector) throws InitializationException {
-      handler.init();
+      handler.init(taskCtx);
 
       epsConduits.add(new HandlerConduit(handler, selector));
    }
 
    @Override
-   public void init() throws InitializationException {
-      LOG.info("Relay(" + this + ") started.");
+   public void init(TaskContext tc) throws InitializationException {
+      taskCtx = tc;
    }
 
    @Override
-   public void destroy() throws DestructionException {
+   public void destroy(TaskContext tc) throws DestructionException {
       for (HandlerConduit conduit : epsConduits) {
-         destroyConduit(conduit);
+         destroyConduit(tc, conduit);
       }
 
       epsConduits.clear();

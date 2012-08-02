@@ -13,6 +13,8 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 import net.jps.nuke.source.AtomSource;
+import net.jps.nuke.task.TaskContext;
+import net.jps.nuke.task.context.TaskContextImpl;
 
 /**
  *
@@ -29,9 +31,9 @@ public class NukeKernel implements Nuke {
    
    private static final int NUM_PROCESSORS = Runtime.getRuntime().availableProcessors();
    private static final AtomicLong TID = new AtomicLong(0);
-   
    private final CancellationRemote kernelCancellationRemote;
    private final ExecutorService executorService;
+   private final TaskContext taskContext;
    private final KernelDelegate logic;
    private final Thread controlThread;
 
@@ -72,6 +74,8 @@ public class NukeKernel implements Nuke {
       kernelCancellationRemote = new AtomicCancellationRemote();
       logic = new KernelDelegate(kernelCancellationRemote, new ExecutionManagerImpl(maxPoolsize, executorService));
       controlThread = new Thread(logic, "nuke-kernel-" + TID.incrementAndGet());
+
+      taskContext = new TaskContextImpl(this);
    }
 
    @Override
@@ -101,7 +105,7 @@ public class NukeKernel implements Nuke {
 
    @Override
    public Task follow(AtomSource source, TimeValue pollingInterval) {
-      final ManagedTaskImpl managedTask = new ManagedTaskImpl(pollingInterval, executorService, source);
+      final ManagedTaskImpl managedTask = new ManagedTaskImpl(taskContext, pollingInterval, executorService, source);
       logic.addTask(managedTask);
 
       return managedTask;

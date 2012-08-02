@@ -1,12 +1,12 @@
 package net.jps.nuke.source;
 
-import net.jps.nuke.service.Service;
+import net.jps.nuke.task.lifecycle.TaskLifeCycle;
 
 /**
  *
  * @author zinic
  */
-public interface AtomSource extends Service {
+public interface AtomSource extends TaskLifeCycle {
 
    AtomSourceResult poll() throws AtomSourceException;
 }

@@ -6,7 +6,8 @@ import net.jps.nuke.atom.model.Feed;
 import net.jps.nuke.listener.eps.eventlet.AtomEventlet;
 import net.jps.nuke.listener.eps.selector.Selector;
 import net.jps.nuke.listener.eps.selector.SelectorResult;
-import net.jps.nuke.service.DestructionException;
+import net.jps.nuke.task.lifecycle.DestructionException;
+import net.jps.nuke.task.TaskContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,8 +27,8 @@ public class HandlerConduit {
       this.selector = selector;
    }
    
-   public void destroy() throws DestructionException {
-      eventHandler.destroy();
+   public void destroy(TaskContext tc) throws DestructionException {
+      eventHandler.destroy(tc);
    }
 
    public SelectorResult select(Feed page) {
