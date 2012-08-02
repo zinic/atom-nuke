@@ -1,5 +1,6 @@
 package net.jps.nuke;
 
+import java.util.concurrent.BlockingQueue;
 import net.jps.nuke.task.threading.ExecutionManagerImpl;
 import net.jps.nuke.util.remote.CancellationRemote;
 import net.jps.nuke.util.remote.AtomicCancellationRemote;
@@ -26,6 +27,7 @@ public class NukeKernel implements Nuke {
       }
    };
    
+   private static final int MAX_QUEUE_SIZE = 256000;
    private static final int NUM_PROCESSORS = Runtime.getRuntime().availableProcessors();
    private static final AtomicLong TID = new AtomicLong(0);
    
@@ -56,21 +58,13 @@ public class NukeKernel implements Nuke {
     * pool may spawn.
     */
    public NukeKernel(int corePoolSize, int maxPoolsize) {
-      this(new NukeThreadPoolExecutor(corePoolSize, maxPoolsize, 30, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(), DEFAULT_THREAD_FACTORY, new NukeRejectionHandler()), maxPoolsize);
-   }
-
-   /**
-    * Initializes a new Nuke kernel.
-    *
-    * @param executorService sets the execution service that the kernel will
-    * utilize for scheduling.
-    */
-   public NukeKernel(ExecutorService executorService, int maxPoolsize) {
-      final ExecutionManager executionManager = new ExecutionManagerImpl(maxPoolsize, executorService);
+      final BlockingQueue<Runnable> runQueue = new LinkedBlockingQueue<Runnable>();
+      final ExecutorService execService = new NukeThreadPoolExecutor(corePoolSize, maxPoolsize, 30, TimeUnit.SECONDS, runQueue, DEFAULT_THREAD_FACTORY, new NukeRejectionHandler());
+      final ExecutionManager executionManager = new ExecutionManagerImpl(MAX_QUEUE_SIZE, runQueue, execService);
       
       kernelCancellationRemote = new AtomicCancellationRemote();
       taskManager = new TaskManagerImpl(executionManager);
-      logic = new KernelDelegate(kernelCancellationRemote, taskManager);
+      logic = new KernelDelegate(kernelCancellationRemote, executionManager, taskManager);
       controlThread = new Thread(logic, "nuke-kernel-" + TID.incrementAndGet());
    }
 

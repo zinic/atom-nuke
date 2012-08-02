@@ -2,6 +2,7 @@ package net.jps.nuke;
 
 import java.util.concurrent.TimeUnit;
 import net.jps.nuke.task.manager.TaskManager;
+import net.jps.nuke.task.threading.ExecutionManager;
 import net.jps.nuke.util.TimeValue;
 import net.jps.nuke.util.remote.CancellationRemote;
 import org.slf4j.Logger;
@@ -15,13 +16,17 @@ public class KernelDelegate implements Runnable {
 
    private static final Logger LOG = LoggerFactory.getLogger(KernelDelegate.class);
    private static final TimeValue ZERO_NANOSECONDS = new TimeValue(0, TimeUnit.NANOSECONDS);
-   
    private final CancellationRemote crawlerCancellationRemote;
+   private final ExecutionManager executionManager;
    private final TaskManager taskManager;
+   private int drainMagnitude;
 
-   public KernelDelegate(CancellationRemote crawlerCancellationRemote, TaskManager taskManager) {
+   public KernelDelegate(CancellationRemote crawlerCancellationRemote, ExecutionManager executionManager, TaskManager taskManager) {
       this.crawlerCancellationRemote = crawlerCancellationRemote;
+      this.executionManager = executionManager;
       this.taskManager = taskManager;
+
+      drainMagnitude = 1;
    }
 
    @Override
@@ -29,10 +34,20 @@ public class KernelDelegate implements Runnable {
       // Run until canceled
       while (!crawlerCancellationRemote.canceled()) {
          final TimeValue now = TimeValue.now();
-         final TimeValue closestPollTime = taskManager.scheduleTasks();
+         TimeValue sleepTime;
 
          // Sleep till the next polling time or for a couple of milliseconds
-         final TimeValue sleepTime = closestPollTime != null ? now.subtract(closestPollTime) : ZERO_NANOSECONDS;
+         if (executionManager.draining()) {
+            drainMagnitude += drainMagnitude == 1000 ? 0 : 1;
+            
+            sleepTime = new TimeValue(2 * drainMagnitude, TimeUnit.MILLISECONDS);
+            LOG.warn("Execution queue too large to continue polling. Yielding " + sleepTime.value() + "millisecond to allow queue to drain.");
+         } else {
+            drainMagnitude -= drainMagnitude == 0 ? 1 : 0;
+
+            final TimeValue closestPollTime = taskManager.scheduleTasks();
+            sleepTime = closestPollTime != null ? now.subtract(closestPollTime) : ZERO_NANOSECONDS;
+         }
 
          try {
             // Sleep if there's nothing to poll at the moment

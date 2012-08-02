@@ -12,7 +12,7 @@ public interface TaskManager extends Tasker {
 
    void destroy();
 
-   List<ManagedTask> tasks();
+   List<ManagedTask> managedTasks();
 
    TimeValue scheduleTasks();
 }

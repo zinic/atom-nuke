@@ -41,7 +41,7 @@ public class AtomListenerDriver implements RegisteredListenerDriver {
 
       switch (result.getAction()) {
          case HALT:
-            registeredListener.cancellationRemote().cancel();
+            registeredListener.cancel();
             break;
 
          default:

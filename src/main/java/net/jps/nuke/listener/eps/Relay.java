@@ -85,7 +85,7 @@ public class Relay implements AtomListener, AtomEventHandlerRelay {
    public ListenerResult entry(Entry entry) throws AtomListenerException {
       for (HandlerConduit conduit : copyConduits()) {
          switch (conduit.select(entry)) {
-            case CLOSE:
+            case HALT:
                removeConduit(conduit);
                break;
 
@@ -100,7 +100,7 @@ public class Relay implements AtomListener, AtomEventHandlerRelay {
    public ListenerResult feedPage(Feed page) throws AtomListenerException {
       for (HandlerConduit conduit : copyConduits()) {
          switch (conduit.select(page)) {
-            case CLOSE:
+            case HALT:
                removeConduit(conduit);
                break;
 

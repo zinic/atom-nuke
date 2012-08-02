@@ -4,8 +4,11 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import net.jps.nuke.listener.manager.ListenerManager;
+import net.jps.nuke.listener.manager.ListenerManagerImpl;
 import net.jps.nuke.source.AtomSource;
 import net.jps.nuke.task.Task;
+import net.jps.nuke.task.TaskImpl;
 import net.jps.nuke.task.context.TaskContext;
 import net.jps.nuke.task.context.TaskContextImpl;
 import net.jps.nuke.task.threading.ExecutionManager;
@@ -47,20 +50,20 @@ public class TaskManagerImpl implements TaskManager {
       allowSubmission = false;
 
       executionManager.destroy();
-      
+
       // Cancel all of the executing tasks
-      for (ManagedTask task : pollingTasks) {
-         task.cancel();
+      for (ManagedTask managedTask : pollingTasks) {
+         managedTask.cancel();
       }
 
       // Destroy the tasks
-      for (ManagedTask task : pollingTasks) {
-         task.destroy(taskContext);
+      for (ManagedTask managedTask : pollingTasks) {
+         managedTask.destroy(taskContext);
       }
    }
 
    @Override
-   public synchronized List<ManagedTask> tasks() {
+   public synchronized List<ManagedTask> managedTasks() {
       final List<ManagedTask> activeTasks = new LinkedList<ManagedTask>();
 
       for (Iterator<ManagedTask> managedTaskIter = pollingTasks.iterator(); managedTaskIter.hasNext();) {
@@ -81,7 +84,7 @@ public class TaskManagerImpl implements TaskManager {
       final TimeValue now = TimeValue.now();
       TimeValue closestPollTime = null;
 
-      for (ManagedTask managedTask : tasks()) {
+      for (ManagedTask managedTask : managedTasks()) {
          final TimeValue nextPollTime = managedTask.nextPollTime();
 
          // Sould this task be scheduled? If so, is the task already in the execution queue?
@@ -110,9 +113,11 @@ public class TaskManagerImpl implements TaskManager {
 
    @Override
    public Task follow(AtomSource source, TimeValue pollingInterval) {
-      final ManagedTask managedTask = new ManagedTask(taskContext, pollingInterval, executionManager, source);
+      final ListenerManager listenerManager = new ListenerManagerImpl();
+      final Task task = new TaskImpl(taskContext, pollingInterval, listenerManager);
+      final ManagedTaskImpl managedTask = new ManagedTaskImpl(task, listenerManager, pollingInterval, executionManager, source);
       addTask(managedTask);
 
-      return managedTask;
+      return task;
    }
 }

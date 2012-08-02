@@ -3,7 +3,6 @@ package net.jps.nuke.task;
 import net.jps.nuke.listener.AtomListener;
 import net.jps.nuke.task.lifecycle.InitializationException;
 import net.jps.nuke.util.TimeValue;
-import net.jps.nuke.util.remote.CancellationRemote;
 
 /**
  * A Nuke Task represents an ATOM feed polling task. The task executes at a
@@ -13,8 +12,6 @@ import net.jps.nuke.util.remote.CancellationRemote;
  * @author zinic
  */
 public interface Task {
-
-   boolean isReentrant();
 
    /**
     * Cancels the task's next execution. This stops all of the listeners
@@ -30,13 +27,6 @@ public interface Task {
    boolean canceled();
 
    /**
-    * Returns the next scheduled polling time.
-    *
-    * @return
-    */
-   TimeValue nextPollTime();
-
-   /**
     * Returns the polling interval of this task.
     *
     * @return
@@ -45,21 +35,10 @@ public interface Task {
 
    /**
     * Adds an AtomListener to this task. The listener will begin receiving ATOM
-    * events during the task's next execution. This method returns a
-    * CancellationRemote that may be utilized to remove the listener at any
-    * time.
+    * events during the task's next execution.
     *
     * @param listener
     * @return
     */
-   CancellationRemote addListener(AtomListener listener) throws InitializationException;
-
-   /**
-    * Adds an AtomListener to this task. The listener will begin receiving ATOM
-    * events during the task's next execution.
-    *
-    * @param listener
-    * @param listenerCancelationRemote
-    */
-   void addListener(AtomListener listener, CancellationRemote listenerCancelationRemote) throws InitializationException;
+   void addListener(AtomListener listener) throws InitializationException;
 }

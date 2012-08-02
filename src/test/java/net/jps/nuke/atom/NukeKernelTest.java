@@ -20,7 +20,7 @@ public class NukeKernelTest {
 
    @Test
    public void nukeShakedownTest() throws Exception {
-      final Nuke nukeKernel = new NukeKernel(1, 1);
+      final Nuke nukeKernel = new NukeKernel();
       final AtomicLong eventsProcessed = new AtomicLong(0);
 
       for (int taskId = 1; taskId <= 30; taskId++) {
@@ -38,7 +38,7 @@ public class NukeKernelTest {
       
       nukeKernel.start();
 
-      Thread.sleep(1000);
+      Thread.sleep(10000);
       
       nukeKernel.destroy();
       

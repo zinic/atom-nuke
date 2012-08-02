@@ -8,11 +8,13 @@ import java.util.UUID;
  */
 public interface ExecutionManager {
 
-   UUID submit(Runnable r);
+   void queue(Runnable r);
 
    void submit(UUID id, Runnable r);
 
    boolean submitted(UUID id);
+
+   boolean draining();
 
    void destroy();
 }

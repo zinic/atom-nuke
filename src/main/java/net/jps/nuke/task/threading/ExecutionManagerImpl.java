@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -18,18 +19,21 @@ public class ExecutionManagerImpl implements ExecutionManager {
 
    private static final Logger LOG = LoggerFactory.getLogger(ExecutionManagerImpl.class);
    
-   private final List<TaskFuture> executionStates;
+   private final List<TaskFuture> taskExecutionFutures;
+   private final BlockingQueue<Runnable> runQueue;
    private final ExecutorService executorService;
-   private final int executionCap;
+   private final int runQueueCapacity;
 
-   public ExecutionManagerImpl(int executionCap, ExecutorService executorService) {
-      this.executionCap = executionCap;
+   public ExecutionManagerImpl(int runQueueCapacity, BlockingQueue<Runnable> runQueue, ExecutorService executorService) {
+      this.runQueue = runQueue;
+      this.runQueueCapacity = runQueueCapacity;
       this.executorService = executorService;
-      executionStates = new LinkedList<TaskFuture>();
+
+      taskExecutionFutures = new LinkedList<TaskFuture>();
    }
 
    private synchronized List<TaskFuture> copyExecutionStates() {
-      for (Iterator<TaskFuture> itr = executionStates.iterator(); itr.hasNext();) {
+      for (Iterator<TaskFuture> itr = taskExecutionFutures.iterator(); itr.hasNext();) {
          final TaskFuture nextTask = itr.next();
 
          if (nextTask.done()) {
@@ -37,17 +41,25 @@ public class ExecutionManagerImpl implements ExecutionManager {
          }
       }
 
-      return new LinkedList<TaskFuture>(executionStates);
+      return new LinkedList<TaskFuture>(taskExecutionFutures);
    }
 
    private synchronized void track(UUID id, Future future) {
-      executionStates.add(new TaskFuture(future, id));
+      taskExecutionFutures.add(new TaskFuture(future, id));
    }
 
    @Override
-   public synchronized void destroy() {
+   public boolean draining() {
+      return runQueue.size() > runQueueCapacity;
+   }
+
+   @Override
+   public void destroy() {
       // Shut down the execution pool
       executorService.shutdown();
+
+      // Kill all of the queued tasks
+      runQueue.clear();
 
       try {
          // Try to wait for things to settle
@@ -59,25 +71,12 @@ public class ExecutionManagerImpl implements ExecutionManager {
    }
 
    @Override
-   public UUID submit(Runnable task) {
-      final UUID id = UUID.randomUUID();
-      submit(id, task);
-      
-      return id;
+   public void queue(Runnable task) {
+      executorService.submit(task);
    }
 
    @Override
-   public synchronized void submit(UUID id, Runnable task) {
-      while (copyExecutionStates().size() >= executionCap) {
-         try {
-            Thread.yield();
-            wait(0, 10000);
-         } catch (InterruptedException ie) {
-            LOG.warn("Interrupted while waiting for task delegates to free-up. Task will not be scheduled.");
-            return;
-         }
-      }
-
+   public void submit(UUID id, Runnable task) {
       track(id, executorService.submit(task));
    }
 

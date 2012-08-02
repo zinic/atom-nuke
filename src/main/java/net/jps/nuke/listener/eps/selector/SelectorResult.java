@@ -8,5 +8,5 @@ public enum SelectorResult {
 
    PROCESS,
    PASS,
-   CLOSE
+   HALT
 }
