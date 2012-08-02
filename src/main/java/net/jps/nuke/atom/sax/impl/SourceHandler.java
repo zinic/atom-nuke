@@ -139,16 +139,12 @@ public class SourceHandler extends AtomHandler {
 
    private static void endCategory(DocumentContextManager contextManager) {
       final HandlerContext<CategoryBuilder> category = contextManager.pop(CategoryBuilder.class);
-      final List<Category> categoryList = contextManager.peek(SourceBuilder.class).builder().categories();
-
-      categoryList.add(category.builder());
+      contextManager.peek(SourceBuilder.class).builder().addCategory(category.builder());
    }
 
    private static void endLink(DocumentContextManager contextManager) {
-      final HandlerContext<LinkBuilder> category = contextManager.pop(LinkBuilder.class);
-      final List<Link> linkList = contextManager.peek(SourceBuilder.class).builder().links();
-
-      linkList.add(category.builder());
+      final HandlerContext<LinkBuilder> link = contextManager.pop(LinkBuilder.class);
+      contextManager.peek(SourceBuilder.class).builder().addLink(link.builder());
    }
 
    private static void endGenerator(DocumentContextManager contextManager) {

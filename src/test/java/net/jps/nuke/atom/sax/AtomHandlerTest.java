@@ -103,8 +103,8 @@ public class AtomHandlerTest {
       }
 
       protected void checkContentAttributes(final Content content) {
-        assertEquals("something.txt", content.src());
-        assertEquals("text", content.type());
+         assertEquals("something.txt", content.src());
+         assertEquals("text", content.type());
       }
    }
 

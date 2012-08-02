@@ -18,6 +18,7 @@ import net.jps.nuke.atom.model.Link;
 import net.jps.nuke.atom.model.PersonConstruct;
 import net.jps.nuke.atom.model.Source;
 import net.jps.nuke.atom.model.TextConstruct;
+import net.jps.nuke.atom.model.impl.LangAwareTextElement;
 import net.jps.nuke.atom.sax.impl.SaxAtomParser;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
@@ -67,6 +68,40 @@ public class AtomWriterTest {
 
          originalSource = originalEntry.source();
          rereadSource = rereadEntry.source();
+      }
+
+      public void assertGeneratorsAreEqual(Generator originalGenerator, Generator rereadGenerator) {
+         assertNotNull(rereadGenerator.base());
+         assertNotNull(rereadGenerator.lang());
+         assertNotNull(rereadGenerator.uri());
+         assertNotNull(rereadGenerator.value());
+         assertNotNull(rereadGenerator.version());
+
+         assertEquals(originalGenerator.base(), rereadGenerator.base());
+         assertEquals(originalGenerator.lang(), rereadGenerator.lang());
+         assertEquals(originalGenerator.uri(), rereadGenerator.uri());
+         assertEquals(originalGenerator.value(), rereadGenerator.value());
+         assertEquals(originalGenerator.version(), rereadGenerator.version());
+      }
+
+      public void assertLangAwareTextElementsAreEqual(LangAwareTextElement originalLATE, LangAwareTextElement rereadLATE) {
+         assertNotNull(rereadLATE.base());
+         assertNotNull(rereadLATE.lang());
+         assertNotNull(rereadLATE.value());
+
+         assertEquals(originalLATE.base(), rereadLATE.base());
+         assertEquals(originalLATE.lang(), rereadLATE.lang());
+         assertEquals(originalLATE.value(), rereadLATE.value());
+      }
+
+      public void assertIdsAreEqual(Id originalId, Id rereadId) {
+         assertNotNull(rereadId.base());
+         assertNotNull(rereadId.lang());
+         assertNotNull(rereadId.value());
+
+         assertEquals(originalId.base(), rereadId.base());
+         assertEquals(originalId.lang(), rereadId.lang());
+         assertEquals(originalId.value(), rereadId.value());
       }
 
       public void assertTextConstructsAreEqual(TextConstruct originalTC, TextConstruct rereadTC) {
@@ -197,7 +232,7 @@ public class AtomWriterTest {
          assertNotNull(rereadFeed.subtitle());
          assertNotNull(rereadFeed.title());
          assertNotNull(rereadFeed.updated());
-         
+
          assertEquals(originalFeed.base(), rereadFeed.base());
          assertEquals(originalFeed.lang(), rereadFeed.lang());
       }
@@ -228,20 +263,38 @@ public class AtomWriterTest {
       }
 
       @Test
+      public void shouldWriteRights() {
+         assertTextConstructsAreEqual(originalFeed.rights(), rereadFeed.rights());
+      }
+
+      @Test
+      public void shouldWriteTitle() {
+         assertTextConstructsAreEqual(originalFeed.title(), rereadFeed.title());
+      }
+
+      @Test
+      public void shouldWriteSubtitle() {
+         assertTextConstructsAreEqual(originalFeed.subtitle(), rereadFeed.subtitle());
+      }
+
+      @Test
+      public void shouldWriteId() {
+         assertLangAwareTextElementsAreEqual((LangAwareTextElement) originalFeed.id(), (LangAwareTextElement) rereadFeed.id());
+      }
+
+      @Test
+      public void shouldWriteLogo() {
+         assertLangAwareTextElementsAreEqual((LangAwareTextElement) originalFeed.logo(), (LangAwareTextElement) rereadFeed.logo());
+      }
+
+      @Test
+      public void shouldWriteIcon() {
+         assertLangAwareTextElementsAreEqual((LangAwareTextElement) originalFeed.icon(), (LangAwareTextElement) rereadFeed.icon());
+      }
+
+      @Test
       public void shouldWriteGenerator() {
-         final Generator originalGenerator = originalFeed.generator(), rereadGenerator = rereadFeed.generator();
-
-         assertNotNull(rereadGenerator.base());
-         assertNotNull(rereadGenerator.lang());
-         assertNotNull(rereadGenerator.uri());
-         assertNotNull(rereadGenerator.value());
-         assertNotNull(rereadGenerator.version());
-
-         assertEquals(originalGenerator.base(), rereadGenerator.base());
-         assertEquals(originalGenerator.lang(), rereadGenerator.lang());
-         assertEquals(originalGenerator.uri(), rereadGenerator.uri());
-         assertEquals(originalGenerator.value(), rereadGenerator.value());
-         assertEquals(originalGenerator.version(), rereadGenerator.version());
+         assertGeneratorsAreEqual(originalFeed.generator(), rereadFeed.generator());
       }
    }
 
@@ -286,15 +339,17 @@ public class AtomWriterTest {
 
       @Test
       public void shouldWriteId() {
-         final Id originalId = originalEntry.id(), rereadId = rereadEntry.id();
+         assertLangAwareTextElementsAreEqual((LangAwareTextElement) originalEntry.id(), (LangAwareTextElement) originalEntry.id());
+      }
 
-         assertNotNull(rereadId.base());
-         assertNotNull(rereadId.lang());
-         assertNotNull(rereadId.value());
+      @Test
+      public void shouldWriteLogo() {
+         assertLangAwareTextElementsAreEqual((LangAwareTextElement) originalSource.logo(), (LangAwareTextElement) rereadSource.logo());
+      }
 
-         assertEquals(originalId.base(), rereadId.base());
-         assertEquals(originalId.lang(), rereadId.lang());
-         assertEquals(originalId.value(), rereadId.value());
+      @Test
+      public void shouldWriteIcon() {
+         assertLangAwareTextElementsAreEqual((LangAwareTextElement) originalSource.icon(), (LangAwareTextElement) rereadSource.icon());
       }
 
       @Test
@@ -361,22 +416,57 @@ public class AtomWriterTest {
 
       @Test
       public void shouldWriteAuthors() {
-         assertPersonConstructsAreEqual(originalFeed.authors(), rereadFeed.authors());
+         assertPersonConstructsAreEqual(originalSource.authors(), rereadSource.authors());
       }
 
       @Test
       public void shouldWriteLinks() {
-         assertLinksAreEqual(originalFeed.links(), rereadFeed.links());
-      }
-
-      @Test
-      public void shouldWriteContributors() {
-         assertPersonConstructsAreEqual(originalFeed.contributors(), rereadFeed.contributors());
+         assertLinksAreEqual(originalSource.links(), rereadSource.links());
       }
 
       @Test
       public void shouldWriteCategories() {
-         assertCategoriesAreEqual(originalFeed.categories(), rereadFeed.categories());
+         assertCategoriesAreEqual(originalSource.categories(), rereadSource.categories());
+      }
+
+      @Test
+      public void shouldWriteUpdated() {
+         assertDateConstructsAreEqual(originalSource.updated(), rereadSource.updated());
+      }
+
+      @Test
+      public void shouldWriteRights() {
+         assertTextConstructsAreEqual(originalSource.rights(), rereadSource.rights());
+      }
+
+      @Test
+      public void shouldWriteTitle() {
+         assertTextConstructsAreEqual(originalSource.title(), rereadSource.title());
+      }
+
+      @Test
+      public void shouldWriteSubtitle() {
+         assertTextConstructsAreEqual(originalSource.subtitle(), rereadSource.subtitle());
+      }
+
+      @Test
+      public void shouldWriteId() {
+         assertLangAwareTextElementsAreEqual((LangAwareTextElement) originalSource.id(), (LangAwareTextElement) rereadSource.id());
+      }
+
+      @Test
+      public void shouldWriteLogo() {
+         assertLangAwareTextElementsAreEqual((LangAwareTextElement) originalSource.logo(), (LangAwareTextElement) rereadSource.logo());
+      }
+
+      @Test
+      public void shouldWriteIcon() {
+         assertLangAwareTextElementsAreEqual((LangAwareTextElement) originalSource.icon(), (LangAwareTextElement) rereadSource.icon());
+      }
+
+      @Test
+      public void shouldWriteGenerator() {
+         assertGeneratorsAreEqual(originalSource.generator(), rereadSource.generator());
       }
    }
 }

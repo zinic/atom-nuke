@@ -15,8 +15,6 @@
       <email>john.doe@example.domain</email>
    </contributor>
    
-   <updated base="test" lang="en">2002-05-30T09:30:10Z</updated>
-   
    <link href="http://example.domain/12345" rel="self" hreflang="en" type="application/atom+xml" title="me" base="test" lang="en" length="52153" />
    <link href="http://example.domain/12345" rel="self" hreflang="en" type="application/atom+xml" title="me" base="test" lang="en" length="52153" />
       
@@ -28,6 +26,8 @@
       This is the most awesome generator ever, yo.
    </generator>
    
+   <updated base="test" lang="en">2002-05-30T09:30:10Z</updated>
+   
    <icon base="test" lang="en">http://example.domain/images/icon.jpg</icon>
    <logo base="test" lang="en">http://example.domain/images/logo.jpg</logo>
       
@@ -37,6 +37,25 @@
 
    <entry base="test" lang="en">
       <id base="test" lang="en">1</id>
+      
+      <author base="test" lang="en">
+         <name>John Doe</name>
+         <uri>http://john.doe.example.domain/</uri>
+         <email>john.doe@example.domain</email>
+      </author>
+
+      <contributor base="test" lang="en">
+         <name>John Doe</name>
+         <uri>http://john.doe.example.domain/</uri>
+         <email>john.doe@example.domain</email>
+      </contributor>
+   
+      <link href="http://example.domain/12345" rel="self" hreflang="en" type="application/atom+xml" title="me" base="test" lang="en" length="52153" />
+      <link href="http://example.domain/12345" rel="self" hreflang="en" type="application/atom+xml" title="me" base="test" lang="en" length="52153" />
+      
+      <category base="test" lang="en" term="a" scheme="http" label="Category A" />
+      <category base="test" lang="en" term="a" scheme="http" label="Category A" />
+      <category base="test" lang="en" term="a" scheme="http" label="Category A" />
       
       <title base="test" lang="en" type="text">An Entry</title>
       <summary base="test" lang="en" type="text">Entry Summary</summary>
@@ -81,7 +100,12 @@
          <icon base="test" lang="en">http://example.domain/images/icon.jpg</icon>
          <logo base="test" lang="en">http://example.domain/images/logo.jpg</logo>
       
-         <title base="test" lang="en" type="text">The source.</title>
+         <title base="test" lang="en" type="text/html">
+            <p xmlns="xml">
+               <span style="font-weight: bold;">The source.</span>
+            </p>
+         </title>
+         
          <subtitle base="test" lang="en" type="text">Where everyone goes to get what they need.</subtitle>
          <rights base="test" lang="en" type="text">Copyright or something</rights>
       
