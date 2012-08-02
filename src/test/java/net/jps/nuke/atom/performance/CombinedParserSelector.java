@@ -29,7 +29,7 @@ public class CombinedParserSelector {
       
       final Nuke nukeKernel = new NukeKernel();
 
-      final Task task = nukeKernel.submitter().follow(new ClasspathSource("/META-INF/examples/atom/PerformanceTestContents.xml"), new TimeValue(1, TimeUnit.NANOSECONDS));
+      final Task task = nukeKernel.tasker().follow(new ClasspathSource("/META-INF/examples/atom/PerformanceTestContents.xml"), new TimeValue(1, TimeUnit.NANOSECONDS));
       task.addListener(relay);
 
       nukeKernel.start();

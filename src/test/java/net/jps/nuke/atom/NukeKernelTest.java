@@ -20,11 +20,11 @@ public class NukeKernelTest {
 
    @Test
    public void nukeShakedownTest() throws Exception {
-      final Nuke nukeKernel = new NukeKernel();
+      final Nuke nukeKernel = new NukeKernel(1, 1);
       final AtomicLong eventsProcessed = new AtomicLong(0);
 
       for (int taskId = 1; taskId <= 30; taskId++) {
-         final Task task = nukeKernel.submitter().follow(new EventGenerator("Task " + taskId, true), new TimeValue(1000 * taskId, TimeUnit.NANOSECONDS));
+         final Task task = nukeKernel.tasker().follow(new EventGenerator("Task " + taskId, true), new TimeValue(1000 * taskId, TimeUnit.NANOSECONDS));
 
          final Relay relay = new ReentrantRelay();
          relay.enlistHandler(new EventCounterAtomEventelt(eventsProcessed));

@@ -1,17 +1,14 @@
-package net.jps.nuke.task.submission;
+package net.jps.nuke.task.manager;
 
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import net.jps.nuke.source.AtomSource;
-import net.jps.nuke.task.ManagedTask;
-import net.jps.nuke.task.ManagedTaskImpl;
 import net.jps.nuke.task.Task;
 import net.jps.nuke.task.context.TaskContext;
 import net.jps.nuke.task.context.TaskContextImpl;
-import net.jps.nuke.task.lifecycle.DestructionException;
-import net.jps.nuke.threading.ExecutionManager;
+import net.jps.nuke.task.threading.ExecutionManager;
 import net.jps.nuke.util.TimeValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,13 +21,13 @@ public class TaskManagerImpl implements TaskManager {
 
    private static final Logger LOG = LoggerFactory.getLogger(TaskManagerImpl.class);
    
-   private final ExecutionManager executorService;
+   private final ExecutionManager executionManager;
    private final List<ManagedTask> pollingTasks;
    private final TaskContext taskContext;
    private boolean allowSubmission;
 
-   public TaskManagerImpl(ExecutionManager executorService) {
-      this.executorService = executorService;
+   public TaskManagerImpl(ExecutionManager executionManager) {
+      this.executionManager = executionManager;
       this.taskContext = new TaskContextImpl(this);
 
       pollingTasks = new LinkedList<ManagedTask>();
@@ -49,6 +46,8 @@ public class TaskManagerImpl implements TaskManager {
    public synchronized void destroy() {
       allowSubmission = false;
 
+      executionManager.destroy();
+      
       // Cancel all of the executing tasks
       for (ManagedTask task : pollingTasks) {
          task.cancel();
@@ -56,11 +55,7 @@ public class TaskManagerImpl implements TaskManager {
 
       // Destroy the tasks
       for (ManagedTask task : pollingTasks) {
-         try {
-            task.destroy(taskContext);
-         } catch (DestructionException de) {
-            LOG.error(de.getMessage(), de);
-         }
+         task.destroy(taskContext);
       }
    }
 
@@ -82,13 +77,40 @@ public class TaskManagerImpl implements TaskManager {
    }
 
    @Override
+   public TimeValue scheduleTasks() {
+      final TimeValue now = TimeValue.now();
+      TimeValue closestPollTime = null;
+
+      for (ManagedTask managedTask : tasks()) {
+         final TimeValue nextPollTime = managedTask.nextPollTime();
+
+         // Sould this task be scheduled? If so, is the task already in the execution queue?
+         if (now.isGreaterThan(nextPollTime)) {
+
+            // Reentrant tasks are always eligible to run if their next polling
+            // time has arrived.
+            if (managedTask.isReentrant() || !executionManager.submitted(managedTask.id())) {
+               executionManager.submit(managedTask.id(), managedTask);
+            }
+         } else if (closestPollTime == null || closestPollTime.isGreaterThan(nextPollTime)) {
+            // If the closest polling time is null or later than this task's
+            // next polling time, it becomes the next time the kernel wakes
+
+            closestPollTime = nextPollTime;
+         }
+      }
+
+      return closestPollTime;
+   }
+
+   @Override
    public Task follow(AtomSource source) {
       return follow(source, new TimeValue(1, TimeUnit.MINUTES));
    }
 
    @Override
    public Task follow(AtomSource source, TimeValue pollingInterval) {
-      final ManagedTaskImpl managedTask = new ManagedTaskImpl(taskContext, pollingInterval, executorService, source);
+      final ManagedTask managedTask = new ManagedTask(taskContext, pollingInterval, executionManager, source);
       addTask(managedTask);
 
       return managedTask;

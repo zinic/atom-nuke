@@ -39,16 +39,16 @@ public class HDFSMain {
       final FeedCrawlerSourceFactory crawlerFactory = new FeedCrawlerSourceFactory();
 
       // Polls for the default of once per minute
-      final Task task1 = nuke.submitter().follow(crawlerFactory.newCrawlerSource("feed-1", "http://feed.com/feed1"));
+      final Task task1 = nuke.tasker().follow(crawlerFactory.newCrawlerSource("feed-1", "http://feed.com/feed1"));
       task1.addListener(listener2);
 
       // Sets the polling interval to five minutes
-      final Task task2 = nuke.submitter().follow(crawlerFactory.newCrawlerSource("feed-2", "http://feed.com/feed2"), new TimeValue(5, TimeUnit.MINUTES));
+      final Task task2 = nuke.tasker().follow(crawlerFactory.newCrawlerSource("feed-2", "http://feed.com/feed2"), new TimeValue(5, TimeUnit.MINUTES));
       task2.addListener(listener);
       task2.addListener(listener2);
 
       // Sets the polling interval to one hour
-      final Task task3 = nuke.submitter().follow(crawlerFactory.newCrawlerSource("feed-3", "http://feed.com/feed3"), new TimeValue(1, TimeUnit.HOURS));
+      final Task task3 = nuke.tasker().follow(crawlerFactory.newCrawlerSource("feed-3", "http://feed.com/feed3"), new TimeValue(1, TimeUnit.HOURS));
       task3.addListener(listener);
    }
 }

@@ -2,10 +2,12 @@ package net.jps.nuke.listener.driver;
 
 import net.jps.nuke.atom.model.Entry;
 import net.jps.nuke.atom.model.Feed;
-import net.jps.nuke.listener.RegisteredListener;
 import net.jps.nuke.listener.AtomListener;
-import net.jps.nuke.listener.ListenerResult;
 import net.jps.nuke.listener.AtomListenerResult;
+import net.jps.nuke.listener.ListenerResult;
+import net.jps.nuke.listener.RegisteredListener;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -13,6 +15,8 @@ import net.jps.nuke.listener.AtomListenerResult;
  */
 public class AtomListenerDriver implements RegisteredListenerDriver {
 
+   private static final Logger LOG = LoggerFactory.getLogger(AtomListenerDriver.class);
+   
    private final RegisteredListener registeredListener;
    private final Feed feed;
    private final Entry entry;
@@ -30,16 +34,12 @@ public class AtomListenerDriver implements RegisteredListenerDriver {
       this.feed = feed;
       this.entry = entry;
    }
-
+  
    @Override
    public void run() {
       final ListenerResult result = drive(registeredListener.listener());
 
       switch (result.getAction()) {
-         case FOLLOW_LINK:
-            // TODO:Implement
-            break;
-
          case HALT:
             registeredListener.cancellationRemote().cancel();
             break;
@@ -56,8 +56,7 @@ public class AtomListenerDriver implements RegisteredListenerDriver {
             return listener.entry(entry);
          }
       } catch (Exception ex) {
-         // TODO:Log
-         ex.printStackTrace(System.err);
+         LOG.error(ex.getMessage(), ex);
 
          return AtomListenerResult.halt(ex.getMessage());
       }

@@ -1,18 +1,17 @@
 package net.jps.nuke;
 
-import net.jps.nuke.threading.ExecutionManagerImpl;
+import net.jps.nuke.task.threading.ExecutionManagerImpl;
 import net.jps.nuke.util.remote.CancellationRemote;
 import net.jps.nuke.util.remote.AtomicCancellationRemote;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
-import net.jps.nuke.task.submission.TaskManager;
-import net.jps.nuke.task.submission.TaskManagerImpl;
-import net.jps.nuke.task.submission.Tasker;
-import net.jps.nuke.threading.ExecutionManager;
+import net.jps.nuke.task.manager.TaskManager;
+import net.jps.nuke.task.manager.TaskManagerImpl;
+import net.jps.nuke.task.Tasker;
+import net.jps.nuke.task.threading.ExecutionManager;
 
 /**
  *
@@ -26,10 +25,11 @@ public class NukeKernel implements Nuke {
          return new Thread(r, "nuke-worker-" + TID.incrementAndGet());
       }
    };
+   
    private static final int NUM_PROCESSORS = Runtime.getRuntime().availableProcessors();
    private static final AtomicLong TID = new AtomicLong(0);
+   
    private final CancellationRemote kernelCancellationRemote;
-   private final ExecutionManager executionManager;
    private final TaskManager taskManager;
    private final KernelDelegate logic;
    private final Thread controlThread;
@@ -56,7 +56,7 @@ public class NukeKernel implements Nuke {
     * pool may spawn.
     */
    public NukeKernel(int corePoolSize, int maxPoolsize) {
-      this(new ThreadPoolExecutor(corePoolSize, maxPoolsize, 30, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(), DEFAULT_THREAD_FACTORY, new NukeRejectionHandler()), maxPoolsize);
+      this(new NukeThreadPoolExecutor(corePoolSize, maxPoolsize, 30, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(), DEFAULT_THREAD_FACTORY, new NukeRejectionHandler()), maxPoolsize);
    }
 
    /**
@@ -66,15 +66,16 @@ public class NukeKernel implements Nuke {
     * utilize for scheduling.
     */
    public NukeKernel(ExecutorService executorService, int maxPoolsize) {
-      kernelCancellationRemote = new AtomicCancellationRemote();      
-      executionManager = new ExecutionManagerImpl(maxPoolsize, executorService);
+      final ExecutionManager executionManager = new ExecutionManagerImpl(maxPoolsize, executorService);
+      
+      kernelCancellationRemote = new AtomicCancellationRemote();
       taskManager = new TaskManagerImpl(executionManager);
-      logic = new KernelDelegate(kernelCancellationRemote, taskManager, executionManager);
+      logic = new KernelDelegate(kernelCancellationRemote, taskManager);
       controlThread = new Thread(logic, "nuke-kernel-" + TID.incrementAndGet());
    }
 
    @Override
-   public Tasker submitter() {
+   public Tasker tasker() {
       return taskManager;
    }
 
@@ -97,7 +98,6 @@ public class NukeKernel implements Nuke {
          controlThread.interrupt();
       }
       
-      executionManager.destroy();
       taskManager.destroy();
    }
 }

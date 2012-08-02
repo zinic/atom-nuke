@@ -2,7 +2,6 @@ package net.jps.nuke.task;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 import net.jps.nuke.listener.AtomListener;
 import net.jps.nuke.listener.ReentrantAtomListener;
@@ -24,7 +23,6 @@ public abstract class TaskImpl implements Task {
    private final AtomicBoolean reentrant;
    private final TaskContext context;
    private final TimeValue interval;
-   private final UUID id;
    private TimeValue timestamp;
 
    public TaskImpl(TaskContext context, TimeValue interval) {
@@ -37,7 +35,6 @@ public abstract class TaskImpl implements Task {
       this.context = context;
       this.interval = interval;
 
-      id = UUID.randomUUID();
       timestamp = TimeValue.now();
       reentrant = new AtomicBoolean(true);
    }
@@ -100,23 +97,5 @@ public abstract class TaskImpl implements Task {
    @Override
    public TimeValue nextPollTime() {
       return timestamp.add(interval());
-   }
-
-   @Override
-   public int hashCode() {
-      int hash = 5;
-      hash = 59 * hash + id.hashCode();
-      return hash;
-   }
-
-   @Override
-   public boolean equals(Object obj) {
-      if (obj != null && TaskImpl.class == obj.getClass()) {
-         final TaskImpl other = (TaskImpl) obj;
-
-         return id.equals(other.id);
-      }
-
-      return false;
    }
 }

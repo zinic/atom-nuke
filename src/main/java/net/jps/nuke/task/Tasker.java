@@ -1,7 +1,6 @@
-package net.jps.nuke.task.submission;
+package net.jps.nuke.task;
 
 import net.jps.nuke.source.AtomSource;
-import net.jps.nuke.task.Task;
 import net.jps.nuke.util.TimeValue;
 
 /**

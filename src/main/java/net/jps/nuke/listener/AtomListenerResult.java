@@ -8,10 +8,6 @@ import net.jps.nuke.atom.model.Link;
  */
 public final class AtomListenerResult implements ListenerResult {
 
-   public static AtomListenerResult follow(Link linkToFollow) {
-      return new AtomListenerResult("Follow link.", ListenerAction.FOLLOW_LINK, linkToFollow);
-   }
-
    public static AtomListenerResult halt(String message) {
       return new AtomListenerResult(message, ListenerAction.HALT, null);
    }

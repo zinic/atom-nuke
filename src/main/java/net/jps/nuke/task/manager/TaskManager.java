@@ -1,7 +1,8 @@
-package net.jps.nuke.task.submission;
+package net.jps.nuke.task.manager;
 
 import java.util.List;
-import net.jps.nuke.task.ManagedTask;
+import net.jps.nuke.task.Tasker;
+import net.jps.nuke.util.TimeValue;
 
 /**
  *
@@ -10,6 +11,8 @@ import net.jps.nuke.task.ManagedTask;
 public interface TaskManager extends Tasker {
 
    void destroy();
-   
+
    List<ManagedTask> tasks();
+
+   TimeValue scheduleTasks();
 }

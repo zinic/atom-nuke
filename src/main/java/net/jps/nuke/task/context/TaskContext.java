@@ -1,6 +1,6 @@
 package net.jps.nuke.task.context;
 
-import net.jps.nuke.task.submission.Tasker;
+import net.jps.nuke.task.Tasker;
 
 /**
  *

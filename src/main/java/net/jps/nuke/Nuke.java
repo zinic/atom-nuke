@@ -1,6 +1,6 @@
 package net.jps.nuke;
 
-import net.jps.nuke.task.submission.Tasker;
+import net.jps.nuke.task.Tasker;
 
 /**
  *
@@ -12,5 +12,5 @@ public interface Nuke {
 
    void destroy();
 
-   Tasker submitter();
+   Tasker tasker();
 }

@@ -7,6 +7,5 @@ package net.jps.nuke.listener;
 public enum ListenerAction {
 
    HALT,
-   FOLLOW_LINK,
    NO_ACTION
 }

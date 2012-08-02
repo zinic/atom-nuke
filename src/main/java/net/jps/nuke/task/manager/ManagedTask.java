@@ -1,4 +1,4 @@
-package net.jps.nuke.task;
+package net.jps.nuke.task.manager;
 
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -10,9 +10,10 @@ import net.jps.nuke.listener.driver.AtomListenerDriver;
 import net.jps.nuke.listener.driver.RegisteredListenerDriver;
 import net.jps.nuke.source.AtomSource;
 import net.jps.nuke.source.AtomSourceResult;
+import net.jps.nuke.task.TaskImpl;
 import net.jps.nuke.task.context.TaskContext;
 import net.jps.nuke.task.lifecycle.DestructionException;
-import net.jps.nuke.threading.ExecutionManager;
+import net.jps.nuke.task.threading.ExecutionManager;
 import net.jps.nuke.util.TimeValue;
 import net.jps.nuke.util.remote.AtomicCancellationRemote;
 import org.slf4j.Logger;
@@ -22,41 +23,43 @@ import org.slf4j.LoggerFactory;
  *
  * @author zinic
  */
-public class ManagedTaskImpl extends TaskImpl implements ManagedTask {
-
-   private static final Logger LOG = LoggerFactory.getLogger(ManagedTaskImpl.class);
+public class ManagedTask extends TaskImpl implements Runnable {
+   
+   private static final Logger LOG = LoggerFactory.getLogger(ManagedTask.class);
    
    private final ExecutionManager executorService;
    private final AtomSource atomSource;
-
-   public ManagedTaskImpl(TaskContext taskContext, TimeValue interval, ExecutionManager executorService, AtomSource atomSource) {
+   private final UUID id;
+   
+   public ManagedTask(TaskContext taskContext, TimeValue interval, ExecutionManager executorService, AtomSource atomSource) {
       super(taskContext, interval.convert(TimeUnit.NANOSECONDS), new AtomicCancellationRemote());
-
+      
       this.executorService = executorService;
       this.atomSource = atomSource;
+      
+      id = UUID.randomUUID();
    }
-
+   
    private synchronized List<RegisteredListener> activeListeners() {
       final List<RegisteredListener> activeListeners = new LinkedList<RegisteredListener>();
-
+      
       for (Iterator<RegisteredListener> listenerIterator = listeners().iterator(); listenerIterator.hasNext();) {
          final RegisteredListener registeredListener = listenerIterator.next();
-
+         
          if (registeredListener.cancellationRemote().canceled()) {
             listenerIterator.remove();
          } else {
             activeListeners.add(registeredListener);
          }
       }
-
+      
       return activeListeners;
    }
-
-   @Override
-   public void init(TaskContext taskContext) {
+   
+   public UUID id() {
+      return id;
    }
-
-   @Override
+   
    public synchronized void destroy(TaskContext taskContext) {
       for (RegisteredListener registeredListener : listeners()) {
          try {
@@ -65,7 +68,7 @@ public class ManagedTaskImpl extends TaskImpl implements ManagedTask {
             LOG.error(sde.getMessage(), sde);
          }
       }
-
+      
       listeners().clear();
    }
 
@@ -79,7 +82,7 @@ public class ManagedTaskImpl extends TaskImpl implements ManagedTask {
    private static boolean shouldUpdateTimestamp(AtomSourceResult pollResult) {
       return !pollResult.isFeedPage() || pollResult.feed().entries().isEmpty();
    }
-
+   
    @Override
    public void run() {
       final List<RegisteredListener> activeListeners = activeListeners();
@@ -88,16 +91,16 @@ public class ManagedTaskImpl extends TaskImpl implements ManagedTask {
       if (!activeListeners.isEmpty()) {
          try {
             final AtomSourceResult pollResult = atomSource.poll();
-
+            
             for (RegisteredListener listener : activeListeners()) {
                RegisteredListenerDriver listenerDriver;
-
+               
                if (pollResult.isFeedPage()) {
                   listenerDriver = new AtomListenerDriver(listener, pollResult.feed());
                } else {
                   listenerDriver = new AtomListenerDriver(listener, pollResult.entry());
                }
-
+               
                executorService.submit(listenerDriver);
             }
 
@@ -107,8 +110,7 @@ public class ManagedTaskImpl extends TaskImpl implements ManagedTask {
                setTimestamp(TimeValue.now());
             }
          } catch (Exception ex) {
-            // TODO:Log
-            ex.printStackTrace(System.err);
+            LOG.error(ex.getMessage(), ex);
          }
       }
    }
