@@ -6,7 +6,7 @@
    <groupId>net.jps.nuke</groupId>
    <artifactId>nuke</artifactId>
    <version>0.9.0-SNAPSHOT</version>
-   
+
    <packaging>jar</packaging>
 
    <name>nuke</name>
@@ -14,14 +14,14 @@
 
    <description>
       Nuke is a collection of utilities built on a simple, fast ATOM implementation.
-      
+
       The ATOM implementation has its own model and utilizes a SAX parser and a StAX
-      writer. The implementation was designed for immutibility, maximum simplicity 
+      writer. The implementation was designed for immutibility, maximum simplicity
       and memory efficiency.
-      
+
       Nuke also contains a smart feed crawler implementation that's built ontop of
       the ATOM implementation.
-      
+
       Lastly, the project aspires to maintain a minimal dependency footprint.
    </description>
 
@@ -44,7 +44,7 @@
    <repositories>
       <repository>
          <id>public.maven.research.rackspace.com</id>
-            
+
          <name>Rackspace Research</name>
          <url>http://maven.research.rackspacecloud.com/content/groups/aggregate</url>
       </repository>
@@ -53,11 +53,11 @@
    <distributionManagement>
       <repository>
          <id>releases.maven.research.rackspace.com</id>
- 
+
          <name>Rackspace Research Releases</name>
          <url>http://maven.research.rackspacecloud.com/content/repositories/releases</url>
       </repository>
-        
+
       <snapshotRepository>
          <id>snapshots.maven.research.rackspace.com</id>
 
@@ -65,38 +65,38 @@
          <url>http://maven.research.rackspacecloud.com/content/repositories/snapshots</url>
       </snapshotRepository>
    </distributionManagement>
-   
+
    <dependencies>
       <dependency>
          <groupId>xerces</groupId>
          <artifactId>xercesImpl</artifactId>
          <version>2.10.0</version>
       </dependency>
-      
+
       <dependency>
          <groupId>org.python</groupId>
          <artifactId>jython</artifactId>
          <version>2.5.2</version>
       </dependency>
-      
+
       <dependency>
          <groupId>xalan</groupId>
          <artifactId>xalan</artifactId>
          <version>2.7.1</version>
       </dependency>
-      
+
       <dependency>
          <groupId>org.codehaus.woodstox</groupId>
          <artifactId>woodstox-core-asl</artifactId>
          <version>4.1.3</version>
       </dependency>
-      
+
       <dependency>
          <groupId>org.apache.httpcomponents</groupId>
          <artifactId>httpclient</artifactId>
          <version>4.2</version>
       </dependency>
-      
+
       <dependency>
          <groupId>org.apache.commons</groupId>
          <artifactId>commons-lang3</artifactId>
@@ -108,31 +108,31 @@
          <artifactId>hadoop-core</artifactId>
          <version>1.0.3</version>
       </dependency>
-         
+
       <dependency>
          <groupId>org.apache.hadoop</groupId>
          <artifactId>hadoop-client</artifactId>
          <version>1.0.3</version>
       </dependency>
-         
+
       <dependency>
          <groupId>com.rackspace.papi.commons</groupId>
          <artifactId>utilities</artifactId>
-         <version>2.1.7</version>
+         <version>2.2.0</version>
       </dependency>
-         
+
       <dependency>
          <groupId>org.slf4j</groupId>
          <artifactId>slf4j-api</artifactId>
          <version>1.6.6</version>
       </dependency>
-         
+
       <dependency>
          <groupId>org.slf4j</groupId>
          <artifactId>slf4j-jdk14</artifactId>
          <version>1.6.4</version>
       </dependency>
-         
+
       <dependency>
          <groupId>org.slf4j</groupId>
          <artifactId>slf4j-log4j12</artifactId>
@@ -147,10 +147,10 @@
          <scope>test</scope>
       </dependency>
    </dependencies>
-   
+
    <build>
       <finalName>nuke</finalName>
-      <plugins>              
+      <plugins>
          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-compiler-plugin</artifactId>
@@ -166,24 +166,24 @@
             <groupId>org.jvnet.jaxb2.maven2</groupId>
             <artifactId>maven-jaxb2-plugin</artifactId>
             <version>0.8.2</version>
-                
+
             <executions>
                <execution>
                   <goals>
                      <goal>generate</goal>
                   </goals>
-                  
+
                   <phase>process-sources</phase>
                </execution>
             </executions>
-            
+
             <configuration>
                <schemaDirectory>src/main/resources/META-INF/schema/</schemaDirectory>
 
                <schemasInclude>
                   <include>*.xsd</include>
                </schemasInclude>
-  
+
                <bindingsInclude>
                   <include>*.xjb</include>
                </bindingsInclude>
@@ -193,7 +193,7 @@
                   <arg>-extension</arg>
                   <arg>-Xjx</arg>
                </args>
-                    
+
                <plugins>
                   <plugin>
                      <groupId>net.jps.jx</groupId>
