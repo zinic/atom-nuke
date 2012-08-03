@@ -32,7 +32,11 @@ public class OtherNukeKernelTest {
       task.addListener(relay);
 
       nukeKernel.start();
+      
+      Thread.sleep(10000);
 
+      task.cancel();
+      
       Thread.sleep(10000);
 
       nukeKernel.destroy();

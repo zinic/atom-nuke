@@ -1,5 +1,6 @@
 package net.jps.nuke.cli.command;
 
+import java.util.List;
 import net.jps.nuke.config.ConfigurationException;
 import net.jps.nuke.config.ConfigurationHandler;
 import net.jps.nuke.config.ConfigurationReader;
@@ -37,24 +38,42 @@ public abstract class AbstractNukeCommand extends AbstractCommand {
       return configurationReader;
    }
 
-//   protected Source findSource(String id) throws ConfigurationException {
-//      final ConfigurationHandler cfgHandler = getConfigurationReader().readConfiguration();
-//
-//      if (cfgHandler != null) {
-//         if (cfgHandler.getConfiguration().getSources() == null) {
-//            cfgHandler.getConfiguration().setSources(new Sources());
-//            cfgHandler.write();
-//         }
-//
-//         for (Source source : cfgHandler.getConfiguration().getSources().getSource()) {
-//            if (source.getId().equals(id)) {
-//               return source;
-//            }
-//         }
-//      }
-//
-//      return null;
-//   }
+   protected List<Source> getSources(ConfigurationHandler cfgHandler) throws ConfigurationException {
+      if (cfgHandler.getConfiguration().getSources() == null) {
+         cfgHandler.getConfiguration().setSources(new Sources());
+         cfgHandler.write();
+      }
+
+      return cfgHandler.getConfiguration().getSources().getSource();
+   }
+
+   protected List<Sink> getSinks(ConfigurationHandler cfgHandler) throws ConfigurationException {
+      if (cfgHandler.getConfiguration().getSinks() == null) {
+         cfgHandler.getConfiguration().setSinks(new Sinks());
+         cfgHandler.write();
+      }
+
+      return cfgHandler.getConfiguration().getSinks().getSink();
+   }
+
+   protected Source findSource(String id) throws ConfigurationException {
+      final ConfigurationHandler cfgHandler = getConfigurationReader().readConfiguration();
+
+      if (cfgHandler != null) {
+         if (cfgHandler.getConfiguration().getSources() == null) {
+            cfgHandler.getConfiguration().setSources(new Sources());
+            cfgHandler.write();
+         }
+
+         for (Source source : cfgHandler.getConfiguration().getSources().getSource()) {
+            if (source.getId().equals(id)) {
+               return source;
+            }
+         }
+      }
+
+      return null;
+   }
 
    protected Sink findSink(String id) throws ConfigurationException {
       final ConfigurationHandler cfgHandler = getConfigurationReader().readConfiguration();

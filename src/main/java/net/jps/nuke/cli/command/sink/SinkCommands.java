@@ -10,7 +10,7 @@ import net.jps.nuke.util.cli.command.AbstractCommandList;
 public class SinkCommands extends AbstractCommandList {
 
    public SinkCommands(ConfigurationReader configurationReader) {
-      super(new Add(configurationReader), new List(configurationReader));
+      super(new Add(configurationReader), new Delete(configurationReader), new List(configurationReader));
    }
 
    @Override

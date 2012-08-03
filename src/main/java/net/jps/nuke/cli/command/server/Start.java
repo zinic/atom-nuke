@@ -3,7 +3,7 @@ package net.jps.nuke.cli.command.server;
 import net.jps.nuke.cli.command.AbstractNukeCommand;
 import net.jps.nuke.config.ConfigurationReader;
 import net.jps.nuke.util.cli.command.result.CommandResult;
-import net.jps.nuke.util.cli.command.result.SuccessResult;
+import net.jps.nuke.util.cli.command.result.CommandSuccess;
 
 /**
  *
@@ -27,6 +27,6 @@ public class Start extends AbstractNukeCommand {
 
    @Override
    public CommandResult perform(String[] arguments) throws Exception {
-      return new SuccessResult();
+      return new CommandSuccess();
    }
 }
