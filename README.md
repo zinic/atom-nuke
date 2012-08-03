@@ -53,7 +53,7 @@ events. This framework is called the [event processing system or EPS](https://gi
 
 ###Other Java Code Exmaples###
 
-* [HDFS Example Listener](https://github.com/zinic/atom-nuke/blob/master/src/main/java/net/jps/nuke/examples/listener/hadoop/HDFSFeedListener.java)
+* [HDFS Example Listener](https://github.com/zinic/atom-nuke/blob/master/src/main/java/net/jps/nuke/examples/listener/HDFSFeedListener.java)
 
 ##Features Missing##
 
