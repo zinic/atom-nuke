@@ -49,11 +49,11 @@ events. This framework is called the [event processing system or EPS](https://gi
 
 * [Using an EPS Relay](https://github.com/zinic/atom-nuke/blob/master/src/main/java/net/jps/nuke/examples/EPSMain.java)
 * [The AtomEventHandler interface](https://github.com/zinic/atom-nuke/blob/master/src/main/java/net/jps/nuke/listener/eps/handler/AtomEventHandler.java)
-* [The Selector interface](https://github.com/zinic/atom-nuke/blob/master/src/main/java/net/jps/nuke/listener/eps/handler/Selector.java)
+* [The Selector interface](https://github.com/zinic/atom-nuke/blob/master/src/main/java/net/jps/nuke/listener/eps/selector/Selector.java)
 
 ###Other Java Code Exmaples###
 
-* [HDFS Example Listener](https://github.com/zinic/atom-nuke/blob/master/src/main/java/net/jps/nuke/examples/listener/hadoop/HDFSFeedListener.java)
+* [HDFS Example Listener](https://github.com/zinic/atom-nuke/blob/master/src/main/java/net/jps/nuke/examples/listener/HDFSFeedListener.java)
 
 ##Features Missing##
 
