@@ -21,4 +21,6 @@ public interface ManagedTask extends Runnable {
    void cancel();
    
    TimeValue nextPollTime();
+   
+   void scheduled();
 }

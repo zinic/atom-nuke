@@ -41,7 +41,7 @@ public class TaskManagerImpl implements TaskManager {
       if (!allowSubmission) {
          // TODO:Implement - Consider returning a boolean value to communicate shutdown
          LOG.warn("This object has been destroyed and can no longer enlist tasks.");
-
+         return;
       }
 
       pollingTasks.add(state);
@@ -96,6 +96,7 @@ public class TaskManagerImpl implements TaskManager {
             // time has arrived.
             if (managedTask.isReentrant() || !executionManager.submitted(managedTask.id())) {
                executionManager.submit(managedTask.id(), managedTask);
+               managedTask.scheduled();
             }
          } else if (closestPollTime == null || closestPollTime.isGreaterThan(nextPollTime)) {
             // If the closest polling time is null or later than this task's

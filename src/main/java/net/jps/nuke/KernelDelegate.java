@@ -34,20 +34,24 @@ public class KernelDelegate implements Runnable {
       // Run until canceled
       while (!crawlerCancellationRemote.canceled()) {
          final TimeValue now = TimeValue.now();
-         TimeValue sleepTime;
+         TimeValue sleepTime = null;
 
          // Sleep till the next polling time or for a couple of milliseconds
          if (executionManager.draining()) {
             drainMagnitude += drainMagnitude == 1000 ? 0 : 1;
-            
+
             sleepTime = new TimeValue(2 * drainMagnitude, TimeUnit.MILLISECONDS);
-            
+
             LOG.debug("Execution queue too large to continue polling. Yielding " + sleepTime.value() + " millisecond to allow queue to drain.");
          } else {
             drainMagnitude -= drainMagnitude == 0 ? 1 : 0;
 
             final TimeValue closestPollTime = taskManager.scheduleTasks();
-            sleepTime = closestPollTime != null ? now.subtract(closestPollTime) : ZERO_NANOSECONDS;
+            final TimeValue nextSleep = closestPollTime != null ? closestPollTime.subtract(now) : ZERO_NANOSECONDS;
+
+            if (sleepTime == null || nextSleep.isLessThan(sleepTime)) {
+               sleepTime = nextSleep;
+            }
          }
 
          try {

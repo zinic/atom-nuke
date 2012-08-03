@@ -61,6 +61,11 @@ public class ManagedTaskImpl implements ManagedTask {
    }
 
    @Override
+   public void scheduled() {
+      timestamp = TimeValue.now();
+   }
+
+   @Override
    public TimeValue nextPollTime() {
       return timestamp.add(task.interval());
    }
@@ -74,17 +79,6 @@ public class ManagedTaskImpl implements ManagedTask {
             LOG.error(sde.getMessage(), sde);
          }
       }
-   }
-
-   /**
-    * Returns true if the poll result was either an ATOM entry or an ATOM feed
-    * page with zero entries in it.
-    *
-    * @param pollResult
-    * @return
-    */
-   private static boolean shouldUpdateTimestamp(AtomSourceResult pollResult) {
-      return !pollResult.isFeedPage() || pollResult.feed().entries().isEmpty();
    }
 
    @Override
@@ -104,12 +98,6 @@ public class ManagedTaskImpl implements ManagedTask {
                }
 
                executorService.queue(listenerDriver);
-            }
-
-            // Updating our timestamp will mean waiting our scheduled interval until
-            // next polling interval
-            if (shouldUpdateTimestamp(pollResult)) {
-               timestamp = TimeValue.now();
             }
          } catch (Exception ex) {
             LOG.error(ex.getMessage(), ex);

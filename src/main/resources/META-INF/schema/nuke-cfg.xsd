@@ -95,7 +95,7 @@
       </xs:annotation>
       
       <xs:sequence>
-         <xs:element name="sink" type="nuke:Sink" minOccurs="0" maxOccurs="unbounded" />
+         <xs:element name="source" type="nuke:Source" minOccurs="0" maxOccurs="unbounded" />
       </xs:sequence>
    </xs:complexType>
    
