@@ -18,7 +18,7 @@ Task polling uses the configured interval in two cases:
 * If a feed page encountered has zero entries in it.
 * When reading individual ATOM entries.
 
-Each source registered in Nuke may have any number of [ATOM listeners](https://github.com/zinic/atom-nuke/blob/master/src/main/java/net/jps/nuke/listener/AtomListener.java)
+Each source registered in Nuke may have any number of [ATOM listeners](https://github.com/zinic/atom-nuke/blob/master/src/main/java/org/atomhopper/listener/AtomListener.java)
 added to its dispatch list. These listeners will begin receiving events on the
 next scheduled poll.
 
@@ -29,31 +29,31 @@ next scheduled poll.
 Nuke contains a high performance event dispatch kernel that's backed by an
 execution pool. The Nuke kernel supports nanosecond polling granularity.
 
-* [Event generator example](https://github.com/zinic/atom-nuke/blob/master/src/main/java/net/jps/nuke/examples/EventGeneratorMain.java)
+* [Event generator example](https://github.com/zinic/atom-nuke/blob/master/src/main/java/org/atomhopper/examples/EventGeneratorMain.java)
 
-For more information see the [Nuke kernel](https://github.com/zinic/atom-nuke/blob/master/src/main/java/net/jps/nuke/NukeKernel.java)
-and the [Nuke kernel run delegate](https://github.com/zinic/atom-nuke/blob/master/src/main/java/net/jps/nuke/KernelDelegate.java).
+For more information see the [Nuke kernel](https://github.com/zinic/atom-nuke/blob/master/src/main/java/org/atomhopper/NukeKernel.java)
+and the [Nuke kernel run delegate](https://github.com/zinic/atom-nuke/blob/master/src/main/java/org/atomhopper/KernelDelegate.java).
 
 ###Feed Crawler###
 
-By default Nuke comes with an [ATOM source](https://github.com/zinic/atom-nuke/blob/master/src/main/java/net/jps/nuke/source/AtomSource.java)
+By default Nuke comes with an [ATOM source](https://github.com/zinic/atom-nuke/blob/master/src/main/java/org/atomhopper/source/AtomSource.java)
 that is useful for crawling feeds. The crawler is designed specifically to work 
 with [AtomHopper](http://atomhopper.org/).
 
-* [Using the Feed Crawler](https://github.com/zinic/atom-nuke/blob/master/src/main/java/net/jps/nuke/examples/HDFSMain.java)
+* [Using the Feed Crawler](https://github.com/zinic/atom-nuke/blob/master/src/main/java/org/atomhopper/examples/HDFSMain.java)
 
 ###Using ATOM Event Selection###
 
 Nuke contains a framework for turning ATOM feeds and entries into selectable
-events. This framework is called the [event processing system or EPS](https://github.com/zinic/atom-nuke/tree/master/src/main/java/net/jps/nuke/listener/eps) for short.
+events. This framework is called the [event processing system or EPS](https://github.com/zinic/atom-nuke/tree/master/src/main/java/org/atomhopper/listener/eps) for short.
 
-* [Using an EPS Relay](https://github.com/zinic/atom-nuke/blob/master/src/main/java/net/jps/nuke/examples/EPSMain.java)
-* [The AtomEventHandler interface](https://github.com/zinic/atom-nuke/blob/master/src/main/java/net/jps/nuke/listener/eps/handler/AtomEventHandler.java)
-* [The Selector interface](https://github.com/zinic/atom-nuke/blob/master/src/main/java/net/jps/nuke/listener/eps/selector/Selector.java)
+* [Using an EPS Relay](https://github.com/zinic/atom-nuke/blob/master/src/main/java/org/atomhopper/examples/EPSMain.java)
+* [The AtomEventHandler interface](https://github.com/zinic/atom-nuke/blob/master/src/main/java/org/atomhopper/listener/eps/handler/AtomEventHandler.java)
+* [The Selector interface](https://github.com/zinic/atom-nuke/blob/master/src/main/java/org/atomhopper/listener/eps/selector/Selector.java)
 
 ###Other Java Code Exmaples###
 
-* [HDFS Example Listener](https://github.com/zinic/atom-nuke/blob/master/src/main/java/net/jps/nuke/examples/listener/HDFSFeedListener.java)
+* [HDFS Example Listener](https://github.com/zinic/atom-nuke/blob/master/src/main/java/org/atomhopper/examples/listener/HDFSFeedListener.java)
 
 ##Features Missing##
 
