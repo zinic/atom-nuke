@@ -30,11 +30,48 @@
          </xs:documentation>
       </xs:annotation>
       
-      <xs:sequence>
+      <xs:all>
          <xs:element name="sinks" type="nuke:Sinks" minOccurs="0" maxOccurs="1" />
          <xs:element name="sources" type="nuke:Sources" minOccurs="0" maxOccurs="1" />
+         <xs:element name="eps" type="nuke:EventProcessingSystem" minOccurs="0" maxOccurs="1" />
          <xs:element name="bindings" type="nuke:Bindings" minOccurs="0" maxOccurs="1" />
-      </xs:sequence>
+      </xs:all>
+   </xs:complexType>
+   
+   <xs:complexType name="CodeDefinition">
+      <xs:annotation>
+         <xs:documentation>
+            <html:p>
+            </html:p>
+         </xs:documentation>
+      </xs:annotation>
+      
+      <xs:attribute name="id" type="xs:string" use="required">
+         <xs:annotation>
+            <xs:documentation>
+               <html:p>
+               </html:p>
+            </xs:documentation>
+         </xs:annotation>
+      </xs:attribute>
+      
+      <xs:attribute name="type" type="nuke:LanguageType" use="required">
+         <xs:annotation>
+            <xs:documentation>
+               <html:p>
+               </html:p>
+            </xs:documentation>
+         </xs:annotation>
+      </xs:attribute>
+      
+      <xs:attribute name="href" type="xs:anyURI" use="required">
+         <xs:annotation>
+            <xs:documentation>
+               <html:p>
+               </html:p>
+            </xs:documentation>
+         </xs:annotation>
+      </xs:attribute>
    </xs:complexType>
    
    <xs:complexType name="Sinks">
@@ -51,39 +88,16 @@
    </xs:complexType>
    
    <xs:complexType name="Sink">
-      <xs:annotation>
-         <xs:documentation>
-            <html:p>
-            </html:p>
-         </xs:documentation>
-      </xs:annotation>
-
-      <xs:attribute name="id" type="xs:string" use="required">
-         <xs:annotation>
-            <xs:documentation>
-               <html:p>
-               </html:p>
-            </xs:documentation>
-         </xs:annotation>
-      </xs:attribute>
-      
-      <xs:attribute name="type" type="nuke:LanguageType" use="required">
-         <xs:annotation>
-            <xs:documentation>
-               <html:p>
-               </html:p>
-            </xs:documentation>
-         </xs:annotation>
-      </xs:attribute>
-      
-      <xs:attribute name="href" type="xs:anyURI" use="required">
-         <xs:annotation>
-            <xs:documentation>
-               <html:p>
-               </html:p>
-            </xs:documentation>
-         </xs:annotation>
-      </xs:attribute>
+      <xs:complexContent>
+         <xs:extension base="nuke:CodeDefinition">
+            <xs:annotation>
+               <xs:documentation>
+                  <html:p>
+                  </html:p>
+               </xs:documentation>
+            </xs:annotation>
+         </xs:extension>
+      </xs:complexContent>
    </xs:complexType>
    
    <xs:complexType name="Sources">
@@ -100,6 +114,19 @@
    </xs:complexType>
    
    <xs:complexType name="Source">
+      <xs:complexContent>
+         <xs:extension base="nuke:CodeDefinition">
+            <xs:annotation>
+               <xs:documentation>
+                  <html:p>
+                  </html:p>
+               </xs:documentation>
+            </xs:annotation>
+         </xs:extension>
+      </xs:complexContent>
+   </xs:complexType>
+   
+   <xs:complexType name="EventProcessingSystem">
       <xs:annotation>
          <xs:documentation>
             <html:p>
@@ -107,6 +134,33 @@
          </xs:documentation>
       </xs:annotation>
       
+      <xs:all>
+         <xs:element name="relays" type="nuke:Relays" minOccurs="0" maxOccurs="1" />
+         <xs:element name="eventlets" type="nuke:Eventlets" minOccurs="0" maxOccurs="1" />
+      </xs:all>
+   </xs:complexType>
+   
+   <xs:complexType name="Relays">
+      <xs:annotation>
+         <xs:documentation>
+            <html:p>
+            </html:p>
+         </xs:documentation>
+      </xs:annotation>
+      
+      <xs:sequence>
+         <xs:element name="relay" type="nuke:Relay" minOccurs="0" maxOccurs="unbounded" />
+      </xs:sequence>
+   </xs:complexType>
+   
+   <xs:complexType name="Relay">
+      <xs:annotation>
+         <xs:documentation>
+            <html:p>
+            </html:p>
+         </xs:documentation>
+      </xs:annotation>
+                      
       <xs:attribute name="id" type="xs:string" use="required">
          <xs:annotation>
             <xs:documentation>
@@ -115,24 +169,32 @@
             </xs:documentation>
          </xs:annotation>
       </xs:attribute>
+   </xs:complexType>
       
-      <xs:attribute name="type" type="nuke:LanguageType" use="required">
-         <xs:annotation>
-            <xs:documentation>
-               <html:p>
-               </html:p>
-            </xs:documentation>
-         </xs:annotation>
-      </xs:attribute>
+   <xs:complexType name="Eventlets">
+      <xs:annotation>
+         <xs:documentation>
+            <html:p>
+            </html:p>
+         </xs:documentation>
+      </xs:annotation>
       
-      <xs:attribute name="href" type="xs:anyURI" use="required">
-         <xs:annotation>
-            <xs:documentation>
-               <html:p>
-               </html:p>
-            </xs:documentation>
-         </xs:annotation>
-      </xs:attribute>
+      <xs:sequence>
+         <xs:element name="Eventlet" type="nuke:Eventlet" minOccurs="0" maxOccurs="unbounded" />
+      </xs:sequence>
+   </xs:complexType>
+   
+   <xs:complexType name="Eventlet">
+      <xs:complexContent>
+         <xs:extension base="nuke:CodeDefinition">
+            <xs:annotation>
+               <xs:documentation>
+                  <html:p>
+                  </html:p>
+               </xs:documentation>
+            </xs:annotation>
+         </xs:extension>
+      </xs:complexContent>
    </xs:complexType>
    
    <xs:complexType name="Bindings">
@@ -144,7 +206,8 @@
       </xs:annotation>
         
       <xs:sequence>
-         <xs:element name="binding" type="nuke:Binding" minOccurs="0" maxOccurs="unbounded" />
+         <xs:element name="listener" type="nuke:ListenerBinding" minOccurs="0" maxOccurs="unbounded" />
+         <xs:element name="relay" type="nuke:RelayBinding" minOccurs="0" maxOccurs="unbounded" />
       </xs:sequence>
    </xs:complexType>
    
@@ -155,11 +218,8 @@
             </html:p>
          </xs:documentation>
       </xs:annotation>
-        
-      <xs:sequence>
-      </xs:sequence>
-        
-      <xs:attribute name="source-id" type="xs:string" use="required">
+                
+      <xs:attribute name="id" type="xs:string" use="required">
          <xs:annotation>
             <xs:documentation>
                <html:p>
@@ -167,14 +227,67 @@
             </xs:documentation>
          </xs:annotation>
       </xs:attribute>
-        
-      <xs:attribute name="skink-id" type="xs:string" use="required">
-         <xs:annotation>
-            <xs:documentation>
-               <html:p>
-               </html:p>
-            </xs:documentation>
-         </xs:annotation>
-      </xs:attribute>
+   </xs:complexType>
+   
+   <xs:complexType name="ListenerBinding">
+      <xs:complexContent>
+         <xs:extension base="nuke:Binding">
+            <xs:annotation>
+               <xs:documentation>
+                  <html:p>
+                  </html:p>
+               </xs:documentation>
+            </xs:annotation>
+            
+            <xs:attribute name="source-id" type="xs:string" use="required">
+               <xs:annotation>
+                  <xs:documentation>
+                     <html:p>
+                     </html:p>
+                  </xs:documentation>
+               </xs:annotation>
+            </xs:attribute>
+            
+            <xs:attribute name="listener-id" type="xs:string" use="required">
+               <xs:annotation>
+                  <xs:documentation>
+                     <html:p>
+                     </html:p>
+                  </xs:documentation>
+               </xs:annotation>
+            </xs:attribute>
+         </xs:extension>
+      </xs:complexContent>
+   </xs:complexType>
+   
+   <xs:complexType name="RelayBinding">
+      <xs:complexContent>
+         <xs:extension base="nuke:Binding">
+            <xs:annotation>
+               <xs:documentation>
+                  <html:p>
+                  </html:p>
+               </xs:documentation>
+            </xs:annotation>
+
+            <xs:attribute name="listener-id" type="xs:string" use="required">
+               <xs:annotation>
+                  <xs:documentation>
+                     <html:p>
+                     </html:p>
+                  </xs:documentation>
+               </xs:annotation>
+            </xs:attribute>
+            
+            <xs:attribute name="relay-id" type="xs:string" use="required">
+               <xs:annotation>
+                  <xs:documentation>
+                     <html:p>
+                     </html:p>
+                  </xs:documentation>
+               </xs:annotation>
+            </xs:attribute>
+         </xs:extension>
+      </xs:complexContent>
    </xs:complexType>
 </xs:schema>

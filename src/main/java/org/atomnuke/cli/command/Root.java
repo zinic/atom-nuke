@@ -1,5 +1,6 @@
 package org.atomnuke.cli.command;
 
+import org.atomnuke.cli.command.eps.EPSCommands;
 import org.atomnuke.cli.command.server.ServerCommands;
 import org.atomnuke.cli.command.source.SourceCommands;
 import org.atomnuke.command.sink.SinkCommands;
@@ -13,6 +14,6 @@ import org.atomnuke.util.cli.command.RootCommand;
 public class Root extends RootCommand {
 
    public Root(ConfigurationReader configurationReader) {
-      super(new ServerCommands(configurationReader), new SourceCommands(configurationReader), new SinkCommands(configurationReader));
+      super(new ServerCommands(configurationReader), new EPSCommands(configurationReader), new SourceCommands(configurationReader), new SinkCommands(configurationReader));
    }
 }
