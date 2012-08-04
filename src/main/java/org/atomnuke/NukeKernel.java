@@ -1,9 +1,9 @@
-package org.atomnuke.nuke;
+package org.atomnuke;
 
 import java.util.concurrent.BlockingQueue;
 import org.atomnuke.task.threading.ExecutionManagerImpl;
-import org.atomnuke.nuke.util.remote.CancellationRemote;
-import org.atomnuke.nuke.util.remote.AtomicCancellationRemote;
+import org.atomnuke.util.remote.CancellationRemote;
+import org.atomnuke.util.remote.AtomicCancellationRemote;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadFactory;

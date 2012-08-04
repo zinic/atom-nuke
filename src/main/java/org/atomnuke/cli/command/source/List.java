@@ -3,7 +3,7 @@ package org.atomnuke.cli.command.source;
 import org.atomnuke.cli.command.AbstractNukeCommand;
 import org.atomnuke.config.ConfigurationHandler;
 import org.atomnuke.config.ConfigurationReader;
-import org.atomnuke.config.model.Sink;
+import org.atomnuke.config.model.Source;
 import org.atomnuke.util.cli.command.result.CommandResult;
 import org.atomnuke.util.cli.command.result.MessageResult;
 
@@ -32,12 +32,10 @@ public class List extends AbstractNukeCommand {
       final ConfigurationHandler cfgHandler = getConfigurationReader().readConfiguration();
       final StringBuilder output = new StringBuilder();
 
-      if (cfgHandler.getConfiguration() != null && cfgHandler.getConfiguration().getSinks() != null) {
-         for (Sink sink : cfgHandler.getConfiguration().getSinks().getSink()) {
-            output.append("Sink: ").append(sink.getId()).append(" binds ").append(sink.getHref()).append(" as language type ").append(sink.getType().name()).append("\n");
-         }
+      for (Source source : getSources(cfgHandler)) {
+         output.append("Source ").append(source.getId()).append(" binds ").append(source.getHref()).append(" as language type ").append(source.getType().name()).append("\n");
       }
-      
+
       return new MessageResult(output.toString());
    }
 }

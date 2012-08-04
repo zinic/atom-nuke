@@ -5,8 +5,8 @@ import org.atomnuke.listener.manager.ListenerManager;
 import org.atomnuke.task.context.TaskContext;
 import org.atomnuke.task.lifecycle.InitializationException;
 import org.atomnuke.util.TimeValue;
-import org.atomnuke.nuke.util.remote.AtomicCancellationRemote;
-import org.atomnuke.nuke.util.remote.CancellationRemote;
+import org.atomnuke.util.remote.AtomicCancellationRemote;
+import org.atomnuke.util.remote.CancellationRemote;
 
 /**
  *

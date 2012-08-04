@@ -1,10 +1,10 @@
-package org.atomnuke.nuke;
+package org.atomnuke;
 
 import java.util.concurrent.TimeUnit;
 import org.atomnuke.task.manager.TaskManager;
 import org.atomnuke.task.threading.ExecutionManager;
 import org.atomnuke.util.TimeValue;
-import org.atomnuke.nuke.util.remote.CancellationRemote;
+import org.atomnuke.util.remote.CancellationRemote;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

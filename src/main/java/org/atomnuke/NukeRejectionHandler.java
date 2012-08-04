@@ -1,4 +1,4 @@
-package org.atomnuke.nuke;
+package org.atomnuke;
 
 import java.util.concurrent.RejectedExecutionHandler;
 import java.util.concurrent.ThreadPoolExecutor;

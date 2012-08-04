@@ -2,8 +2,6 @@ package org.atomnuke;
 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
-import org.atomnuke.nuke.Nuke;
-import org.atomnuke.nuke.NukeKernel;
 import org.atomnuke.examples.listener.EventCounterAtomEventelt;
 import org.atomnuke.examples.source.EventGenerator;
 import org.atomnuke.listener.eps.ReentrantRelay;

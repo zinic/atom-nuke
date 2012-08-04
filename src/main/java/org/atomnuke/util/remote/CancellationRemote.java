@@ -1,4 +1,4 @@
-package org.atomnuke.nuke.util.remote;
+package org.atomnuke.util.remote;
 
 /**
  * A cancellation remote is a thread safe object that can be utilized to

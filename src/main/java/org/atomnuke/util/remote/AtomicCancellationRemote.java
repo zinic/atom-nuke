@@ -1,4 +1,4 @@
-package org.atomnuke.nuke.util.remote;
+package org.atomnuke.util.remote;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 

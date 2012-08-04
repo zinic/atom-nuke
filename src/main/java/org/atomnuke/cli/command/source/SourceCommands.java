@@ -10,16 +10,16 @@ import org.atomnuke.util.cli.command.AbstractCommandList;
 public class SourceCommands extends AbstractCommandList {
 
    public SourceCommands(ConfigurationReader configurationReader) {
-      super(new Add(configurationReader), new List(configurationReader));
+      super(new Add(configurationReader), new Delete(configurationReader), new List(configurationReader));
    }
 
    @Override
    public String getCommandToken() {
-      return "sink";
+      return "source";
    }
 
    @Override
    public String getCommandDescription() {
-      return "Sink commands.";
+      return "Source commands.";
    }
 }

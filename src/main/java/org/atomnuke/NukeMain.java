@@ -1,4 +1,4 @@
-package org.atomnuke.nuke;
+package org.atomnuke;
 
 import java.io.File;
 import javax.xml.bind.JAXBContext;

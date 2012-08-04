@@ -1,6 +1,6 @@
 package org.atomnuke.listener;
 
-import org.atomnuke.nuke.util.remote.CancellationRemote;
+import org.atomnuke.util.remote.CancellationRemote;
 
 /**
  *

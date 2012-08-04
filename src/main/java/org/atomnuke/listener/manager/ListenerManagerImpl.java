@@ -8,7 +8,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.atomnuke.listener.AtomListener;
 import org.atomnuke.listener.ReentrantAtomListener;
 import org.atomnuke.listener.RegisteredListener;
-import org.atomnuke.nuke.util.remote.AtomicCancellationRemote;
+import org.atomnuke.util.remote.AtomicCancellationRemote;
 
 /**
  *

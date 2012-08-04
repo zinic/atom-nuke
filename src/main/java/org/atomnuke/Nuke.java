@@ -1,4 +1,4 @@
-package org.atomnuke.nuke;
+package org.atomnuke;
 
 import org.atomnuke.source.AtomSource;
 import org.atomnuke.task.Task;

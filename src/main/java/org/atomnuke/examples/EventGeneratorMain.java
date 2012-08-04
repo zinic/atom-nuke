@@ -2,8 +2,8 @@ package org.atomnuke.examples;
 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
-import org.atomnuke.nuke.Nuke;
-import org.atomnuke.nuke.NukeKernel;
+import org.atomnuke.Nuke;
+import org.atomnuke.NukeKernel;
 import org.atomnuke.examples.listener.PrintStreamOutputListener;
 import org.atomnuke.examples.source.EventGenerator;
 import org.atomnuke.listener.eps.Relay;

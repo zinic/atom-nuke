@@ -4,6 +4,7 @@ import org.atomnuke.cli.command.AbstractNukeCommand;
 import org.atomnuke.config.ConfigurationHandler;
 import org.atomnuke.config.ConfigurationReader;
 import org.atomnuke.config.model.LanguageType;
+import org.atomnuke.config.model.Source;
 import org.atomnuke.util.cli.command.result.CommandFailure;
 import org.atomnuke.util.cli.command.result.CommandResult;
 import org.atomnuke.util.cli.command.result.CommandSuccess;
@@ -53,12 +54,12 @@ public class Add extends AbstractNukeCommand {
          return new CommandFailure("Language must be one of: java, javascript, python.");
       }
 
-//      final Source newSource = new Source();
-//      newSource.setId(arguments[SOURCE_ID]);
-//      newSource.setType(sinkLanguageType);
-//      newSource.setHref(arguments[SINK_REFERENCE]);
-//
-//      cfgHandler.getConfiguration().getSinks().getSink().add(newSource);
+      final Source newSource = new Source();
+      newSource.setId(arguments[SOURCE_ID]);
+      newSource.setType(sinkLanguageType);
+      newSource.setHref(arguments[SINK_REFERENCE]);
+
+      getSources(cfgHandler).add(newSource);
       cfgHandler.write();
 
       return new CommandSuccess();

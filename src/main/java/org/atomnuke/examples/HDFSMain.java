@@ -2,8 +2,8 @@ package org.atomnuke.examples;
 
 import java.io.File;
 import java.util.concurrent.TimeUnit;
-import org.atomnuke.nuke.Nuke;
-import org.atomnuke.nuke.NukeKernel;
+import org.atomnuke.Nuke;
+import org.atomnuke.NukeKernel;
 import org.atomnuke.atom.stax.StaxAtomWriter;
 import org.atomnuke.task.Task;
 import org.atomnuke.examples.listener.HDFSFeedListener;
