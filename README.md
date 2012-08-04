@@ -14,10 +14,6 @@ Nuke also contains a polling event framework that can poll multiple sources. Eac
 source may be registered will a configured polling interval that will govern how
 often the source is polled during normal operation.
 
-Task polling uses the configured interval in two cases:
-* If a feed page encountered has zero entries in it.
-* When reading individual ATOM entries.
-
 Each source registered in Nuke may have any number of [ATOM listeners](https://github.com/zinic/atom-nuke/blob/master/src/main/java/org/atomnuke/listener/AtomListener.java)
 added to its dispatch list. These listeners will begin receiving events on the
 next scheduled poll.
