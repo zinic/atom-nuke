@@ -48,7 +48,7 @@ Nuke contains a framework for turning ATOM feeds and entries into selectable
 events. This framework is called the [event processing system or EPS](https://github.com/zinic/atom-nuke/tree/master/src/main/java/org/atomnuke/listener/eps) for short.
 
 * [Using an EPS Relay](https://github.com/zinic/atom-nuke/blob/master/src/main/java/org/atomnuke/examples/EPSMain.java)
-* [The AtomEventHandler interface](https://github.com/zinic/atom-nuke/blob/master/src/main/java/org/atomnuke/listener/eps/handler/AtomEventHandler.java)
+* [The Eventlet interface](https://github.com/zinic/atom-nuke/blob/master/src/main/java/org/atomnuke/listener/eps/eventlet/AtomEventlet.java)
 * [The Selector interface](https://github.com/zinic/atom-nuke/blob/master/src/main/java/org/atomnuke/listener/eps/selector/Selector.java)
 
 ###Other Java Code Exmaples###
