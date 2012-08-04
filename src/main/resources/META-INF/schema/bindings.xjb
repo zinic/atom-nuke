@@ -7,6 +7,6 @@
           schemaLocation="nuke-cfg.xsd">
             
    <schemaBindings>
-      <package name="net.jps.nuke.config.model" />
+      <package name="org.atomnuke.config.model" />
    </schemaBindings>
 </bindings>
