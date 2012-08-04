@@ -15,6 +15,8 @@ import org.atomnuke.task.manager.TaskManager;
 import org.atomnuke.task.manager.TaskManagerImpl;
 import org.atomnuke.task.threading.ExecutionManager;
 import org.atomnuke.util.TimeValue;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -22,6 +24,8 @@ import org.atomnuke.util.TimeValue;
  */
 public class NukeKernel implements Nuke {
 
+   private static final Logger LOG = LoggerFactory.getLogger(NukeKernel.class);
+   
    private static final ThreadFactory DEFAULT_THREAD_FACTORY = new ThreadFactory() {
       @Override
       public Thread newThread(Runnable r) {
@@ -63,11 +67,13 @@ public class NukeKernel implements Nuke {
       final BlockingQueue<Runnable> runQueue = new LinkedBlockingQueue<Runnable>();
       final ExecutorService execService = new NukeThreadPoolExecutor(corePoolSize, maxPoolsize, 30, TimeUnit.SECONDS, runQueue, DEFAULT_THREAD_FACTORY, new NukeRejectionHandler());
       final ExecutionManager executionManager = new ExecutionManagerImpl(MAX_QUEUE_SIZE, runQueue, execService);
-      
+
       kernelCancellationRemote = new AtomicCancellationRemote();
       taskManager = new TaskManagerImpl(executionManager);
       logic = new KernelDelegate(kernelCancellationRemote, executionManager, taskManager);
       controlThread = new Thread(logic, "nuke-kernel-" + TID.incrementAndGet());
+
+      Runtime.getRuntime().addShutdownHook(new Thread(new KernelShutdownHook(this)));
    }
 
    @Override
@@ -79,18 +85,22 @@ public class NukeKernel implements Nuke {
    public Task follow(AtomSource source, TimeValue pollingInterval) {
       return taskManager.follow(source, pollingInterval);
    }
-   
+
    @Override
    public void start() {
       if (controlThread.getState() != Thread.State.NEW) {
          throw new IllegalStateException("Crawler already started or destroyed.");
       }
 
+      LOG.info("Nuke kernel:" + this + " starting.");
+      
       controlThread.start();
    }
 
    @Override
    public void destroy() {
+      taskManager.destroy();
+      
       kernelCancellationRemote.cancel();
 
       try {
@@ -98,7 +108,5 @@ public class NukeKernel implements Nuke {
       } catch (InterruptedException ie) {
          controlThread.interrupt();
       }
-      
-      taskManager.destroy();
    }
 }

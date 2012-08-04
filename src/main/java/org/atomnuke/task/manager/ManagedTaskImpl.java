@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 public class ManagedTaskImpl implements ManagedTask {
 
    private static final Logger LOG = LoggerFactory.getLogger(ManagedTaskImpl.class);
+   
    private final ExecutionManager executorService;
    private final ListenerManager listenerManager;
    private final AtomSource atomSource;
@@ -72,6 +73,8 @@ public class ManagedTaskImpl implements ManagedTask {
 
    @Override
    public void destroy(TaskContext taskContext) {
+      LOG.debug("Destroying task: " + task);
+      
       for (RegisteredListener registeredListener : listenerManager.listeners()) {
          try {
             registeredListener.listener().destroy(taskContext);

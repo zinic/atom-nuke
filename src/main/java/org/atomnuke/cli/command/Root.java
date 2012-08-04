@@ -13,7 +13,10 @@ import org.atomnuke.util.cli.command.RootCommand;
  */
 public class Root extends RootCommand {
 
+   // Aw yeah, dependency inversion...
+   // This should totally be done by an IOC container or something >_>
    public Root(ConfigurationReader configurationReader) {
-      super(new ServerCommands(configurationReader), new EPSCommands(configurationReader), new SourceCommands(configurationReader), new SinkCommands(configurationReader));
+      super(new ServerCommands(configurationReader), new EPSCommands(configurationReader),
+              new SourceCommands(configurationReader), new SinkCommands(configurationReader));
    }
 }
