@@ -13,6 +13,7 @@ import org.atomnuke.listener.AtomListener;
 import org.atomnuke.listener.eps.eventlet.AtomEventlet;
 import org.atomnuke.source.AtomSource;
 import org.atomnuke.task.Task;
+import org.atomnuke.util.TimeValue;
 
 /**
  *
@@ -64,7 +65,8 @@ public class ServerBuilder {
 
    public void constructSources() throws ConfigurationException {
       for (Source source : cfgHandler.getSources()) {
-         final Task newTask = kernelBeingBuilt.follow((AtomSource) construct(source.getType(), source.getHref()));
+         final Task newTask = kernelBeingBuilt.follow((AtomSource) construct(source.getType(), source.getHref()), TimeValue.fromPollingInterval(source.getPollingInterval()));
+         
          registeredSources.put(source.getId(), newTask);
       }
    }

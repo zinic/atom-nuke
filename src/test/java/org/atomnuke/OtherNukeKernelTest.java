@@ -2,7 +2,7 @@ package org.atomnuke;
 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
-import org.atomnuke.examples.listener.EventCounterAtomEventelt;
+import org.atomnuke.examples.listener.CounterEventlet;
 import org.atomnuke.examples.source.EventGenerator;
 import org.atomnuke.listener.eps.ReentrantRelay;
 import org.atomnuke.listener.eps.Relay;
@@ -25,7 +25,7 @@ public class OtherNukeKernelTest {
       final Task task = nukeKernel.follow(new EventGenerator("Task 1", true), new TimeValue(1, TimeUnit.SECONDS));
 
       final Relay relay = new ReentrantRelay();
-      relay.enlistHandler(new EventCounterAtomEventelt(eventsProcessed));
+      relay.enlistHandler(new CounterEventlet(eventsProcessed));
 
       task.addListener(relay);
 

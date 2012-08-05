@@ -7,7 +7,7 @@ import org.atomnuke.Nuke;
 import org.atomnuke.NukeKernel;
 import org.atomnuke.examples.handler.FeedFileWriterHandler;
 import org.atomnuke.examples.listener.ClasspathSource;
-import org.atomnuke.examples.listener.EventCounterAtomEventelt;
+import org.atomnuke.examples.listener.CounterEventlet;
 import org.atomnuke.listener.eps.ReentrantRelay;
 import org.atomnuke.listener.eps.Relay;
 import org.atomnuke.listener.eps.selectors.CategorySelector;
@@ -25,7 +25,7 @@ public class CombinedParserSelector {
 
       final Relay relay = new ReentrantRelay();
       relay.enlistHandler(new FeedFileWriterHandler(new File("/tmp/test.feed")), new CategorySelector(new String[]{"test"}, new String[]{"test"}));
-      relay.enlistHandler(new EventCounterAtomEventelt(events));
+      relay.enlistHandler(new CounterEventlet(events));
       
       final Nuke nukeKernel = new NukeKernel();
 

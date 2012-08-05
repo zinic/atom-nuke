@@ -148,8 +148,43 @@
       </dependency>
    </dependencies>
 
+   <profiles>
+      <profile>
+         <id>runjar</id>
+         
+         <build>
+            <plugins>
+               <plugin>
+                  <groupId>org.apache.maven.plugins</groupId>
+                  <artifactId>maven-shade-plugin</artifactId>
+                  <version>1.4</version>
+
+                  <executions>
+                     <execution>
+                        <phase>package</phase>
+
+                        <goals>
+                           <goal>shade</goal>
+                        </goals>
+
+                        <configuration>
+                           <transformers>
+                              <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                 <mainClass>org.atomnuke.NukeMain</mainClass>
+                              </transformer>
+                           </transformers>
+                        </configuration>
+                     </execution>
+                  </executions>
+               </plugin>
+            </plugins>
+         </build>
+      </profile>
+   </profiles>
+
    <build>
       <finalName>nuke</finalName>
+
       <plugins>
          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
@@ -194,13 +229,13 @@
                   <arg>-Xjx</arg>
                </args>
 
-               <plugins>
-                  <plugin>
-                     <groupId>net.jps.jx</groupId>
-                     <artifactId>jx-xjc</artifactId>
-                  </plugin>
-               </plugins>
--->
+                              <plugins>
+                                 <plugin>
+                                    <groupId>net.jps.jx</groupId>
+                                    <artifactId>jx-xjc</artifactId>
+                                 </plugin>
+                              </plugins>
+               -->
             </configuration>
          </plugin>
       </plugins>

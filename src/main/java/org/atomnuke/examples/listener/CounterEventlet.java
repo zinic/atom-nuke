@@ -7,16 +7,20 @@ import org.atomnuke.listener.eps.eventlet.AtomEventletException;
 import org.atomnuke.task.context.TaskContext;
 import org.atomnuke.task.lifecycle.DestructionException;
 import org.atomnuke.task.lifecycle.InitializationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author zinic
  */
-public class EventCounterAtomEventelt implements AtomEventlet {
+public class CounterEventlet implements AtomEventlet {
 
+   private static final Logger LOG = LoggerFactory.getLogger(CounterEventlet.class);
+   
    protected final AtomicLong entryEvents;
 
-   public EventCounterAtomEventelt(AtomicLong entryEvents) {
+   public CounterEventlet(AtomicLong entryEvents) {
       this.entryEvents = entryEvents;
    }
 
@@ -26,6 +30,7 @@ public class EventCounterAtomEventelt implements AtomEventlet {
 
    @Override
    public void destroy(TaskContext tc) throws DestructionException {
+      LOG.info("Processed " + entryEvents.toString() + " events.");
    }
 
    @Override

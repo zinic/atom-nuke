@@ -6,7 +6,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import org.atomnuke.Nuke;
 import org.atomnuke.NukeKernel;
 import org.atomnuke.examples.handler.FeedFileWriterHandler;
-import org.atomnuke.examples.listener.EventCounterAtomEventelt;
+import org.atomnuke.examples.listener.CounterEventlet;
 import org.atomnuke.examples.source.EventGenerator;
 import org.atomnuke.listener.eps.ReentrantRelay;
 import org.atomnuke.listener.eps.Relay;
@@ -25,7 +25,7 @@ public class FileWriterPerformance {
 
       final Relay relay = new ReentrantRelay();
       relay.enlistHandler(new FeedFileWriterHandler(new File("/tmp/test.feed")), new CategorySelector(new String[]{"test"}, new String[]{"test"}));
-      relay.enlistHandler(new EventCounterAtomEventelt(events));
+      relay.enlistHandler(new CounterEventlet(events));
       
       final Nuke nukeKernel = new NukeKernel();
 

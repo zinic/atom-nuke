@@ -12,7 +12,7 @@ import org.atomnuke.task.lifecycle.InitializationException;
  *
  * @author zinic
  */
-public class PrintStreamOutputListener extends EventCounterAtomEventelt {
+public class PrintStreamOutputListener extends CounterEventlet {
 
    private final PrintStream out;
    private final String msg;

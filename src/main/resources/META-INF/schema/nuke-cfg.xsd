@@ -11,6 +11,18 @@
     
    <!-- Enumeration and SimpleType definitions -->
 
+   <xs:simpleType name="TimeUnitType">
+      <xs:restriction base="xs:string">
+         <xs:enumeration value="NANOSECONDS" />
+         <xs:enumeration value="MICROSECONDS" />
+         <xs:enumeration value="MILLISECONDS" />
+         <xs:enumeration value="SECONDS" />
+         <xs:enumeration value="MINUTES" />
+         <xs:enumeration value="HOURS" />
+         <xs:enumeration value="DAYS" />
+      </xs:restriction>
+   </xs:simpleType>
+   
    <xs:simpleType name="LanguageType">
       <xs:restriction base="xs:string">
          <xs:enumeration value="java" />
@@ -36,6 +48,33 @@
          <xs:element name="eps" type="nuke:EventProcessingSystem" minOccurs="0" maxOccurs="1" />
          <xs:element name="bindings" type="nuke:Bindings" minOccurs="0" maxOccurs="1" />
       </xs:all>
+   </xs:complexType>
+   
+   <xs:complexType name="PollingInterval">
+      <xs:annotation>
+         <xs:documentation>
+            <html:p>
+            </html:p>
+         </xs:documentation>
+      </xs:annotation>
+      
+      <xs:attribute name="value" type="xs:long" use="required">
+         <xs:annotation>
+            <xs:documentation>
+               <html:p>
+               </html:p>
+            </xs:documentation>
+         </xs:annotation>
+      </xs:attribute>
+      
+      <xs:attribute name="unit" type="nuke:TimeUnitType" use="required">
+         <xs:annotation>
+            <xs:documentation>
+               <html:p>
+               </html:p>
+            </xs:documentation>
+         </xs:annotation>
+      </xs:attribute>
    </xs:complexType>
    
    <xs:complexType name="CodeDefinition">
@@ -122,6 +161,10 @@
                   </html:p>
                </xs:documentation>
             </xs:annotation>
+            
+            <xs:sequence>
+               <xs:element name="polling-interval" type="nuke:PollingInterval" minOccurs="0" maxOccurs="1" />
+            </xs:sequence>
          </xs:extension>
       </xs:complexContent>
    </xs:complexType>
