@@ -1,16 +1,15 @@
 package org.atomnuke.cli.command;
 
-import java.util.Collections;
 import java.util.List;
 import org.atomnuke.config.ConfigurationException;
 import org.atomnuke.config.ConfigurationHandler;
 import org.atomnuke.config.ConfigurationReader;
+import org.atomnuke.config.model.Binding;
 import org.atomnuke.config.model.Bindings;
 import org.atomnuke.config.model.EventProcessingSystem;
 import org.atomnuke.config.model.Eventlet;
 import org.atomnuke.config.model.Eventlets;
 import org.atomnuke.config.model.Relay;
-import org.atomnuke.config.model.RelayBinding;
 import org.atomnuke.config.model.Relays;
 import org.atomnuke.config.model.Sink;
 import org.atomnuke.config.model.Sinks;
@@ -90,23 +89,13 @@ public abstract class AbstractNukeCommand extends AbstractCommand {
       return cfgHandler.getConfiguration().getEps().getEventlets().getEventlet();
    }
 
-   protected Bindings getBindings(ConfigurationHandler cfgHandler) throws ConfigurationException {
+   protected List<Binding> getBindings(ConfigurationHandler cfgHandler) throws ConfigurationException {
       if (cfgHandler.getConfiguration().getBindings() == null) {
          final Bindings bindings = new Bindings();
          cfgHandler.getConfiguration().setBindings(bindings);
       }
 
-      return cfgHandler.getConfiguration().getBindings();
-   }
-
-   protected RelayBinding getRelayBinding(ConfigurationHandler cfgHandler, String relayBindingId) throws ConfigurationException {
-      for (RelayBinding relayBinding : getBindings(cfgHandler).getRelay()) {
-         if (relayBinding.getId().equals(relayBindingId)) {
-            return relayBinding;
-         }
-      }
-
-      return null;
+      return cfgHandler.getConfiguration().getBindings().getBinding();
    }
 
    protected Relay findRelay(String id) throws ConfigurationException {

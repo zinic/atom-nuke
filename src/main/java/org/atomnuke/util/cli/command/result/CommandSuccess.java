@@ -7,7 +7,7 @@ package org.atomnuke.util.cli.command.result;
 public class CommandSuccess extends MessageResult {
 
    public CommandSuccess() {
-      this("");
+      this("Ok.");
    }
 
    public CommandSuccess(String message) {

@@ -10,7 +10,7 @@ import org.atomnuke.util.cli.command.AbstractCommandList;
 public class SourceCommands extends AbstractCommandList {
 
    public SourceCommands(ConfigurationReader configurationReader) {
-      super(new Add(configurationReader), new Delete(configurationReader), new List(configurationReader));
+      super(new AddSource(configurationReader), new DeleteSource(configurationReader), new ListSources(configurationReader));
    }
 
    @Override

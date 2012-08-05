@@ -13,11 +13,11 @@ import org.atomnuke.util.cli.command.result.CommandSuccess;
  *
  * @author zinic
  */
-   public class Delete extends AbstractNukeCommand {
+   public class DeleteSource extends AbstractNukeCommand {
 
    private static final int SINK_ID = 0;
 
-   public Delete(ConfigurationReader configurationReader) {
+   public DeleteSource(ConfigurationReader configurationReader) {
       super(configurationReader);
    }
 

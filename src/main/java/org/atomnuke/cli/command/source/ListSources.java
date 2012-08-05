@@ -11,9 +11,9 @@ import org.atomnuke.util.cli.command.result.MessageResult;
  *
  * @author zinic
  */
-public class List extends AbstractNukeCommand {
+public class ListSources extends AbstractNukeCommand {
 
-   public List(ConfigurationReader configurationReader) {
+   public ListSources(ConfigurationReader configurationReader) {
       super(configurationReader);
    }
 

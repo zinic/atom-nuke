@@ -22,6 +22,6 @@ public class EPSCommands extends AbstractCommandList {
 
    @Override
    public String getCommandDescription() {
-      return "Event processing system commands.";
+      return "Relay and eventlet commands.";
    }
 }

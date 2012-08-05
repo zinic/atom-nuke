@@ -206,8 +206,7 @@
       </xs:annotation>
         
       <xs:sequence>
-         <xs:element name="listener" type="nuke:ListenerBinding" minOccurs="0" maxOccurs="unbounded" />
-         <xs:element name="relay" type="nuke:RelayBinding" minOccurs="0" maxOccurs="unbounded" />
+         <xs:element name="binding" type="nuke:Binding" minOccurs="0" maxOccurs="unbounded" />
       </xs:sequence>
    </xs:complexType>
    
@@ -227,67 +226,23 @@
             </xs:documentation>
          </xs:annotation>
       </xs:attribute>
-   </xs:complexType>
-   
-   <xs:complexType name="ListenerBinding">
-      <xs:complexContent>
-         <xs:extension base="nuke:Binding">
-            <xs:annotation>
-               <xs:documentation>
-                  <html:p>
-                  </html:p>
-               </xs:documentation>
-            </xs:annotation>
-            
-            <xs:attribute name="source-id" type="xs:string" use="required">
-               <xs:annotation>
-                  <xs:documentation>
-                     <html:p>
-                     </html:p>
-                  </xs:documentation>
-               </xs:annotation>
-            </xs:attribute>
-            
-            <xs:attribute name="listener-id" type="xs:string" use="required">
-               <xs:annotation>
-                  <xs:documentation>
-                     <html:p>
-                     </html:p>
-                  </xs:documentation>
-               </xs:annotation>
-            </xs:attribute>
-         </xs:extension>
-      </xs:complexContent>
-   </xs:complexType>
-   
-   <xs:complexType name="RelayBinding">
-      <xs:complexContent>
-         <xs:extension base="nuke:Binding">
-            <xs:annotation>
-               <xs:documentation>
-                  <html:p>
-                  </html:p>
-               </xs:documentation>
-            </xs:annotation>
-
-            <xs:attribute name="listener-id" type="xs:string" use="required">
-               <xs:annotation>
-                  <xs:documentation>
-                     <html:p>
-                     </html:p>
-                  </xs:documentation>
-               </xs:annotation>
-            </xs:attribute>
-            
-            <xs:attribute name="relay-id" type="xs:string" use="required">
-               <xs:annotation>
-                  <xs:documentation>
-                     <html:p>
-                     </html:p>
-                  </xs:documentation>
-               </xs:annotation>
-            </xs:attribute>
-         </xs:extension>
-      </xs:complexContent>
+                
+      <xs:attribute name="target" type="xs:string" use="required">
+         <xs:annotation>
+            <xs:documentation>
+               <html:p>
+               </html:p>
+            </xs:documentation>
+         </xs:annotation>
+      </xs:attribute>
+                
+      <xs:attribute name="receiver" type="xs:string" use="required">
+         <xs:annotation>
+            <xs:documentation>
+               <html:p>
+               </html:p>
+            </xs:documentation>
+         </xs:annotation>
+      </xs:attribute>
    </xs:complexType>
 </xs:schema>

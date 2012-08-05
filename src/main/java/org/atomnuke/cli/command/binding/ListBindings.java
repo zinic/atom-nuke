@@ -1,9 +1,9 @@
-package org.atomnuke.command.sink;
+package org.atomnuke.cli.command.binding;
 
 import org.atomnuke.cli.command.AbstractNukeCommand;
 import org.atomnuke.config.ConfigurationHandler;
 import org.atomnuke.config.ConfigurationReader;
-import org.atomnuke.config.model.Sink;
+import org.atomnuke.config.model.Binding;
 import org.atomnuke.util.cli.command.result.CommandResult;
 import org.atomnuke.util.cli.command.result.MessageResult;
 
@@ -11,9 +11,9 @@ import org.atomnuke.util.cli.command.result.MessageResult;
  *
  * @author zinic
  */
-public class List extends AbstractNukeCommand {
+public class ListBindings extends AbstractNukeCommand {
 
-   public List(ConfigurationReader configurationReader) {
+   public ListBindings(ConfigurationReader configurationReader) {
       super(configurationReader);
    }
 
@@ -24,7 +24,7 @@ public class List extends AbstractNukeCommand {
 
    @Override
    public String getCommandDescription() {
-      return "Lists all registered sinks.";
+      return "Lists all registered bindings.";
    }
 
    @Override
@@ -32,8 +32,8 @@ public class List extends AbstractNukeCommand {
       final ConfigurationHandler cfgHandler = getConfigurationReader().readConfiguration();
       final StringBuilder output = new StringBuilder();
 
-      for (Sink sink : getSinks(cfgHandler)) {
-         output.append("Sink definition, \"").append(sink.getId()).append("\" binds ").append(sink.getHref()).append(" as language type ").append(sink.getType().name().toLowerCase()).append("\n");
+      for (Binding binding : getBindings(cfgHandler)) {
+         output.append("Binding definition, ").append(binding.getId()).append(" binds reciever ").append(binding.getReceiver()).append(" to target ").append(binding.getTarget()).append("\n");
       }
 
       return new MessageResult(output.toString());

@@ -13,11 +13,11 @@ import org.atomnuke.util.cli.command.result.CommandSuccess;
  *
  * @author zinic
  */
-public class Add extends AbstractNukeCommand {
+public class AddSource extends AbstractNukeCommand {
 
    private static final int SOURCE_ID = 0, SOURCE_LANG = 1, SOURCE_REFERENCE = 2;
 
-   public Add(ConfigurationReader configurationReader) {
+   public AddSource(ConfigurationReader configurationReader) {
       super(configurationReader);
    }
 
