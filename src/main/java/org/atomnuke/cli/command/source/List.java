@@ -33,7 +33,7 @@ public class List extends AbstractNukeCommand {
       final StringBuilder output = new StringBuilder();
 
       for (Source source : getSources(cfgHandler)) {
-         output.append("Source ").append(source.getId()).append(" binds ").append(source.getHref()).append(" as language type ").append(source.getType().name()).append("\n");
+         output.append("Source definition, \"").append(source.getId()).append("\" binds ").append(source.getHref()).append(" as language type ").append(source.getType().name().toLowerCase()).append("\n");
       }
 
       return new MessageResult(output.toString());

@@ -1,12 +1,10 @@
 package org.atomnuke.cli.command.eps.eventlet;
 
-import org.atomnuke.cli.command.eps.relay.*;
-import org.atomnuke.cli.command.source.*;
 import java.util.Iterator;
 import org.atomnuke.cli.command.AbstractNukeCommand;
 import org.atomnuke.config.ConfigurationHandler;
 import org.atomnuke.config.ConfigurationReader;
-import org.atomnuke.config.model.Source;
+import org.atomnuke.config.model.Eventlet;
 import org.atomnuke.util.cli.command.result.CommandFailure;
 import org.atomnuke.util.cli.command.result.CommandResult;
 import org.atomnuke.util.cli.command.result.CommandSuccess;
@@ -15,9 +13,9 @@ import org.atomnuke.util.cli.command.result.CommandSuccess;
  *
  * @author zinic
  */
-   public class DeleteEventlet extends AbstractNukeCommand {
+public class DeleteEventlet extends AbstractNukeCommand {
 
-   private static final int SINK_ID = 0;
+   private static final int EVENTLET_ID = 0;
 
    public DeleteEventlet(ConfigurationReader configurationReader) {
       super(configurationReader);
@@ -30,7 +28,7 @@ import org.atomnuke.util.cli.command.result.CommandSuccess;
 
    @Override
    public String getCommandDescription() {
-      return "Removes a sink definition. This will unbind any sources tied to the sink being deleted.";
+      return "Removes an eventlet definition. This will unbind the eventlet from all relays its registered to.";
    }
 
    @Override
@@ -41,15 +39,15 @@ import org.atomnuke.util.cli.command.result.CommandSuccess;
 
       final ConfigurationHandler cfgHandler = getConfigurationReader().readConfiguration();
 
-      for (Iterator<Source> sourceItr = getSources(cfgHandler).iterator(); sourceItr.hasNext();) {
-         if (sourceItr.next().getId().equals(arguments[SINK_ID])) {
-            sourceItr.remove();
+      for (Iterator<Eventlet> eventletItr = getEventlets(cfgHandler).iterator(); eventletItr.hasNext();) {
+         if (eventletItr.next().getId().equals(arguments[EVENTLET_ID])) {
+            eventletItr.remove();
             cfgHandler.write();
-            
+
             return new CommandSuccess();
          }
       }
 
-      return new CommandFailure("No source with an id matching, \"" + arguments[SINK_ID] + "\" seems to exist.");
+      return new CommandFailure("No eventlet with an id matching, \"" + arguments[EVENTLET_ID] + "\" seems to exist.");
    }
 }

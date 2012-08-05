@@ -1,11 +1,9 @@
 package org.atomnuke.cli.command.eps.eventlet;
 
-import org.atomnuke.cli.command.eps.relay.*;
-import org.atomnuke.cli.command.source.*;
 import org.atomnuke.cli.command.AbstractNukeCommand;
 import org.atomnuke.config.ConfigurationHandler;
 import org.atomnuke.config.ConfigurationReader;
-import org.atomnuke.config.model.Source;
+import org.atomnuke.config.model.Eventlet;
 import org.atomnuke.util.cli.command.result.CommandResult;
 import org.atomnuke.util.cli.command.result.MessageResult;
 
@@ -34,8 +32,8 @@ public class ListEventlets extends AbstractNukeCommand {
       final ConfigurationHandler cfgHandler = getConfigurationReader().readConfiguration();
       final StringBuilder output = new StringBuilder();
 
-      for (Source source : getSources(cfgHandler)) {
-         output.append("Source ").append(source.getId()).append(" binds ").append(source.getHref()).append(" as language type ").append(source.getType().name()).append("\n");
+      for (Eventlet eventlet : getEventlets(cfgHandler)) {
+         output.append("Eventlet definition, \"").append(eventlet.getId()).append("\" binds ").append(eventlet.getHref()).append(" as language type ").append(eventlet.getType().name().toLowerCase()).append("\n");
       }
 
       return new MessageResult(output.toString());

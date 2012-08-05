@@ -1,9 +1,17 @@
 package org.atomnuke.cli.command;
 
+import java.util.Collections;
 import java.util.List;
 import org.atomnuke.config.ConfigurationException;
 import org.atomnuke.config.ConfigurationHandler;
 import org.atomnuke.config.ConfigurationReader;
+import org.atomnuke.config.model.Bindings;
+import org.atomnuke.config.model.EventProcessingSystem;
+import org.atomnuke.config.model.Eventlet;
+import org.atomnuke.config.model.Eventlets;
+import org.atomnuke.config.model.Relay;
+import org.atomnuke.config.model.RelayBinding;
+import org.atomnuke.config.model.Relays;
 import org.atomnuke.config.model.Sink;
 import org.atomnuke.config.model.Sinks;
 import org.atomnuke.config.model.Source;
@@ -56,19 +64,75 @@ public abstract class AbstractNukeCommand extends AbstractCommand {
       return cfgHandler.getConfiguration().getSinks().getSink();
    }
 
-   protected Source findSource(String id) throws ConfigurationException {
-      final ConfigurationHandler cfgHandler = getConfigurationReader().readConfiguration();
+   protected List<Relay> getRelays(ConfigurationHandler cfgHandler) throws ConfigurationException {
+      if (cfgHandler.getConfiguration().getEps() == null) {
+         final EventProcessingSystem eps = new EventProcessingSystem();
+         eps.setEventlets(new Eventlets());
+         eps.setRelays(new Relays());
 
-      if (cfgHandler != null) {
-         if (cfgHandler.getConfiguration().getSources() == null) {
-            cfgHandler.getConfiguration().setSources(new Sources());
-            cfgHandler.write();
+         cfgHandler.getConfiguration().setEps(eps);
+         cfgHandler.write();
+      }
+
+      return cfgHandler.getConfiguration().getEps().getRelays().getRelay();
+   }
+
+   protected List<Eventlet> getEventlets(ConfigurationHandler cfgHandler) throws ConfigurationException {
+      if (cfgHandler.getConfiguration().getEps() == null) {
+         final EventProcessingSystem eps = new EventProcessingSystem();
+         eps.setEventlets(new Eventlets());
+         eps.setRelays(new Relays());
+
+         cfgHandler.getConfiguration().setEps(eps);
+         cfgHandler.write();
+      }
+
+      return cfgHandler.getConfiguration().getEps().getEventlets().getEventlet();
+   }
+
+   protected Bindings getBindings(ConfigurationHandler cfgHandler) throws ConfigurationException {
+      if (cfgHandler.getConfiguration().getBindings() == null) {
+         final Bindings bindings = new Bindings();
+         cfgHandler.getConfiguration().setBindings(bindings);
+      }
+
+      return cfgHandler.getConfiguration().getBindings();
+   }
+
+   protected RelayBinding getRelayBinding(ConfigurationHandler cfgHandler, String relayBindingId) throws ConfigurationException {
+      for (RelayBinding relayBinding : getBindings(cfgHandler).getRelay()) {
+         if (relayBinding.getId().equals(relayBindingId)) {
+            return relayBinding;
          }
+      }
 
-         for (Source source : cfgHandler.getConfiguration().getSources().getSource()) {
-            if (source.getId().equals(id)) {
-               return source;
-            }
+      return null;
+   }
+
+   protected Relay findRelay(String id) throws ConfigurationException {
+      for (Relay relay : getRelays(getConfigurationReader().readConfiguration())) {
+         if (relay.getId().equals(id)) {
+            return relay;
+         }
+      }
+
+      return null;
+   }
+
+   protected Eventlet findEventlet(String eventletId) throws ConfigurationException {
+      for (Eventlet eventlet : getEventlets(getConfigurationReader().readConfiguration())) {
+         if (eventlet.getId().equals(eventletId)) {
+            return eventlet;
+         }
+      }
+
+      return null;
+   }
+
+   protected Source findSource(String id) throws ConfigurationException {
+      for (Source source : getSources(getConfigurationReader().readConfiguration())) {
+         if (source.getId().equals(id)) {
+            return source;
          }
       }
 
@@ -76,18 +140,9 @@ public abstract class AbstractNukeCommand extends AbstractCommand {
    }
 
    protected Sink findSink(String id) throws ConfigurationException {
-      final ConfigurationHandler cfgHandler = getConfigurationReader().readConfiguration();
-
-      if (cfgHandler != null) {
-         if (cfgHandler.getConfiguration().getSinks() == null) {
-            cfgHandler.getConfiguration().setSinks(new Sinks());
-            cfgHandler.write();
-         }
-
-         for (Sink sink : cfgHandler.getConfiguration().getSinks().getSink()) {
-            if (sink.getId().equals(id)) {
-               return sink;
-            }
+      for (Sink sink : getSinks(getConfigurationReader().readConfiguration())) {
+         if (sink.getId().equals(id)) {
+            return sink;
          }
       }
 

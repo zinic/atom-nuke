@@ -15,7 +15,7 @@ import org.atomnuke.util.cli.command.result.CommandSuccess;
  */
 public class Add extends AbstractNukeCommand {
 
-   private static final int SOURCE_ID = 0, SINK_LANGUAGE = 1, SINK_REFERENCE = 2;
+   private static final int SOURCE_ID = 0, SOURCE_LANG = 1, SOURCE_REFERENCE = 2;
 
    public Add(ConfigurationReader configurationReader) {
       super(configurationReader);
@@ -45,9 +45,9 @@ public class Add extends AbstractNukeCommand {
       final LanguageType sinkLanguageType;
 
       try {
-         sinkLanguageType = LanguageType.fromValue(arguments[SINK_LANGUAGE]);
+         sinkLanguageType = LanguageType.fromValue(arguments[SOURCE_LANG]);
       } catch (IllegalArgumentException iae) {
-         return new CommandFailure("Language \"" + arguments[SINK_LANGUAGE] + "\" not valid. Language must be one of: java, javascript, python.");
+         return new CommandFailure("Language \"" + arguments[SOURCE_LANG] + "\" not valid. Language must be one of: java, javascript, python.");
       }
 
       if (sinkLanguageType == null) {
@@ -57,7 +57,7 @@ public class Add extends AbstractNukeCommand {
       final Source newSource = new Source();
       newSource.setId(arguments[SOURCE_ID]);
       newSource.setType(sinkLanguageType);
-      newSource.setHref(arguments[SINK_REFERENCE]);
+      newSource.setHref(arguments[SOURCE_REFERENCE]);
 
       getSources(cfgHandler).add(newSource);
       cfgHandler.write();
