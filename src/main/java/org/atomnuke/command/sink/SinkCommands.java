@@ -10,7 +10,7 @@ import org.atomnuke.util.cli.command.AbstractCommandList;
 public class SinkCommands extends AbstractCommandList {
 
    public SinkCommands(ConfigurationReader configurationReader) {
-      super(new Add(configurationReader), new DeleteSink(configurationReader), new ListSinks(configurationReader));
+      super(new AddSink(configurationReader), new DeleteSink(configurationReader), new ListSinks(configurationReader));
    }
 
    @Override

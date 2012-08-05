@@ -13,9 +13,9 @@ import org.atomnuke.util.cli.command.result.CommandSuccess;
  *
  * @author zinic
  */
-   public class DeleteSource extends AbstractNukeCommand {
+public class DeleteSource extends AbstractNukeCommand {
 
-   private static final int SINK_ID = 0;
+   private static final int SOURCE_ID = 0;
 
    public DeleteSource(ConfigurationReader configurationReader) {
       super(configurationReader);
@@ -28,7 +28,7 @@ import org.atomnuke.util.cli.command.result.CommandSuccess;
 
    @Override
    public String getCommandDescription() {
-      return "Removes a sink definition. This will unbind any sources tied to the sink being deleted.";
+      return "Removes a source definition. This will unbind any recievers tied to the source being deleted.";
    }
 
    @Override
@@ -39,15 +39,18 @@ import org.atomnuke.util.cli.command.result.CommandSuccess;
 
       final ConfigurationHandler cfgHandler = getConfigurationReader().readConfiguration();
 
-      for (Iterator<Source> sourceItr = getSources(cfgHandler).iterator(); sourceItr.hasNext();) {
-         if (sourceItr.next().getId().equals(arguments[SINK_ID])) {
+      for (Iterator<Source> sourceItr = cfgHandler.getSources().iterator(); sourceItr.hasNext();) {
+         if (sourceItr.next().getId().equals(arguments[SOURCE_ID])) {
             sourceItr.remove();
-            cfgHandler.write();
+            unbindTarget(cfgHandler, arguments[SOURCE_ID]);
             
+            cfgHandler.write();
             return new CommandSuccess();
          }
       }
+      
+      
 
-      return new CommandFailure("No source with an id matching, \"" + arguments[SINK_ID] + "\" seems to exist.");
+      return new CommandFailure("No source with an id matching, \"" + arguments[SOURCE_ID] + "\" seems to exist.");
    }
 }

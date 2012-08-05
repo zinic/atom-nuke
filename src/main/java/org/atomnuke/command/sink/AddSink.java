@@ -13,11 +13,11 @@ import org.atomnuke.util.cli.command.result.CommandSuccess;
  *
  * @author zinic
  */
-public class Add extends AbstractNukeCommand {
+public class AddSink extends AbstractNukeCommand {
 
    private static final int SINK_ID = 0, SINK_LANGUAGE = 1, SINK_REFERENCE = 2;
 
-   public Add(ConfigurationReader configurationReader) {
+   public AddSink(ConfigurationReader configurationReader) {
       super(configurationReader);
    }
 
@@ -39,7 +39,7 @@ public class Add extends AbstractNukeCommand {
 
       final ConfigurationHandler cfgHandler = getConfigurationReader().readConfiguration();
 
-      if (findSink(arguments[SINK_ID]) != null) {
+      if (cfgHandler.findSink(arguments[SINK_ID]) != null) {
          return new CommandFailure("A sink with the id \"" + arguments[SINK_ID] + "\" already exists.");
       }
 
@@ -60,7 +60,7 @@ public class Add extends AbstractNukeCommand {
       newSink.setType(sinkLanguageType);
       newSink.setHref(arguments[SINK_REFERENCE]);
 
-      cfgHandler.getConfiguration().getSinks().getSink().add(newSink);
+      cfgHandler.getSinks().add(newSink);
       cfgHandler.write();
       
       return new CommandSuccess();

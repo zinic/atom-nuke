@@ -39,7 +39,7 @@ public class AddEventlet extends AbstractNukeCommand {
 
       final ConfigurationHandler cfgHandler = getConfigurationReader().readConfiguration();
 
-      if (findEventlet(arguments[EVENTLET_ID]) != null) {
+      if (cfgHandler.findEventlet(arguments[EVENTLET_ID]) != null) {
          return new CommandFailure("An eventlet with the id \"" + arguments[EVENTLET_ID] + "\" already exists.");
       }
 
@@ -60,7 +60,7 @@ public class AddEventlet extends AbstractNukeCommand {
       newEventlet.setType(sinkLanguageType);
       newEventlet.setHref(arguments[EVENTLET_REFERENCE]);
 
-      getEventlets(cfgHandler).add(newEventlet);
+      cfgHandler.getEventlets().add(newEventlet);
       cfgHandler.write();
 
       return new CommandSuccess();

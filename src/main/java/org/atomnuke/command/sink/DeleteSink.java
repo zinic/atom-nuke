@@ -4,6 +4,7 @@ import java.util.Iterator;
 import org.atomnuke.cli.command.AbstractNukeCommand;
 import org.atomnuke.config.ConfigurationHandler;
 import org.atomnuke.config.ConfigurationReader;
+import org.atomnuke.config.model.Binding;
 import org.atomnuke.config.model.Sink;
 import org.atomnuke.util.cli.command.result.CommandFailure;
 import org.atomnuke.util.cli.command.result.CommandResult;
@@ -13,7 +14,7 @@ import org.atomnuke.util.cli.command.result.CommandSuccess;
  *
  * @author zinic
  */
-   public class DeleteSink extends AbstractNukeCommand {
+public class DeleteSink extends AbstractNukeCommand {
 
    private static final int SINK_ID = 0;
 
@@ -28,7 +29,7 @@ import org.atomnuke.util.cli.command.result.CommandSuccess;
 
    @Override
    public String getCommandDescription() {
-      return "Removes a sink definition. This will unbind any sources tied to the sink being deleted.";
+      return "Removes a sink definition. This will unbind any targets bound to the sink being deleted.";
    }
 
    @Override
@@ -39,15 +40,15 @@ import org.atomnuke.util.cli.command.result.CommandSuccess;
 
       final ConfigurationHandler cfgHandler = getConfigurationReader().readConfiguration();
 
-      for (Iterator<Sink> sinkItr = getSinks(cfgHandler).iterator(); sinkItr.hasNext();) {
+      for (Iterator<Sink> sinkItr = cfgHandler.getSinks().iterator(); sinkItr.hasNext();) {
          if (sinkItr.next().getId().equals(arguments[SINK_ID])) {
             sinkItr.remove();
-            cfgHandler.write();
+            unbindReciever(cfgHandler, arguments[SINK_ID]);
             
-            return new CommandSuccess();
+            cfgHandler.write();
+            break;
          }
       }
-
-      return new CommandFailure("No sink with an id matching, \"" + arguments[SINK_ID] + "\" seems to exist.");
+         return new CommandFailure("No sink with an id matching, \"" + arguments[SINK_ID] + "\" seems to exist.");
    }
 }

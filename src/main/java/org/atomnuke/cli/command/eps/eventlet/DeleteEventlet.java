@@ -39,11 +39,12 @@ public class DeleteEventlet extends AbstractNukeCommand {
 
       final ConfigurationHandler cfgHandler = getConfigurationReader().readConfiguration();
 
-      for (Iterator<Eventlet> eventletItr = getEventlets(cfgHandler).iterator(); eventletItr.hasNext();) {
+      for (Iterator<Eventlet> eventletItr = cfgHandler.getEventlets().iterator(); eventletItr.hasNext();) {
          if (eventletItr.next().getId().equals(arguments[EVENTLET_ID])) {
             eventletItr.remove();
+            unbindReciever(cfgHandler, arguments[EVENTLET_ID]);
+            
             cfgHandler.write();
-
             return new CommandSuccess();
          }
       }

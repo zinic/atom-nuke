@@ -39,7 +39,7 @@ public class DeleteBinding extends AbstractNukeCommand {
 
       final ConfigurationHandler cfgHandler = getConfigurationReader().readConfiguration();
 
-      for (Iterator<Binding> bindingItr = getBindings(cfgHandler).iterator(); bindingItr.hasNext();) {
+      for (Iterator<Binding> bindingItr = cfgHandler.getBindings().iterator(); bindingItr.hasNext();) {
          if (bindingItr.next().getId().equals(arguments[BINDING_ID])) {
             bindingItr.remove();
             cfgHandler.write();

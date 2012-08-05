@@ -32,8 +32,8 @@ public class ListSinks extends AbstractNukeCommand {
       final ConfigurationHandler cfgHandler = getConfigurationReader().readConfiguration();
       final StringBuilder output = new StringBuilder();
 
-      for (Sink sink : getSinks(cfgHandler)) {
-         output.append("Sink definition, \"").append(sink.getId()).append("\" binds ").append(sink.getHref()).append(" as language type ").append(sink.getType().name().toLowerCase()).append("\n");
+      for (Sink sink : cfgHandler.getSinks()) {
+         output.append("Sink definition, ").append(sink.getId()).append(" binds ").append(sink.getHref()).append(" as language type ").append(sink.getType().name().toLowerCase()).append("\n");
       }
 
       return new MessageResult(output.toString());

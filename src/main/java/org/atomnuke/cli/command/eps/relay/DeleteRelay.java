@@ -28,7 +28,7 @@ import org.atomnuke.util.cli.command.result.CommandSuccess;
 
    @Override
    public String getCommandDescription() {
-      return "Removes a relay definition. This will unbind any eventlets tied to the relay being deleted.";
+      return "Removes a relay definition. This will unbind any sources or eventlets bound to the relay being deleted.";
    }
 
    @Override
@@ -39,11 +39,13 @@ import org.atomnuke.util.cli.command.result.CommandSuccess;
 
       final ConfigurationHandler cfgHandler = getConfigurationReader().readConfiguration();
 
-      for (Iterator<Relay> relayItr = getRelays(cfgHandler).iterator(); relayItr.hasNext();) {
+      for (Iterator<Relay> relayItr = cfgHandler.getRelays().iterator(); relayItr.hasNext();) {
          if (relayItr.next().getId().equals(arguments[RELAY_ID])) {
             relayItr.remove();
-            cfgHandler.write();
+            unbindTarget(cfgHandler, arguments[RELAY_ID]);
+            unbindReciever(cfgHandler, arguments[RELAY_ID]);
             
+            cfgHandler.write();
             return new CommandSuccess();
          }
       }

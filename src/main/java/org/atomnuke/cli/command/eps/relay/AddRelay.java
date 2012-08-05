@@ -38,14 +38,14 @@ public class AddRelay extends AbstractNukeCommand {
       }
       final ConfigurationHandler cfgHandler = getConfigurationReader().readConfiguration();
 
-      if (findRelay(arguments[RELAY_ID]) != null) {
+      if (cfgHandler.findRelay(arguments[RELAY_ID]) != null) {
          return new CommandFailure("A relay with the id \"" + arguments[RELAY_ID] + "\" already exists.");
       }
 
       final Relay newRelay = new Relay();
       newRelay.setId(arguments[RELAY_ID]);
 
-      getRelays(cfgHandler).add(newRelay);
+      cfgHandler.getRelays().add(newRelay);
       cfgHandler.write();
 
       return new CommandSuccess();

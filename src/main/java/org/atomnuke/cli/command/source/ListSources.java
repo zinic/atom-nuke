@@ -24,7 +24,7 @@ public class ListSources extends AbstractNukeCommand {
 
    @Override
    public String getCommandDescription() {
-      return "Lists all registered sinks.";
+      return "Lists all registered sources.";
    }
 
    @Override
@@ -32,8 +32,8 @@ public class ListSources extends AbstractNukeCommand {
       final ConfigurationHandler cfgHandler = getConfigurationReader().readConfiguration();
       final StringBuilder output = new StringBuilder();
 
-      for (Source source : getSources(cfgHandler)) {
-         output.append("Source definition, \"").append(source.getId()).append("\" binds ").append(source.getHref()).append(" as language type ").append(source.getType().name().toLowerCase()).append("\n");
+      for (Source source : cfgHandler.getSources()) {
+         output.append("Source definition, ").append(source.getId()).append(" binds ").append(source.getHref()).append(" as language type ").append(source.getType().name().toLowerCase()).append("\n");
       }
 
       return new MessageResult(output.toString());

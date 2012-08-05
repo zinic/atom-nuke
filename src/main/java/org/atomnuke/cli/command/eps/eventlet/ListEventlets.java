@@ -24,7 +24,7 @@ public class ListEventlets extends AbstractNukeCommand {
 
    @Override
    public String getCommandDescription() {
-      return "Lists all registered sinks.";
+      return "Lists all registered relay eventlets.";
    }
 
    @Override
@@ -32,8 +32,8 @@ public class ListEventlets extends AbstractNukeCommand {
       final ConfigurationHandler cfgHandler = getConfigurationReader().readConfiguration();
       final StringBuilder output = new StringBuilder();
 
-      for (Eventlet eventlet : getEventlets(cfgHandler)) {
-         output.append("Eventlet definition, \"").append(eventlet.getId()).append("\" binds ").append(eventlet.getHref()).append(" as language type ").append(eventlet.getType().name().toLowerCase()).append("\n");
+      for (Eventlet eventlet : cfgHandler.getEventlets()) {
+         output.append("Eventlet definition, ").append(eventlet.getId()).append("\" binds ").append(eventlet.getHref()).append(" as language type ").append(eventlet.getType().name().toLowerCase()).append("\n");
       }
 
       return new MessageResult(output.toString());

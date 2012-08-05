@@ -32,7 +32,7 @@ public class ListBindings extends AbstractNukeCommand {
       final ConfigurationHandler cfgHandler = getConfigurationReader().readConfiguration();
       final StringBuilder output = new StringBuilder();
 
-      for (Binding binding : getBindings(cfgHandler)) {
+      for (Binding binding : cfgHandler.getBindings()) {
          output.append("Binding definition, ").append(binding.getId()).append(" binds reciever ").append(binding.getReceiver()).append(" to target ").append(binding.getTarget()).append("\n");
       }
 

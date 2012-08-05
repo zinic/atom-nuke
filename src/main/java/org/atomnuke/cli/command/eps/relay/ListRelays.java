@@ -32,7 +32,7 @@ public class ListRelays extends AbstractNukeCommand {
       final ConfigurationHandler cfgHandler = getConfigurationReader().readConfiguration();
       final StringBuilder output = new StringBuilder();
 
-      for (Relay relay : getRelays(cfgHandler)) {
+      for (Relay relay : cfgHandler.getRelays()) {
          output.append(relay.getId());
       }
 

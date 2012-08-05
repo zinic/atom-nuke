@@ -38,7 +38,7 @@ public class AddSource extends AbstractNukeCommand {
       }
       final ConfigurationHandler cfgHandler = getConfigurationReader().readConfiguration();
 
-      if (findSource(arguments[SOURCE_ID]) != null) {
+      if (cfgHandler.findSource(arguments[SOURCE_ID]) != null) {
          return new CommandFailure("A source with the id \"" + arguments[SOURCE_ID] + "\" already exists.");
       }
 
@@ -59,7 +59,7 @@ public class AddSource extends AbstractNukeCommand {
       newSource.setType(sinkLanguageType);
       newSource.setHref(arguments[SOURCE_REFERENCE]);
 
-      getSources(cfgHandler).add(newSource);
+      cfgHandler.getSources().add(newSource);
       cfgHandler.write();
 
       return new CommandSuccess();

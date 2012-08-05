@@ -37,18 +37,18 @@ public class AddBinding extends AbstractNukeCommand {
       if (arguments.length != 2) {
          return new CommandFailure("Creating a binding requires two arguments: <target-id> <receiver-id>");
       }
+      
+      final ConfigurationHandler cfgHandler = getConfigurationReader().readConfiguration();
 
-      if (findSource(arguments[TARGET_ID]) == null && findRelay(arguments[TARGET_ID]) == null) {
+      if (cfgHandler.findSource(arguments[TARGET_ID]) == null && cfgHandler.findRelay(arguments[TARGET_ID]) == null) {
          return new CommandFailure("Unable to locate a source or relay with the id, \"" + arguments[TARGET_ID] + "\"");
       }
       
-      if (findSink(arguments[RECEIVER_ID]) == null && findRelay(arguments[RECEIVER_ID]) == null && findEventlet(arguments[RECEIVER_ID]) == null) {
+      if (cfgHandler.findSink(arguments[RECEIVER_ID]) == null && cfgHandler.findRelay(arguments[RECEIVER_ID]) == null && cfgHandler.findEventlet(arguments[RECEIVER_ID]) == null) {
          return new CommandFailure("Unable to locate a sink or eventlet with the id, \"" + arguments[RECEIVER_ID] + "\"");
       }
 
-      final ConfigurationHandler cfgHandler = getConfigurationReader().readConfiguration();
-      
-      for (Binding binding : getBindings(cfgHandler)) {
+      for (Binding binding : cfgHandler.getBindings()) {
          if (binding.getTarget().equals(arguments[TARGET_ID]) && binding.getReceiver().equals(arguments[RECEIVER_ID])) {
             return new CommandFailure("Binding already exists as binding, \"" + binding.getId() + "\"");
          }
@@ -59,7 +59,7 @@ public class AddBinding extends AbstractNukeCommand {
       newBinding.setTarget(arguments[TARGET_ID]);
       newBinding.setReceiver(arguments[RECEIVER_ID]);
       
-      getBindings(cfgHandler).add(newBinding);
+      cfgHandler.getBindings().add(newBinding);
       cfgHandler.write();
       
       return new CommandSuccess();
