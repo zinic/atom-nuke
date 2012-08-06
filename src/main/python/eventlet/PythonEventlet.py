@@ -1,10 +1,5 @@
 from org.atomnuke.listener.eps.eventlet import AtomEventlet
 
-
-#class AtomEventlet:
-#   def __init__(self):
-#      print("init")
-
 # Python <3
 class PythonEventlet(AtomEventlet):
    def init(self, taskContext):
