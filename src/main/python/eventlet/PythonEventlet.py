@@ -1,6 +1,4 @@
 from org.atomnuke.listener.eps.eventlet import AtomEventlet
-from org.atomnuke.atom.model import Entry
-from org.atomnuke.atom.model import Category
 
 # Python <3
 class PythonEventlet(AtomEventlet):
