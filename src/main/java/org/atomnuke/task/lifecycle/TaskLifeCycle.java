@@ -1,6 +1,5 @@
 package org.atomnuke.task.lifecycle;
 
-import java.util.UUID;
 import org.atomnuke.task.context.TaskContext;
 
 /**

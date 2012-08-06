@@ -1,6 +1,8 @@
 package org.atomnuke.cli.command.server;
 
 import org.atomnuke.Nuke;
+import org.atomnuke.NukeEnv;
+import org.atomnuke.bindings.loader.DirectoryLoaderManager;
 import org.atomnuke.bindings.resolver.BindingResolver;
 import org.atomnuke.bindings.resolver.BindingResolverImpl;
 import org.atomnuke.cli.command.AbstractNukeCommand;
@@ -33,6 +35,9 @@ public class Start extends AbstractNukeCommand {
    @Override
    public CommandResult perform(String[] arguments) throws Exception {
       final BindingResolver bindingsResolver = BindingResolverImpl.defaultResolver();
+      final DirectoryLoaderManager loaderManager = new DirectoryLoaderManager(NukeEnv.NUKE_LIB, bindingsResolver.registeredBindingContexts());
+      
+      loaderManager.load();
       
       final ConfigurationHandler cfgHandler = getConfigurationReader().readConfiguration();
       final ServerBuilder serverBuilder = new ServerBuilder(cfgHandler, bindingsResolver);

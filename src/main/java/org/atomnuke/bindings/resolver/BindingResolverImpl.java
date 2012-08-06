@@ -22,11 +22,10 @@ public class BindingResolverImpl implements BindingResolver {
 
    private static final Logger LOG = LoggerFactory.getLogger(BindingResolverImpl.class);
    private static final BindingResolver DEFAULT_RESOLVER = new BindingResolverImpl(new ClasspathBindingContext(), new PythonInterpreterContext(LOG.isDebugEnabled()));
-   
+
    public static BindingResolver defaultResolver() {
       return DEFAULT_RESOLVER;
    }
-   
    private final List<BindingContext> contexts;
 
    public BindingResolverImpl() {
@@ -35,6 +34,11 @@ public class BindingResolverImpl implements BindingResolver {
 
    public BindingResolverImpl(BindingContext... contextArray) {
       contexts = Arrays.asList(contextArray);
+   }
+
+   @Override
+   public List<BindingContext> registeredBindingContexts() {
+      return contexts;
    }
 
    @Override
