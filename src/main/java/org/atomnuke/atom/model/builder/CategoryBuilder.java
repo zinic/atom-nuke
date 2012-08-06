@@ -9,6 +9,26 @@ import org.atomnuke.atom.model.impl.CategoryImpl;
  */
 public class CategoryBuilder extends CategoryImpl {
 
+   public String getTerm() {
+      return term;
+   }
+
+   public String getScheme() {
+      return scheme;
+   }
+
+   public String getLabel() {
+      return label;
+   }
+
+   public URI getBase() {
+      return base;
+   }
+
+   public String getLang() {
+      return lang;
+   }
+
    public CategoryBuilder setTerm(String term) {
       this.term = term;
       return this;

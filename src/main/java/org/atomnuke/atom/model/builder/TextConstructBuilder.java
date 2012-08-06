@@ -14,6 +14,22 @@ public class TextConstructBuilder extends TextConstructImpl implements ValueBuil
       this.value = new StringBuilder();
    }
 
+   public Type getType() {
+      return type;
+   }
+
+   public String getValue() {
+      return value.toString();
+   }
+
+   public URI getBase() {
+      return base;
+   }
+
+   public String getLang() {
+      return lang;
+   }
+
    public TextConstructBuilder setType(Type type) {
       this.type = type;
       return this;

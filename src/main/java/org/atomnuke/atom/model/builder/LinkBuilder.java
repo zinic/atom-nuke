@@ -12,6 +12,38 @@ public class LinkBuilder extends LinkImpl {
    public LinkBuilder() {
    }
 
+   public String getHref() {
+      return href;
+   }
+
+   public String getRel() {
+      return rel;
+   }
+
+   public String getType() {
+      return type;
+   }
+
+   public String getHreflang() {
+      return hreflang;
+   }
+
+   public String getTitle() {
+      return title;
+   }
+
+   public Integer getLength() {
+      return length;
+   }
+
+   public URI getBase() {
+      return base;
+   }
+
+   public String getLang() {
+      return lang;
+   }
+
    public LinkBuilder setHref(String href) {
       this.href = href;
       return this;

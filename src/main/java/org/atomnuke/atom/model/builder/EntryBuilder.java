@@ -2,6 +2,7 @@ package org.atomnuke.atom.model.builder;
 
 import java.net.URI;
 import java.util.LinkedList;
+import java.util.List;
 import org.atomnuke.atom.model.Author;
 import org.atomnuke.atom.model.Category;
 import org.atomnuke.atom.model.Content;
@@ -27,6 +28,62 @@ public class EntryBuilder extends EntryImpl {
       contributors = new LinkedList<Contributor>();
       categories = new LinkedList<Category>();
       links = new LinkedList<Link>();
+   }
+
+   public List<Author> getAuthors() {
+      return authors;
+   }
+
+   public List<Contributor> getContributors() {
+      return contributors;
+   }
+
+   public List<Category> getCategories() {
+      return categories;
+   }
+
+   public List<Link> getLinks() {
+      return links;
+   }
+
+   public Id getId() {
+      return id;
+   }
+
+   public Rights getRights() {
+      return rights;
+   }
+
+   public Title getTitle() {
+      return title;
+   }
+
+   public Updated getUpdated() {
+      return updated;
+   }
+
+   public Content getContent() {
+      return content;
+   }
+
+   public Summary getSummary() {
+      return summary;
+   }
+
+   public Published getPublished() {
+      return published;
+   }
+
+   public Source getSource() {
+      return source;
+   }
+
+   public URI getBase() {
+      return base;
+   }
+
+   public String getLang() {
+      return lang;
    }
 
    public EntryBuilder addAuthor(Author author) {

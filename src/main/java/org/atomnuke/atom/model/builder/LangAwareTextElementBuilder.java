@@ -12,7 +12,19 @@ public class LangAwareTextElementBuilder extends LangAwareTextElement implements
    public LangAwareTextElementBuilder() {
       value = new StringBuilder();
    }
-   
+
+   public String getValue() {
+      return value.toString();
+   }
+
+   public URI getBase() {
+      return base;
+   }
+
+   public String getLang() {
+      return lang;
+   }
+
    @Override
    public LangAwareTextElementBuilder setValue(String value) {
       this.value = new StringBuilder(value);

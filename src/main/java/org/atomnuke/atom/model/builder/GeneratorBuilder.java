@@ -13,6 +13,26 @@ public class GeneratorBuilder extends GeneratorImpl {
       value = new StringBuilder();
    }
 
+   public String getUri() {
+      return uri;
+   }
+
+   public String getVersion() {
+      return version;
+   }
+
+   public StringBuilder getValue() {
+      return value;
+   }
+
+   public URI getBase() {
+      return base;
+   }
+
+   public String getLang() {
+      return lang;
+   }
+
    public GeneratorBuilder setUri(String uri) {
       this.uri = uri;
       return this;

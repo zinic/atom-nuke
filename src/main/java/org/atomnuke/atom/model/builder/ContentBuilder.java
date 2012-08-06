@@ -13,6 +13,26 @@ public class ContentBuilder extends ContentImpl implements ValueBuilder<ContentB
       value = new StringBuilder();
    }
 
+   public String getType() {
+      return type;
+   }
+
+   public String getSrc() {
+      return src;
+   }
+
+   public String getValue() {
+      return value.toString();
+   }
+
+   public URI getBase() {
+      return base;
+   }
+
+   public String getLang() {
+      return lang;
+   }
+
    public ContentBuilder setType(String type) {
       this.type = type;
       return this;

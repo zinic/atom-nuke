@@ -1,4 +1,5 @@
 from org.atomnuke.listener.eps.eventlet import AtomEventlet
+from org.atomnuke.atom.model import *
 
 # Python <3
 class PythonEventlet(AtomEventlet):
@@ -9,5 +10,5 @@ class PythonEventlet(AtomEventlet):
       print("Python eventlet stop!")
 
    def entry(self, entry):
-      print("Entry")
+      print("Entry - ID: %s" % (entry.id().value))
 

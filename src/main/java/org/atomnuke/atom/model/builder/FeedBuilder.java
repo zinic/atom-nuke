@@ -2,6 +2,7 @@ package org.atomnuke.atom.model.builder;
 
 import java.net.URI;
 import java.util.LinkedList;
+import java.util.List;
 import org.atomnuke.atom.model.Author;
 import org.atomnuke.atom.model.Category;
 import org.atomnuke.atom.model.Contributor;
@@ -29,6 +30,66 @@ public class FeedBuilder extends FeedImpl {
       categories = new LinkedList<Category>();
       links = new LinkedList<Link>();
       entries = new LinkedList<Entry>();
+   }
+
+   public List<Author> getAuthors() {
+      return authors;
+   }
+
+   public List<Contributor> getContributors() {
+      return contributors;
+   }
+
+   public List<Category> getCategories() {
+      return categories;
+   }
+
+   public List<Link> getLinks() {
+      return links;
+   }
+
+   public List<Entry> getEntries() {
+      return entries;
+   }
+
+   public Generator getGenerator() {
+      return generator;
+   }
+
+   public Icon getIcon() {
+      return icon;
+   }
+
+   public Id getId() {
+      return id;
+   }
+
+   public Logo getLogo() {
+      return logo;
+   }
+
+   public Rights getRights() {
+      return rights;
+   }
+
+   public Subtitle getSubtitle() {
+      return subtitle;
+   }
+
+   public Title getTitle() {
+      return title;
+   }
+
+   public Updated getUpdated() {
+      return updated;
+   }
+
+   public URI getBase() {
+      return base;
+   }
+
+   public String getLang() {
+      return lang;
    }
 
    public FeedBuilder addAuthor(Author author) {
