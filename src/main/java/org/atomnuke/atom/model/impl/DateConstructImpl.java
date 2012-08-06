@@ -15,7 +15,7 @@ public abstract class DateConstructImpl extends AtomCommonAttributesImpl impleme
    protected StringBuilder dateStringBuilder;
    private Calendar date;
 
-   public Calendar asCalendar() {
+   public Calendar toCalendar() {
       if (date == null) {
          date = DatatypeConverter.parseDate(dateStringBuilder.toString());
       }
@@ -23,7 +23,7 @@ public abstract class DateConstructImpl extends AtomCommonAttributesImpl impleme
       return date;
    }
 
-   public String asText() {
+   public String toString() {
       return dateStringBuilder.toString();
    }
 }

@@ -279,7 +279,7 @@ public final class AtomWriter {
       writeLang(context, dateConstruct.lang());
       writeBase(context, dateConstruct.base());
 
-      context.getWriter().writeCharacters(dateConstruct.asText());
+      context.getWriter().writeCharacters(dateConstruct.toString());
 
       writeEndElement(context);
    }

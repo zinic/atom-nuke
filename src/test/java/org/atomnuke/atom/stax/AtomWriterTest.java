@@ -120,13 +120,13 @@ public class AtomWriterTest {
       public void assertDateConstructsAreEqual(DateConstruct originalDC, DateConstruct rereadDC) {
          assertNotNull(rereadDC.base());
          assertNotNull(rereadDC.lang());
-         assertNotNull(rereadDC.asText());
-         assertNotNull(rereadDC.asCalendar());
+         assertNotNull(rereadDC.toString());
+         assertNotNull(rereadDC.toCalendar());
 
          assertEquals(originalDC.base(), rereadDC.base());
          assertEquals(originalDC.lang(), rereadDC.lang());
-         assertEquals(originalDC.asText(), rereadDC.asText());
-         assertEquals(originalDC.asCalendar(), rereadDC.asCalendar());
+         assertEquals(originalDC.toString(), rereadDC.toString());
+         assertEquals(originalDC.toCalendar(), rereadDC.toCalendar());
       }
 
       public void assertLinksAreEqual(List<Link> originalLinks, List<Link> rereadLinks) {

@@ -199,7 +199,7 @@ public class AtomHandlerTest {
          final ParserResult result = getParser().read(openFeedResource("FeedWithUpdated.xml"));
 
          final Feed f = result.getFeed();
-         assertEquals(THAT_DATE, f.updated().asCalendar());
+         assertEquals(THAT_DATE, f.updated().toCalendar());
       }
 
       @Test
@@ -303,7 +303,7 @@ public class AtomHandlerTest {
          final ParserResult result = getParser().read(openEntryResource("EntryWithUpdated.xml"));
 
          final Entry e = result.getEntry();
-         assertEquals(THAT_DATE, e.updated().asCalendar());
+         assertEquals(THAT_DATE, e.updated().toCalendar());
       }
 
       @Test
@@ -311,7 +311,7 @@ public class AtomHandlerTest {
          final ParserResult result = getParser().read(openEntryResource("EntryWithPublished.xml"));
 
          final Entry e = result.getEntry();
-         assertEquals(THAT_DATE, e.published().asCalendar());
+         assertEquals(THAT_DATE, e.published().toCalendar());
       }
 
       @Test

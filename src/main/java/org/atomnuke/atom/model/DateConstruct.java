@@ -14,7 +14,7 @@ public interface DateConstruct extends AtomCommonAtributes {
     *
     * @return
     */
-   Calendar asCalendar();
+   Calendar toCalendar();
 
    /**
     * Returns the string representation of the date construct. This preserves
@@ -22,5 +22,6 @@ public interface DateConstruct extends AtomCommonAtributes {
     *
     * @return
     */
-   String asText();
+   @Override
+   String toString();
 }
