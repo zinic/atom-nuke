@@ -76,7 +76,7 @@ public class HDFSFeedListener implements AtomListener {
          final ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
          writer.write(baos, entry);
-         append(new Text(entry.id().value()), new Text(baos.toByteArray()));
+         append(new Text(entry.id().toString()), new Text(baos.toByteArray()));
       } catch (Exception ioe) {
          throw new AtomListenerException(ioe);
       }
@@ -95,7 +95,7 @@ public class HDFSFeedListener implements AtomListener {
 
          for (Entry e : page.entries()) {
             writer.write(baos, page);
-            append(new Text(e.id().value()), new Text(baos.toByteArray()));
+            append(new Text(e.id().toString()), new Text(baos.toByteArray()));
          }
       } catch (Exception ioe) {
          throw new AtomListenerException(ioe);
@@ -132,9 +132,9 @@ public class HDFSFeedListener implements AtomListener {
       writeHeader = false;
 
       final StringBuilder header = new StringBuilder("{");
-      writeVariable("id", page.id().value(), header);
+      writeVariable("id", page.id().toString(), header);
       header.append(",");
-      writeVariable("title", page.title().value(), header);
+      writeVariable("title", page.title().toString(), header);
       header.append("}");
 
       append(feedName + "-metadata", header.toString());

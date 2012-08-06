@@ -44,12 +44,6 @@ public class ContentBuilder extends ContentImpl implements ValueBuilder<ContentB
    }
 
    @Override
-   public ContentBuilder setValue(String value) {
-      this.value = new StringBuilder(value);
-      return this;
-   }
-
-   @Override
    public ContentBuilder appendValue(String value) {
       this.value.append(value);
       return this;

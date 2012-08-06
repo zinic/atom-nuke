@@ -12,5 +12,6 @@ public interface Id extends AtomCommonAtributes {
 
    @ElementValue
    @ComplexConstraint(AtomUriConstraint.class)
-   String value();
+   @Override
+   String toString();
 }

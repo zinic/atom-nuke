@@ -187,7 +187,7 @@ public final class AtomWriter {
       writeAttribute(context, AtomNamespaceContext.ATOM_NAMESPACE, "uri", generator.uri());
       writeAttribute(context, AtomNamespaceContext.ATOM_NAMESPACE, "version", generator.version());
 
-      context.getWriter().writeCharacters(generator.value());
+      context.getWriter().writeCharacters(generator.toString());
 
       writeEndElement(context);
    }
@@ -202,7 +202,7 @@ public final class AtomWriter {
       writeLang(context, icon.lang());
       writeBase(context, icon.base());
 
-      context.getWriter().writeCharacters(icon.value());
+      context.getWriter().writeCharacters(icon.toString());
 
       writeEndElement(context);
    }
@@ -217,7 +217,7 @@ public final class AtomWriter {
       writeLang(context, id.lang());
       writeBase(context, id.base());
 
-      context.getWriter().writeCharacters(id.value());
+      context.getWriter().writeCharacters(id.toString());
 
       writeEndElement(context);
    }
@@ -232,7 +232,7 @@ public final class AtomWriter {
       writeLang(context, logo.lang());
       writeBase(context, logo.base());
 
-      context.getWriter().writeCharacters(logo.value());
+      context.getWriter().writeCharacters(logo.toString());
 
       writeEndElement(context);
    }
@@ -248,7 +248,7 @@ public final class AtomWriter {
       writeBase(context, text.base());
       writeType(context, text.type());
 
-      context.getWriter().writeCharacters(text.value());
+      context.getWriter().writeCharacters(text.toString());
 
       writeEndElement(context);
    }
@@ -333,7 +333,7 @@ public final class AtomWriter {
       writeType(context, content.type());
       writeSrc(context, content.src());
 
-      context.getWriter().writeCharacters(content.value());
+      context.getWriter().writeCharacters(content.toString());
 
       writeEndElement(context);
    }

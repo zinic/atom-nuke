@@ -12,7 +12,7 @@ public abstract class LangAwareTextElement extends AtomCommonAttributesImpl impl
 
    protected StringBuilder value;
 
-   public String value() {
+   public String toString() {
       return value.toString();
    }
 }

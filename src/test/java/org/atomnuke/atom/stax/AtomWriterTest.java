@@ -61,7 +61,7 @@ public class AtomWriterTest {
          originalEntry = originalFeed.entries().get(0);
 
          for (Entry checkEntry : rereadFeed.entries()) {
-            if (originalEntry.id().value().equals(checkEntry.id().value())) {
+            if (originalEntry.id().toString().equals(checkEntry.id().toString())) {
                rereadEntry = checkEntry;
                break;
             }
@@ -75,46 +75,46 @@ public class AtomWriterTest {
          assertNotNull(rereadGenerator.base());
          assertNotNull(rereadGenerator.lang());
          assertNotNull(rereadGenerator.uri());
-         assertNotNull(rereadGenerator.value());
+         assertNotNull(rereadGenerator.toString());
          assertNotNull(rereadGenerator.version());
 
          assertEquals(originalGenerator.base(), rereadGenerator.base());
          assertEquals(originalGenerator.lang(), rereadGenerator.lang());
          assertEquals(originalGenerator.uri(), rereadGenerator.uri());
-         assertEquals(originalGenerator.value(), rereadGenerator.value());
+         assertEquals(originalGenerator.toString(), rereadGenerator.toString());
          assertEquals(originalGenerator.version(), rereadGenerator.version());
       }
 
       public void assertLangAwareTextElementsAreEqual(LangAwareTextElement originalLATE, LangAwareTextElement rereadLATE) {
          assertNotNull(rereadLATE.base());
          assertNotNull(rereadLATE.lang());
-         assertNotNull(rereadLATE.value());
+         assertNotNull(rereadLATE.toString());
 
          assertEquals(originalLATE.base(), rereadLATE.base());
          assertEquals(originalLATE.lang(), rereadLATE.lang());
-         assertEquals(originalLATE.value(), rereadLATE.value());
+         assertEquals(originalLATE.toString(), rereadLATE.toString());
       }
 
       public void assertIdsAreEqual(Id originalId, Id rereadId) {
          assertNotNull(rereadId.base());
          assertNotNull(rereadId.lang());
-         assertNotNull(rereadId.value());
+         assertNotNull(rereadId.toString());
 
          assertEquals(originalId.base(), rereadId.base());
          assertEquals(originalId.lang(), rereadId.lang());
-         assertEquals(originalId.value(), rereadId.value());
+         assertEquals(originalId.toString(), rereadId.toString());
       }
 
       public void assertTextConstructsAreEqual(TextConstruct originalTC, TextConstruct rereadTC) {
          assertNotNull(rereadTC.base());
          assertNotNull(rereadTC.lang());
          assertNotNull(rereadTC.type());
-         assertNotNull(rereadTC.value());
+         assertNotNull(rereadTC.toString());
 
          assertEquals(originalTC.base(), rereadTC.base());
          assertEquals(originalTC.lang(), rereadTC.lang());
          assertEquals(originalTC.type(), rereadTC.type());
-         assertEquals(originalTC.value(), rereadTC.value());
+         assertEquals(originalTC.toString(), rereadTC.toString());
       }
 
       public void assertDateConstructsAreEqual(DateConstruct originalDC, DateConstruct rereadDC) {
@@ -386,13 +386,13 @@ public class AtomWriterTest {
          assertNotNull(rereadContent.lang());
          assertNotNull(rereadContent.src());
          assertNotNull(rereadContent.type());
-         assertNotNull(rereadContent.value());
+         assertNotNull(rereadContent.toString());
 
          assertEquals(originalContent.base(), rereadContent.base());
          assertEquals(originalContent.lang(), rereadContent.lang());
          assertEquals(originalContent.src(), rereadContent.src());
          assertEquals(originalContent.type(), rereadContent.type());
-         assertEquals(originalContent.value(), rereadContent.value());
+         assertEquals(originalContent.toString(), rereadContent.toString());
       }
    }
 

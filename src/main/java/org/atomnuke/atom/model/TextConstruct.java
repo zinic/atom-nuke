@@ -11,5 +11,6 @@ public interface TextConstruct extends AtomCommonAtributes {
    Type type();
 
    @ElementValue
-   String value();
+   @Override
+   String toString();
 }

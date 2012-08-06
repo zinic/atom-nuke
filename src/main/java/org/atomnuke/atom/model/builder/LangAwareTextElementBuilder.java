@@ -26,12 +26,6 @@ public class LangAwareTextElementBuilder extends LangAwareTextElement implements
    }
 
    @Override
-   public LangAwareTextElementBuilder setValue(String value) {
-      this.value = new StringBuilder(value);
-      return this;
-   }
-
-   @Override
    public LangAwareTextElementBuilder appendValue(String value) {
       this.value.append(value);
       return this;

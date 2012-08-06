@@ -36,12 +36,6 @@ public class TextConstructBuilder extends TextConstructImpl implements ValueBuil
    }
 
    @Override
-   public TextConstructBuilder setValue(String value) {
-      this.value = new StringBuilder(value);
-      return this;
-   }
-
-   @Override
    public TextConstructBuilder appendValue(String value) {
       this.value.append(value);
       return this;

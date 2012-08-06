@@ -16,5 +16,6 @@ public interface Content extends AtomCommonAtributes {
    String src();
 
    @ElementValue
-   String value();
+   @Override
+   String toString();
 }

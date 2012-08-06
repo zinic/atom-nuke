@@ -167,7 +167,7 @@ public class AtomHandlerTest {
          final ParserResult result = getParser().read(openFeedResource("FeedWithID.xml"));
 
          final Feed f = result.getFeed();
-         assertEquals("urn:uuid:05b6e287-eb46-4f4b-a1a7-1a171ea66c78", f.id().value());
+         assertEquals("urn:uuid:05b6e287-eb46-4f4b-a1a7-1a171ea66c78", f.id().toString());
       }
 
       @Test
@@ -175,7 +175,7 @@ public class AtomHandlerTest {
          final ParserResult result = getParser().read(openFeedResource("FeedWithIcon.xml"));
 
          final Feed f = result.getFeed();
-         assertEquals("http://example.domain/images/icon.jpg", f.icon().value());
+         assertEquals("http://example.domain/images/icon.jpg", f.icon().toString());
       }
 
       @Test
@@ -183,7 +183,7 @@ public class AtomHandlerTest {
          final ParserResult result = getParser().read(openFeedResource("FeedWithLogo.xml"));
 
          final Feed f = result.getFeed();
-         assertEquals("http://example.domain/images/logo.jpg", f.logo().value());
+         assertEquals("http://example.domain/images/logo.jpg", f.logo().toString());
       }
 
       @Test
@@ -207,7 +207,7 @@ public class AtomHandlerTest {
          final ParserResult result = getParser().read(openFeedResource("FeedWithRights.xml"));
 
          final Feed f = result.getFeed();
-         assertEquals("Rights.", f.rights().value());
+         assertEquals("Rights.", f.rights().toString());
       }
    }
 
@@ -270,7 +270,7 @@ public class AtomHandlerTest {
          final ParserResult result = getParser().read(openEntryResource("EntryWithContent.xml"));
 
          final Entry e = result.getEntry();
-         assertEquals("Text content.", e.content().value());
+         assertEquals("Text content.", e.content().toString());
          checkContentAttributes(e.content());
       }
 
@@ -287,7 +287,7 @@ public class AtomHandlerTest {
          final ParserResult result = getParser().read(openEntryResource("EntryWithID.xml"));
 
          final Entry e = result.getEntry();
-         assertEquals("urn:uuid:05b6e287-eb46-4f4b-a1a7-1a171ea66c78", e.id().value());
+         assertEquals("urn:uuid:05b6e287-eb46-4f4b-a1a7-1a171ea66c78", e.id().toString());
       }
 
       @Test
@@ -319,7 +319,7 @@ public class AtomHandlerTest {
          final ParserResult result = getParser().read(openEntryResource("EntryWithRights.xml"));
 
          final Entry e = result.getEntry();
-         assertEquals("<this attr\"test\"><is>some</is></this>", e.rights().value());
+         assertEquals("<this attr\"test\"><is>some</is></this>", e.rights().toString());
       }
 
       @Test

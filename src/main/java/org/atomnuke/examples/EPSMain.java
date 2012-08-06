@@ -42,7 +42,7 @@ public class EPSMain {
          
          @Override
          public void entry(Entry entry) throws AtomEventletException {
-            System.out.println("Relay 1 - Entry: " + entry.id().value());
+            System.out.println("Relay 1 - Entry: " + entry.id().toString());
          }
       }, new CategorySelector(new String[]{"test"}, new String[]{"test"}));
 

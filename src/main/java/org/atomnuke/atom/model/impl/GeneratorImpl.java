@@ -20,7 +20,7 @@ public abstract class GeneratorImpl extends AtomCommonAttributesImpl implements 
       return version;
    }
 
-   public String value() {
+   public String toString() {
       return value.toString();
    }
 }

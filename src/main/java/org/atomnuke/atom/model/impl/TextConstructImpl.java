@@ -20,7 +20,7 @@ public abstract class TextConstructImpl extends AtomCommonAttributesImpl impleme
       return type;
    }
 
-   public String value() {
+   public String toString() {
       return value.toString();
    }
 }

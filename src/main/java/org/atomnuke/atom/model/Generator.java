@@ -16,5 +16,6 @@ public interface Generator extends AtomCommonAtributes {
    String version();
 
    @ElementValue
-   String value();
+   @Override
+   String toString();
 }
