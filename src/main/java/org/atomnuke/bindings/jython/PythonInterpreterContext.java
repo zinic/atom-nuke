@@ -2,9 +2,9 @@ package org.atomnuke.bindings.jython;
 
 import org.atomnuke.bindings.BindingContext;
 import org.atomnuke.bindings.BindingInstantiationException;
-import org.atomnuke.bindings.LanguageDescriptor;
-import org.atomnuke.bindings.LanguageDescriptorImpl;
-import org.atomnuke.bindings.Loader;
+import org.atomnuke.bindings.lang.LanguageDescriptor;
+import org.atomnuke.bindings.lang.LanguageDescriptorImpl;
+import org.atomnuke.bindings.loader.Loader;
 import org.atomnuke.config.model.LanguageType;
 import org.python.core.Options;
 import org.python.core.PyObject;
@@ -38,8 +38,15 @@ public class PythonInterpreterContext implements BindingContext {
    }
 
    @Override
-   public <T> T instantiate(Class<T> interfaceType, String href) throws BindingInstantiationException {
-      final PyObject pyClass = pythonInterpreter.get(href);
+   public boolean hasRef(String ref) {
+      return pythonInterpreter.get(ref) != null;
+   }
+
+   
+   
+   @Override
+   public <T> T instantiate(Class<T> interfaceType, String ref) throws BindingInstantiationException {
+      final PyObject pyClass = pythonInterpreter.get(ref);
 
       // Create a new object reference of the Jython class store into PyObject
       final PyObject newObj = pyClass.__call__();

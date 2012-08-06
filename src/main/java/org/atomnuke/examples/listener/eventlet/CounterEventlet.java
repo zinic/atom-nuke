@@ -1,4 +1,4 @@
-package org.atomnuke.examples.listener;
+package org.atomnuke.examples.listener.eventlet;
 
 import java.util.concurrent.atomic.AtomicLong;
 import org.atomnuke.atom.model.Entry;
@@ -19,13 +19,15 @@ public class CounterEventlet implements AtomEventlet {
    private static final Logger LOG = LoggerFactory.getLogger(CounterEventlet.class);
    
    protected final AtomicLong entryEvents;
+   private boolean log;
 
    public CounterEventlet() {
-      this(new AtomicLong());
+      this(new AtomicLong(), true);
    }
 
-   public CounterEventlet(AtomicLong entryEvents) {
+   public CounterEventlet(AtomicLong entryEvents, boolean log) {
       this.entryEvents = entryEvents;
+      this.log = log;
    }
 
    @Override
@@ -34,11 +36,17 @@ public class CounterEventlet implements AtomEventlet {
 
    @Override
    public void destroy(TaskContext tc) throws DestructionException {
-      LOG.info("Processed " + entryEvents.toString() + " events.");
+      if (log) {
+         LOG.info("Processed " + entryEvents.toString() + " events.");
+      }
    }
 
    @Override
    public void entry(Entry entry) throws AtomEventletException {
-      entryEvents.incrementAndGet();
+      final long events = entryEvents.incrementAndGet();
+      
+      if (log && events % 1000 == 0) {
+         LOG.info("Processed " + events + " events.");
+      }
    }
 }

@@ -2,21 +2,21 @@ package org.atomnuke.bindings.classpath;
 
 import org.atomnuke.bindings.BindingContext;
 import org.atomnuke.bindings.BindingInstantiationException;
-import org.atomnuke.bindings.LanguageDescriptor;
-import org.atomnuke.bindings.LanguageDescriptorImpl;
-import org.atomnuke.bindings.Loader;
-import org.atomnuke.bindings.NopLoader;
+import org.atomnuke.bindings.lang.LanguageDescriptor;
+import org.atomnuke.bindings.lang.LanguageDescriptorImpl;
+import org.atomnuke.bindings.loader.Loader;
+import org.atomnuke.bindings.loader.NopLoader;
 import org.atomnuke.config.model.LanguageType;
 
 /**
  *
  * @author zinic
  */
-public class ClasspathObjectFactory implements BindingContext {
+public class ClasspathBindingContext implements BindingContext {
 
    private static final LanguageDescriptor LANGUAGE_DESCRIPTOR = new LanguageDescriptorImpl(LanguageType.JAVA);
 
-   public ClasspathObjectFactory() {
+   public ClasspathBindingContext() {
    }
 
    @Override
@@ -27,6 +27,16 @@ public class ClasspathObjectFactory implements BindingContext {
    @Override
    public Loader loader() {
       return NopLoader.instance();
+   }
+
+   @Override
+   public boolean hasRef(String ref) {
+      try {
+         Class.forName(ref);
+         return true;
+      } catch (ClassNotFoundException cnfe) {
+         return false;
+      }
    }
 
    @Override

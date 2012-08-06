@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 import org.atomnuke.Nuke;
 import org.atomnuke.NukeKernel;
+import org.atomnuke.bindings.BindingInstantiationException;
+import org.atomnuke.bindings.resolver.BindingResolver;
 import org.atomnuke.config.ConfigurationException;
 import org.atomnuke.config.ConfigurationHandler;
 import org.atomnuke.config.model.Binding;
@@ -29,11 +31,13 @@ public class ServerBuilder {
    private final Map<String, AtomEventlet> builtEventlets;
    private final Map<String, AtomListener> builtListeners;
    private final Map<String, Task> registeredSources;
+   private final BindingResolver bindingsResolver;
    private final ConfigurationHandler cfgHandler;
    private final Nuke kernelBeingBuilt;
 
-   public ServerBuilder(ConfigurationHandler cfgHandler) {
+   public ServerBuilder(ConfigurationHandler cfgHandler, BindingResolver bindingsResolver) {
       this.cfgHandler = cfgHandler;
+      this.bindingsResolver = bindingsResolver;
 
       kernelBeingBuilt = new NukeKernel();
       builtEventlets = new HashMap<String, AtomEventlet>();
@@ -42,7 +46,7 @@ public class ServerBuilder {
       registeredSources = new HashMap<String, Task>();
    }
 
-   public Nuke build() throws ConfigurationException {
+   public Nuke build() throws BindingInstantiationException, ConfigurationException {
       constructSources();
       constructRelays();
       constructListeners();
@@ -53,22 +57,16 @@ public class ServerBuilder {
       return kernelBeingBuilt;
    }
 
-   public Object construct(LanguageType langType, String href) throws ConfigurationException {
-      switch (langType) {
-         case JAVA:
-            try {
-               final Class sourceClass = Class.forName(href);
+   public AtomEventlet constructEventlet(LanguageType langType, String ref) throws BindingInstantiationException {
+      return bindingsResolver.resolveEventlet(langType, ref);
+   }
 
-               return sourceClass.newInstance();
-            } catch (Exception ex) {
-               throw new ConfigurationException(ex.getMessage(), ex);
-            }
+   public AtomSource constructSource(LanguageType langType, String ref) throws BindingInstantiationException {
+      return bindingsResolver.resolveSource(langType, ref);
+   }
 
-         case JAVASCRIPT:
-         case PYTHON:
-         default:
-            throw new ConfigurationException("Unsupported scriptlet lang: " + langType);
-      }
+   public AtomListener constructListener(LanguageType langType, String ref) throws BindingInstantiationException {
+      return bindingsResolver.resolveListener(langType, ref);
    }
 
    public void processBindings() throws ConfigurationException {
@@ -109,29 +107,29 @@ public class ServerBuilder {
       }
    }
 
-   public void constructSources() throws ConfigurationException {
+   public void constructSources() throws BindingInstantiationException, ConfigurationException {
       for (Source source : cfgHandler.getSources()) {
-         final Task newTask = kernelBeingBuilt.follow((AtomSource) construct(source.getType(), source.getHref()), TimeValue.fromPollingInterval(source.getPollingInterval()));
+         final Task newTask = kernelBeingBuilt.follow(constructSource(source.getType(), source.getHref()), TimeValue.fromPollingInterval(source.getPollingInterval()));
 
          registeredSources.put(source.getId(), newTask);
       }
    }
 
-   public void constructRelays() throws ConfigurationException {
+   public void constructRelays() throws BindingInstantiationException, ConfigurationException{
       for (Relay relay : cfgHandler.getRelays()) {
          builtRelays.put(relay.getId(), new org.atomnuke.listener.eps.Relay());
       }
    }
 
-   public void constructListeners() throws ConfigurationException {
+   public void constructListeners() throws BindingInstantiationException, ConfigurationException {
       for (Sink sink : cfgHandler.getSinks()) {
-         builtListeners.put(sink.getId(), (AtomListener) construct(sink.getType(), sink.getHref()));
+         builtListeners.put(sink.getId(), constructListener(sink.getType(), sink.getHref()));
       }
    }
 
-   public void constructEventlets() throws ConfigurationException {
+   public void constructEventlets() throws BindingInstantiationException, ConfigurationException {
       for (Eventlet eventlet : cfgHandler.getEventlets()) {
-         builtEventlets.put(eventlet.getId(), (AtomEventlet) construct(eventlet.getType(), eventlet.getHref()));
+         builtEventlets.put(eventlet.getId(), constructEventlet(eventlet.getType(), eventlet.getHref()));
       }
    }
 }

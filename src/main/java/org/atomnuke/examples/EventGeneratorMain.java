@@ -4,7 +4,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 import org.atomnuke.Nuke;
 import org.atomnuke.NukeKernel;
-import org.atomnuke.examples.listener.PrintStreamOutputListener;
+import org.atomnuke.examples.listener.eventlet.PrintStreamEventlet;
 import org.atomnuke.examples.source.EventGenerator;
 import org.atomnuke.listener.eps.Relay;
 import org.atomnuke.task.Task;
@@ -24,11 +24,11 @@ public class EventGeneratorMain {
          final Task task = nukeKernel.follow(new EventGenerator("Task " + taskId, true), new TimeValue(100 * taskId, TimeUnit.NANOSECONDS));
          final Relay relay = new Relay();
 
-         relay.enlistHandler(new PrintStreamOutputListener(System.out, "Task " + taskId + " - Listener 1", eventsProcessed));
-         relay.enlistHandler(new PrintStreamOutputListener(System.out, "Task " + taskId + " - Listener 2", eventsProcessed));
-         relay.enlistHandler(new PrintStreamOutputListener(System.out, "Task " + taskId + " - Listener 3", eventsProcessed));
-         relay.enlistHandler(new PrintStreamOutputListener(System.out, "Task " + taskId + " - Listener 4", eventsProcessed));
-         relay.enlistHandler(new PrintStreamOutputListener(System.out, "Task " + taskId + " - Listener 5", eventsProcessed));
+         relay.enlistHandler(new PrintStreamEventlet(System.out, "Task " + taskId + " - Listener 1", eventsProcessed));
+         relay.enlistHandler(new PrintStreamEventlet(System.out, "Task " + taskId + " - Listener 2", eventsProcessed));
+         relay.enlistHandler(new PrintStreamEventlet(System.out, "Task " + taskId + " - Listener 3", eventsProcessed));
+         relay.enlistHandler(new PrintStreamEventlet(System.out, "Task " + taskId + " - Listener 4", eventsProcessed));
+         relay.enlistHandler(new PrintStreamEventlet(System.out, "Task " + taskId + " - Listener 5", eventsProcessed));
       }
 
       nukeKernel.start();

@@ -1,4 +1,4 @@
-package org.atomnuke.examples.listener;
+package org.atomnuke.examples.listener.eventlet;
 
 import java.io.PrintStream;
 import java.util.concurrent.atomic.AtomicLong;
@@ -12,14 +12,14 @@ import org.atomnuke.task.lifecycle.InitializationException;
  *
  * @author zinic
  */
-public class PrintStreamOutputListener extends CounterEventlet {
+public class PrintStreamEventlet extends CounterEventlet {
 
    private final PrintStream out;
    private final String msg;
    private final long creationTime;
 
-   public PrintStreamOutputListener(PrintStream out, String msg, AtomicLong events) {
-      super(events);
+   public PrintStreamEventlet(PrintStream out, String msg, AtomicLong events) {
+      super(events, true);
 
       this.out = out;
       this.msg = msg;

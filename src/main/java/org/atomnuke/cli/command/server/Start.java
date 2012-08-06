@@ -1,6 +1,8 @@
 package org.atomnuke.cli.command.server;
 
 import org.atomnuke.Nuke;
+import org.atomnuke.bindings.resolver.BindingResolver;
+import org.atomnuke.bindings.resolver.BindingResolverImpl;
 import org.atomnuke.cli.command.AbstractNukeCommand;
 import org.atomnuke.cli.command.server.builder.ServerBuilder;
 import org.atomnuke.config.ConfigurationHandler;
@@ -30,8 +32,10 @@ public class Start extends AbstractNukeCommand {
 
    @Override
    public CommandResult perform(String[] arguments) throws Exception {
+      final BindingResolver bindingsResolver = BindingResolverImpl.defaultResolver();
+      
       final ConfigurationHandler cfgHandler = getConfigurationReader().readConfiguration();
-      final ServerBuilder serverBuilder = new ServerBuilder(cfgHandler);
+      final ServerBuilder serverBuilder = new ServerBuilder(cfgHandler, bindingsResolver);
       final Nuke nuke = serverBuilder.build();
       
       nuke.start();

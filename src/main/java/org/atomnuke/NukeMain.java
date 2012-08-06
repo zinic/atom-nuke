@@ -19,14 +19,6 @@ import org.slf4j.LoggerFactory;
 public final class NukeMain {
 
    private static final Logger LOG = LoggerFactory.getLogger(NukeMain.class);
-   private static final String NUKE_HOME = fromEnv("NUKE_HOME", System.getProperty("user.home") + File.separator + ".nuke");
-   private static final String CONFIG_NAME = fromEnv("NUKE_CONFIG", File.separator + "nuke.cfg.xml");
-
-   public static String fromEnv(String key, String defaultValue) {
-      final String envValue = System.getenv().get(key);
-
-      return envValue != null ? envValue : defaultValue;
-   }
 
    private NukeMain() {
    }
@@ -34,7 +26,7 @@ public final class NukeMain {
    public static void main(String[] args) throws Exception {
       try {
          final JAXBContext jaxbc = JAXBContext.newInstance(ObjectFactory.class);
-         final Command rootCommand = new Root(new FileConfigurationManager(jaxbc.createMarshaller(), jaxbc.createUnmarshaller(), new ObjectFactory(), new File(NUKE_HOME), CONFIG_NAME));
+         final Command rootCommand = new Root(new FileConfigurationManager(jaxbc.createMarshaller(), jaxbc.createUnmarshaller(), new ObjectFactory(), new File(NukeEnv.NUKE_HOME), NukeEnv.CONFIG_NAME));
 
          final CommandResult result = new CommandDriver(rootCommand, args).go();
          final String stringResult = result.getStringResult();

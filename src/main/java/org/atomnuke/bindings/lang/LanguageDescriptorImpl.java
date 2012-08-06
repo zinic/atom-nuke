@@ -1,4 +1,4 @@
-package org.atomnuke.bindings;
+package org.atomnuke.bindings.lang;
 
 import org.atomnuke.config.model.LanguageType;
 

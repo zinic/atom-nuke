@@ -1,6 +1,8 @@
-package org.atomnuke.bindings;
+package org.atomnuke.bindings.loader;
 
 import java.io.InputStream;
+import org.atomnuke.bindings.BindingLoaderException;
+import org.atomnuke.bindings.loader.Loader;
 
 /**
  *
@@ -18,6 +20,6 @@ public final class NopLoader implements Loader {
    }
 
    @Override
-   public void load(String href, InputStream in) throws BindingLoaderException {
+   public void load(InputStream in) throws BindingLoaderException {
    }
 }
