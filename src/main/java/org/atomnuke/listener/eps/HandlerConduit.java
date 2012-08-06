@@ -8,6 +8,8 @@ import org.atomnuke.listener.eps.selector.Selector;
 import org.atomnuke.listener.eps.selector.SelectorResult;
 import org.atomnuke.task.lifecycle.DestructionException;
 import org.atomnuke.task.context.TaskContext;
+import org.atomnuke.task.lifecycle.InitializationException;
+import org.atomnuke.task.lifecycle.TaskLifeCycle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,7 +17,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author zinic
  */
-public class HandlerConduit {
+public class HandlerConduit implements TaskLifeCycle {
 
    private static final Logger LOG = LoggerFactory.getLogger(HandlerConduit.class);
    
@@ -26,7 +28,13 @@ public class HandlerConduit {
       this.eventHandler = eventHandler;
       this.selector = selector;
    }
-   
+
+   @Override
+   public void init(TaskContext tc) throws InitializationException {
+      eventHandler.init(tc);
+   }
+
+   @Override
    public void destroy(TaskContext tc) throws DestructionException {
       eventHandler.destroy(tc);
    }

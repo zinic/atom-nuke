@@ -27,6 +27,10 @@ public class EventGenerator implements AtomSource {
    private final String generatorPrefix;
    private final AtomicLong remainingEvents;
 
+   public EventGenerator() {
+      this(0, "", true, true);
+   }
+
    public EventGenerator(String generatorPrefix, boolean generateFeed) {
       this(0, generatorPrefix, generateFeed, true);
    }

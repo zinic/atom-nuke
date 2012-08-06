@@ -20,6 +20,10 @@ public class CounterEventlet implements AtomEventlet {
    
    protected final AtomicLong entryEvents;
 
+   public CounterEventlet() {
+      this(new AtomicLong());
+   }
+
    public CounterEventlet(AtomicLong entryEvents) {
       this.entryEvents = entryEvents;
    }

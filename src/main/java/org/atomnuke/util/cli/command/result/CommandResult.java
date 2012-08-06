@@ -6,7 +6,9 @@ package org.atomnuke.util.cli.command.result;
  */
 public interface CommandResult {
 
+   boolean shouldExit();
+
    int getStatusCode();
-   
+
    String getStringResult();
 }

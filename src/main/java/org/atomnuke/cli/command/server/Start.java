@@ -1,6 +1,8 @@
 package org.atomnuke.cli.command.server;
 
+import org.atomnuke.Nuke;
 import org.atomnuke.cli.command.AbstractNukeCommand;
+import org.atomnuke.cli.command.server.builder.ServerBuilder;
 import org.atomnuke.config.ConfigurationHandler;
 import org.atomnuke.config.ConfigurationReader;
 import org.atomnuke.util.cli.command.result.CommandResult;
@@ -29,7 +31,11 @@ public class Start extends AbstractNukeCommand {
    @Override
    public CommandResult perform(String[] arguments) throws Exception {
       final ConfigurationHandler cfgHandler = getConfigurationReader().readConfiguration();
-     
+      final ServerBuilder serverBuilder = new ServerBuilder(cfgHandler);
+      final Nuke nuke = serverBuilder.build();
+      
+      nuke.start();
+      
       return new CommandSuccess();
    }
 }

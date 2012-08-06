@@ -7,6 +7,8 @@ target
 */target
 */*/target
 
+dependency-reduced-pom.xml
+
 ## vim objects
 *.swo
 *.swp

@@ -15,6 +15,15 @@ public class ExceptionResult implements CommandResult {
       this.throwable = throwable;
    }
 
+   public Throwable throwable() {
+      return throwable;
+   }
+
+   @Override
+   public boolean shouldExit() {
+      return true;
+   }
+
    @Override
    public int getStatusCode() {
       return -22;
@@ -22,15 +31,12 @@ public class ExceptionResult implements CommandResult {
 
    @Override
    public String getStringResult() {
-      String message = throwable.getMessage();
+      final StringWriter stringWriter = new StringWriter();
+      stringWriter.write(throwable.getMessage());
+      stringWriter.write("\n");
       
-      if (message == null) {
-         final StringWriter stringWriter = new StringWriter();
-         throwable.printStackTrace(new PrintWriter(stringWriter));
-         
-         message = stringWriter.toString();
-      }
-      
-      return message;
+      throwable.printStackTrace(new PrintWriter(stringWriter));
+
+      return stringWriter.toString();
    }
 }

@@ -12,8 +12,6 @@ public interface Command {
    
    String getCommandDescription();
    
-//   CommandResult perform() throws Exception;
-   
    CommandResult perform(String[] arguments) throws Exception;
    
    Command[] availableCommands();
