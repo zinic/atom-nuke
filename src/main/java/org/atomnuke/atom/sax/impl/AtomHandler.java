@@ -37,15 +37,11 @@ public class AtomHandler extends DelegatingHandler {
       result = new ParserResultImpl();
    }
 
-   public AtomHandler(AtomHandler delegate) {
+   protected AtomHandler(AtomHandler delegate) {
       super(delegate);
 
       contextManager = delegate.contextManager;
       result = delegate.result;
-   }
-
-   protected static String asLocalName(String qName, String localName) {
-      return "".equals(localName) ? qName : localName;
    }
 
    protected static boolean handleCommonElement(DelegatingHandler handler, DocumentContextManager contextManager, AtomElement currentElement, Attributes attributes) throws SAXException {
@@ -98,7 +94,7 @@ public class AtomHandler extends DelegatingHandler {
 
    @Override
    public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
-      final AtomElement currentElement = AtomElement.find(asLocalName(qName, localName), AtomElement.ROOT_ELEMENTS);
+      final AtomElement currentElement = AtomElement.find(localName, AtomElement.ROOT_ELEMENTS);
 
       if (currentElement == null) {
          return;

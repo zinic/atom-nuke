@@ -10,20 +10,23 @@ import org.xml.sax.helpers.DefaultHandler;
  */
 public abstract class DelegatingHandler extends DefaultHandler {
 
-   private final ContentHandler parentHandler;
+   private final DelegatingHandler parentHandler;
    private final XMLReader readerInstance;
 
    public DelegatingHandler(XMLReader readerInstance) {
-      this.readerInstance = readerInstance;
-      parentHandler = null;
+      this(null, readerInstance);
    }
 
    public DelegatingHandler(DelegatingHandler parentHandler) {
-      this.parentHandler = parentHandler;
-      this.readerInstance = parentHandler.getReader();
+      this(parentHandler, parentHandler.reader());
    }
 
-   protected XMLReader getReader() {
+   private DelegatingHandler(DelegatingHandler parentHandler, XMLReader readerInstance) {
+      this.parentHandler = parentHandler;
+      this.readerInstance = readerInstance;
+   }
+
+   protected XMLReader reader() {
       return readerInstance;
    }
 
@@ -35,7 +38,7 @@ public abstract class DelegatingHandler extends DefaultHandler {
       readerInstance.setContentHandler(handler);
    }
 
-   public ContentHandler releaseToParent() {
+   public DelegatingHandler releaseToParent() {
       delegateTo(parentHandler);
       return parentHandler;
    }

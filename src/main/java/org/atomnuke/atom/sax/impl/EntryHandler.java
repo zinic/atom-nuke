@@ -29,7 +29,7 @@ public class EntryHandler extends AtomHandler {
 
    @Override
    public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
-      final AtomElement currentElement = AtomElement.find(asLocalName(qName, localName), AtomElement.ENTRY_ELEMENTS);
+      final AtomElement currentElement = AtomElement.find(localName, AtomElement.ENTRY_ELEMENTS);
 
       if (currentElement == null) {
          // TODO:Implement - Error case. Unknown element...
@@ -84,9 +84,8 @@ public class EntryHandler extends AtomHandler {
    @Override
    public void endElement(String uri, String localName, String qName) throws SAXException {
       final AtomElement currentElement = contextManager.peek().getElementDef();
-      final String elementEnding = asLocalName(qName, localName);
 
-      if (!currentElement.elementName().equals(elementEnding)) {
+      if (!currentElement.elementName().equals(localName)) {
          return;
       }
 

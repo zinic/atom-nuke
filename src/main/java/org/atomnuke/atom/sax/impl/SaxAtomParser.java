@@ -28,6 +28,8 @@ public class SaxAtomParser implements Reader {
 
    public SaxAtomParser(SAXParserFactory parserFactoryInst) {
       this.parserFactory = parserFactoryInst;
+      parserFactory.setNamespaceAware(true);
+      
       this.parserPool = new GenericBlockingResourcePool<SAXParser>(new ConstructionStrategy<SAXParser>() {
          @Override
          public SAXParser construct() {
@@ -40,6 +42,7 @@ public class SaxAtomParser implements Reader {
       });
    }
 
+   @Override
    public ParserResult read(final InputStream source) throws AtomParserException {
       try {
          return parserPool.use(new ResourceContext<SAXParser, ParserResult>() {

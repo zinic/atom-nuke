@@ -1,8 +1,5 @@
 package org.atomnuke.atom.sax.impl;
 
-import java.util.List;
-import org.atomnuke.atom.model.Category;
-import org.atomnuke.atom.model.Link;
 import org.atomnuke.atom.model.builder.CategoryBuilder;
 import org.atomnuke.atom.model.builder.EntryBuilder;
 import org.atomnuke.atom.model.builder.GeneratorBuilder;
@@ -30,7 +27,7 @@ public class SourceHandler extends AtomHandler {
 
    @Override
    public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
-      final AtomElement currentElement = AtomElement.find(asLocalName(qName, localName), AtomElement.SOURCE_ELEMENTS);
+      final AtomElement currentElement = AtomElement.find(localName, AtomElement.SOURCE_ELEMENTS);
 
       if (currentElement == null) {
          return;
@@ -42,9 +39,8 @@ public class SourceHandler extends AtomHandler {
    @Override
    public void endElement(String uri, String localName, String qName) throws SAXException {
       final AtomElement currentElement = contextManager.peek().getElementDef();
-      final String elementEnding = asLocalName(qName, localName);
 
-      if (!currentElement.elementName().equals(elementEnding)) {
+      if (!currentElement.elementName().equals(localName)) {
          return;
       }
 

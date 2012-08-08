@@ -41,6 +41,10 @@ public class AtomHandlerTest {
       return AtomHandlerTest.class.getResourceAsStream("/META-INF/examples/atom/entry/" + name);
    }
 
+   public static InputStream openAtomResource(String name) throws IOException {
+      return AtomHandlerTest.class.getResourceAsStream("/META-INF/examples/atom/" + name);
+   }
+
    @Ignore
    public static class TestParent {
 
@@ -116,6 +120,14 @@ public class AtomHandlerTest {
          final ParserResult result = getParser().read(new ByteArrayInputStream(feedXml.getBytes()));
 
          assertNotNull(result.getFeed());
+      }
+
+      @Test
+      public void shouldFeedWithComplexNamespacing() throws Exception {
+         final ParserResult result = getParser().read(openAtomResource("ComplexNamespaceFeed.xml"));
+
+         assertNotNull(result.getFeed());
+         assertEquals(1, result.getFeed().entries().size());
       }
 
       @Test

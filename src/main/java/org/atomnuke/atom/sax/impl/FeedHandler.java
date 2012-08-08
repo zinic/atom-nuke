@@ -28,7 +28,7 @@ public class FeedHandler extends AtomHandler {
 
    @Override
    public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
-      final AtomElement currentElement = AtomElement.find(asLocalName(qName, localName), AtomElement.FEED_ELEMENTS);
+      final AtomElement currentElement = AtomElement.find(localName, AtomElement.FEED_ELEMENTS);
 
       if (currentElement == null || handleCommonElement(this, contextManager, currentElement, attributes)) {
          return;
@@ -52,9 +52,8 @@ public class FeedHandler extends AtomHandler {
    @Override
    public void endElement(String uri, String localName, String qName) throws SAXException {
       final AtomElement currentElement = contextManager.peek().getElementDef();
-      final String elementEnding = asLocalName(qName, localName);
 
-      if (!currentElement.elementName().equals(elementEnding)) {
+      if (!currentElement.elementName().equals(localName)) {
          return;
       }
 

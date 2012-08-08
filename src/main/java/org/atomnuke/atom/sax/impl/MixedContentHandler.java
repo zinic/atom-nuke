@@ -1,8 +1,8 @@
 package org.atomnuke.atom.sax.impl;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.atomnuke.atom.model.builder.ValueBuilder;
 import org.atomnuke.atom.sax.DelegatingHandler;
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
@@ -23,32 +23,14 @@ public class MixedContentHandler<T extends ValueBuilder> extends DelegatingHandl
       depth = 0;
    }
 
-   private static String asFullName(String qName, String localName) {
-      final StringBuilder name = new StringBuilder();
-
-      if (qName != null && !"".equals(qName)) {
-         name.append(qName);
-      }
-
-      if (localName != null && !"".equals(localName)) {
-         if (name.length() > 0) {
-            name.append(":");
-         }
-
-         name.append(localName);
-      }
-
-      return name.toString();
-   }
-
    @Override
    public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
       contentBuilder.appendValue("<");
-      contentBuilder.appendValue(asFullName(qName, localName));
+      contentBuilder.appendValue(qName);
 
       for (int i = 0; i < attributes.getLength(); i++) {
          contentBuilder.appendValue(" ");
-         contentBuilder.appendValue(asFullName(attributes.getQName(i), attributes.getLocalName(i)));
+         contentBuilder.appendValue(attributes.getQName(i));
          contentBuilder.appendValue("\"");
          contentBuilder.appendValue(StringEscapeUtils.escapeXml(attributes.getValue(i)));
          contentBuilder.appendValue("\"");
@@ -62,7 +44,7 @@ public class MixedContentHandler<T extends ValueBuilder> extends DelegatingHandl
    public void endElement(String uri, String localName, String qName) throws SAXException {
       if (depth > 0) {
          contentBuilder.appendValue("</");
-         contentBuilder.appendValue(asFullName(qName, localName));
+         contentBuilder.appendValue(qName);
          contentBuilder.appendValue(">");
       }
 
