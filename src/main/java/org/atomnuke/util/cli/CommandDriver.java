@@ -28,7 +28,7 @@ public class CommandDriver {
    }
 
    public CommandResult nextCommand(String nextArgument) throws Exception {
-      if (nextArgument == null && nextArgument.length() == 0) {
+      if (nextArgument == null || nextArgument.length() == 0) {
          throw new IllegalArgumentException();
       }
 
