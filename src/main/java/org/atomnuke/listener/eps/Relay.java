@@ -57,7 +57,7 @@ public class Relay implements AtomListener, AtomEventHandlerRelay {
 
    @Override
    public void enlistHandler(AtomEventlet handler) throws InitializationException {
-      enlistHandler(handler, DefaultSelector.INSTANCE);
+      enlistHandler(handler, DefaultSelector.instance());
    }
 
    @Override

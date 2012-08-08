@@ -10,7 +10,11 @@ import org.atomnuke.atom.model.Feed;
  */
 public class DefaultSelector implements Selector {
 
-   public static final Selector INSTANCE = new DefaultSelector();
+   private static final Selector INSTANCE = new DefaultSelector();
+
+   public static Selector instance() {
+      return INSTANCE;
+   }
 
    private DefaultSelector() {
    }
