@@ -340,7 +340,7 @@ public final class AtomWriter {
 
    private static void writeEntries(WriterContext context, List<Entry> entries) throws XMLStreamException {
       for (Entry entry : entries) {
-         writeEntry(context, entry);
+         writeNonNamespacedEntry(context, entry);
       }
    }
 
@@ -351,6 +351,36 @@ public final class AtomWriter {
 
       writeStartElement(context, AtomNamespaceContext.ATOM_NAMESPACE, "entry");
       bindNamespaces(context);
+
+      writeLang(context, entry.lang());
+      writeBase(context, entry.base());
+
+      writeAuthors(context, entry.authors());
+      writeContributors(context, entry.contributors());
+      writeLinks(context, entry.links());
+      writeCategories(context, entry.categories());
+
+      writeId(context, entry.id());
+
+      writeRights(context, entry.rights());
+      writeTitle(context, entry.title());
+
+      writePublished(context, entry.published());
+      writeUpdated(context, entry.updated());
+      writeSummary(context, entry.summary());
+
+      writeSource(context, entry.source());
+      writeContent(context, entry.content());
+
+      writeEndElement(context);
+   }
+
+   private static void writeNonNamespacedEntry(WriterContext context, Entry entry) throws XMLStreamException {
+      if (entry == null) {
+         return;
+      }
+
+      writeStartElement(context, AtomNamespaceContext.ATOM_NAMESPACE, "entry");
 
       writeLang(context, entry.lang());
       writeBase(context, entry.base());
