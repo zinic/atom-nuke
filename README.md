@@ -52,7 +52,7 @@ events. This framework is called the [event processing system or EPS](https://gi
 ###Other Java Code Exmaples###
 
 * [HDFS Example Listener](https://github.com/zinic/atom-nuke/blob/master/src/main/java/org/atomnuke/examples/listener/HDFSFeedListener.java)
-* [Building a simple ATOM crawler with Atom Nuke, Netbeans 7.2 and Java](http://www.giantflyingsaucer.com/blog/?p=4078)
+* [(Tutorial) Building a simple ATOM crawler with Atom Nuke, Netbeans 7.2 and Java](http://www.giantflyingsaucer.com/blog/?p=4078)
 
 ##Features Missing##
 
