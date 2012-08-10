@@ -1,6 +1,8 @@
 #Nuke#
 ###The Fast ATOM Framework###
 
+Our Website: [Atom Nuke](http://atomnuke.org)
+
 ##What is it?##
 
 Nuke is a collection of utilities built on a simple, fast ATOM implementation
@@ -50,6 +52,7 @@ events. This framework is called the [event processing system or EPS](https://gi
 ###Other Java Code Exmaples###
 
 * [HDFS Example Listener](https://github.com/zinic/atom-nuke/blob/master/src/main/java/org/atomnuke/examples/listener/HDFSFeedListener.java)
+* [Building a simple ATOM crawler with Atom Nuke, Netbeans 7.2 and Java](http://www.giantflyingsaucer.com/blog/?p=4078)
 
 ##Features Missing##
 
