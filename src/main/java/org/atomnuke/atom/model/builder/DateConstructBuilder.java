@@ -17,6 +17,13 @@ public class DateConstructBuilder extends DateConstructImpl {
       return dateStringBuilder;
    }
 
+   public DateConstructBuilder setDateString(String date) {
+      dateStringBuilder.setLength(0);
+      dateStringBuilder.append(date);
+
+      return this;
+   }
+
    public DateConstructBuilder setBase(URI base) {
       this.base = base;
       return this;
