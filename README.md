@@ -28,9 +28,7 @@ next scheduled poll.
 * [Create an ATOM feed with Atom Nuke, NetBeans 7.2 and Java](http://www.giantflyingsaucer.com/blog/?p=4113)
 * [Finding specific ATOM categories using Atom Nuke and Java](http://www.giantflyingsaucer.com/blog/?p=4126)
 
-###Code Examples###
-
-####As an Event Bus####
+###The Nuke Event Bus###
 
 Nuke contains a high performance event dispatch kernel that's backed by an
 execution pool. The Nuke kernel supports nanosecond polling granularity.
@@ -40,7 +38,7 @@ execution pool. The Nuke kernel supports nanosecond polling granularity.
 For more information see the [Nuke kernel](https://github.com/zinic/atom-nuke/blob/master/src/main/java/org/atomnuke/NukeKernel.java)
 and the [Nuke kernel run delegate](https://github.com/zinic/atom-nuke/blob/master/src/main/java/org/atomnuke/KernelDelegate.java).
 
-####Feed Crawler####
+###As a Feed Crawler###
 
 By default Nuke comes with an [ATOM source](https://github.com/zinic/atom-nuke/blob/master/src/main/java/org/atomnuke/source/AtomSource.java)
 that is useful for crawling feeds. The crawler is designed specifically to work 
@@ -48,7 +46,7 @@ with [AtomHopper](http://atomhopper.org/).
 
 * [Using the Feed Crawler](https://github.com/zinic/atom-nuke/blob/master/src/main/java/org/atomnuke/examples/HDFSMain.java)
 
-####Using ATOM Event Selection####
+###ATOM Entry Event Selection###
 
 Nuke contains a framework for turning ATOM feeds and entries into selectable
 events. This framework is called the [event processing system or EPS](https://github.com/zinic/atom-nuke/tree/master/src/main/java/org/atomnuke/listener/eps) for short.
@@ -57,7 +55,7 @@ events. This framework is called the [event processing system or EPS](https://gi
 * [The Eventlet interface](https://github.com/zinic/atom-nuke/blob/master/src/main/java/org/atomnuke/listener/eps/eventlet/AtomEventlet.java)
 * [The Selector interface](https://github.com/zinic/atom-nuke/blob/master/src/main/java/org/atomnuke/listener/eps/selector/Selector.java)
 
-####Other Java Code Exmaples####
+###Other Java Code Exmaples###
 
 * [HDFS Example Listener](https://github.com/zinic/atom-nuke/blob/master/src/main/java/org/atomnuke/examples/listener/HDFSFeedListener.java)
 
