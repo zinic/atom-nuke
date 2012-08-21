@@ -13,4 +13,8 @@ public class AtomEventletException extends Exception {
    public AtomEventletException(String message, Throwable cause) {
       super(message, cause);
    }
+
+   public AtomEventletException(Throwable cause) {
+      super(cause);
+   }
 }
