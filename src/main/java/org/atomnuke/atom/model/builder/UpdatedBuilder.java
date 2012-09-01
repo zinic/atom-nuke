@@ -11,4 +11,8 @@ public class UpdatedBuilder extends DateConstructBuilder<UpdatedBuilder, Updated
    public UpdatedBuilder() {
       super(UpdatedBuilder.class);
    }
+
+   public UpdatedBuilder(Updated copyConstruct) {
+      super(UpdatedBuilder.class, copyConstruct);
+   }
 }

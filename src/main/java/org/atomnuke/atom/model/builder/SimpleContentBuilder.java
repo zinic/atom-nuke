@@ -1,13 +1,13 @@
 package org.atomnuke.atom.model.builder;
 
-import org.atomnuke.atom.model.AtomCommonAtributes;
-import org.atomnuke.atom.model.impl.SimpleContent;
+import org.atomnuke.atom.model.SimpleContent;
+import org.atomnuke.atom.model.impl.SimpleContentImpl;
 
 /**
  *
  * @author zinic
  */
-public abstract class SimpleContentBuilder<T extends SimpleContentBuilder, B extends AtomCommonAtributes, C extends SimpleContent> extends AtomConstructBuilderImpl<T, B, C> implements ValueBuilder<T> {
+public abstract class SimpleContentBuilder<T extends SimpleContentBuilder, B extends SimpleContent, C extends SimpleContentImpl> extends AtomConstructBuilderImpl<T, B, C> implements ValueBuilder<T> {
 
    private final StringBuilder valueBuilder;
 
@@ -17,8 +17,15 @@ public abstract class SimpleContentBuilder<T extends SimpleContentBuilder, B ext
       valueBuilder = new StringBuilder();
    }
 
+   protected SimpleContentBuilder(Class<T> builderType, C atomConstruct, B copyConstruct) {
+      super(builderType, atomConstruct, copyConstruct);
+
+      valueBuilder = new StringBuilder();
+      appendValue(copyConstruct.toString());
+   }
+
    @Override
-   public T setValue(String value) {
+   public final T setValue(String value) {
       valueBuilder.setLength(0);
 
       return appendValue(value);
@@ -26,7 +33,8 @@ public abstract class SimpleContentBuilder<T extends SimpleContentBuilder, B ext
 
    @Override
    public final T appendValue(String value) {
-      construct().setValue(valueBuilder.append(value).toString());
+      valueBuilder.append(value);
+      construct().setValue(valueBuilder.toString());
 
       return builder();
    }

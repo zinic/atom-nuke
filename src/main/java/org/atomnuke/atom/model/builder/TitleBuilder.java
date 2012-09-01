@@ -11,4 +11,8 @@ public class TitleBuilder extends TypedContentBuilder<TitleBuilder, Title> {
    public TitleBuilder() {
       super(TitleBuilder.class);
    }
+
+   public TitleBuilder(Title copyConstruct) {
+      super(TitleBuilder.class, copyConstruct);
+   }
 }

@@ -10,7 +10,7 @@ import org.atomnuke.atom.model.Type;
  *
  * @author zinic
  */
-public class TypedContentImpl extends SimpleContent implements Rights, Subtitle, Title, Summary {
+public class TypedContentImpl extends SimpleContentImpl implements Rights, Subtitle, Title, Summary {
 
    private Type type;
 

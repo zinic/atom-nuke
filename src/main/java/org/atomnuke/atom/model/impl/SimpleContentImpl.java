@@ -1,10 +1,12 @@
 package org.atomnuke.atom.model.impl;
 
+import org.atomnuke.atom.model.SimpleContent;
+
 /**
  *
  * @author zinic
  */
-public class SimpleContent extends AtomCommonAttributesImpl {
+public class SimpleContentImpl extends AtomCommonAttributesImpl implements SimpleContent {
 
    private String value;
 
@@ -14,6 +16,6 @@ public class SimpleContent extends AtomCommonAttributesImpl {
 
    @Override
    public String toString() {
-      return value.toString();
+      return value;
    }
 }

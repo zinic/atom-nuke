@@ -15,6 +15,7 @@ import org.atomnuke.atom.model.Subtitle;
 import org.atomnuke.atom.model.Title;
 import org.atomnuke.atom.model.Updated;
 import org.atomnuke.atom.model.impl.SourceImpl;
+import static org.atomnuke.atom.model.builder.CollectionUtil.*;
 
 /**
  *
@@ -33,6 +34,29 @@ public class SourceBuilder extends AtomConstructBuilderImpl<SourceBuilder, Sourc
       categories = new LinkedList<Category>();
       links = new LinkedList<Link>();
 
+      setLists();
+   }
+
+   public SourceBuilder(Source copyConstruct) {
+      super(SourceBuilder.class, new SourceImpl(), copyConstruct);
+
+      authors = copyAuthors(copyConstruct.authors());
+      categories = copyCategories(copyConstruct.categories());
+      links = copyLinks(copyConstruct.links());
+
+      setGenerator(new GeneratorBuilder(copyConstruct.generator()).build());
+      setIcon(new IconBuilder(copyConstruct.icon()).build());
+      setId(new IdBuilder(copyConstruct.id()).build());
+      setLogo(new LogoBuilder(copyConstruct.logo()).build());
+      setRights(new RightsBuilder(copyConstruct.rights()).build());
+      setSubtitle(new SubtitleBuilder(copyConstruct.subtitle()).build());
+      setTitle(new TitleBuilder(copyConstruct.title()).build());
+      setUpdated(new UpdatedBuilder(copyConstruct.updated()).build());
+
+      setLists();
+   }
+
+   private void setLists() {
       construct().setAuthors(authors);
       construct().setCategories(categories);
       construct().setLinks(links);
@@ -54,42 +78,42 @@ public class SourceBuilder extends AtomConstructBuilderImpl<SourceBuilder, Sourc
       return this;
    }
 
-   public SourceBuilder setGenerator(Generator generator) {
+   public final SourceBuilder setGenerator(Generator generator) {
       construct().setGenerator(generator);
       return this;
    }
 
-   public SourceBuilder setIcon(Icon icon) {
+   public final SourceBuilder setIcon(Icon icon) {
       construct().setIcon(icon);
       return this;
    }
 
-   public SourceBuilder setId(Id id) {
+   public final SourceBuilder setId(Id id) {
       construct().setId(id);
       return this;
    }
 
-   public SourceBuilder setLogo(Logo logo) {
+   public final SourceBuilder setLogo(Logo logo) {
       construct().setLogo(logo);
       return this;
    }
 
-   public SourceBuilder setRights(Rights rights) {
+   public final SourceBuilder setRights(Rights rights) {
       construct().setRights(rights);
       return this;
    }
 
-   public SourceBuilder setSubtitle(Subtitle subtitle) {
+   public final SourceBuilder setSubtitle(Subtitle subtitle) {
       construct().setSubtitle(subtitle);
       return this;
    }
 
-   public SourceBuilder setTitle(Title title) {
+   public final SourceBuilder setTitle(Title title) {
       construct().setTitle(title);
       return this;
    }
 
-   public SourceBuilder setUpdated(Updated updated) {
+   public final SourceBuilder setUpdated(Updated updated) {
       construct().setUpdated(updated);
       return this;
    }

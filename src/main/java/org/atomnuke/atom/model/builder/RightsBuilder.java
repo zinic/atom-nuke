@@ -11,4 +11,8 @@ public class RightsBuilder extends TypedContentBuilder<RightsBuilder, Rights> {
    public RightsBuilder() {
       super(RightsBuilder.class);
    }
+
+   public RightsBuilder(Rights copyConstruct) {
+      super(RightsBuilder.class, copyConstruct);
+   }
 }

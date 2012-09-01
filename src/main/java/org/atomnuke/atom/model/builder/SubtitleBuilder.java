@@ -11,4 +11,8 @@ public class SubtitleBuilder extends TypedContentBuilder<SubtitleBuilder, Subtit
    public SubtitleBuilder() {
       super(SubtitleBuilder.class);
    }
+
+   public SubtitleBuilder(Subtitle copyConstruct) {
+      super(SubtitleBuilder.class, copyConstruct);
+   }
 }

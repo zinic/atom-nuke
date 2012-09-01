@@ -9,24 +9,25 @@ public enum Type {
    TEXT,
    HTML,
    XHTML,
-   INVALID;
+   OTHER;
 
    public static Type find(String st) {
       for (Type type : values()) {
-         if (type.getFormattedName().equals(st)) {
+         if (type.cannonicalName().equalsIgnoreCase(st)) {
             return type;
          }
       }
 
-      return INVALID;
+      return OTHER;
    }
-   private String formattedName;
+
+   private String cannonicalName;
 
    private Type() {
-      formattedName = name().toLowerCase();
+      this.cannonicalName = name();
    }
 
-   public String getFormattedName() {
-      return formattedName;
+   public String cannonicalName() {
+      return cannonicalName;
    }
 }

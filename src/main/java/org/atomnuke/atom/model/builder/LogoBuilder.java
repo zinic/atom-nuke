@@ -12,4 +12,8 @@ public class LogoBuilder extends SimpleContentBuilder<LogoBuilder, Logo, TextCon
    public LogoBuilder() {
       super(LogoBuilder.class, new TextContent());
    }
+
+   public LogoBuilder(Logo copyConstruct) {
+      super(LogoBuilder.class, new TextContent(), copyConstruct);
+   }
 }

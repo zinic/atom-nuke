@@ -13,6 +13,13 @@ public class ContentBuilder extends SimpleContentBuilder<ContentBuilder, Content
       super(ContentBuilder.class, new ContentImpl());
    }
 
+   public ContentBuilder(Content copyConstruct) {
+      super(ContentBuilder.class, new ContentImpl(), copyConstruct);
+
+      setSrc(copyConstruct.src());
+      setType(copyConstruct.type());
+   }
+
    public ContentBuilder setType(String type) {
       construct().setType(type);
       return this;

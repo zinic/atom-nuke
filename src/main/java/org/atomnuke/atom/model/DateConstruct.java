@@ -1,12 +1,15 @@
 package org.atomnuke.atom.model;
 
 import java.util.Calendar;
+import org.atomnuke.atom.model.annotation.ContentConstraint;
+import org.atomnuke.atom.model.constraint.XmlDateConstraint;
 
 /**
  *
  * @author zinic
  */
-public interface DateConstruct extends AtomCommonAtributes {
+@ContentConstraint(XmlDateConstraint.class)
+public interface DateConstruct extends SimpleContent {
 
    /**
     * Transforms the internal representation of the DateConstruct into a Java
@@ -15,13 +18,4 @@ public interface DateConstruct extends AtomCommonAtributes {
     * @return
     */
    Calendar toCalendar();
-
-   /**
-    * Returns the string representation of the date construct. This preserves
-    * the toString method for other features.
-    *
-    * @return
-    */
-   @Override
-   String toString();
 }

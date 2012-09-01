@@ -11,4 +11,8 @@ public class ContributorBuilder extends PersonConstructBuilder<ContributorBuilde
    public ContributorBuilder() {
       super(ContributorBuilder.class);
    }
+
+   public ContributorBuilder(Contributor copyConstruct) {
+      super(ContributorBuilder.class, copyConstruct);
+   }
 }

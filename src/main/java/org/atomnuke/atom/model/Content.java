@@ -8,14 +8,10 @@ import org.atomnuke.atom.model.constraint.AtomUriConstraint;
  *
  * @author zinic
  */
-public interface Content extends AtomCommonAtributes {
+public interface Content extends SimpleContent {
 
    String type();
 
    @ComplexConstraint(AtomUriConstraint.class)
    String src();
-
-   @ElementValue
-   @Override
-   String toString();
 }

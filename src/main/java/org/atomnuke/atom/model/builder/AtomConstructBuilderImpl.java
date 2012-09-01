@@ -13,9 +13,17 @@ public abstract class AtomConstructBuilderImpl<T extends AtomConstructBuilder, B
    private final Class<T> builderType;
    private final C atomConstruct;
 
-   public AtomConstructBuilderImpl(Class<T> builderType, C atomConstruct) {
+   protected AtomConstructBuilderImpl(Class<T> builderType, C atomConstruct) {
       this.atomConstruct = atomConstruct;
       this.builderType = builderType;
+   }
+
+   protected AtomConstructBuilderImpl(Class<T> builderType, C atomConstruct, B copyConstruct) {
+      this.atomConstruct = atomConstruct;
+      this.builderType = builderType;
+
+      setBase(copyConstruct.base());
+      setLang(copyConstruct.lang());
    }
 
    protected final T builder() {
@@ -27,7 +35,7 @@ public abstract class AtomConstructBuilderImpl<T extends AtomConstructBuilder, B
    }
 
    @Override
-   public B build() {
+   public final B build() {
       return (B) construct();
    }
 

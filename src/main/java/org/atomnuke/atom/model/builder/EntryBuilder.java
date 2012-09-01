@@ -17,6 +17,9 @@ import org.atomnuke.atom.model.Title;
 import org.atomnuke.atom.model.Updated;
 import org.atomnuke.atom.model.impl.EntryImpl;
 
+
+import static org.atomnuke.atom.model.builder.CollectionUtil.*;
+
 /**
  *
  * @author zinic
@@ -36,68 +39,92 @@ public class EntryBuilder extends AtomConstructBuilderImpl<EntryBuilder, Entry, 
       categories = new LinkedList<Category>();
       links = new LinkedList<Link>();
 
+      setLists();
+   }
+
+   public EntryBuilder(Entry copyConstruct) {
+      super(EntryBuilder.class, new EntryImpl());
+
+      authors = copyAuthors(copyConstruct.authors());
+      contributors = copyContributors(copyConstruct.contributors());
+      categories = copyCategories(copyConstruct.categories());
+      links = copyLinks(copyConstruct.links());
+
+      setContent(new ContentBuilder(copyConstruct.content()).build());
+      setId(new IdBuilder(copyConstruct.id()).build());
+      setPublished(new PublishedBuilder(copyConstruct.published()).build());
+      setRights(new RightsBuilder(copyConstruct.rights()).build());
+      setSource(new SourceBuilder(copyConstruct.source()).build());
+      setSummary(new SummaryBuilder(copyConstruct.summary()).build());
+      setTitle(new TitleBuilder(copyConstruct.title()).build());
+      setUpdated(new UpdatedBuilder(copyConstruct.updated()).build());
+
+      setLists();
+   }
+
+   private void setLists() {
       construct().setAuthors(authors);
       construct().setContributors(contributors);
       construct().setCategories(categories);
       construct().setLinks(links);
    }
 
-   public EntryBuilder addAuthor(Author author) {
+   public final EntryBuilder addAuthor(Author author) {
       authors.add(author);
       return this;
    }
 
-   public EntryBuilder addContributor(Contributor contributor) {
+   public final EntryBuilder addContributor(Contributor contributor) {
       contributors.add(contributor);
       return this;
    }
 
-   public EntryBuilder addCategory(Category category) {
+   public final EntryBuilder addCategory(Category category) {
       categories.add(category);
       return this;
    }
 
-   public EntryBuilder addLink(Link link) {
+   public final EntryBuilder addLink(Link link) {
       links.add(link);
       return this;
    }
 
-   public EntryBuilder setId(Id id) {
+   public final EntryBuilder setId(Id id) {
       construct().setId(id);
       return this;
    }
 
-   public EntryBuilder setRights(Rights rights) {
+   public final EntryBuilder setRights(Rights rights) {
       construct().setRights(rights);
       return this;
    }
 
-   public EntryBuilder setTitle(Title title) {
+   public final EntryBuilder setTitle(Title title) {
       construct().setTitle(title);
       return this;
    }
 
-   public EntryBuilder setUpdated(Updated updated) {
+   public final EntryBuilder setUpdated(Updated updated) {
       construct().setUpdated(updated);
       return this;
    }
 
-   public EntryBuilder setContent(Content content) {
+   public final EntryBuilder setContent(Content content) {
       construct().setContent(content);
       return this;
    }
 
-   public EntryBuilder setSummary(Summary summary) {
+   public final EntryBuilder setSummary(Summary summary) {
       construct().setSummary(summary);
       return this;
    }
 
-   public EntryBuilder setPublished(Published published) {
+   public final EntryBuilder setPublished(Published published) {
       construct().setPublished(published);
       return this;
    }
 
-   public EntryBuilder setSource(Source source) {
+   public final EntryBuilder setSource(Source source) {
       construct().setSource(source);
       return this;
    }

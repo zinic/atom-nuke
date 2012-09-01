@@ -8,5 +8,5 @@ import org.atomnuke.atom.model.Logo;
  *
  * @author zinic
  */
-public class TextContent extends SimpleContent implements Id, Icon, Logo {
+public class TextContent extends SimpleContentImpl implements Id, Icon, Logo {
 }

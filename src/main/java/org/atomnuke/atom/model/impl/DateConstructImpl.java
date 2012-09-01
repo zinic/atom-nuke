@@ -10,7 +10,7 @@ import org.atomnuke.atom.model.Updated;
  *
  * @author zinic
  */
-public class DateConstructImpl extends SimpleContent implements DateConstruct, Updated, Published {
+public class DateConstructImpl extends SimpleContentImpl implements DateConstruct, Updated, Published {
 
    @Override
    public Calendar toCalendar() {

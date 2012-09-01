@@ -12,4 +12,8 @@ public abstract class DateConstructBuilder<T extends DateConstructBuilder, B ext
    protected DateConstructBuilder(Class<T> builderClass) {
       super(builderClass, new DateConstructImpl());
    }
+
+   protected DateConstructBuilder(Class<T> builderClass, B copyConstruct) {
+      super(builderClass, new DateConstructImpl(), copyConstruct);
+   }
 }

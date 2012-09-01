@@ -314,6 +314,4 @@ public class AtomHandler extends DelegatingHandler {
 
       contextManager.push(element, simpleContentBuilder);
    }
-
-   
 }

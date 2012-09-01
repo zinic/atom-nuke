@@ -13,12 +13,19 @@ public class GeneratorBuilder extends SimpleContentBuilder<GeneratorBuilder, Gen
       super(GeneratorBuilder.class, new GeneratorImpl());
    }
 
-   public GeneratorBuilder setUri(String uri) {
+   public GeneratorBuilder(Generator copyConstruct) {
+      super(GeneratorBuilder.class, new GeneratorImpl(), copyConstruct);
+
+      setUri(copyConstruct.uri());
+      setVersion(copyConstruct.version());
+   }
+
+   public final GeneratorBuilder setUri(String uri) {
       construct().setUri(uri);
       return this;
    }
 
-   public GeneratorBuilder setVersion(String version) {
+   public final GeneratorBuilder setVersion(String version) {
       construct().setVersion(version);
       return this;
    }

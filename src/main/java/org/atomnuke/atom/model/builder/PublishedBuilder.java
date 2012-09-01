@@ -11,4 +11,8 @@ public class PublishedBuilder extends DateConstructBuilder<PublishedBuilder, Pub
    public PublishedBuilder() {
       super(PublishedBuilder.class);
    }
+
+   public PublishedBuilder(Published copyConstruct) {
+      super(PublishedBuilder.class, copyConstruct);
+   }
 }

@@ -6,7 +6,7 @@ import org.atomnuke.atom.model.Content;
  *
  * @author zinic
  */
-public class ContentImpl extends SimpleContent implements Content {
+public class ContentImpl extends SimpleContentImpl implements Content {
 
    private String type, src;
 

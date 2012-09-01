@@ -1,10 +1,6 @@
 package org.atomnuke.atom.model.builder;
 
-import org.atomnuke.atom.model.builder.*;
-import java.net.URI;
-import org.atomnuke.atom.model.AtomCommonAtributes;
 import org.atomnuke.atom.model.Link;
-import org.atomnuke.atom.model.impl.AtomCommonAttributesImpl;
 import org.atomnuke.atom.model.impl.LinkImpl;
 
 /**
@@ -17,32 +13,43 @@ public class LinkBuilder extends AtomConstructBuilderImpl<LinkBuilder, Link, Lin
       super(LinkBuilder.class, new LinkImpl());
    }
 
-   public LinkBuilder setHref(String href) {
+   public LinkBuilder(Link copyConstruct) {
+      super(LinkBuilder.class, new LinkImpl(), copyConstruct);
+
+      setHref(copyConstruct.href());
+      setHreflang(copyConstruct.hreflang());
+      setLength(copyConstruct.length());
+      setRel(copyConstruct.rel());
+      setTitle(copyConstruct.title());
+      setType(copyConstruct.type());
+   }
+
+   public final LinkBuilder setHref(String href) {
       construct().setHref(href);
       return this;
    }
 
-   public LinkBuilder setRel(String rel) {
+   public final LinkBuilder setRel(String rel) {
       construct().setRel(rel);
       return this;
    }
 
-   public LinkBuilder setHreflang(String hreflang) {
+   public final LinkBuilder setHreflang(String hreflang) {
       construct().setHreflang(hreflang);
       return this;
    }
 
-   public LinkBuilder setTitle(String title) {
+   public final LinkBuilder setTitle(String title) {
       construct().setTitle(title);
       return this;
    }
 
-   public LinkBuilder setLength(Integer length) {
+   public final LinkBuilder setLength(Integer length) {
       construct().setLength(length);
       return this;
    }
 
-   public LinkBuilder setType(String type) {
+   public final LinkBuilder setType(String type) {
       construct().setType(type);
       return this;
    }

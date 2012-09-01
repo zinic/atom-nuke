@@ -1,6 +1,5 @@
 package org.atomnuke.atom.model.builder;
 
-import java.net.URI;
 import java.util.LinkedList;
 import java.util.List;
 import org.atomnuke.atom.model.Author;
@@ -9,8 +8,8 @@ import org.atomnuke.atom.model.Contributor;
 import org.atomnuke.atom.model.Entry;
 import org.atomnuke.atom.model.Feed;
 import org.atomnuke.atom.model.Generator;
-import org.atomnuke.atom.model.Id;
 import org.atomnuke.atom.model.Icon;
+import org.atomnuke.atom.model.Id;
 import org.atomnuke.atom.model.Link;
 import org.atomnuke.atom.model.Logo;
 import org.atomnuke.atom.model.Rights;
@@ -18,6 +17,8 @@ import org.atomnuke.atom.model.Subtitle;
 import org.atomnuke.atom.model.Title;
 import org.atomnuke.atom.model.Updated;
 import org.atomnuke.atom.model.impl.FeedImpl;
+
+import static org.atomnuke.atom.model.builder.CollectionUtil.*;
 
 /**
  *
@@ -40,6 +41,31 @@ public class FeedBuilder extends AtomConstructBuilderImpl<FeedBuilder, Feed, Fee
       links = new LinkedList<Link>();
       entries = new LinkedList<Entry>();
 
+      setLists();
+   }
+
+   public FeedBuilder(Feed copyConstruct) {
+      super(FeedBuilder.class, new FeedImpl(), copyConstruct);
+
+      authors = copyAuthors(copyConstruct.authors());
+      contributors = copyContributors(copyConstruct.contributors());
+      categories = copyCategories(copyConstruct.categories());
+      links = copyLinks(copyConstruct.links());
+      entries = copyEntries(copyConstruct.entries());
+
+      setGenerator(new GeneratorBuilder(copyConstruct.generator()).build());
+      setIcon(new IconBuilder(copyConstruct.icon()).build());
+      setId(new IdBuilder(copyConstruct.id()).build());
+      setLogo(new LogoBuilder(copyConstruct.logo()).build());
+      setRights(new RightsBuilder(copyConstruct.rights()).build());
+      setSubtitle(new SubtitleBuilder(copyConstruct.subtitle()).build());
+      setTitle(new TitleBuilder(copyConstruct.title()).build());
+      setUpdated(new UpdatedBuilder(copyConstruct.updated()).build());
+
+      setLists();
+   }
+
+   private void setLists() {
       construct().setAuthors(authors);
       construct().setContributors(contributors);
       construct().setCategories(categories);
@@ -47,67 +73,67 @@ public class FeedBuilder extends AtomConstructBuilderImpl<FeedBuilder, Feed, Fee
       construct().setEntries(entries);
    }
 
-   public FeedBuilder addAuthor(Author author) {
+   public final FeedBuilder addAuthor(Author author) {
       authors.add(author);
       return this;
    }
 
-   public FeedBuilder addContributor(Contributor contributor) {
+   public final FeedBuilder addContributor(Contributor contributor) {
       contributors.add(contributor);
       return this;
    }
 
-   public FeedBuilder addCategory(Category category) {
+   public final FeedBuilder addCategory(Category category) {
       categories.add(category);
       return this;
    }
 
-   public FeedBuilder addLink(Link link) {
+   public final FeedBuilder addLink(Link link) {
       links.add(link);
       return this;
    }
 
-   public FeedBuilder addEntry(Entry entry) {
+   public final FeedBuilder addEntry(Entry entry) {
       entries.add(entry);
       return this;
    }
 
-   public FeedBuilder setGenerator(Generator generator) {
+   public final FeedBuilder setGenerator(Generator generator) {
       construct().setGenerator(generator);
       return this;
    }
 
-   public FeedBuilder setIcon(Icon icon) {
+   public final FeedBuilder setIcon(Icon icon) {
       construct().setIcon(icon);
       return this;
    }
 
-   public FeedBuilder setId(Id id) {
+   public final FeedBuilder setId(Id id) {
       construct().setId(id);
       return this;
    }
 
-   public FeedBuilder setLogo(Logo logo) {
+   public final FeedBuilder setLogo(Logo logo) {
       construct().setLogo(logo);
       return this;
    }
 
-   public FeedBuilder setRights(Rights rights) {
+   public final FeedBuilder setRights(Rights rights) {
       construct().setRights(rights);
       return this;
    }
 
-   public FeedBuilder setSubtitle(Subtitle subtitle) {
+   public final FeedBuilder setSubtitle(Subtitle subtitle) {
       construct().setSubtitle(subtitle);
       return this;
    }
 
-   public FeedBuilder setTitle(Title title) {
+   public final FeedBuilder setTitle(Title title) {
       construct().setTitle(title);
       return this;
    }
 
-   public FeedBuilder setUpdated(Updated updated) {
+   public final FeedBuilder setUpdated(Updated updated) {
       construct().setUpdated(updated);
       return this;
    }

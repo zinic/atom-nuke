@@ -12,4 +12,8 @@ public class IconBuilder extends SimpleContentBuilder<IconBuilder, Icon, TextCon
    public IconBuilder() {
       super(IconBuilder.class, new TextContent());
    }
+
+   public IconBuilder(Icon copyMe) {
+      super(IconBuilder.class, new TextContent(), copyMe);
+   }
 }
