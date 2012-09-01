@@ -1,59 +1,30 @@
 package org.atomnuke.atom.model.builder;
 
-import java.net.URI;
+import org.atomnuke.atom.model.PersonConstruct;
 import org.atomnuke.atom.model.impl.PersonConstructImpl;
 
 /**
  *
  * @author zinic
  */
-public class PersonConstructBuilder extends PersonConstructImpl {
+public class PersonConstructBuilder <T extends PersonConstructBuilder, B extends PersonConstruct> extends AtomConstructBuilderImpl<T, B, PersonConstructImpl> {
 
-   public PersonConstructBuilder() {
-   }
-
-   public String getName() {
-      return name;
-   }
-
-   public String getEmail() {
-      return email;
-   }
-
-   public String getUri() {
-      return uri;
-   }
-
-   public URI getBase() {
-      return base;
-   }
-
-   public String getLang() {
-      return lang;
+   public PersonConstructBuilder(Class<T> builderClass) {
+      super(builderClass, new PersonConstructImpl());
    }
 
    public PersonConstructBuilder setName(String name) {
-      this.name = name;
+      construct().setName(name);
       return this;
    }
 
    public PersonConstructBuilder setEmail(String email) {
-      this.email = email;
+      construct().setEmail(email);
       return this;
    }
 
    public PersonConstructBuilder setUri(String uri) {
-      this.uri = uri;
-      return this;
-   }
-
-   public PersonConstructBuilder setBase(URI base) {
-      this.base = base;
-      return this;
-   }
-
-   public PersonConstructBuilder setLang(String lang) {
-      this.lang = lang;
+      construct().setUri(uri);
       return this;
    }
 }

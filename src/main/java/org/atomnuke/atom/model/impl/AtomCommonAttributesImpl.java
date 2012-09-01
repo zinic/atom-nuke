@@ -9,13 +9,23 @@ import org.atomnuke.atom.model.AtomCommonAtributes;
  */
 public abstract class AtomCommonAttributesImpl implements AtomCommonAtributes {
 
-   protected URI base;
-   protected String lang;
+   private String lang;
+   private URI base;
 
+   public void setBase(URI base) {
+      this.base = base;
+   }
+
+   public void setLang(String lang) {
+      this.lang = lang;
+   }
+
+   @Override
    public URI base() {
       return base;
    }
 
+   @Override
    public String lang() {
       return lang;
    }

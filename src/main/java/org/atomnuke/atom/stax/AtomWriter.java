@@ -21,7 +21,7 @@ import org.atomnuke.atom.model.Rights;
 import org.atomnuke.atom.model.Source;
 import org.atomnuke.atom.model.Subtitle;
 import org.atomnuke.atom.model.Summary;
-import org.atomnuke.atom.model.TextConstruct;
+import org.atomnuke.atom.model.TypedContent;
 import org.atomnuke.atom.model.Title;
 import org.atomnuke.atom.model.Type;
 import org.atomnuke.atom.model.Updated;
@@ -237,7 +237,7 @@ public final class AtomWriter {
       writeEndElement(context);
    }
 
-   private static void writeTextConstruct(WriterContext context, String element, TextConstruct text) throws XMLStreamException {
+   private static void writeTextConstruct(WriterContext context, String element, TypedContent text) throws XMLStreamException {
       if (text == null) {
          return;
       }

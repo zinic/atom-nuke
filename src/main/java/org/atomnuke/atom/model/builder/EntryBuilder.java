@@ -1,12 +1,12 @@
 package org.atomnuke.atom.model.builder;
 
-import java.net.URI;
 import java.util.LinkedList;
 import java.util.List;
 import org.atomnuke.atom.model.Author;
 import org.atomnuke.atom.model.Category;
 import org.atomnuke.atom.model.Content;
 import org.atomnuke.atom.model.Contributor;
+import org.atomnuke.atom.model.Entry;
 import org.atomnuke.atom.model.Id;
 import org.atomnuke.atom.model.Link;
 import org.atomnuke.atom.model.Published;
@@ -21,69 +21,25 @@ import org.atomnuke.atom.model.impl.EntryImpl;
  *
  * @author zinic
  */
-public class EntryBuilder extends EntryImpl {
+public class EntryBuilder extends AtomConstructBuilderImpl<EntryBuilder, Entry, EntryImpl> {
+
+   private List<Author> authors;
+   private List<Contributor> contributors;
+   private List<Category> categories;
+   private List<Link> links;
 
    public EntryBuilder() {
+      super(EntryBuilder.class, new EntryImpl());
+
       authors = new LinkedList<Author>();
       contributors = new LinkedList<Contributor>();
       categories = new LinkedList<Category>();
       links = new LinkedList<Link>();
-   }
 
-   public List<Author> getAuthors() {
-      return authors;
-   }
-
-   public List<Contributor> getContributors() {
-      return contributors;
-   }
-
-   public List<Category> getCategories() {
-      return categories;
-   }
-
-   public List<Link> getLinks() {
-      return links;
-   }
-
-   public Id getId() {
-      return id;
-   }
-
-   public Rights getRights() {
-      return rights;
-   }
-
-   public Title getTitle() {
-      return title;
-   }
-
-   public Updated getUpdated() {
-      return updated;
-   }
-
-   public Content getContent() {
-      return content;
-   }
-
-   public Summary getSummary() {
-      return summary;
-   }
-
-   public Published getPublished() {
-      return published;
-   }
-
-   public Source getSource() {
-      return source;
-   }
-
-   public URI getBase() {
-      return base;
-   }
-
-   public String getLang() {
-      return lang;
+      construct().setAuthors(authors);
+      construct().setContributors(contributors);
+      construct().setCategories(categories);
+      construct().setLinks(links);
    }
 
    public EntryBuilder addAuthor(Author author) {
@@ -107,52 +63,42 @@ public class EntryBuilder extends EntryImpl {
    }
 
    public EntryBuilder setId(Id id) {
-      this.id = id;
+      construct().setId(id);
       return this;
    }
 
    public EntryBuilder setRights(Rights rights) {
-      this.rights = rights;
+      construct().setRights(rights);
       return this;
    }
 
    public EntryBuilder setTitle(Title title) {
-      this.title = title;
+      construct().setTitle(title);
       return this;
    }
 
    public EntryBuilder setUpdated(Updated updated) {
-      this.updated = updated;
+      construct().setUpdated(updated);
       return this;
    }
 
    public EntryBuilder setContent(Content content) {
-      this.content = content;
+      construct().setContent(content);
       return this;
    }
 
    public EntryBuilder setSummary(Summary summary) {
-      this.summary = summary;
+      construct().setSummary(summary);
       return this;
    }
 
    public EntryBuilder setPublished(Published published) {
-      this.published = published;
+      construct().setPublished(published);
       return this;
    }
 
    public EntryBuilder setSource(Source source) {
-      this.source = source;
-      return this;
-   }
-
-   public EntryBuilder setBase(URI base) {
-      this.base = base;
-      return this;
-   }
-
-   public EntryBuilder setLang(String lang) {
-      this.lang = lang;
+      construct().setSource(source);
       return this;
    }
 }

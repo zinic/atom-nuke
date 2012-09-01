@@ -59,19 +59,19 @@ public class EventGenerator implements AtomSource {
 
       final IdBuilder idBuilder = new IdBuilder();
       idBuilder.appendValue(id);
-      entry.setId(idBuilder);
+      entry.setId(idBuilder.build());
 
       final CategoryBuilder testCat = new CategoryBuilder();
       testCat.setTerm("test");
-      entry.addCategory(testCat);
+      entry.addCategory(testCat.build());
 
       if (Math.random() > 0.5) {
          final CategoryBuilder otherCat = new CategoryBuilder();
          otherCat.setTerm("other-cat");
-         entry.addCategory(otherCat);
+         entry.addCategory(otherCat.build());
       }
 
-      return entry;
+      return entry.build();
    }
 
    private Feed buildFeed() {
@@ -79,21 +79,21 @@ public class EventGenerator implements AtomSource {
 
       final TitleBuilder title = new TitleBuilder();
       title.appendValue(generatorPrefix).appendValue(" Example Feed");
-      feed.setTitle(title);
+      feed.setTitle(title.build());
 
       final AuthorBuilder author = new AuthorBuilder();
       author.setName("Author");
-      feed.addAuthor(author);
+      feed.addAuthor(author.build());
 
       final CategoryBuilder category = new CategoryBuilder();
       category.setTerm("test");
-      feed.addCategory(category);
+      feed.addCategory(category.build());
 
       for (int entryNum = 1; entryNum <= 50; entryNum++) {
          feed.addEntry(buildEntry("urn:entryid:" + generatorPrefix + "-" + entryNum));
       }
 
-      return feed;
+      return feed.build();
    }
 
    @Override

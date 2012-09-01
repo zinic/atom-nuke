@@ -1,61 +1,25 @@
 package org.atomnuke.atom.model.builder;
 
-import java.net.URI;
+import org.atomnuke.atom.model.Content;
 import org.atomnuke.atom.model.impl.ContentImpl;
 
 /**
  *
  * @author zinic
  */
-public class ContentBuilder extends ContentImpl implements ValueBuilder<ContentBuilder> {
+public class ContentBuilder extends SimpleContentBuilder<ContentBuilder, Content, ContentImpl> {
 
    public ContentBuilder() {
-      value = new StringBuilder();
-   }
-
-   public String getType() {
-      return type;
-   }
-
-   public String getSrc() {
-      return src;
-   }
-
-   public String getValue() {
-      return value.toString();
-   }
-
-   public URI getBase() {
-      return base;
-   }
-
-   public String getLang() {
-      return lang;
+      super(ContentBuilder.class, new ContentImpl());
    }
 
    public ContentBuilder setType(String type) {
-      this.type = type;
+      construct().setType(type);
       return this;
    }
 
    public ContentBuilder setSrc(String src) {
-      this.src = src;
-      return this;
-   }
-
-   @Override
-   public ContentBuilder appendValue(String value) {
-      this.value.append(value);
-      return this;
-   }
-
-   public ContentBuilder setBase(URI base) {
-      this.base = base;
-      return this;
-   }
-
-   public ContentBuilder setLang(String lang) {
-      this.lang = lang;
+      construct().setSrc(src);
       return this;
    }
 }

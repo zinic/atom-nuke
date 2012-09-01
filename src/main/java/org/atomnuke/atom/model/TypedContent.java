@@ -6,7 +6,7 @@ import org.atomnuke.atom.model.annotation.ElementValue;
  *
  * @author zinic
  */
-public interface TextConstruct extends AtomCommonAtributes {
+public interface TypedContent extends AtomCommonAtributes {
 
    Type type();
 

@@ -6,21 +6,25 @@ import org.atomnuke.atom.model.Generator;
  *
  * @author zinic
  */
-public abstract class GeneratorImpl extends AtomCommonAttributesImpl implements Generator {
+public class GeneratorImpl extends SimpleContent implements Generator {
 
-   protected String uri;
-   protected String version;
-   protected StringBuilder value;
+   private String uri, version;
 
+   public void setUri(String uri) {
+      this.uri = uri;
+   }
+
+   public void setVersion(String version) {
+      this.version = version;
+   }
+
+   @Override
    public String uri() {
       return uri;
    }
 
+   @Override
    public String version() {
       return version;
-   }
-
-   public String toString() {
-      return value.toString();
    }
 }

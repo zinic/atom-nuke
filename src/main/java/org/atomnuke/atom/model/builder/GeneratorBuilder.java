@@ -1,65 +1,25 @@
 package org.atomnuke.atom.model.builder;
 
-import java.net.URI;
+import org.atomnuke.atom.model.Generator;
 import org.atomnuke.atom.model.impl.GeneratorImpl;
 
 /**
  *
  * @author zinic
  */
-public class GeneratorBuilder extends GeneratorImpl {
+public class GeneratorBuilder extends SimpleContentBuilder<GeneratorBuilder, Generator, GeneratorImpl> {
 
    public GeneratorBuilder() {
-      value = new StringBuilder();
-   }
-
-   public String getUri() {
-      return uri;
-   }
-
-   public String getVersion() {
-      return version;
-   }
-
-   public StringBuilder getValue() {
-      return value;
-   }
-
-   public URI getBase() {
-      return base;
-   }
-
-   public String getLang() {
-      return lang;
+      super(GeneratorBuilder.class, new GeneratorImpl());
    }
 
    public GeneratorBuilder setUri(String uri) {
-      this.uri = uri;
+      construct().setUri(uri);
       return this;
    }
 
    public GeneratorBuilder setVersion(String version) {
-      this.version = version;
-      return this;
-   }
-
-   public GeneratorBuilder setValue(String value) {
-      this.value = new StringBuilder(value);
-      return this;
-   }
-
-   public GeneratorBuilder appendValue(String value) {
-      this.value.append(value);
-      return this;
-   }
-
-   public GeneratorBuilder setBase(URI base) {
-      this.base = base;
-      return this;
-   }
-
-   public GeneratorBuilder setLang(String lang) {
-      this.lang = lang;
+      construct().setVersion(version);
       return this;
    }
 }

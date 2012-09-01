@@ -7,6 +7,7 @@ import org.atomnuke.atom.model.Author;
 import org.atomnuke.atom.model.Category;
 import org.atomnuke.atom.model.Contributor;
 import org.atomnuke.atom.model.Entry;
+import org.atomnuke.atom.model.Feed;
 import org.atomnuke.atom.model.Generator;
 import org.atomnuke.atom.model.Id;
 import org.atomnuke.atom.model.Icon;
@@ -22,74 +23,28 @@ import org.atomnuke.atom.model.impl.FeedImpl;
  *
  * @author zinic
  */
-public class FeedBuilder extends FeedImpl {
+public class FeedBuilder extends AtomConstructBuilderImpl<FeedBuilder, Feed, FeedImpl> {
+
+   private List<Author> authors;
+   private List<Contributor> contributors;
+   private List<Category> categories;
+   private List<Link> links;
+   private List<Entry> entries;
 
    public FeedBuilder() {
+      super(FeedBuilder.class, new FeedImpl());
+
       authors = new LinkedList<Author>();
       contributors = new LinkedList<Contributor>();
       categories = new LinkedList<Category>();
       links = new LinkedList<Link>();
       entries = new LinkedList<Entry>();
-   }
 
-   public List<Author> getAuthors() {
-      return authors;
-   }
-
-   public List<Contributor> getContributors() {
-      return contributors;
-   }
-
-   public List<Category> getCategories() {
-      return categories;
-   }
-
-   public List<Link> getLinks() {
-      return links;
-   }
-
-   public List<Entry> getEntries() {
-      return entries;
-   }
-
-   public Generator getGenerator() {
-      return generator;
-   }
-
-   public Icon getIcon() {
-      return icon;
-   }
-
-   public Id getId() {
-      return id;
-   }
-
-   public Logo getLogo() {
-      return logo;
-   }
-
-   public Rights getRights() {
-      return rights;
-   }
-
-   public Subtitle getSubtitle() {
-      return subtitle;
-   }
-
-   public Title getTitle() {
-      return title;
-   }
-
-   public Updated getUpdated() {
-      return updated;
-   }
-
-   public URI getBase() {
-      return base;
-   }
-
-   public String getLang() {
-      return lang;
+      construct().setAuthors(authors);
+      construct().setContributors(contributors);
+      construct().setCategories(categories);
+      construct().setLinks(links);
+      construct().setEntries(entries);
    }
 
    public FeedBuilder addAuthor(Author author) {
@@ -118,52 +73,42 @@ public class FeedBuilder extends FeedImpl {
    }
 
    public FeedBuilder setGenerator(Generator generator) {
-      this.generator = generator;
+      construct().setGenerator(generator);
       return this;
    }
 
    public FeedBuilder setIcon(Icon icon) {
-      this.icon = icon;
+      construct().setIcon(icon);
       return this;
    }
 
    public FeedBuilder setId(Id id) {
-      this.id = id;
+      construct().setId(id);
       return this;
    }
 
    public FeedBuilder setLogo(Logo logo) {
-      this.logo = logo;
+      construct().setLogo(logo);
       return this;
    }
 
    public FeedBuilder setRights(Rights rights) {
-      this.rights = rights;
+      construct().setRights(rights);
       return this;
    }
 
    public FeedBuilder setSubtitle(Subtitle subtitle) {
-      this.subtitle = subtitle;
+      construct().setSubtitle(subtitle);
       return this;
    }
 
    public FeedBuilder setTitle(Title title) {
-      this.title = title;
+      construct().setTitle(title);
       return this;
    }
 
    public FeedBuilder setUpdated(Updated updated) {
-      this.updated = updated;
-      return this;
-   }
-
-   public FeedBuilder setBase(URI base) {
-      this.base = base;
-      return this;
-   }
-
-   public FeedBuilder setLang(String lang) {
-      this.lang = lang;
+      construct().setUpdated(updated);
       return this;
    }
 }

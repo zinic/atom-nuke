@@ -1,56 +1,30 @@
 package org.atomnuke.atom.model.builder;
 
-import java.net.URI;
+import org.atomnuke.atom.model.Category;
 import org.atomnuke.atom.model.impl.CategoryImpl;
 
 /**
  *
  * @author zinic
  */
-public class CategoryBuilder extends CategoryImpl {
+public class CategoryBuilder extends AtomConstructBuilderImpl<CategoryBuilder, Category, CategoryImpl> {
 
-   public String getTerm() {
-      return term;
-   }
-
-   public String getScheme() {
-      return scheme;
-   }
-
-   public String getLabel() {
-      return label;
-   }
-
-   public URI getBase() {
-      return base;
-   }
-
-   public String getLang() {
-      return lang;
+   public CategoryBuilder() {
+      super(CategoryBuilder.class, new CategoryImpl());
    }
 
    public CategoryBuilder setTerm(String term) {
-      this.term = term;
+      construct().setTerm(term);
       return this;
    }
 
    public CategoryBuilder setScheme(String scheme) {
-      this.scheme = scheme;
+      construct().setScheme(scheme);
       return this;
    }
 
    public CategoryBuilder setLabel(String label) {
-      this.label = label;
-      return this;
-   }
-
-   public CategoryBuilder setBase(URI base) {
-      this.base = base;
-      return this;
-   }
-
-   public CategoryBuilder setLang(String lang) {
-      this.lang = lang;
+      construct().setLabel(label);
       return this;
    }
 }

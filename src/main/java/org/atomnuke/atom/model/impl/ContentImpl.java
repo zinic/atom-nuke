@@ -6,15 +6,24 @@ import org.atomnuke.atom.model.Content;
  *
  * @author zinic
  */
-public abstract class ContentImpl extends LangAwareTextElement implements Content {
+public class ContentImpl extends SimpleContent implements Content {
 
-   protected String type;
-   protected String src;
+   private String type, src;
 
+   public void setType(String type) {
+      this.type = type;
+   }
+
+   public void setSrc(String src) {
+      this.src = src;
+   }
+
+   @Override
    public String type() {
       return type;
    }
 
+   @Override
    public String src() {
       return src;
    }

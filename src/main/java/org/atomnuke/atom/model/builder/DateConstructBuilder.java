@@ -1,36 +1,15 @@
 package org.atomnuke.atom.model.builder;
 
-import java.net.URI;
+import org.atomnuke.atom.model.DateConstruct;
 import org.atomnuke.atom.model.impl.DateConstructImpl;
 
 /**
  *
  * @author zinic
  */
-public class DateConstructBuilder extends DateConstructImpl {
+public abstract class DateConstructBuilder<T extends DateConstructBuilder, B extends DateConstruct> extends SimpleContentBuilder<T, B, DateConstructImpl> {
 
-   public DateConstructBuilder() {
-      dateStringBuilder = new StringBuilder();
-   }
-
-   public StringBuilder getDateStringBuilder() {
-      return dateStringBuilder;
-   }
-
-   public DateConstructBuilder setDateString(String date) {
-      dateStringBuilder.setLength(0);
-      dateStringBuilder.append(date);
-
-      return this;
-   }
-
-   public DateConstructBuilder setBase(URI base) {
-      this.base = base;
-      return this;
-   }
-
-   public DateConstructBuilder setLang(String lang) {
-      this.lang = lang;
-      return this;
+   protected DateConstructBuilder(Class<T> builderClass) {
+      super(builderClass, new DateConstructImpl());
    }
 }

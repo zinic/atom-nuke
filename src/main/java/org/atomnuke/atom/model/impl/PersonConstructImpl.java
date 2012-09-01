@@ -8,20 +8,33 @@ import org.atomnuke.atom.model.PersonConstruct;
  *
  * @author zinic
  */
-public abstract class PersonConstructImpl extends AtomCommonAttributesImpl implements PersonConstruct, Author, Contributor {
+public class PersonConstructImpl extends AtomCommonAttributesImpl implements PersonConstruct, Author, Contributor {
 
-   protected String name;
-   protected String email;
-   protected String uri;
+   private String name, email, uri;
 
+   public void setName(String name) {
+      this.name = name;
+   }
+
+   public void setEmail(String email) {
+      this.email = email;
+   }
+
+   public void setUri(String uri) {
+      this.uri = uri;
+   }
+
+   @Override
    public String name() {
       return name;
    }
 
+   @Override
    public String email() {
       return email;
    }
 
+   @Override
    public String uri() {
       return uri;
    }

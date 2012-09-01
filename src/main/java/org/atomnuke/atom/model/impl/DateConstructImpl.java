@@ -10,20 +10,10 @@ import org.atomnuke.atom.model.Updated;
  *
  * @author zinic
  */
-public abstract class DateConstructImpl extends AtomCommonAttributesImpl implements DateConstruct, Updated, Published {
+public class DateConstructImpl extends SimpleContent implements DateConstruct, Updated, Published {
 
-   protected StringBuilder dateStringBuilder;
-   private Calendar date;
-
+   @Override
    public Calendar toCalendar() {
-      if (date == null) {
-         date = DatatypeConverter.parseDate(dateStringBuilder.toString());
-      }
-
-      return date;
-   }
-
-   public String toString() {
-      return dateStringBuilder.toString();
+      return DatatypeConverter.parseDate(toString());
    }
 }

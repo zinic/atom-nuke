@@ -18,8 +18,8 @@ import org.atomnuke.atom.model.Id;
 import org.atomnuke.atom.model.Link;
 import org.atomnuke.atom.model.PersonConstruct;
 import org.atomnuke.atom.model.Source;
-import org.atomnuke.atom.model.TextConstruct;
-import org.atomnuke.atom.model.impl.LangAwareTextElement;
+import org.atomnuke.atom.model.TypedContent;
+import org.atomnuke.atom.model.impl.TextContent;
 import org.atomnuke.atom.sax.impl.SaxAtomParser;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
@@ -85,7 +85,7 @@ public class AtomWriterTest {
          assertEquals(originalGenerator.version(), rereadGenerator.version());
       }
 
-      public void assertLangAwareTextElementsAreEqual(LangAwareTextElement originalLATE, LangAwareTextElement rereadLATE) {
+      public void assertLangAwareTextElementsAreEqual(TextContent originalLATE, TextContent rereadLATE) {
          assertNotNull(rereadLATE.base());
          assertNotNull(rereadLATE.lang());
          assertNotNull(rereadLATE.toString());
@@ -105,7 +105,7 @@ public class AtomWriterTest {
          assertEquals(originalId.toString(), rereadId.toString());
       }
 
-      public void assertTextConstructsAreEqual(TextConstruct originalTC, TextConstruct rereadTC) {
+      public void assertTextConstructsAreEqual(TypedContent originalTC, TypedContent rereadTC) {
          assertNotNull(rereadTC.base());
          assertNotNull(rereadTC.lang());
          assertNotNull(rereadTC.type());
@@ -280,17 +280,17 @@ public class AtomWriterTest {
 
       @Test
       public void shouldWriteId() {
-         assertLangAwareTextElementsAreEqual((LangAwareTextElement) originalFeed.id(), (LangAwareTextElement) rereadFeed.id());
+         assertLangAwareTextElementsAreEqual((TextContent) originalFeed.id(), (TextContent) rereadFeed.id());
       }
 
       @Test
       public void shouldWriteLogo() {
-         assertLangAwareTextElementsAreEqual((LangAwareTextElement) originalFeed.logo(), (LangAwareTextElement) rereadFeed.logo());
+         assertLangAwareTextElementsAreEqual((TextContent) originalFeed.logo(), (TextContent) rereadFeed.logo());
       }
 
       @Test
       public void shouldWriteIcon() {
-         assertLangAwareTextElementsAreEqual((LangAwareTextElement) originalFeed.icon(), (LangAwareTextElement) rereadFeed.icon());
+         assertLangAwareTextElementsAreEqual((TextContent) originalFeed.icon(), (TextContent) rereadFeed.icon());
       }
 
       @Test
@@ -340,17 +340,17 @@ public class AtomWriterTest {
 
       @Test
       public void shouldWriteId() {
-         assertLangAwareTextElementsAreEqual((LangAwareTextElement) originalEntry.id(), (LangAwareTextElement) originalEntry.id());
+         assertLangAwareTextElementsAreEqual((TextContent) originalEntry.id(), (TextContent) originalEntry.id());
       }
 
       @Test
       public void shouldWriteLogo() {
-         assertLangAwareTextElementsAreEqual((LangAwareTextElement) originalSource.logo(), (LangAwareTextElement) rereadSource.logo());
+         assertLangAwareTextElementsAreEqual((TextContent) originalSource.logo(), (TextContent) rereadSource.logo());
       }
 
       @Test
       public void shouldWriteIcon() {
-         assertLangAwareTextElementsAreEqual((LangAwareTextElement) originalSource.icon(), (LangAwareTextElement) rereadSource.icon());
+         assertLangAwareTextElementsAreEqual((TextContent) originalSource.icon(), (TextContent) rereadSource.icon());
       }
 
       @Test
@@ -452,17 +452,17 @@ public class AtomWriterTest {
 
       @Test
       public void shouldWriteId() {
-         assertLangAwareTextElementsAreEqual((LangAwareTextElement) originalSource.id(), (LangAwareTextElement) rereadSource.id());
+         assertLangAwareTextElementsAreEqual((TextContent) originalSource.id(), (TextContent) rereadSource.id());
       }
 
       @Test
       public void shouldWriteLogo() {
-         assertLangAwareTextElementsAreEqual((LangAwareTextElement) originalSource.logo(), (LangAwareTextElement) rereadSource.logo());
+         assertLangAwareTextElementsAreEqual((TextContent) originalSource.logo(), (TextContent) rereadSource.logo());
       }
 
       @Test
       public void shouldWriteIcon() {
-         assertLangAwareTextElementsAreEqual((LangAwareTextElement) originalSource.icon(), (LangAwareTextElement) rereadSource.icon());
+         assertLangAwareTextElementsAreEqual((TextContent) originalSource.icon(), (TextContent) rereadSource.icon());
       }
 
       @Test
