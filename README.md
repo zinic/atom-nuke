@@ -13,7 +13,7 @@ writer. The implementation was designed for immutability, maximum simplicity
 and memory efficiency.
 
 Nuke also contains a polling event framework that can poll multiple sources. Each
-source may be registered will a configured polling interval that will govern how
+source may be registered with a configured polling interval that will govern how
 often the source is polled during normal operation.
 
 Each source registered in Nuke may have any number of [ATOM listeners](https://github.com/zinic/atom-nuke/blob/master/src/main/java/org/atomnuke/listener/AtomListener.java)
