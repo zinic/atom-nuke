@@ -64,4 +64,53 @@ public class LinkImpl extends AtomCommonAttributesImpl implements Link {
    public Integer length() {
       return length;
    }
+
+   @Override
+   public int hashCode() {
+      int hash = 7;
+
+      hash = 31 * hash + (this.href != null ? this.href.hashCode() : 0);
+      hash = 31 * hash + (this.rel != null ? this.rel.hashCode() : 0);
+      hash = 31 * hash + (this.type != null ? this.type.hashCode() : 0);
+      hash = 31 * hash + (this.hreflang != null ? this.hreflang.hashCode() : 0);
+      hash = 31 * hash + (this.title != null ? this.title.hashCode() : 0);
+      hash = 31 * hash + (this.length != null ? this.length.hashCode() : 0);
+
+      return hash + super.hashCode();
+   }
+
+   @Override
+   public boolean equals(Object obj) {
+      if (obj == null || getClass() != obj.getClass()) {
+         return false;
+      }
+
+      final LinkImpl other = (LinkImpl) obj;
+
+      if ((this.href == null) ? (other.href != null) : !this.href.equals(other.href)) {
+         return false;
+      }
+
+      if ((this.rel == null) ? (other.rel != null) : !this.rel.equals(other.rel)) {
+         return false;
+      }
+
+      if ((this.type == null) ? (other.type != null) : !this.type.equals(other.type)) {
+         return false;
+      }
+
+      if ((this.hreflang == null) ? (other.hreflang != null) : !this.hreflang.equals(other.hreflang)) {
+         return false;
+      }
+
+      if ((this.title == null) ? (other.title != null) : !this.title.equals(other.title)) {
+         return false;
+      }
+
+      if (this.length != other.length && (this.length == null || !this.length.equals(other.length))) {
+         return false;
+      }
+
+      return super.equals(obj);
+   }
 }

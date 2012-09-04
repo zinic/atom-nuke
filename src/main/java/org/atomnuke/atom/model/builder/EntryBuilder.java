@@ -18,7 +18,7 @@ import org.atomnuke.atom.model.Updated;
 import org.atomnuke.atom.model.impl.EntryImpl;
 
 
-import static org.atomnuke.atom.model.builder.CollectionUtil.*;
+import static org.atomnuke.util.CollectionUtil.*;
 
 /**
  *

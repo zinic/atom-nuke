@@ -22,4 +22,30 @@ public class TypedContentImpl extends SimpleContentImpl implements Rights, Subti
    public Type type() {
       return type;
    }
+
+   @Override
+   public int hashCode() {
+      int hash = 7;
+
+      hash = 59 * hash + (this.type != null ? this.type.hashCode() : 0);
+
+      return hash + super.hashCode();
+   }
+
+   @Override
+   public boolean equals(Object obj) {
+      if (obj == null || getClass() != obj.getClass()) {
+         return false;
+      }
+
+      final TypedContentImpl other = (TypedContentImpl) obj;
+
+      if (this.type != other.type) {
+         return false;
+      }
+
+      return super.equals(obj);
+   }
+
+
 }

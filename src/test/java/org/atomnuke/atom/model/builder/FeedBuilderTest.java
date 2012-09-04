@@ -2,20 +2,12 @@ package org.atomnuke.atom.model.builder;
 
 import java.net.URI;
 import org.atomnuke.atom.model.Feed;
-import org.atomnuke.atom.model.Generator;
-import org.atomnuke.atom.model.Icon;
-import org.atomnuke.atom.model.Id;
-import org.atomnuke.atom.model.Logo;
-import org.atomnuke.atom.model.Rights;
-import org.atomnuke.atom.model.Subtitle;
-import org.atomnuke.atom.model.Title;
-import org.atomnuke.atom.model.Type;
-import org.atomnuke.atom.model.Updated;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 
 import static org.junit.Assert.*;
+import static org.atomnuke.atom.model.ModelTestUtil.*;
 
 /**
  *
@@ -23,41 +15,6 @@ import static org.junit.Assert.*;
  */
 @RunWith(Enclosed.class)
 public class FeedBuilderTest {
-
-   private static final String URI_STRING = "/uri", LANG = "en";
-   private static final URI URI_INSTANCE = URI.create(URI_STRING);
-
-   public static Generator newGenerator() {
-      return new GeneratorBuilder().setBase(URI_INSTANCE).setLang(LANG).setUri(URI_STRING).setValue("Generator Value").setVersion("1.0").build();
-   }
-
-   public static Icon newIcon() {
-      return new IconBuilder().setBase(URI_INSTANCE).setLang(LANG).setValue("ICON").build();
-   }
-
-   public static Id newId() {
-      return new IdBuilder().setBase(URI_INSTANCE).setLang(LANG).setValue("ID").build();
-   }
-
-   public static Logo newLogo() {
-      return new LogoBuilder().setBase(URI_INSTANCE).setLang(LANG).setValue("LOGO").build();
-   }
-
-   public static Rights newRights() {
-      return new RightsBuilder().setBase(URI_INSTANCE).setLang(LANG).setType(Type.TEXT).setValue("LOGO").build();
-   }
-
-   public static Subtitle newSubtitle() {
-      return new SubtitleBuilder().setBase(URI_INSTANCE).setLang(LANG).setValue("LOGO").build();
-   }
-
-   public static Title newTitle() {
-      return new TitleBuilder().setBase(URI_INSTANCE).setLang(LANG).setValue("LOGO").build();
-   }
-
-   public static Updated newUpdated() {
-      return new UpdatedBuilder().setBase(URI_INSTANCE).setLang(LANG).setValue("LOGO").build();
-   }
 
    public static class WhenCopyingFeedObjects {
 

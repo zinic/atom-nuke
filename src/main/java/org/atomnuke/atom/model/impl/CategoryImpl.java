@@ -36,4 +36,38 @@ public class CategoryImpl extends AtomCommonAttributesImpl implements Category {
    public String label() {
       return label;
    }
+
+   @Override
+   public int hashCode() {
+      int hash = 5;
+
+      hash = 61 * hash + (this.term != null ? this.term.hashCode() : 0);
+      hash = 61 * hash + (this.scheme != null ? this.scheme.hashCode() : 0);
+      hash = 61 * hash + (this.label != null ? this.label.hashCode() : 0);
+
+      return hash + super.hashCode();
+   }
+
+   @Override
+   public boolean equals(Object obj) {
+      if (obj == null || getClass() != obj.getClass()) {
+         return false;
+      }
+
+      final CategoryImpl other = (CategoryImpl) obj;
+
+      if ((this.term == null) ? (other.term != null) : !this.term.equals(other.term)) {
+         return false;
+      }
+
+      if ((this.scheme == null) ? (other.scheme != null) : !this.scheme.equals(other.scheme)) {
+         return false;
+      }
+
+      if ((this.label == null) ? (other.label != null) : !this.label.equals(other.label)) {
+         return false;
+      }
+
+      return super.equals(obj);
+   }
 }

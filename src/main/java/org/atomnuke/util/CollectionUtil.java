@@ -1,4 +1,4 @@
-package org.atomnuke.atom.model.builder;
+package org.atomnuke.util;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -9,6 +9,10 @@ import org.atomnuke.atom.model.Category;
 import org.atomnuke.atom.model.Contributor;
 import org.atomnuke.atom.model.Entry;
 import org.atomnuke.atom.model.Link;
+import org.atomnuke.atom.model.builder.AuthorBuilder;
+import org.atomnuke.atom.model.builder.ContributorBuilder;
+import org.atomnuke.atom.model.builder.EntryBuilder;
+import org.atomnuke.atom.model.builder.LinkBuilder;
 
 /**
  *
@@ -61,7 +65,7 @@ public final class CollectionUtil<R> {
       });
    }
 
-   private static <R> CollectionUtil<R> forCollection(Collection<R> collection) {
+   public static <R> CollectionUtil<R> forCollection(Collection<R> collection) {
       return new CollectionUtil<R>(collection != null ? collection : Collections.EMPTY_LIST);
    }
 
