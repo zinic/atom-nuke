@@ -1,6 +1,7 @@
 package org.atomnuke.atom.model.impl;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import org.atomnuke.atom.model.Author;
 import org.atomnuke.atom.model.Category;
 import org.atomnuke.atom.model.Contributor;
@@ -15,6 +16,9 @@ import org.atomnuke.atom.model.Rights;
 import org.atomnuke.atom.model.Subtitle;
 import org.atomnuke.atom.model.Title;
 import org.atomnuke.atom.model.Updated;
+import org.atomnuke.util.CollectionUtil;
+
+import static org.atomnuke.util.CollectionUtil.*;
 
 /**
  *
@@ -151,5 +155,65 @@ public class FeedImpl extends AtomCommonAttributesImpl implements Feed {
    @Override
    public Updated updated() {
       return updated;
+   }
+
+   @Override
+   public int hashCode() {
+      final AtomicInteger hashCode = new AtomicInteger(929);
+
+      hashCode.addAndGet(599 * hashCode.get() + (this.id != null ? this.id.hashCode() : 0));
+      hashCode.addAndGet(599 * hashCode.get() + (this.rights != null ? this.rights.hashCode() : 0));
+      hashCode.addAndGet(599 * hashCode.get() + (this.title != null ? this.title.hashCode() : 0));
+      hashCode.addAndGet(599 * hashCode.get() + (this.updated != null ? this.updated.hashCode() : 0));
+      hashCode.addAndGet(599 * hashCode.get() + (this.generator != null ? this.generator.hashCode() : 0));
+      hashCode.addAndGet(599 * hashCode.get() + (this.icon != null ? this.icon.hashCode() : 0));
+      hashCode.addAndGet(599 * hashCode.get() + (this.subtitle != null ? this.subtitle.hashCode() : 0));
+      hashCode.addAndGet(599 * hashCode.get() + (this.logo != null ? this.logo.hashCode() : 0));
+
+      forCollection(authors).each(new Delegate<Author>() {
+         @Override
+         public void element(Author element) {
+            hashCode.addAndGet(element.hashCode());
+         }
+      });
+
+      forCollection(categories).each(new Delegate<Category>() {
+         @Override
+         public void element(Category element) {
+            hashCode.addAndGet(element.hashCode());
+         }
+      });
+
+      forCollection(contributors).each(new Delegate<Contributor>() {
+         @Override
+         public void element(Contributor element) {
+            hashCode.addAndGet(element.hashCode());
+         }
+      });
+
+      forCollection(links).each(new Delegate<Link>() {
+         @Override
+         public void element(Link element) {
+            hashCode.addAndGet(element.hashCode());
+         }
+      });
+
+      forCollection(entries).each(new Delegate<Entry>() {
+         @Override
+         public void element(Entry element) {
+            hashCode.addAndGet(element.hashCode());
+         }
+      });
+
+      return hashCode.get() + super.hashCode();
+   }
+
+   @Override
+   public boolean equals(Object obj) {
+      if (obj == null || getClass() != obj.getClass()) {
+         return false;
+      }
+
+      return hashCode() == obj.hashCode();
    }
 }
