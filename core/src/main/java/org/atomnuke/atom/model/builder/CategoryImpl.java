@@ -1,4 +1,4 @@
-package org.atomnuke.atom.model.impl;
+package org.atomnuke.atom.model.builder;
 
 import org.atomnuke.atom.model.Category;
 
@@ -6,7 +6,7 @@ import org.atomnuke.atom.model.Category;
  *
  * @author zinic
  */
-public class CategoryImpl extends AtomCommonAttributesImpl implements Category {
+class CategoryImpl extends AtomCommonAttributesImpl implements Category {
 
    private String term, scheme, label;
 

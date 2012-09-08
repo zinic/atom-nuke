@@ -1,4 +1,4 @@
-package org.atomnuke.atom.model.impl;
+package org.atomnuke.atom.model.builder;
 
 import org.atomnuke.atom.model.Rights;
 import org.atomnuke.atom.model.Subtitle;
@@ -10,7 +10,7 @@ import org.atomnuke.atom.model.Type;
  *
  * @author zinic
  */
-public class TypedContentImpl extends SimpleContentImpl implements Rights, Subtitle, Title, Summary {
+class TypedContentImpl extends SimpleContentImpl implements Rights, Subtitle, Title, Summary {
 
    private Type type;
 

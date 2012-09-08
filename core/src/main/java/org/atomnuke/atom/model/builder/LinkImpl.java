@@ -1,4 +1,4 @@
-package org.atomnuke.atom.model.impl;
+package org.atomnuke.atom.model.builder;
 
 import org.atomnuke.atom.model.Link;
 
@@ -6,7 +6,7 @@ import org.atomnuke.atom.model.Link;
  *
  * @author zinic
  */
-public class LinkImpl extends AtomCommonAttributesImpl implements Link {
+class LinkImpl extends AtomCommonAttributesImpl implements Link {
 
    private String href, rel, type, hreflang, title;
    private Integer length;

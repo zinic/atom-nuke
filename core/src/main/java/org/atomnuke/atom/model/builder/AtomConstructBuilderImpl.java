@@ -2,7 +2,6 @@ package org.atomnuke.atom.model.builder;
 
 import java.net.URI;
 import org.atomnuke.atom.model.AtomCommonAtributes;
-import org.atomnuke.atom.model.impl.AtomCommonAttributesImpl;
 
 /**
  *
@@ -21,7 +20,7 @@ public abstract class AtomConstructBuilderImpl<T extends AtomConstructBuilder, B
    protected AtomConstructBuilderImpl(Class<T> builderType, C atomConstruct, B copyConstruct) {
       this.atomConstruct = atomConstruct;
       this.builderType = builderType;
-      
+
       if (copyConstruct != null) {
          if (copyConstruct.base() != null) {
             setBase(copyConstruct.base());

@@ -1,4 +1,4 @@
-package org.atomnuke.atom.model.impl;
+package org.atomnuke.atom.model.builder;
 
 import org.atomnuke.atom.model.SimpleContent;
 
@@ -6,7 +6,7 @@ import org.atomnuke.atom.model.SimpleContent;
  *
  * @author zinic
  */
-public abstract class SimpleContentImpl extends AtomCommonAttributesImpl implements SimpleContent {
+abstract class SimpleContentImpl extends AtomCommonAttributesImpl implements SimpleContent {
 
    private String value;
 

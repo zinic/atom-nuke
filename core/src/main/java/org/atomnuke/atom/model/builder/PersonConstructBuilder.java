@@ -1,7 +1,6 @@
 package org.atomnuke.atom.model.builder;
 
 import org.atomnuke.atom.model.PersonConstruct;
-import org.atomnuke.atom.model.impl.PersonConstructImpl;
 
 /**
  *

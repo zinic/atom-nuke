@@ -1,4 +1,4 @@
-package org.atomnuke.atom.model.impl;
+package org.atomnuke.atom.model.builder;
 
 import java.net.URI;
 import org.atomnuke.atom.model.AtomCommonAtributes;
@@ -7,7 +7,7 @@ import org.atomnuke.atom.model.AtomCommonAtributes;
  *
  * @author zinic
  */
-public abstract class AtomCommonAttributesImpl implements AtomCommonAtributes {
+abstract class AtomCommonAttributesImpl implements AtomCommonAtributes {
 
    private String lang;
    private URI base;

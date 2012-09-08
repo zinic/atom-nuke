@@ -8,7 +8,6 @@ import org.junit.runner.RunWith;
 
 import static org.junit.Assert.*;
 import static org.atomnuke.atom.model.ModelTestUtil.*;
-import org.atomnuke.atom.model.impl.FeedImpl;
 
 /**
  *

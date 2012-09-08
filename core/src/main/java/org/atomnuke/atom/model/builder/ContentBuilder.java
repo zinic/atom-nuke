@@ -1,7 +1,6 @@
 package org.atomnuke.atom.model.builder;
 
 import org.atomnuke.atom.model.Content;
-import org.atomnuke.atom.model.impl.ContentImpl;
 
 /**
  *

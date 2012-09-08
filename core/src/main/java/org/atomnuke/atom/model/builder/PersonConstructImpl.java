@@ -1,4 +1,4 @@
-package org.atomnuke.atom.model.impl;
+package org.atomnuke.atom.model.builder;
 
 import org.atomnuke.atom.model.Author;
 import org.atomnuke.atom.model.Contributor;

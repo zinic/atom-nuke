@@ -1,7 +1,6 @@
 package org.atomnuke.atom.model.builder;
 
 import org.atomnuke.atom.model.DateConstruct;
-import org.atomnuke.atom.model.impl.DateConstructImpl;
 
 /**
  *

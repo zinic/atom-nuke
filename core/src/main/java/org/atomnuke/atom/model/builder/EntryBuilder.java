@@ -15,7 +15,6 @@ import org.atomnuke.atom.model.Source;
 import org.atomnuke.atom.model.Summary;
 import org.atomnuke.atom.model.Title;
 import org.atomnuke.atom.model.Updated;
-import org.atomnuke.atom.model.impl.EntryImpl;
 
 import static org.atomnuke.util.CollectionUtil.*;
 

@@ -1,4 +1,4 @@
-package org.atomnuke.atom.model.impl;
+package org.atomnuke.atom.model.builder;
 
 import org.atomnuke.atom.model.Generator;
 
@@ -6,7 +6,7 @@ import org.atomnuke.atom.model.Generator;
  *
  * @author zinic
  */
-public class GeneratorImpl extends SimpleContentImpl implements Generator {
+class GeneratorImpl extends SimpleContentImpl implements Generator {
 
    private String uri, version;
 

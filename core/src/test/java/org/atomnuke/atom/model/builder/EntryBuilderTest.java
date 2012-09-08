@@ -1,7 +1,6 @@
 package org.atomnuke.atom.model.builder;
 
 import org.atomnuke.atom.model.Entry;
-import org.atomnuke.atom.model.impl.EntryImpl;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;

@@ -1,4 +1,4 @@
-package org.atomnuke.atom.model.impl;
+package org.atomnuke.atom.model.builder;
 
 import java.util.List;
 import org.atomnuke.atom.model.Author;
@@ -18,7 +18,7 @@ import org.atomnuke.atom.model.Updated;
  *
  * @author zinic
  */
-public class SourceImpl extends AtomCommonAttributesImpl implements Source {
+class SourceImpl extends AtomCommonAttributesImpl implements Source {
 
    private List<Author> authors;
    private List<Category> categories;

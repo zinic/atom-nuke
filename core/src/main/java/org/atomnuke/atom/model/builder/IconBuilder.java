@@ -1,7 +1,6 @@
 package org.atomnuke.atom.model.builder;
 
 import org.atomnuke.atom.model.Icon;
-import org.atomnuke.atom.model.impl.TextContent;
 
 /**
  *

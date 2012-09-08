@@ -1,4 +1,4 @@
-package org.atomnuke.atom.model.impl;
+package org.atomnuke.atom.model.builder;
 
 import org.atomnuke.atom.model.Content;
 
@@ -6,7 +6,7 @@ import org.atomnuke.atom.model.Content;
  *
  * @author zinic
  */
-public class ContentImpl extends SimpleContentImpl implements Content {
+class ContentImpl extends SimpleContentImpl implements Content {
 
    private String type, src;
 

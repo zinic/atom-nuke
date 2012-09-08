@@ -1,4 +1,4 @@
-package org.atomnuke.atom.model.impl;
+package org.atomnuke.atom.model.builder;
 
 import java.util.Calendar;
 import javax.xml.bind.DatatypeConverter;
@@ -10,7 +10,7 @@ import org.atomnuke.atom.model.Updated;
  *
  * @author zinic
  */
-public class DateConstructImpl extends SimpleContentImpl implements DateConstruct, Updated, Published {
+class DateConstructImpl extends SimpleContentImpl implements DateConstruct, Updated, Published {
 
    @Override
    public Calendar toCalendar() {

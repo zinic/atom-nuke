@@ -2,7 +2,6 @@ package org.atomnuke.atom.model.builder;
 
 import org.atomnuke.atom.model.Type;
 import org.atomnuke.atom.model.TypedContent;
-import org.atomnuke.atom.model.impl.TypedContentImpl;
 
 /**
  *
@@ -16,7 +15,7 @@ public abstract class TypedContentBuilder<T extends TypedContentBuilder, B exten
 
    protected TypedContentBuilder(Class<T> builderType, B copyConstruct) {
       super(builderType, new TypedContentImpl(), copyConstruct);
-      
+
       if (copyConstruct != null) {
          if (copyConstruct.type() != null) {
             setType(copyConstruct.type());
