@@ -21,9 +21,16 @@ public abstract class AtomConstructBuilderImpl<T extends AtomConstructBuilder, B
    protected AtomConstructBuilderImpl(Class<T> builderType, C atomConstruct, B copyConstruct) {
       this.atomConstruct = atomConstruct;
       this.builderType = builderType;
+      
+      if (copyConstruct != null) {
+         if (copyConstruct.base() != null) {
+            setBase(copyConstruct.base());
+         }
 
-      setBase(copyConstruct.base());
-      setLang(copyConstruct.lang());
+         if (copyConstruct.lang() != null) {
+            setLang(copyConstruct.lang());
+         }
+      }
    }
 
    protected final T builder() {

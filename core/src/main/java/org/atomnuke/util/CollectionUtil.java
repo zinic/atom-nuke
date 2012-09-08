@@ -10,6 +10,7 @@ import org.atomnuke.atom.model.Contributor;
 import org.atomnuke.atom.model.Entry;
 import org.atomnuke.atom.model.Link;
 import org.atomnuke.atom.model.builder.AuthorBuilder;
+import org.atomnuke.atom.model.builder.CategoryBuilder;
 import org.atomnuke.atom.model.builder.ContributorBuilder;
 import org.atomnuke.atom.model.builder.EntryBuilder;
 import org.atomnuke.atom.model.builder.LinkBuilder;
@@ -42,7 +43,7 @@ public final class CollectionUtil<R> {
       return forCollection(categories).copyInto(LinkedList.class, new Copier<Category>() {
          @Override
          public Category element(Category element) {
-            return element;
+            return new CategoryBuilder(element).build();
          }
       });
    }

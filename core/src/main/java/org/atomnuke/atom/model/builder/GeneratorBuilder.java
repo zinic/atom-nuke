@@ -16,8 +16,15 @@ public class GeneratorBuilder extends SimpleContentBuilder<GeneratorBuilder, Gen
    public GeneratorBuilder(Generator copyConstruct) {
       super(GeneratorBuilder.class, new GeneratorImpl(), copyConstruct);
 
-      setUri(copyConstruct.uri());
-      setVersion(copyConstruct.version());
+      if (copyConstruct != null) {
+         if (copyConstruct.uri() != null) {
+            setUri(copyConstruct.uri());
+         }
+
+         if (copyConstruct.version() != null) {
+            setVersion(copyConstruct.version());
+         }
+      }
    }
 
    public final GeneratorBuilder setUri(String uri) {

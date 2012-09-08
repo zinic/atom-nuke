@@ -6,7 +6,7 @@
    <parent>
       <groupId>org.atomnuke</groupId>
       <artifactId>project</artifactId>
-      <version>0.9.3-SNAPSHOT</version>
+      <version>0.9.4-SNAPSHOT</version>
    </parent>
 
    <groupId>org.atomnuke</groupId>
@@ -21,7 +21,7 @@
          <groupId>org.atomnuke</groupId>
          <artifactId>nuke</artifactId>
       </dependency>
-      
+
       <dependency>
          <groupId>xerces</groupId>
          <artifactId>xercesImpl</artifactId>

@@ -23,13 +23,13 @@ public class CombinedParserSelector {
    public static void main(String[] args) throws Exception {
       final AtomicLong events = new AtomicLong(0);
 
-      final Relay relay = new ReentrantRelay();
+      final Relay relay = new Relay();
       relay.enlistHandler(new FeedFileWriterHandler(new File("/tmp/test.feed")), new CategorySelector(new String[]{"test"}, new String[]{"test"}));
       relay.enlistHandler(new CounterEventlet(events, false));
-      
+
       final Nuke nukeKernel = new NukeKernel();
 
-      final Task task = nukeKernel.follow(new ClasspathSource("/META-INF/examples/atom/PerformanceTestContents.xml"), new TimeValue(1, TimeUnit.NANOSECONDS));
+      final Task task = nukeKernel.follow(new ClasspathSource("/META-INF/examples/atom/PerformanceTestContents.xml"), new TimeValue(1, TimeUnit.MICROSECONDS));
       task.addListener(relay);
 
       nukeKernel.start();
@@ -37,7 +37,7 @@ public class CombinedParserSelector {
       Thread.sleep(10000);
 
       nukeKernel.destroy();
-      
+
       System.out.println("Processed " + events.get() + " entry events in ten seconds.");
    }
 }

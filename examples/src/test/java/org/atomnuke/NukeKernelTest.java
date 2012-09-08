@@ -30,16 +30,16 @@ public class NukeKernelTest {
          relay.enlistHandler(new CounterEventlet(eventsProcessed, false));
          relay.enlistHandler(new CounterEventlet(eventsProcessed, false));
          relay.enlistHandler(new CounterEventlet(eventsProcessed, false));
-         
+
          task.addListener(relay);
       }
-      
+
       nukeKernel.start();
 
       Thread.sleep(1000);
-      
+
       nukeKernel.destroy();
-      
-      System.out.println("Processed " + eventsProcessed.get() + " events in one second.");
+
+      System.out.println("Processed " + eventsProcessed.get() + " entry events in one second.");
    }
 }

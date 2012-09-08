@@ -22,7 +22,6 @@ import org.slf4j.LoggerFactory;
 public class ManagedTaskImpl implements ManagedTask {
 
    private static final Logger LOG = LoggerFactory.getLogger(ManagedTaskImpl.class);
-   
    private final ExecutionManager executorService;
    private final ListenerManager listenerManager;
    private final AtomSource atomSource;
@@ -74,7 +73,7 @@ public class ManagedTaskImpl implements ManagedTask {
    @Override
    public void destroy(TaskContext taskContext) {
       LOG.debug("Destroying task: " + task);
-      
+
       for (RegisteredListener registeredListener : listenerManager.listeners()) {
          try {
             registeredListener.listener().destroy(taskContext);
@@ -94,13 +93,15 @@ public class ManagedTaskImpl implements ManagedTask {
             for (RegisteredListener listener : listenerManager.listeners()) {
                RegisteredListenerDriver listenerDriver;
 
-               if (pollResult.isFeedPage()) {
-                  listenerDriver = new AtomListenerDriver(listener, pollResult.feed());
-               } else {
-                  listenerDriver = new AtomListenerDriver(listener, pollResult.entry());
-               }
+               if (pollResult != null) {
+                  if (pollResult.isFeedPage()) {
+                     listenerDriver = new AtomListenerDriver(listener, pollResult.feed());
+                  } else {
+                     listenerDriver = new AtomListenerDriver(listener, pollResult.entry());
+                  }
 
-               executorService.queue(listenerDriver);
+                  executorService.queue(listenerDriver);
+               }
             }
          } catch (Exception ex) {
             LOG.error(ex.getMessage(), ex);

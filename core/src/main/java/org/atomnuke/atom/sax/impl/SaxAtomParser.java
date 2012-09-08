@@ -6,6 +6,7 @@ import com.rackspace.papi.commons.util.pooling.Pool;
 import com.rackspace.papi.commons.util.pooling.ResourceConstructionException;
 import com.rackspace.papi.commons.util.pooling.ResourceContext;
 import com.rackspace.papi.commons.util.pooling.ResourceContextException;
+import java.io.IOException;
 import java.io.InputStream;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -29,7 +30,7 @@ public class SaxAtomParser implements Reader {
    public SaxAtomParser(SAXParserFactory parserFactoryInst) {
       this.parserFactory = parserFactoryInst;
       parserFactory.setNamespaceAware(true);
-      
+
       this.parserPool = new GenericBlockingResourcePool<SAXParser>(new ConstructionStrategy<SAXParser>() {
          @Override
          public SAXParser construct() {
@@ -39,7 +40,7 @@ public class SaxAtomParser implements Reader {
                throw new ResourceConstructionException(ex.getMessage(), ex);
             }
          }
-      });
+      }, 2, 32);
    }
 
    @Override
@@ -58,8 +59,11 @@ public class SaxAtomParser implements Reader {
                }
             }
          });
-      } catch (Exception e) {
-         throw new AtomParserException(e.getMessage(), e.getCause());
+      } catch (ResourceContextException e) {
+         // Unwrap the inner exception
+         final Throwable cause = e.getCause();
+
+         throw new AtomParserException(cause.getMessage(), cause);
       }
    }
 }

@@ -16,9 +16,19 @@ public class PersonConstructBuilder<T extends PersonConstructBuilder, B extends 
    protected PersonConstructBuilder(Class<T> builderClass, B copyConstruct) {
       super(builderClass, new PersonConstructImpl(), copyConstruct);
 
-      setName(copyConstruct.name());
-      setEmail(copyConstruct.email());
-      setUri(copyConstruct.uri());
+      if (copyConstruct != null) {
+         if (copyConstruct.name() != null) {
+            setName(copyConstruct.name());
+         }
+
+         if (copyConstruct.email() != null) {
+            setEmail(copyConstruct.email());
+         }
+
+         if (copyConstruct.uri() != null) {
+            setUri(copyConstruct.uri());
+         }
+      }
    }
 
    public final T setName(String name) {

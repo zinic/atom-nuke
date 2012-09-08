@@ -1,11 +1,8 @@
 package org.atomnuke.atom.model.impl;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 import org.atomnuke.atom.model.Author;
 import org.atomnuke.atom.model.Category;
-import org.atomnuke.atom.model.Contributor;
-import org.atomnuke.atom.model.Entry;
 import org.atomnuke.atom.model.Generator;
 import org.atomnuke.atom.model.Id;
 import org.atomnuke.atom.model.Icon;
@@ -16,9 +13,6 @@ import org.atomnuke.atom.model.Source;
 import org.atomnuke.atom.model.Subtitle;
 import org.atomnuke.atom.model.Title;
 import org.atomnuke.atom.model.Updated;
-import org.atomnuke.util.CollectionUtil;
-
-import static org.atomnuke.util.CollectionUtil.*;
 
 /**
  *
@@ -139,47 +133,21 @@ public class SourceImpl extends AtomCommonAttributesImpl implements Source {
 
    @Override
    public int hashCode() {
-      final AtomicInteger hashCode = new AtomicInteger(137);
+      int hash = 5;
 
-      hashCode.addAndGet(113 * hashCode.get() + (this.id != null ? this.id.hashCode() : 0));
-      hashCode.addAndGet(113 * hashCode.get() + (this.rights != null ? this.rights.hashCode() : 0));
-      hashCode.addAndGet(113 * hashCode.get() + (this.title != null ? this.title.hashCode() : 0));
-      hashCode.addAndGet(113 * hashCode.get() + (this.updated != null ? this.updated.hashCode() : 0));
-      hashCode.addAndGet(113 * hashCode.get() + (this.generator != null ? this.generator.hashCode() : 0));
-      hashCode.addAndGet(113 * hashCode.get() + (this.icon != null ? this.icon.hashCode() : 0));
-      hashCode.addAndGet(113 * hashCode.get() + (this.subtitle != null ? this.subtitle.hashCode() : 0));
-      hashCode.addAndGet(113 * hashCode.get() + (this.logo != null ? this.logo.hashCode() : 0));
+      hash = 37 * hash + (this.authors != null ? this.authors.hashCode() : 0);
+      hash = 37 * hash + (this.categories != null ? this.categories.hashCode() : 0);
+      hash = 37 * hash + (this.links != null ? this.links.hashCode() : 0);
 
-      forCollection(authors).each(new Delegate<Author>() {
-         @Override
-         public void element(Author element) {
-            hashCode.addAndGet(element.hashCode());
-         }
-      });
+      hash = 59 * hash + (this.generator != null ? this.generator.hashCode() : 0);
+      hash = 59 * hash + (this.icon != null ? this.icon.hashCode() : 0);
+      hash = 59 * hash + (this.id != null ? this.id.hashCode() : 0);
+      hash = 59 * hash + (this.logo != null ? this.logo.hashCode() : 0);
+      hash = 59 * hash + (this.rights != null ? this.rights.hashCode() : 0);
+      hash = 59 * hash + (this.subtitle != null ? this.subtitle.hashCode() : 0);
+      hash = 59 * hash + (this.title != null ? this.title.hashCode() : 0);
+      hash = 59 * hash + (this.updated != null ? this.updated.hashCode() : 0);
 
-      forCollection(categories).each(new Delegate<Category>() {
-         @Override
-         public void element(Category element) {
-            hashCode.addAndGet(element.hashCode());
-         }
-      });
-
-      forCollection(links).each(new Delegate<Link>() {
-         @Override
-         public void element(Link element) {
-            hashCode.addAndGet(element.hashCode());
-         }
-      });
-
-      return hashCode.get() + super.hashCode();
-   }
-
-   @Override
-   public boolean equals(Object obj) {
-      if (obj == null || getClass() != obj.getClass()) {
-         return false;
-      }
-
-      return hashCode() == obj.hashCode();
+      return hash + super.hashCode();
    }
 }

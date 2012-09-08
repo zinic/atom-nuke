@@ -21,7 +21,10 @@ public abstract class SimpleContentBuilder<T extends SimpleContentBuilder, B ext
       super(builderType, atomConstruct, copyConstruct);
 
       valueBuilder = new StringBuilder();
-      appendValue(copyConstruct.toString());
+
+      if (copyConstruct != null) {
+         appendValue(copyConstruct.toString());
+      }
    }
 
    @Override

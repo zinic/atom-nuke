@@ -78,39 +78,4 @@ public class LinkImpl extends AtomCommonAttributesImpl implements Link {
 
       return hash + super.hashCode();
    }
-
-   @Override
-   public boolean equals(Object obj) {
-      if (obj == null || getClass() != obj.getClass()) {
-         return false;
-      }
-
-      final LinkImpl other = (LinkImpl) obj;
-
-      if ((this.href == null) ? (other.href != null) : !this.href.equals(other.href)) {
-         return false;
-      }
-
-      if ((this.rel == null) ? (other.rel != null) : !this.rel.equals(other.rel)) {
-         return false;
-      }
-
-      if ((this.type == null) ? (other.type != null) : !this.type.equals(other.type)) {
-         return false;
-      }
-
-      if ((this.hreflang == null) ? (other.hreflang != null) : !this.hreflang.equals(other.hreflang)) {
-         return false;
-      }
-
-      if ((this.title == null) ? (other.title != null) : !this.title.equals(other.title)) {
-         return false;
-      }
-
-      if (this.length != other.length && (this.length == null || !this.length.equals(other.length))) {
-         return false;
-      }
-
-      return super.equals(obj);
-   }
 }

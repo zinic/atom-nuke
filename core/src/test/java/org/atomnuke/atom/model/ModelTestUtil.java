@@ -6,6 +6,7 @@ import org.atomnuke.atom.model.builder.CategoryBuilder;
 import org.atomnuke.atom.model.builder.ContentBuilder;
 import org.atomnuke.atom.model.builder.ContributorBuilder;
 import org.atomnuke.atom.model.builder.EntryBuilder;
+import org.atomnuke.atom.model.builder.FeedBuilder;
 import org.atomnuke.atom.model.builder.GeneratorBuilder;
 import org.atomnuke.atom.model.builder.IconBuilder;
 import org.atomnuke.atom.model.builder.IdBuilder;
@@ -13,6 +14,7 @@ import org.atomnuke.atom.model.builder.LinkBuilder;
 import org.atomnuke.atom.model.builder.LogoBuilder;
 import org.atomnuke.atom.model.builder.PublishedBuilder;
 import org.atomnuke.atom.model.builder.RightsBuilder;
+import org.atomnuke.atom.model.builder.SourceBuilder;
 import org.atomnuke.atom.model.builder.SubtitleBuilder;
 import org.atomnuke.atom.model.builder.SummaryBuilder;
 import org.atomnuke.atom.model.builder.TitleBuilder;
@@ -30,10 +32,38 @@ public final class ModelTestUtil {
    private ModelTestUtil() {
    }
 
+   public static Feed newFeed() {
+      final FeedBuilder newFeed = new FeedBuilder().setBase(URI_INSTANCE).setLang(LANG);
+
+      newFeed.setGenerator(newGenerator());
+      newFeed.setIcon(newIcon());
+      newFeed.setId(newId());
+      newFeed.setLogo(newLogo());
+      newFeed.setRights(newRights());
+      newFeed.setSubtitle(newSubtitle());
+      newFeed.setTitle(newTitle());
+      newFeed.setUpdated(newUpdated());
+
+      newFeed.addEntry(newEntry());
+      newFeed.addAuthor(newAuthor());
+      newFeed.addCategory(newCategory());
+      newFeed.addContributor(newContributor());
+      newFeed.addLink(newLink());
+
+      return newFeed.build();
+   }
+
    public static Entry newEntry() {
-      final EntryBuilder newEntry = new EntryBuilder().setBase(URI_INSTANCE).setLang(LANG).setContent(newContent())
-              .setId(newId()).setPublished(newPublished()).setRights(newRights()).setSummary(newSummary())
-              .setTitle(newTitle()).setUpdated(newUpdated());
+      final EntryBuilder newEntry = new EntryBuilder().setBase(URI_INSTANCE).setLang(LANG);
+
+      newEntry.setContent(newContent());
+      newEntry.setId(newId());
+      newEntry.setPublished(newPublished());
+      newEntry.setRights(newRights());
+      newEntry.setSource(newSource());
+      newEntry.setSummary(newSummary());
+      newEntry.setTitle(newTitle());
+      newEntry.setUpdated(newUpdated());
 
       newEntry.addAuthor(newAuthor());
       newEntry.addCategory(newCategory());
@@ -41,6 +71,25 @@ public final class ModelTestUtil {
       newEntry.addLink(newLink());
 
       return newEntry.build();
+   }
+
+   public static Source newSource() {
+      final SourceBuilder newSource = new SourceBuilder().setBase(URI_INSTANCE).setLang(LANG);
+
+      newSource.setGenerator(newGenerator());
+      newSource.setIcon(newIcon());
+      newSource.setId(newId());
+      newSource.setLogo(newLogo());
+      newSource.setRights(newRights());
+      newSource.setSubtitle(newSubtitle());
+      newSource.setTitle(newTitle());
+      newSource.setUpdated(newUpdated());
+
+      newSource.addAuthor(newAuthor());
+      newSource.addCategory(newCategory());
+      newSource.addLink(newLink());
+
+      return newSource.build();
    }
 
    public static Link newLink() {

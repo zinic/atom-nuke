@@ -16,12 +16,31 @@ public class LinkBuilder extends AtomConstructBuilderImpl<LinkBuilder, Link, Lin
    public LinkBuilder(Link copyConstruct) {
       super(LinkBuilder.class, new LinkImpl(), copyConstruct);
 
-      setHref(copyConstruct.href());
-      setHreflang(copyConstruct.hreflang());
-      setLength(copyConstruct.length());
-      setRel(copyConstruct.rel());
-      setTitle(copyConstruct.title());
-      setType(copyConstruct.type());
+      if (copyConstruct != null) {
+         if (copyConstruct.href() != null) {
+            setHref(copyConstruct.href());
+         }
+
+         if (copyConstruct.hreflang() != null) {
+            setHreflang(copyConstruct.hreflang());
+         }
+
+         if (copyConstruct.length() != null) {
+            setLength(copyConstruct.length());
+         }
+
+         if (copyConstruct.rel() != null) {
+            setRel(copyConstruct.rel());
+         }
+
+         if (copyConstruct.title() != null) {
+            setTitle(copyConstruct.title());
+         }
+
+         if (copyConstruct.type() != null) {
+            setType(copyConstruct.type());
+         }
+      }
    }
 
    public final LinkBuilder setHref(String href) {

@@ -37,23 +37,4 @@ public class ContentImpl extends SimpleContentImpl implements Content {
 
       return hash + super.hashCode();
    }
-
-   @Override
-   public boolean equals(Object obj) {
-      if (obj == null || getClass() != obj.getClass()) {
-         return false;
-      }
-
-      final ContentImpl other = (ContentImpl) obj;
-
-      if ((this.type == null) ? (other.type != null) : !this.type.equals(other.type)) {
-         return false;
-      }
-
-      if ((this.src == null) ? (other.src != null) : !this.src.equals(other.src)) {
-         return false;
-      }
-
-      return super.equals(obj);
-   }
 }

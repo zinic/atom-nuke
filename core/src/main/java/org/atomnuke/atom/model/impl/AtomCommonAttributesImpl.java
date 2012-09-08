@@ -41,21 +41,11 @@ public abstract class AtomCommonAttributesImpl implements AtomCommonAtributes {
    }
 
    @Override
-   public boolean equals(Object obj) {
+   public final boolean equals(Object obj) {
       if (obj == null || getClass() != obj.getClass()) {
          return false;
       }
 
-      final AtomCommonAttributesImpl other = (AtomCommonAttributesImpl) obj;
-
-      if ((this.lang == null) ? (other.lang != null) : !this.lang.equals(other.lang)) {
-         return false;
-      }
-
-      if (this.base != other.base && (this.base == null || !this.base.equals(other.base))) {
-         return false;
-      }
-
-      return true;
+      return hashCode() == obj.hashCode();
    }
 }

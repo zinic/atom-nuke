@@ -29,8 +29,7 @@ public class ParserPerformance {
       final ByteArrayOutputStream output = new ByteArrayOutputStream();
 
       for (int i = 0; i < iterationLimit; i++) {
-         parser.read(new ByteArrayInputStream(bytes)).getFeed();
-         writer.write(output, parser.read(new ByteArrayInputStream(bytes)).getFeed());
+         writer.write(output, parser.read(new ByteArrayInputStream(bytes)).getEntry());
          output.reset();
       }
 

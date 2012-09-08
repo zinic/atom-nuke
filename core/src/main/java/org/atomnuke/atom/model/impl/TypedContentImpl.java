@@ -31,21 +31,4 @@ public class TypedContentImpl extends SimpleContentImpl implements Rights, Subti
 
       return hash + super.hashCode();
    }
-
-   @Override
-   public boolean equals(Object obj) {
-      if (obj == null || getClass() != obj.getClass()) {
-         return false;
-      }
-
-      final TypedContentImpl other = (TypedContentImpl) obj;
-
-      if (this.type != other.type) {
-         return false;
-      }
-
-      return super.equals(obj);
-   }
-
-
 }

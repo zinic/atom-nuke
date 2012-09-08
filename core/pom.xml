@@ -6,7 +6,7 @@
    <parent>
       <groupId>org.atomnuke</groupId>
       <artifactId>project</artifactId>
-      <version>0.9.3-SNAPSHOT</version>
+      <version>0.9.4-SNAPSHOT</version>
    </parent>
 
    <groupId>org.atomnuke</groupId>
@@ -14,7 +14,7 @@
 
    <packaging>jar</packaging>
 
-   <name>Atom Nuke</name>
+   <name>Atom Nuke - Core</name>
 
    <dependencies>
       <dependency>
@@ -45,11 +45,6 @@
       <dependency>
          <groupId>org.apache.commons</groupId>
          <artifactId>commons-lang3</artifactId>
-      </dependency>
-
-      <dependency>
-         <groupId>org.apache.hadoop</groupId>
-         <artifactId>hadoop-client</artifactId>
       </dependency>
 
       <dependency>

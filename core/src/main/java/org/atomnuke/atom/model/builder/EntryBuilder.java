@@ -17,7 +17,6 @@ import org.atomnuke.atom.model.Title;
 import org.atomnuke.atom.model.Updated;
 import org.atomnuke.atom.model.impl.EntryImpl;
 
-
 import static org.atomnuke.util.CollectionUtil.*;
 
 /**
@@ -43,21 +42,44 @@ public class EntryBuilder extends AtomConstructBuilderImpl<EntryBuilder, Entry, 
    }
 
    public EntryBuilder(Entry copyConstruct) {
-      super(EntryBuilder.class, new EntryImpl());
+      super(EntryBuilder.class, new EntryImpl(), copyConstruct);
 
       authors = copyAuthors(copyConstruct.authors());
       contributors = copyContributors(copyConstruct.contributors());
       categories = copyCategories(copyConstruct.categories());
       links = copyLinks(copyConstruct.links());
 
-      setContent(new ContentBuilder(copyConstruct.content()).build());
-      setId(new IdBuilder(copyConstruct.id()).build());
-      setPublished(new PublishedBuilder(copyConstruct.published()).build());
-      setRights(new RightsBuilder(copyConstruct.rights()).build());
-      setSource(new SourceBuilder(copyConstruct.source()).build());
-      setSummary(new SummaryBuilder(copyConstruct.summary()).build());
-      setTitle(new TitleBuilder(copyConstruct.title()).build());
-      setUpdated(new UpdatedBuilder(copyConstruct.updated()).build());
+      if (copyConstruct.content() != null) {
+         setContent(new ContentBuilder(copyConstruct.content()).build());
+      }
+
+      if (copyConstruct.id() != null) {
+         setId(new IdBuilder(copyConstruct.id()).build());
+      }
+
+      if (copyConstruct.published() != null) {
+         setPublished(new PublishedBuilder(copyConstruct.published()).build());
+      }
+
+      if (copyConstruct.rights() != null) {
+         setRights(new RightsBuilder(copyConstruct.rights()).build());
+      }
+
+      if (copyConstruct.source() != null) {
+         setSource(new SourceBuilder(copyConstruct.source()).build());
+      }
+
+      if (copyConstruct.summary() != null) {
+         setSummary(new SummaryBuilder(copyConstruct.summary()).build());
+      }
+
+      if (copyConstruct.title() != null) {
+         setTitle(new TitleBuilder(copyConstruct.title()).build());
+      }
+
+      if (copyConstruct.updated() != null) {
+         setUpdated(new UpdatedBuilder(copyConstruct.updated()).build());
+      }
 
       setLists();
    }

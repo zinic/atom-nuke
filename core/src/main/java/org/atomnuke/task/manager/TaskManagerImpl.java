@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
 public class TaskManagerImpl implements TaskManager {
 
    private static final Logger LOG = LoggerFactory.getLogger(TaskManagerImpl.class);
-   
+
    private final ExecutionManager executionManager;
    private final List<ManagedTask> pollingTasks;
    private final TaskContext taskContext;
@@ -94,6 +94,10 @@ public class TaskManagerImpl implements TaskManager {
 
             // Reentrant tasks are always eligible to run if their next polling
             // time has arrived.
+
+            // TODO:Review - Reentrancy provides a potential concurrency boost but safety needs to be checked in greater detail
+//            if (managedTask.isReentrant() || !executionManager.submitted(managedTask.id())) {
+
             if (managedTask.isReentrant() || !executionManager.submitted(managedTask.id())) {
                executionManager.submit(managedTask.id(), managedTask);
                managedTask.scheduled();

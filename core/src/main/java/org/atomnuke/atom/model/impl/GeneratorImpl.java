@@ -37,23 +37,4 @@ public class GeneratorImpl extends SimpleContentImpl implements Generator {
 
       return hash + super.hashCode();
    }
-
-   @Override
-   public boolean equals(Object obj) {
-      if (obj == null || getClass() != obj.getClass()) {
-         return false;
-      }
-
-      final GeneratorImpl other = (GeneratorImpl) obj;
-
-      if ((this.uri == null) ? (other.uri != null) : !this.uri.equals(other.uri)) {
-         return false;
-      }
-
-      if ((this.version == null) ? (other.version != null) : !this.version.equals(other.version)) {
-         return false;
-      }
-
-      return super.equals(obj);
-   }
 }

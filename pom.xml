@@ -5,16 +5,18 @@
 
    <groupId>org.atomnuke</groupId>
    <artifactId>project</artifactId>
-   <version>0.9.3-SNAPSHOT</version>
+   <version>0.9.4-SNAPSHOT</version>
 
    <packaging>pom</packaging>
 
-   <name>Atom Nuke Projects</name>
+   <name>Atom Nuke</name>
    <url>http://atomnuke.org</url>
 
    <modules>
       <module>core</module>
       <module>examples</module>
+
+      <module>components/sources/servlet</module>
    </modules>
 
    <description>
@@ -80,6 +82,13 @@
          </dependency>
 
          <dependency>
+            <groupId>org.atomnuke</groupId>
+            <artifactId>examples</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+         </dependency>
+
+         <dependency>
             <groupId>xerces</groupId>
             <artifactId>xercesImpl</artifactId>
             <version>2.10.0</version>
@@ -124,13 +133,13 @@
          <dependency>
             <groupId>com.rackspace.papi.commons</groupId>
             <artifactId>utilities</artifactId>
-            <version>2.2.0</version>
+            <version>2.3.1</version>
          </dependency>
 
          <dependency>
             <groupId>com.rackspace.papi.commons</groupId>
             <artifactId>classloader</artifactId>
-            <version>2.2.0</version>
+            <version>2.3.1</version>
          </dependency>
 
          <dependency>

@@ -53,14 +53,39 @@ public class FeedBuilder extends AtomConstructBuilderImpl<FeedBuilder, Feed, Fee
       links = copyLinks(copyConstruct.links());
       entries = copyEntries(copyConstruct.entries());
 
-      setGenerator(new GeneratorBuilder(copyConstruct.generator()).build());
-      setIcon(new IconBuilder(copyConstruct.icon()).build());
-      setId(new IdBuilder(copyConstruct.id()).build());
-      setLogo(new LogoBuilder(copyConstruct.logo()).build());
-      setRights(new RightsBuilder(copyConstruct.rights()).build());
-      setSubtitle(new SubtitleBuilder(copyConstruct.subtitle()).build());
-      setTitle(new TitleBuilder(copyConstruct.title()).build());
-      setUpdated(new UpdatedBuilder(copyConstruct.updated()).build());
+      if (copyConstruct != null) {
+         if (copyConstruct.generator() != null) {
+            setGenerator(new GeneratorBuilder(copyConstruct.generator()).build());
+         }
+
+         if (copyConstruct.icon() != null) {
+            setIcon(new IconBuilder(copyConstruct.icon()).build());
+         }
+
+         if (copyConstruct.id() != null) {
+            setId(new IdBuilder(copyConstruct.id()).build());
+         }
+
+         if (copyConstruct.logo() != null) {
+            setLogo(new LogoBuilder(copyConstruct.logo()).build());
+         }
+
+         if (copyConstruct.rights() != null) {
+            setRights(new RightsBuilder(copyConstruct.rights()).build());
+         }
+
+         if (copyConstruct.subtitle() != null) {
+            setSubtitle(new SubtitleBuilder(copyConstruct.subtitle()).build());
+         }
+
+         if (copyConstruct.title() != null) {
+            setTitle(new TitleBuilder(copyConstruct.title()).build());
+         }
+
+         if (copyConstruct.updated() != null) {
+            setUpdated(new UpdatedBuilder(copyConstruct.updated()).build());
+         }
+      }
 
       setLists();
    }

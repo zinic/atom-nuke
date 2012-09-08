@@ -16,8 +16,12 @@ public abstract class TypedContentBuilder<T extends TypedContentBuilder, B exten
 
    protected TypedContentBuilder(Class<T> builderType, B copyConstruct) {
       super(builderType, new TypedContentImpl(), copyConstruct);
-
-      setType(copyConstruct.type());
+      
+      if (copyConstruct != null) {
+         if (copyConstruct.type() != null) {
+            setType(copyConstruct.type());
+         }
+      }
    }
 
    public final T setType(Type type) {

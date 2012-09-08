@@ -42,7 +42,7 @@ public class KernelDelegate implements Runnable {
 
             sleepTime = new TimeValue(2 * drainMagnitude, TimeUnit.MILLISECONDS);
 
-            LOG.debug("Execution queue too large to continue polling. Yielding " + sleepTime.value() + " millisecond to allow queue to drain.");
+            LOG.error("Execution queue too large to continue polling. Yielding " + sleepTime.value() + " millisecond to allow queue to drain.");
          } else {
             drainMagnitude -= drainMagnitude == 0 ? 1 : 0;
 
