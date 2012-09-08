@@ -1,7 +1,5 @@
-#Nuke#
-###The Fast ATOM Framework###
-
-Our Website: [Atom Nuke](http://atomnuke.org)
+#[Nuke](http://atomnuke.org)#
+###[The Fast ATOM Framework](http://atomnuke.org)###
 
 ##What is it?##
 
