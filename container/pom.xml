@@ -10,16 +10,26 @@
    </parent>
 
    <groupId>org.atomnuke</groupId>
-   <artifactId>nuke</artifactId>
+   <artifactId>container</artifactId>
 
    <packaging>jar</packaging>
 
-   <name>Atom Nuke - Core</name>
+   <name>Atom Nuke - Container</name>
 
    <dependencies>
       <dependency>
+         <groupId>org.atomnuke</groupId>
+         <artifactId>nuke</artifactId>
+      </dependency>
+
+      <dependency>
          <groupId>xerces</groupId>
          <artifactId>xercesImpl</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>org.python</groupId>
+         <artifactId>jython</artifactId>
       </dependency>
 
       <dependency>
@@ -48,6 +58,11 @@
       </dependency>
 
       <dependency>
+         <groupId>com.rackspace.papi.commons</groupId>
+         <artifactId>classloader</artifactId>
+      </dependency>
+
+      <dependency>
          <groupId>org.slf4j</groupId>
          <artifactId>slf4j-api</artifactId>
       </dependency>
@@ -68,6 +83,40 @@
          <scope>test</scope>
       </dependency>
    </dependencies>
+
+   <profiles>
+      <profile>
+         <id>runjar</id>
+
+         <build>
+            <plugins>
+               <plugin>
+                  <groupId>org.apache.maven.plugins</groupId>
+                  <artifactId>maven-shade-plugin</artifactId>
+                  <version>1.7.1</version>
+
+                  <executions>
+                     <execution>
+                        <phase>package</phase>
+
+                        <goals>
+                           <goal>shade</goal>
+                        </goals>
+
+                        <configuration>
+                           <transformers>
+                              <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                 <mainClass>org.atomnuke.NukeMain</mainClass>
+                              </transformer>
+                           </transformers>
+                        </configuration>
+                     </execution>
+                  </executions>
+               </plugin>
+            </plugins>
+         </build>
+      </profile>
+   </profiles>
 
    <build>
       <plugins>

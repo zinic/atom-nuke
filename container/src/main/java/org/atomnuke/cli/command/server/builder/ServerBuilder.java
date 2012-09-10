@@ -20,6 +20,7 @@ import org.atomnuke.source.AtomSource;
 import org.atomnuke.task.Task;
 import org.atomnuke.task.lifecycle.InitializationException;
 import org.atomnuke.util.TimeValue;
+import org.atomnuke.util.TimeValueUtil;
 
 /**
  *
@@ -109,7 +110,7 @@ public class ServerBuilder {
 
    public void constructSources() throws BindingInstantiationException, ConfigurationException {
       for (Source source : cfgHandler.getSources()) {
-         final Task newTask = kernelBeingBuilt.follow(constructSource(source.getType(), source.getHref()), TimeValue.fromPollingInterval(source.getPollingInterval()));
+         final Task newTask = kernelBeingBuilt.follow(constructSource(source.getType(), source.getHref()), TimeValueUtil.fromPollingInterval(source.getPollingInterval()));
 
          registeredSources.put(source.getId(), newTask);
       }
