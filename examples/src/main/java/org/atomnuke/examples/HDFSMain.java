@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.concurrent.TimeUnit;
 import org.atomnuke.Nuke;
 import org.atomnuke.NukeKernel;
+import org.atomnuke.atom.io.writer.stax.StaxAtomWriterFactory;
 import org.atomnuke.atom.stax.StaxAtomWriter;
 import org.atomnuke.task.Task;
 import org.atomnuke.examples.listener.HDFSFeedListener;
@@ -17,16 +18,16 @@ import org.atomnuke.util.TimeValue;
 public class HDFSMain {
 
    public static void main(String[] args) throws Exception {
-      final HDFSFeedListener listener = new HDFSFeedListener("example-1.feed", new StaxAtomWriter());
-      final HDFSFeedListener listener2 = new HDFSFeedListener("example-2.feed", new StaxAtomWriter());
+      final HDFSFeedListener listener = new HDFSFeedListener("example-1.feed", new StaxAtomWriterFactory());
+      final HDFSFeedListener listener2 = new HDFSFeedListener("example-2.feed", new StaxAtomWriterFactory());
 
       /*
        * Still todo...
-       * 
+       *
        * - Consider using a listener delegation pattern ala SAX
        *    Might not implement this one due to the execution pattern I took. Still
        *    investigating the model.
-       * 
+       *
        */
 
       // Create the nuke kernel

@@ -1,6 +1,5 @@
-package org.atomnuke.atom.sax;
+package org.atomnuke.atom.io.reader.sax;
 
-import org.atomnuke.atom.sax.impl.SaxAtomParser;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,7 +7,8 @@ import java.net.URI;
 import java.util.Calendar;
 import java.util.List;
 import javax.xml.bind.DatatypeConverter;
-import org.atomnuke.atom.ParserResult;
+import org.atomnuke.atom.io.AtomReader;
+import org.atomnuke.atom.io.ReaderResult;
 import org.atomnuke.atom.model.Author;
 import org.atomnuke.atom.model.Category;
 import org.atomnuke.atom.model.Contributor;
@@ -48,14 +48,14 @@ public class AtomHandlerTest {
    @Ignore
    public static class TestParent {
 
-      private SaxAtomParser parserInstance;
+      private AtomReader parserInstance;
 
       @Before
       public void standUp() {
-         parserInstance = new SaxAtomParser();
+         parserInstance = new SaxAtomReaderFactory().getInstance();
       }
 
-      protected SaxAtomParser getParser() {
+      protected AtomReader getReader() {
          return parserInstance;
       }
 
@@ -117,14 +117,14 @@ public class AtomHandlerTest {
       @Test
       public void shouldReturnEmptyFeed() throws Exception {
          final String feedXml = "<feed />";
-         final ParserResult result = getParser().read(new ByteArrayInputStream(feedXml.getBytes()));
+         final ReaderResult result = getReader().read(new ByteArrayInputStream(feedXml.getBytes()));
 
          assertNotNull(result.getFeed());
       }
 
       @Test
       public void shouldFeedWithComplexNamespacing() throws Exception {
-         final ParserResult result = getParser().read(openAtomResource("ComplexNamespaceFeed.xml"));
+         final ReaderResult result = getReader().read(openAtomResource("ComplexNamespaceFeed.xml"));
 
          assertNotNull(result.getFeed());
          assertEquals(1, result.getFeed().entries().size());
@@ -133,7 +133,7 @@ public class AtomHandlerTest {
       @Test
       public void shouldReturnFeedWithEmptyEntry() throws Exception {
          final String feedXml = "<feed><entry></entry></feed>";
-         final ParserResult result = getParser().read(new ByteArrayInputStream(feedXml.getBytes()));
+         final ReaderResult result = getReader().read(new ByteArrayInputStream(feedXml.getBytes()));
 
          assertNotNull(result.getFeed());
          assertTrue(1 == result.getFeed().entries().size());
@@ -142,7 +142,7 @@ public class AtomHandlerTest {
       @Test
       public void shouldReadFeedAttributes() throws Exception {
          final String feedXml = "<feed lang='en' base='uri'></feed>";
-         final ParserResult result = getParser().read(new ByteArrayInputStream(feedXml.getBytes()));
+         final ReaderResult result = getReader().read(new ByteArrayInputStream(feedXml.getBytes()));
 
          assertNotNull(result.getFeed());
          assertEquals("en", result.getFeed().lang());
@@ -151,7 +151,7 @@ public class AtomHandlerTest {
 
       @Test
       public void shouldReadFeedAuthors() throws Exception {
-         final ParserResult result = getParser().read(openFeedResource("FeedWithAuthors.xml"));
+         final ReaderResult result = getReader().read(openFeedResource("FeedWithAuthors.xml"));
 
          final Feed f = result.getFeed();
          checkAuthors(f.authors());
@@ -159,7 +159,7 @@ public class AtomHandlerTest {
 
       @Test
       public void shouldReadFeedContributors() throws Exception {
-         final ParserResult result = getParser().read(openFeedResource("FeedWithContributors.xml"));
+         final ReaderResult result = getReader().read(openFeedResource("FeedWithContributors.xml"));
 
          final Feed f = result.getFeed();
          assertEquals(3, f.contributors().size());
@@ -168,7 +168,7 @@ public class AtomHandlerTest {
 
       @Test
       public void shouldReadFeedCategories() throws Exception {
-         final ParserResult result = getParser().read(openFeedResource("FeedWithCategories.xml"));
+         final ReaderResult result = getReader().read(openFeedResource("FeedWithCategories.xml"));
 
          final Feed f = result.getFeed();
          checkCategories(f.categories());
@@ -176,7 +176,7 @@ public class AtomHandlerTest {
 
       @Test
       public void shouldReadFeedID() throws Exception {
-         final ParserResult result = getParser().read(openFeedResource("FeedWithID.xml"));
+         final ReaderResult result = getReader().read(openFeedResource("FeedWithID.xml"));
 
          final Feed f = result.getFeed();
          assertEquals("urn:uuid:05b6e287-eb46-4f4b-a1a7-1a171ea66c78", f.id().toString());
@@ -184,7 +184,7 @@ public class AtomHandlerTest {
 
       @Test
       public void shouldReadFeedIcon() throws Exception {
-         final ParserResult result = getParser().read(openFeedResource("FeedWithIcon.xml"));
+         final ReaderResult result = getReader().read(openFeedResource("FeedWithIcon.xml"));
 
          final Feed f = result.getFeed();
          assertEquals("http://example.domain/images/icon.jpg", f.icon().toString());
@@ -192,7 +192,7 @@ public class AtomHandlerTest {
 
       @Test
       public void shouldReadFeedLogo() throws Exception {
-         final ParserResult result = getParser().read(openFeedResource("FeedWithLogo.xml"));
+         final ReaderResult result = getReader().read(openFeedResource("FeedWithLogo.xml"));
 
          final Feed f = result.getFeed();
          assertEquals("http://example.domain/images/logo.jpg", f.logo().toString());
@@ -200,7 +200,7 @@ public class AtomHandlerTest {
 
       @Test
       public void shouldReadFeedLinks() throws Exception {
-         final ParserResult result = getParser().read(openFeedResource("FeedWithLinks.xml"));
+         final ReaderResult result = getReader().read(openFeedResource("FeedWithLinks.xml"));
 
          final Feed f = result.getFeed();
          checkLinks(f.links());
@@ -208,7 +208,7 @@ public class AtomHandlerTest {
 
       @Test
       public void shouldReadFeedUpdated() throws Exception {
-         final ParserResult result = getParser().read(openFeedResource("FeedWithUpdated.xml"));
+         final ReaderResult result = getReader().read(openFeedResource("FeedWithUpdated.xml"));
 
          final Feed f = result.getFeed();
          assertEquals(THAT_DATE, f.updated().toCalendar());
@@ -216,7 +216,7 @@ public class AtomHandlerTest {
 
       @Test
       public void shouldReadFeedRights() throws Exception {
-         final ParserResult result = getParser().read(openFeedResource("FeedWithRights.xml"));
+         final ReaderResult result = getReader().read(openFeedResource("FeedWithRights.xml"));
 
          final Feed f = result.getFeed();
          assertEquals("Rights.", f.rights().toString());
@@ -228,7 +228,7 @@ public class AtomHandlerTest {
       @Test
       public void shouldReturnEmptyEntry() throws Exception {
          final String feedXml = "<entry />";
-         final ParserResult result = getParser().read(new ByteArrayInputStream(feedXml.getBytes()));
+         final ReaderResult result = getReader().read(new ByteArrayInputStream(feedXml.getBytes()));
 
          assertNotNull(result.getEntry());
       }
@@ -236,7 +236,7 @@ public class AtomHandlerTest {
       @Test
       public void shouldReturnFeedWithEmptyEntry() throws Exception {
          final String feedXml = "<feed><entry /></feed>";
-         final ParserResult result = getParser().read(new ByteArrayInputStream(feedXml.getBytes()));
+         final ReaderResult result = getReader().read(new ByteArrayInputStream(feedXml.getBytes()));
 
          final Feed f = result.getFeed();
 
@@ -247,7 +247,7 @@ public class AtomHandlerTest {
       @Test
       public void shouldReadEntryAttributes() throws Exception {
          final String feedXml = "<feed><entry lang='en' base='uri' /></feed>";
-         final ParserResult result = getParser().read(new ByteArrayInputStream(feedXml.getBytes()));
+         final ReaderResult result = getReader().read(new ByteArrayInputStream(feedXml.getBytes()));
 
          final Feed f = result.getFeed();
 
@@ -262,7 +262,7 @@ public class AtomHandlerTest {
 
       @Test
       public void shouldReadEntryAuthors() throws Exception {
-         final ParserResult result = getParser().read(openEntryResource("EntryWithAuthors.xml"));
+         final ReaderResult result = getReader().read(openEntryResource("EntryWithAuthors.xml"));
 
          final Entry e = result.getEntry();
          checkAuthors(e.authors());
@@ -270,7 +270,7 @@ public class AtomHandlerTest {
 
       @Test
       public void shouldReadEntryContributors() throws Exception {
-         final ParserResult result = getParser().read(openEntryResource("EntryWithContributors.xml"));
+         final ReaderResult result = getReader().read(openEntryResource("EntryWithContributors.xml"));
 
          final Entry e = result.getEntry();
          assertEquals(3, e.contributors().size());
@@ -279,7 +279,7 @@ public class AtomHandlerTest {
 
       @Test
       public void shouldReadEntryContent() throws Exception {
-         final ParserResult result = getParser().read(openEntryResource("EntryWithContent.xml"));
+         final ReaderResult result = getReader().read(openEntryResource("EntryWithContent.xml"));
 
          final Entry e = result.getEntry();
          assertEquals("Text content.", e.content().toString());
@@ -288,7 +288,7 @@ public class AtomHandlerTest {
 
       @Test
       public void shouldReadEntryCategories() throws Exception {
-         final ParserResult result = getParser().read(openEntryResource("EntryWithCategories.xml"));
+         final ReaderResult result = getReader().read(openEntryResource("EntryWithCategories.xml"));
 
          final Entry e = result.getEntry();
          checkCategories(e.categories());
@@ -296,7 +296,7 @@ public class AtomHandlerTest {
 
       @Test
       public void shouldReadEntryID() throws Exception {
-         final ParserResult result = getParser().read(openEntryResource("EntryWithID.xml"));
+         final ReaderResult result = getReader().read(openEntryResource("EntryWithID.xml"));
 
          final Entry e = result.getEntry();
          assertEquals("urn:uuid:05b6e287-eb46-4f4b-a1a7-1a171ea66c78", e.id().toString());
@@ -304,7 +304,7 @@ public class AtomHandlerTest {
 
       @Test
       public void shouldReadEntryLinks() throws Exception {
-         final ParserResult result = getParser().read(openEntryResource("EntryWithLinks.xml"));
+         final ReaderResult result = getReader().read(openEntryResource("EntryWithLinks.xml"));
 
          final Entry e = result.getEntry();
          checkLinks(e.links());
@@ -312,7 +312,7 @@ public class AtomHandlerTest {
 
       @Test
       public void shouldReadEntryUpdated() throws Exception {
-         final ParserResult result = getParser().read(openEntryResource("EntryWithUpdated.xml"));
+         final ReaderResult result = getReader().read(openEntryResource("EntryWithUpdated.xml"));
 
          final Entry e = result.getEntry();
          assertEquals(THAT_DATE, e.updated().toCalendar());
@@ -320,7 +320,7 @@ public class AtomHandlerTest {
 
       @Test
       public void shouldReadEntryPublished() throws Exception {
-         final ParserResult result = getParser().read(openEntryResource("EntryWithPublished.xml"));
+         final ReaderResult result = getReader().read(openEntryResource("EntryWithPublished.xml"));
 
          final Entry e = result.getEntry();
          assertEquals(THAT_DATE, e.published().toCalendar());
@@ -328,7 +328,7 @@ public class AtomHandlerTest {
 
       @Test
       public void shouldReadEntryRights() throws Exception {
-         final ParserResult result = getParser().read(openEntryResource("EntryWithRights.xml"));
+         final ReaderResult result = getReader().read(openEntryResource("EntryWithRights.xml"));
 
          final Entry e = result.getEntry();
          assertEquals("<this attr\"test\"><is>some</is></this>", e.rights().toString());
@@ -336,7 +336,7 @@ public class AtomHandlerTest {
 
       @Test
       public void shouldReadEntrySource() throws Exception {
-         final ParserResult result = getParser().read(openEntryResource("EntryWithSource.xml"));
+         final ReaderResult result = getReader().read(openEntryResource("EntryWithSource.xml"));
 
          final Entry e = result.getEntry();
       }

@@ -1,4 +1,4 @@
-package org.atomnuke.atom.io.reader.impl.sax;
+package org.atomnuke.atom.io.reader.sax;
 
 import org.xml.sax.ContentHandler;
 import org.xml.sax.XMLReader;

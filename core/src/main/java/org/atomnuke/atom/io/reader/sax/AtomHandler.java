@@ -1,8 +1,7 @@
-package org.atomnuke.atom.io.reader.impl.sax;
+package org.atomnuke.atom.io.reader.sax;
 
 import java.net.URI;
-import org.atomnuke.atom.ParserResult;
-import org.atomnuke.atom.ParserResultImpl;
+import org.atomnuke.atom.io.ReaderResult;
 import org.atomnuke.atom.model.Type;
 import org.atomnuke.atom.model.builder.AuthorBuilder;
 import org.atomnuke.atom.model.builder.CategoryBuilder;
@@ -23,9 +22,6 @@ import org.atomnuke.atom.model.builder.TitleBuilder;
 import org.atomnuke.atom.model.builder.TypedContentBuilder;
 import org.atomnuke.atom.model.builder.UpdatedBuilder;
 import org.atomnuke.atom.model.builder.ValueBuilder;
-import org.atomnuke.atom.sax.DocumentContextManager;
-import org.atomnuke.atom.sax.HandlerContext;
-import org.atomnuke.atom.sax.DelegatingHandler;
 import org.atomnuke.atom.xml.AtomElement;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -38,13 +34,13 @@ import org.xml.sax.XMLReader;
 public class AtomHandler extends DelegatingHandler {
 
    protected final DocumentContextManager contextManager;
-   protected final ParserResultImpl result;
+   protected final SaxAtomReaderResult result;
 
    public AtomHandler(XMLReader xmlReader) {
       super(xmlReader);
 
       contextManager = new DocumentContextManager();
-      result = new ParserResultImpl();
+      result = new SaxAtomReaderResult();
    }
 
    protected AtomHandler(AtomHandler delegate) {
@@ -188,7 +184,7 @@ public class AtomHandler extends DelegatingHandler {
       }
    }
 
-   public ParserResult getResult() {
+   public ReaderResult getResult() {
       return result;
    }
 

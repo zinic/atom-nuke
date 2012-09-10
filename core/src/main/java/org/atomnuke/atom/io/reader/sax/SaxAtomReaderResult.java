@@ -1,5 +1,6 @@
-package org.atomnuke.atom.io;
+package org.atomnuke.atom.io.reader.sax;
 
+import org.atomnuke.atom.io.ReaderResult;
 import org.atomnuke.atom.model.Entry;
 import org.atomnuke.atom.model.Feed;
 
@@ -7,21 +8,16 @@ import org.atomnuke.atom.model.Feed;
  *
  * @author zinic
  */
-public class SimpleResult implements ReaderResult {
+public class SaxAtomReaderResult implements ReaderResult {
 
-   private final Feed feedResult;
-   private final Entry entryResult;
+   private Feed feedResult;
+   private Entry entryResult;
 
-   public SimpleResult(Entry e) {
-      this(null, e);
-   }
-
-   public SimpleResult(Feed f) {
-      this(f, null);
-   }
-
-   private SimpleResult(Feed feedResult, Entry entryResult) {
+   public void setFeedResult(Feed feedResult) {
       this.feedResult = feedResult;
+   }
+
+   public void setEntryResult(Entry entryResult) {
       this.entryResult = entryResult;
    }
 

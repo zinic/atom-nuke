@@ -8,7 +8,6 @@ import org.atomnuke.NukeKernel;
 import org.atomnuke.examples.handler.FeedFileWriterHandler;
 import org.atomnuke.examples.listener.ClasspathSource;
 import org.atomnuke.examples.listener.eventlet.CounterEventlet;
-import org.atomnuke.listener.eps.ReentrantRelay;
 import org.atomnuke.listener.eps.Relay;
 import org.atomnuke.listener.eps.selectors.CategorySelector;
 import org.atomnuke.task.Task;

@@ -1,4 +1,4 @@
-package org.atomnuke.atom.io.writer.impl.stax;
+package org.atomnuke.atom.io.writer.stax;
 
 import org.atomnuke.atom.io.cfg.NamespaceLevel;
 import org.atomnuke.atom.io.cfg.WriterConfiguration;

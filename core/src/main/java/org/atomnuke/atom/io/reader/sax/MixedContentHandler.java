@@ -1,8 +1,7 @@
-package org.atomnuke.atom.io.reader.impl.sax;
+package org.atomnuke.atom.io.reader.sax;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.atomnuke.atom.model.builder.ValueBuilder;
-import org.atomnuke.atom.sax.DelegatingHandler;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 

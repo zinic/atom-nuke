@@ -14,13 +14,13 @@ import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 import org.atomnuke.Nuke;
 import org.atomnuke.NukeKernel;
-import org.atomnuke.atom.AtomParserException;
-import org.atomnuke.atom.ParserResult;
-import org.atomnuke.atom.Reader;
+import org.atomnuke.atom.io.AtomReadException;
+import org.atomnuke.atom.io.AtomReaderFactory;
+import org.atomnuke.atom.io.ReaderResult;
+import org.atomnuke.atom.io.reader.sax.SaxAtomReaderFactory;
 import org.atomnuke.atom.model.builder.EntryBuilder;
 import org.atomnuke.atom.model.builder.IdBuilder;
 import org.atomnuke.atom.model.builder.UpdatedBuilder;
-import org.atomnuke.atom.sax.impl.SaxAtomParser;
 import org.atomnuke.listener.AtomListener;
 import org.atomnuke.source.QueueSource;
 import org.atomnuke.source.QueueSourceImpl;
@@ -51,13 +51,13 @@ public class HttpServletSource extends HttpServlet {
       }
    }
 
+   private final AtomReaderFactory atomReaderFactory;
    private final QueueSource queueSource;
-   private final Reader atomReader;
    private final Nuke nukeInstance;
 
    public HttpServletSource(AtomListener... listeners) throws InitializationException {
       queueSource = new QueueSourceImpl();
-      atomReader = new SaxAtomParser();
+      atomReaderFactory = new SaxAtomReaderFactory();
       nukeInstance = new NukeKernel();
 
       final Task followTask = nukeInstance.follow(queueSource, new TimeValue(10, TimeUnit.MILLISECONDS));
@@ -93,11 +93,11 @@ public class HttpServletSource extends HttpServlet {
          resp.setStatus(415);
       } else {
          try {
-            final ParserResult parserResult = atomReader.read(new LimitedReadInputStream(req.getInputStream(), 5242880));
+            final ReaderResult readerResult = atomReaderFactory.getInstance().read(new LimitedReadInputStream(req.getInputStream(), 5242880));
 
-            if (parserResult.getEntry() != null) {
+            if (readerResult.getEntry() != null) {
                final XMLGregorianCalendar cal = DATATYPE_FACTORY.newXMLGregorianCalendar((GregorianCalendar) GregorianCalendar.getInstance());
-               final EntryBuilder newEntry = new EntryBuilder(parserResult.getEntry());
+               final EntryBuilder newEntry = new EntryBuilder(readerResult.getEntry());
 
                newEntry.setId(new IdBuilder().setValue(UUID.randomUUID().toString()).build());
                newEntry.setUpdated(new UpdatedBuilder().setValue(cal.toXMLFormat()).build());
@@ -108,7 +108,7 @@ public class HttpServletSource extends HttpServlet {
                resp.setStatus(400);
                resp.getWriter().append("Request entity must be an Entry.");
             }
-         } catch (AtomParserException ape) {
+         } catch (AtomReadException ape) {
             final Throwable cause = ape.getCause();
 
             if (cause instanceof ReadLimitException) {

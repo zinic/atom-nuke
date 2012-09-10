@@ -1,4 +1,4 @@
-package org.atomnuke.atom.io.writer.impl.stax;
+package org.atomnuke.atom.io.writer.stax;
 
 import java.net.URI;
 import java.util.List;

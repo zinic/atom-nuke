@@ -1,4 +1,4 @@
-package org.atomnuke.atom.io.writer.impl.stax;
+package org.atomnuke.atom.io.writer.stax;
 
 import java.io.OutputStream;
 import javax.xml.stream.XMLOutputFactory;
@@ -6,7 +6,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import org.atomnuke.atom.io.AtomWriteException;
 import org.atomnuke.atom.io.AtomWriter;
-import org.atomnuke.atom.io.cfg.NamespaceLevel;
+import org.atomnuke.atom.io.cfg.WriterConfiguration;
 import org.atomnuke.atom.model.Entry;
 import org.atomnuke.atom.model.Feed;
 
@@ -16,43 +16,29 @@ import org.atomnuke.atom.model.Feed;
  */
 public class StaxAtomWriter implements AtomWriter {
 
-   private static final StaxWriterConfiguration DEFAULT_CONFIGURATION = new StaxWriterConfiguration(NamespaceLevel.NONE);
-   
+   private final WriterConfiguration writerConfiguration;
    private final XMLOutputFactory outputFactory;
 
-   public StaxAtomWriter() {
-      this(XMLOutputFactory.newFactory());
-   }
-
-   public StaxAtomWriter(XMLOutputFactory outputFactory) {
+   public StaxAtomWriter(WriterConfiguration writerConfiguration, XMLOutputFactory outputFactory) {
+      this.writerConfiguration = writerConfiguration;
       this.outputFactory = outputFactory;
    }
 
    @Override
    public void write(OutputStream output, Feed f) throws AtomWriteException {
-      write(output, f, DEFAULT_CONFIGURATION);
-   }
-
-   @Override
-   public void write(OutputStream output, Entry e) throws AtomWriteException {
-      write(output, e, DEFAULT_CONFIGURATION);
-   }
-
-   @Override
-   public void write(OutputStream output, Feed f, StaxWriterConfiguration configuration) throws AtomWriteException {
       try {
          final XMLStreamWriter writer = outputFactory.createXMLStreamWriter(output);
-         Writer.instance().write(new WriterContext(writer, configuration), f);
+         Writer.instance().write(new WriterContext(writer, writerConfiguration), f);
       } catch (XMLStreamException xmlse) {
          throw new AtomWriteException("Failed to write Atom entry. Reason: " + xmlse.getMessage(), xmlse);
       }
    }
 
    @Override
-   public void write(OutputStream output, Entry e, StaxWriterConfiguration configuration) throws AtomWriteException {
+   public void write(OutputStream output, Entry e) throws AtomWriteException {
       try {
          final XMLStreamWriter writer = outputFactory.createXMLStreamWriter(output);
-         Writer.instance().write(new WriterContext(writer, configuration), e);
+         Writer.instance().write(new WriterContext(writer, writerConfiguration), e);
       } catch (XMLStreamException xmlse) {
          throw new AtomWriteException("Failed to write Atom entry. Reason: " + xmlse.getMessage(), xmlse);
       }

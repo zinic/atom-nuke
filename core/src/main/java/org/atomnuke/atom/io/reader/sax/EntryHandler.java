@@ -1,6 +1,5 @@
-package org.atomnuke.atom.io.reader.impl.sax;
+package org.atomnuke.atom.io.reader.sax;
 
-import org.atomnuke.atom.ParserResultImpl;
 import org.atomnuke.atom.model.builder.AuthorBuilder;
 import org.atomnuke.atom.model.builder.CategoryBuilder;
 import org.atomnuke.atom.model.builder.ContentBuilder;
@@ -15,8 +14,6 @@ import org.atomnuke.atom.model.builder.RightsBuilder;
 import org.atomnuke.atom.model.builder.SummaryBuilder;
 import org.atomnuke.atom.model.builder.TitleBuilder;
 import org.atomnuke.atom.model.builder.UpdatedBuilder;
-import org.atomnuke.atom.sax.DocumentContextManager;
-import org.atomnuke.atom.sax.HandlerContext;
 import org.atomnuke.atom.xml.AtomElement;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -184,14 +181,14 @@ public class EntryHandler extends AtomHandler {
       self.delegateTo(new MixedContentHandler(contentBuilder, self));
    }
 
-   private static void endEntry(EntryHandler self, DocumentContextManager contextManager, ParserResultImpl result) {
+   private static void endEntry(EntryHandler self, DocumentContextManager contextManager, SaxAtomReaderResult result) {
       final HandlerContext<EntryBuilder> entryContext = contextManager.pop(EntryBuilder.class);
 
       if (contextManager.hasContext()) {
          final HandlerContext<FeedBuilder> feedBuilderContext = contextManager.peek(FeedBuilder.class);
          feedBuilderContext.builder().addEntry(entryContext.builder().build());
       } else {
-         result.setEntryBuilder(entryContext.builder());
+         result.setEntryResult(entryContext.builder().build());
       }
 
       self.releaseToParent();

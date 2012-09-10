@@ -1,14 +1,14 @@
-package org.atomnuke.atom.stax;
+package org.atomnuke.atom.io.writer.stax;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import org.atomnuke.atom.ParserResult;
-import org.atomnuke.atom.Reader;
-import org.atomnuke.atom.Writer;
+import org.atomnuke.atom.io.AtomReader;
+import org.atomnuke.atom.io.AtomWriter;
+import org.atomnuke.atom.io.ReaderResult;
+import org.atomnuke.atom.io.reader.sax.SaxAtomReaderFactory;
 import org.atomnuke.atom.model.Entry;
 import org.atomnuke.atom.model.Feed;
 import org.atomnuke.atom.model.Source;
-import org.atomnuke.atom.sax.impl.SaxAtomParser;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
@@ -33,12 +33,12 @@ public class AtomWriterTest {
 
       @Before
       public void beforeAny() throws Exception {
-         final Reader reader = new SaxAtomParser();
-         final ParserResult originalResult = reader.read(AtomWriterTest.class.getResourceAsStream("/META-INF/examples/atom/PerformanceTestContents.xml"));
+         final AtomReader reader = new SaxAtomReaderFactory().getInstance();
+         final ReaderResult originalResult = reader.read(AtomWriterTest.class.getResourceAsStream("/META-INF/examples/atom/PerformanceTestContents.xml"));
 
          originalFeed = originalResult.getFeed();
 
-         final Writer writer = new StaxAtomWriter();
+         final AtomWriter writer = new StaxAtomWriterFactory().getInstance();
          final ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
          writer.write(baos, originalFeed);

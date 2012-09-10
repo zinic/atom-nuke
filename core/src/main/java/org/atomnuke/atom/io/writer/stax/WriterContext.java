@@ -1,6 +1,7 @@
-package org.atomnuke.atom.io.writer.impl.stax;
+package org.atomnuke.atom.io.writer.stax;
 
 import javax.xml.stream.XMLStreamWriter;
+import org.atomnuke.atom.io.cfg.WriterConfiguration;
 
 /**
  *
@@ -8,15 +9,15 @@ import javax.xml.stream.XMLStreamWriter;
  */
 public class WriterContext {
 
-   private final StaxWriterConfiguration configuration;
+   private final WriterConfiguration configuration;
    private final XMLStreamWriter writer;
 
-   public WriterContext(XMLStreamWriter writer, StaxWriterConfiguration configuration) {
+   public WriterContext(XMLStreamWriter writer, WriterConfiguration configuration) {
       this.configuration = configuration;
       this.writer = writer;
    }
 
-   public StaxWriterConfiguration getConfiguration() {
+   public WriterConfiguration getConfiguration() {
       return configuration;
    }
 

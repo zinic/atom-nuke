@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import org.atomnuke.atom.model.Entry;
 import org.atomnuke.atom.model.Feed;
-import org.atomnuke.atom.Writer;
 import org.atomnuke.listener.AtomListenerException;
 import org.atomnuke.task.context.TaskContext;
 import org.atomnuke.task.lifecycle.DestructionException;
@@ -20,6 +19,7 @@ import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.SequenceFile;
 import org.apache.hadoop.io.Text;
+import org.atomnuke.atom.io.AtomWriterFactory;
 
 /**
  *
@@ -30,15 +30,15 @@ public class HDFSFeedListener implements AtomListener {
    private final Configuration configuration;
    private final Path targetPath;
    private final String feedName;
-   private final Writer writer;
-   
+   private final AtomWriterFactory writerFactory;
+
    private SequenceFile.Writer fileWriter;
    private boolean writeHeader;
    private FileSystem hdfs;
 
-   public HDFSFeedListener(String feedName, Writer writer) {
+   public HDFSFeedListener(String feedName, AtomWriterFactory writerFactory) {
       this.feedName = feedName;
-      this.writer = writer;
+      this.writerFactory = writerFactory;
 
       targetPath = new Path("/data/atom/" + feedName);
 
@@ -75,7 +75,7 @@ public class HDFSFeedListener implements AtomListener {
       try {
          final ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
-         writer.write(baos, entry);
+         writerFactory.getInstance().write(baos, entry);
          append(new Text(entry.id().toString()), new Text(baos.toByteArray()));
       } catch (Exception ioe) {
          throw new AtomListenerException(ioe);
@@ -94,7 +94,7 @@ public class HDFSFeedListener implements AtomListener {
          final ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
          for (Entry e : page.entries()) {
-            writer.write(baos, page);
+            writerFactory.getInstance().write(baos, page);
             append(new Text(e.id().toString()), new Text(baos.toByteArray()));
          }
       } catch (Exception ioe) {
