@@ -4,9 +4,12 @@ import org.atomnuke.atom.WriterConfiguration;
 import javax.xml.stream.XMLStreamWriter;
 
 /**
+ * @deprecated org.atomnuke.atom.io replaces this package
  *
  * @author zinic
  */
+
+@Deprecated
 public class WriterContext {
 
    private final WriterConfiguration configuration;

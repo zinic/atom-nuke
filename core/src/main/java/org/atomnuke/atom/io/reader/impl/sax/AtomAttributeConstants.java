@@ -1,13 +1,9 @@
-package org.atomnuke.atom.sax.impl;
-
+package org.atomnuke.atom.io.reader.impl.sax;
 
 /**
- * @deprecated org.atomnuke.atom.io replaces this package
  *
  * @author zinic
  */
-
-@Deprecated
 public interface AtomAttributeConstants {
 
    String BASE = "base";

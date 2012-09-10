@@ -1,4 +1,4 @@
-package org.atomnuke.atom.sax.impl;
+package org.atomnuke.atom.io.reader.impl.sax;
 
 import java.net.URI;
 import org.atomnuke.atom.ParserResult;
@@ -32,12 +32,9 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
 /**
- * @deprecated org.atomnuke.atom.io replaces this package
  *
  * @author zinic
  */
-
-@Deprecated
 public class AtomHandler extends DelegatingHandler {
 
    protected final DocumentContextManager contextManager;

@@ -1,13 +1,9 @@
-package org.atomnuke.atom.sax;
-
+package org.atomnuke.atom.io.reader.impl.sax;
 
 /**
- * @deprecated org.atomnuke.atom.io replaces this package
  *
  * @author zinic
  */
-
-@Deprecated
 public class InvalidElementException extends IllegalStateException {
 
    public InvalidElementException(String s) {

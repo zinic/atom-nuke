@@ -1,4 +1,4 @@
-package org.atomnuke.atom.sax.impl;
+package org.atomnuke.atom.io.reader.impl.sax;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.atomnuke.atom.model.builder.ValueBuilder;
@@ -7,12 +7,10 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 /**
- * @deprecated org.atomnuke.atom.io replaces this package
+ * TODO: Ugh... make this pretty...
  *
  * @author zinic
  */
-
-@Deprecated
 public class MixedContentHandler<T extends ValueBuilder> extends DelegatingHandler {
 
    private final T contentBuilder;

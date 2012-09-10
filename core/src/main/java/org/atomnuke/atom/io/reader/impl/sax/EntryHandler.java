@@ -1,4 +1,4 @@
-package org.atomnuke.atom.sax.impl;
+package org.atomnuke.atom.io.reader.impl.sax;
 
 import org.atomnuke.atom.ParserResultImpl;
 import org.atomnuke.atom.model.builder.AuthorBuilder;
@@ -21,14 +21,10 @@ import org.atomnuke.atom.xml.AtomElement;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-
 /**
- * @deprecated org.atomnuke.atom.io replaces this package
  *
  * @author zinic
  */
-
-@Deprecated
 public class EntryHandler extends AtomHandler {
 
    public EntryHandler(AtomHandler delegate) {

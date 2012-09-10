@@ -27,11 +27,14 @@ public enum AtomElement {
    UPDATED("updated"),
    NAME("name"),
    EMAIL("email"),
-   URI("uri");
+   URI("uri"),
+   EXTENDED(null);
+
    public static final AtomElement[] ROOT_ELEMENTS = new AtomElement[]{
       FEED,
       ENTRY
    };
+
    public static final AtomElement[] ENTRY_ELEMENTS = new AtomElement[]{
       SOURCE,
       AUTHOR,
@@ -49,6 +52,7 @@ public enum AtomElement {
       TITLE,
       SUMMARY
    };
+
    public static final AtomElement[] FEED_ELEMENTS = new AtomElement[]{
       ENTRY,
       AUTHOR,
@@ -68,6 +72,7 @@ public enum AtomElement {
       SUBTITLE,
       SUMMARY
    };
+
    public static final AtomElement[] SOURCE_ELEMENTS = new AtomElement[]{
       AUTHOR,
       GENERATOR,
@@ -93,8 +98,9 @@ public enum AtomElement {
          }
       }
 
-      return null;
+      return EXTENDED;
    }
+
    private final String elementName;
 
    private AtomElement(String elementName) {

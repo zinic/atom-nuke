@@ -10,9 +10,12 @@ import org.atomnuke.atom.model.Entry;
 import org.atomnuke.atom.model.Feed;
 
 /**
+ * @deprecated org.atomnuke.atom.io replaces this package
  *
  * @author zinic
  */
+
+@Deprecated
 public class StaxAtomWriter implements Writer {
 
    private static final WriterConfiguration DEFAULT_CONFIGURATION = new WriterConfiguration(WriterConfiguration.NamespaceLevel.NONE);

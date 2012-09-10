@@ -6,9 +6,12 @@ import org.atomnuke.atom.model.builder.EntryBuilder;
 import org.atomnuke.atom.model.builder.FeedBuilder;
 
 /**
+ * @deprecated org.atomnuke.atom.io replaces this package
  *
  * @author zinic
  */
+
+@Deprecated
 public class ParserResultImpl implements ParserResult {
 
    private FeedBuilder feed;

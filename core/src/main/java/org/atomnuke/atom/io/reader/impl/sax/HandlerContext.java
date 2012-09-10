@@ -1,14 +1,11 @@
-package org.atomnuke.atom.sax;
+package org.atomnuke.atom.io.reader.impl.sax;
 
 import org.atomnuke.atom.xml.AtomElement;
 
 /**
- * @deprecated org.atomnuke.atom.io replaces this package
  *
  * @author zinic
  */
-
-@Deprecated
 public class HandlerContext<T> {
 
    private final AtomElement elementDef;

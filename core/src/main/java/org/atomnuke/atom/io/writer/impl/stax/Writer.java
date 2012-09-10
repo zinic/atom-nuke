@@ -1,10 +1,10 @@
-package org.atomnuke.atom.stax;
+package org.atomnuke.atom.io.writer.impl.stax;
 
-import org.atomnuke.atom.WriterConfiguration;
 import java.net.URI;
 import java.util.List;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
+import org.atomnuke.atom.io.cfg.NamespaceLevel;
 import org.atomnuke.atom.model.Category;
 import org.atomnuke.atom.model.Content;
 import org.atomnuke.atom.model.DateConstruct;
@@ -28,21 +28,18 @@ import org.atomnuke.atom.model.Updated;
 import org.atomnuke.atom.xml.AtomNamespaceContext;
 
 /**
- * @deprecated org.atomnuke.atom.io replaces this package
  *
  * @author zinic
  */
+public final class Writer {
 
-@Deprecated
-public final class AtomWriter {
+   private static final Writer INSTANCE = new Writer();
 
-   private static final AtomWriter INSTANCE = new AtomWriter();
-
-   public static AtomWriter instance() {
+   public static Writer instance() {
       return INSTANCE;
    }
 
-   private AtomWriter() {
+   private Writer() {
    }
 
    private static void writeStartElement(WriterContext context, String ns, String element) throws XMLStreamException {
@@ -440,7 +437,7 @@ public final class AtomWriter {
    private static void bindNamespaces(WriterContext context) throws XMLStreamException {
       final XMLStreamWriter writer = context.getWriter();
 
-      if (context.getConfiguration().getNamespaceLevel() == WriterConfiguration.NamespaceLevel.PREFXIED) {
+      if (context.getConfiguration().getNamespaceLevel() == NamespaceLevel.PREFXIED) {
          writer.writeNamespace(AtomNamespaceContext.ATOM_PREFIX, AtomNamespaceContext.ATOM_NAMESPACE);
          writer.writeNamespace(AtomNamespaceContext.XML_PREFIX, AtomNamespaceContext.XML_NAMESPACE);
       } else {

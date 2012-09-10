@@ -1,4 +1,4 @@
-package org.atomnuke.atom.sax.impl;
+package org.atomnuke.atom.io.reader.impl.sax;
 
 import com.rackspace.papi.commons.util.pooling.ConstructionStrategy;
 import com.rackspace.papi.commons.util.pooling.GenericBlockingResourcePool;
@@ -6,7 +6,6 @@ import com.rackspace.papi.commons.util.pooling.Pool;
 import com.rackspace.papi.commons.util.pooling.ResourceConstructionException;
 import com.rackspace.papi.commons.util.pooling.ResourceContext;
 import com.rackspace.papi.commons.util.pooling.ResourceContextException;
-import java.io.IOException;
 import java.io.InputStream;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -15,12 +14,9 @@ import org.atomnuke.atom.ParserResult;
 import org.atomnuke.atom.Reader;
 
 /**
- * @deprecated org.atomnuke.atom.io replaces this package
  *
  * @author zinic
  */
-
-@Deprecated
 public class SaxAtomParser implements Reader {
 
    private final SAXParserFactory parserFactory;

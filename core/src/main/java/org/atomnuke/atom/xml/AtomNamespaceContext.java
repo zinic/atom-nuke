@@ -16,13 +16,13 @@ public final class AtomNamespaceContext implements NamespaceContext {
    public static final String ATOM_NAMESPACE = "http://www.w3.org/2005/Atom";
    public static final String XML_PREFIX = "xml";
    public static final String ATOM_PREFIX = "atom";
-   
+
    private static final AtomNamespaceContext INSTANCE = new AtomNamespaceContext();
 
    public static NamespaceContext instance() {
       return INSTANCE;
    }
-   
+
    private final Map<String, String> uriToPrefixMap;
    private final Map<String, String> prefixToUriMap;
 
@@ -37,14 +37,17 @@ public final class AtomNamespaceContext implements NamespaceContext {
       prefixToUriMap.put(XML_PREFIX, XML_NAMESPACE);
    }
 
+   @Override
    public String getNamespaceURI(String prefix) {
       return prefixToUriMap.get(prefix);
    }
 
+   @Override
    public String getPrefix(String namespaceURI) {
       return uriToPrefixMap.get(namespaceURI);
    }
 
+   @Override
    public Iterator getPrefixes(String namespaceURI) {
       return Collections.EMPTY_LIST.iterator();
    }

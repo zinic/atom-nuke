@@ -2,11 +2,14 @@ package org.atomnuke.atom;
 
 import java.io.OutputStream;
 import javax.xml.stream.XMLStreamException;
+import org.atomnuke.atom.io.AtomWriter;
 import org.atomnuke.atom.model.Entry;
 import org.atomnuke.atom.model.Feed;
 
 /**
- *
+ * @deprecated This class has been deprecated in favor of the more flexible io implementation
+ * @see AtomWriter
+ * 
  * @author zinic
  */
 public interface Writer {

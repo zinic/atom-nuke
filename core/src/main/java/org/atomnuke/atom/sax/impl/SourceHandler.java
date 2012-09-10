@@ -20,9 +20,12 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 /**
+ * @deprecated org.atomnuke.atom.io replaces this package
  *
  * @author zinic
  */
+
+@Deprecated
 public class SourceHandler extends AtomHandler {
 
    public SourceHandler(AtomHandler delegate) {

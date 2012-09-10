@@ -1,9 +1,12 @@
 package org.atomnuke.atom;
 
 /**
+ * @deprecated org.atomnuke.atom.io replaces this package
  *
  * @author zinic
  */
+
+@Deprecated
 public class WriterConfiguration {
 
    public enum NamespaceLevel {

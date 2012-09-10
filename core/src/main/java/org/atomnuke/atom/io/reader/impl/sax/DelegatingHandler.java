@@ -1,16 +1,13 @@
-package org.atomnuke.atom.sax;
+package org.atomnuke.atom.io.reader.impl.sax;
 
 import org.xml.sax.ContentHandler;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
 /**
- * @deprecated org.atomnuke.atom.io replaces this package
  *
  * @author zinic
  */
-
-@Deprecated
 public abstract class DelegatingHandler extends DefaultHandler {
 
    private final DelegatingHandler parentHandler;

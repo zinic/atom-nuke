@@ -1,16 +1,12 @@
-package org.atomnuke.atom.sax;
+package org.atomnuke.atom.io.reader.impl.sax;
 
 import java.util.Stack;
 import org.atomnuke.atom.xml.AtomElement;
 
-
 /**
- * @deprecated org.atomnuke.atom.io replaces this package
  *
  * @author zinic
  */
-
-@Deprecated
 public class DocumentContextManager {
 
    private final Stack<HandlerContext<?>> contextStack;

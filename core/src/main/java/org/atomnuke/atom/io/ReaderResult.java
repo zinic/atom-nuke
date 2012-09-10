@@ -1,17 +1,17 @@
-package org.atomnuke.atom;
+package org.atomnuke.atom.io;
 
 import org.atomnuke.atom.model.Entry;
 import org.atomnuke.atom.model.Feed;
 
-
 /**
- * @deprecated org.atomnuke.atom.io replaces this package
  *
  * @author zinic
  */
+public interface ReaderResult {
 
-@Deprecated
-public interface ParserResult {
+   boolean isEntry();
+
+   boolean isFeed();
 
    Feed getFeed();
 
