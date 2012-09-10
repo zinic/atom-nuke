@@ -8,7 +8,7 @@
            xmlns:html="http://www.w3.org/1999/xhtml"
            xmlns:xs="http://www.w3.org/2001/XMLSchema">
    <!-- jaxb:extensionBindingPrefixes="jx" -->
-    
+
    <!-- Enumeration and SimpleType definitions -->
 
    <xs:simpleType name="TimeUnitType">
@@ -22,7 +22,7 @@
          <xs:enumeration value="DAYS" />
       </xs:restriction>
    </xs:simpleType>
-   
+
    <xs:simpleType name="LanguageType">
       <xs:restriction base="xs:string">
          <xs:enumeration value="java" />
@@ -41,7 +41,7 @@
             </html:p>
          </xs:documentation>
       </xs:annotation>
-      
+
       <xs:all>
          <xs:element name="sinks" type="nuke:Sinks" minOccurs="0" maxOccurs="1" />
          <xs:element name="sources" type="nuke:Sources" minOccurs="0" maxOccurs="1" />
@@ -49,7 +49,7 @@
          <xs:element name="bindings" type="nuke:Bindings" minOccurs="0" maxOccurs="1" />
       </xs:all>
    </xs:complexType>
-   
+
    <xs:complexType name="PollingInterval">
       <xs:annotation>
          <xs:documentation>
@@ -57,7 +57,7 @@
             </html:p>
          </xs:documentation>
       </xs:annotation>
-      
+
       <xs:attribute name="value" type="xs:long" use="required">
          <xs:annotation>
             <xs:documentation>
@@ -66,7 +66,7 @@
             </xs:documentation>
          </xs:annotation>
       </xs:attribute>
-      
+
       <xs:attribute name="unit" type="nuke:TimeUnitType" use="required">
          <xs:annotation>
             <xs:documentation>
@@ -76,7 +76,7 @@
          </xs:annotation>
       </xs:attribute>
    </xs:complexType>
-   
+
    <xs:complexType name="CodeDefinition">
       <xs:annotation>
          <xs:documentation>
@@ -84,7 +84,7 @@
             </html:p>
          </xs:documentation>
       </xs:annotation>
-      
+
       <xs:attribute name="id" type="xs:string" use="required">
          <xs:annotation>
             <xs:documentation>
@@ -93,7 +93,7 @@
             </xs:documentation>
          </xs:annotation>
       </xs:attribute>
-      
+
       <xs:attribute name="type" type="nuke:LanguageType" use="required">
          <xs:annotation>
             <xs:documentation>
@@ -102,7 +102,7 @@
             </xs:documentation>
          </xs:annotation>
       </xs:attribute>
-      
+
       <xs:attribute name="href" type="xs:anyURI" use="required">
          <xs:annotation>
             <xs:documentation>
@@ -112,7 +112,7 @@
          </xs:annotation>
       </xs:attribute>
    </xs:complexType>
-   
+
    <xs:complexType name="Sinks">
       <xs:annotation>
          <xs:documentation>
@@ -120,12 +120,12 @@
             </html:p>
          </xs:documentation>
       </xs:annotation>
-      
+
       <xs:sequence>
          <xs:element name="sink" type="nuke:Sink" minOccurs="0" maxOccurs="unbounded" />
       </xs:sequence>
    </xs:complexType>
-   
+
    <xs:complexType name="Sink">
       <xs:complexContent>
          <xs:extension base="nuke:CodeDefinition">
@@ -138,7 +138,7 @@
          </xs:extension>
       </xs:complexContent>
    </xs:complexType>
-   
+
    <xs:complexType name="Sources">
       <xs:annotation>
          <xs:documentation>
@@ -146,12 +146,12 @@
             </html:p>
          </xs:documentation>
       </xs:annotation>
-      
+
       <xs:sequence>
          <xs:element name="source" type="nuke:Source" minOccurs="0" maxOccurs="unbounded" />
       </xs:sequence>
    </xs:complexType>
-   
+
    <xs:complexType name="Source">
       <xs:complexContent>
          <xs:extension base="nuke:CodeDefinition">
@@ -161,14 +161,14 @@
                   </html:p>
                </xs:documentation>
             </xs:annotation>
-            
+
             <xs:sequence>
                <xs:element name="polling-interval" type="nuke:PollingInterval" minOccurs="0" maxOccurs="1" />
             </xs:sequence>
          </xs:extension>
       </xs:complexContent>
    </xs:complexType>
-   
+
    <xs:complexType name="EventProcessingSystem">
       <xs:annotation>
          <xs:documentation>
@@ -176,13 +176,13 @@
             </html:p>
          </xs:documentation>
       </xs:annotation>
-      
+
       <xs:all>
          <xs:element name="relays" type="nuke:Relays" minOccurs="0" maxOccurs="1" />
          <xs:element name="eventlets" type="nuke:Eventlets" minOccurs="0" maxOccurs="1" />
       </xs:all>
    </xs:complexType>
-   
+
    <xs:complexType name="Relays">
       <xs:annotation>
          <xs:documentation>
@@ -190,12 +190,12 @@
             </html:p>
          </xs:documentation>
       </xs:annotation>
-      
+
       <xs:sequence>
          <xs:element name="relay" type="nuke:Relay" minOccurs="0" maxOccurs="unbounded" />
       </xs:sequence>
    </xs:complexType>
-   
+
    <xs:complexType name="Relay">
       <xs:annotation>
          <xs:documentation>
@@ -203,7 +203,7 @@
             </html:p>
          </xs:documentation>
       </xs:annotation>
-                      
+
       <xs:attribute name="id" type="xs:string" use="required">
          <xs:annotation>
             <xs:documentation>
@@ -213,7 +213,7 @@
          </xs:annotation>
       </xs:attribute>
    </xs:complexType>
-      
+
    <xs:complexType name="Eventlets">
       <xs:annotation>
          <xs:documentation>
@@ -221,12 +221,12 @@
             </html:p>
          </xs:documentation>
       </xs:annotation>
-      
+
       <xs:sequence>
-         <xs:element name="Eventlet" type="nuke:Eventlet" minOccurs="0" maxOccurs="unbounded" />
+         <xs:element name="eventlet" type="nuke:Eventlet" minOccurs="0" maxOccurs="unbounded" />
       </xs:sequence>
    </xs:complexType>
-   
+
    <xs:complexType name="Eventlet">
       <xs:complexContent>
          <xs:extension base="nuke:CodeDefinition">
@@ -239,7 +239,7 @@
          </xs:extension>
       </xs:complexContent>
    </xs:complexType>
-   
+
    <xs:complexType name="Bindings">
       <xs:annotation>
          <xs:documentation>
@@ -247,12 +247,12 @@
             </html:p>
          </xs:documentation>
       </xs:annotation>
-        
+
       <xs:sequence>
          <xs:element name="binding" type="nuke:Binding" minOccurs="0" maxOccurs="unbounded" />
       </xs:sequence>
    </xs:complexType>
-   
+
    <xs:complexType name="Binding">
       <xs:annotation>
          <xs:documentation>
@@ -260,7 +260,7 @@
             </html:p>
          </xs:documentation>
       </xs:annotation>
-                
+
       <xs:attribute name="id" type="xs:string" use="required">
          <xs:annotation>
             <xs:documentation>
@@ -269,7 +269,7 @@
             </xs:documentation>
          </xs:annotation>
       </xs:attribute>
-                
+
       <xs:attribute name="target" type="xs:string" use="required">
          <xs:annotation>
             <xs:documentation>
@@ -278,7 +278,7 @@
             </xs:documentation>
          </xs:annotation>
       </xs:attribute>
-                
+
       <xs:attribute name="receiver" type="xs:string" use="required">
          <xs:annotation>
             <xs:documentation>

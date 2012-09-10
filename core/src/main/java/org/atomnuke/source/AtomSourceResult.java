@@ -9,6 +9,8 @@ import org.atomnuke.atom.model.Feed;
  */
 public interface AtomSourceResult {
 
+   boolean isEmpty();
+
    boolean isFeedPage();
 
    Feed feed();

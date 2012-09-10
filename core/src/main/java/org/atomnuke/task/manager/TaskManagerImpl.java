@@ -23,10 +23,11 @@ import org.slf4j.LoggerFactory;
 public class TaskManagerImpl implements TaskManager {
 
    private static final Logger LOG = LoggerFactory.getLogger(TaskManagerImpl.class);
-
+   
    private final ExecutionManager executionManager;
    private final List<ManagedTask> pollingTasks;
    private final TaskContext taskContext;
+
    private boolean allowSubmission;
 
    public TaskManagerImpl(ExecutionManager executionManager) {
@@ -90,18 +91,9 @@ public class TaskManagerImpl implements TaskManager {
          final TimeValue nextPollTime = managedTask.nextPollTime();
 
          // Sould this task be scheduled? If so, is the task already in the execution queue?
-         if (now.isGreaterThan(nextPollTime)) {
-
-            // Reentrant tasks are always eligible to run if their next polling
-            // time has arrived.
-
-            // TODO:Review - Reentrancy provides a potential concurrency boost but safety needs to be checked in greater detail
-//            if (managedTask.isReentrant() || !executionManager.submitted(managedTask.id())) {
-
-            if (managedTask.isReentrant() || !executionManager.submitted(managedTask.id())) {
-               executionManager.submit(managedTask.id(), managedTask);
-               managedTask.scheduled();
-            }
+         if (now.isGreaterThan(nextPollTime) && !executionManager.submitted(managedTask.id())) {
+            executionManager.submit(managedTask.id(), managedTask);
+            managedTask.scheduled();
          } else if (closestPollTime == null || closestPollTime.isGreaterThan(nextPollTime)) {
             // If the closest polling time is null or later than this task's
             // next polling time, it becomes the next time the kernel wakes

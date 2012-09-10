@@ -13,6 +13,10 @@ public class AtomSourceResultImpl implements AtomSourceResult {
    private final Feed feed;
    private final Entry entry;
 
+   public AtomSourceResultImpl() {
+      this(null, null);
+   }
+
    public AtomSourceResultImpl(Feed feed) {
       this(feed, null);
    }
@@ -21,9 +25,14 @@ public class AtomSourceResultImpl implements AtomSourceResult {
       this(null, entry);
    }
 
-   private AtomSourceResultImpl(Feed feed, Entry entry) {
+   public AtomSourceResultImpl(Feed feed, Entry entry) {
       this.feed = feed;
       this.entry = entry;
+   }
+
+   @Override
+   public boolean isEmpty() {
+      return feed == null && entry == null;
    }
 
    @Override

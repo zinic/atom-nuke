@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<nuke xmlns='http://atomnuke.org/configuration'>
+   <sinks>
+      <sink id="" type="" href="" />
+      <sink id="" type="" href="" />
+      <sink id="" type="" href="" />
+   </sinks>
+
+   <sources>
+      <source id="" type="" href="">
+         <polling-interval value="" unit="" />
+      </source>
+
+      <source id="" type="" href="">
+         <polling-interval value="" unit="" />
+      </source>
+
+      <source id="" type="" href="">
+         <polling-interval value="" unit="" />
+      </source>
+   </sources>
+
+   <eps>
+      <relays>
+         <relay id="" />
+         <relay id="" />
+         <relay id="" />
+      </relays>
+
+      <eventlets>
+         <eventlet id="" type="" href="" />
+         <eventlet id="" type="" href="" />
+         <eventlet id="" type="" href="" />
+      </eventlets>
+   </eps>
+
+   <bindings>
+      <binding id="" target="" receiver="" />
+      <binding id="" target="" receiver="" />
+      <binding id="" target="" receiver="" />
+   </bindings>
+</nuke>

@@ -22,11 +22,13 @@ import org.slf4j.LoggerFactory;
 public class ManagedTaskImpl implements ManagedTask {
 
    private static final Logger LOG = LoggerFactory.getLogger(ManagedTaskImpl.class);
+
    private final ExecutionManager executorService;
    private final ListenerManager listenerManager;
    private final AtomSource atomSource;
    private final Task task;
    private final UUID id;
+   
    private TimeValue timestamp;
 
    public ManagedTaskImpl(Task task, ListenerManager listenerManager, TimeValue interval, ExecutionManager executorService, AtomSource atomSource) {
@@ -90,21 +92,21 @@ public class ManagedTaskImpl implements ManagedTask {
          try {
             final AtomSourceResult pollResult = atomSource.poll();
 
-            for (RegisteredListener listener : listenerManager.listeners()) {
-               RegisteredListenerDriver listenerDriver;
-
-               if (pollResult != null) {
-                  if (pollResult.isFeedPage()) {
-                     listenerDriver = new AtomListenerDriver(listener, pollResult.feed());
-                  } else {
-                     listenerDriver = new AtomListenerDriver(listener, pollResult.entry());
-                  }
-
-                  executorService.queue(listenerDriver);
-               }
+            if (!pollResult.isEmpty()) {
+               dispatchToListeners(pollResult);
             }
          } catch (Exception ex) {
             LOG.error(ex.getMessage(), ex);
+         }
+      }
+   }
+
+   private void dispatchToListeners(AtomSourceResult pollResult) {
+      for (RegisteredListener listener : listenerManager.listeners()) {
+         if (pollResult.isFeedPage()) {
+            executorService.queue(new AtomListenerDriver(listener, pollResult.feed()));
+         } else {
+            executorService.queue(new AtomListenerDriver(listener, pollResult.entry()));
          }
       }
    }
