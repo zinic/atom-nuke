@@ -1,10 +1,13 @@
 package org.atomnuke.cli.command.server.builder;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import org.atomnuke.Nuke;
+import org.atomnuke.NukeEnv;
 import org.atomnuke.NukeKernel;
 import org.atomnuke.bindings.BindingInstantiationException;
+import org.atomnuke.bindings.ear.EarBindingContext;
 import org.atomnuke.bindings.resolver.BindingResolver;
 import org.atomnuke.config.ConfigurationException;
 import org.atomnuke.config.ConfigurationHandler;
@@ -19,7 +22,6 @@ import org.atomnuke.listener.eps.eventlet.AtomEventlet;
 import org.atomnuke.source.AtomSource;
 import org.atomnuke.task.Task;
 import org.atomnuke.task.lifecycle.InitializationException;
-import org.atomnuke.util.TimeValue;
 import org.atomnuke.util.TimeValueUtil;
 
 /**
@@ -41,9 +43,11 @@ public class ServerBuilder {
       this.bindingsResolver = bindingsResolver;
 
       kernelBeingBuilt = new NukeKernel();
+
       builtEventlets = new HashMap<String, AtomEventlet>();
       builtListeners = new HashMap<String, AtomListener>();
       builtRelays = new HashMap<String, org.atomnuke.listener.eps.Relay>();
+
       registeredSources = new HashMap<String, Task>();
    }
 

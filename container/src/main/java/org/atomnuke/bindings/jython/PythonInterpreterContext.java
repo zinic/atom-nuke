@@ -17,6 +17,7 @@ import org.python.util.PythonInterpreter;
 public class PythonInterpreterContext implements BindingContext {
 
    private static final LanguageDescriptor LANGUAGE_DESCRIPTOR = new LanguageDescriptorImpl(LanguageType.PYTHON, ".py");
+   
    private final PythonInterpreter pythonInterpreter;
    private final JythonLoader loader;
 
@@ -42,8 +43,6 @@ public class PythonInterpreterContext implements BindingContext {
       return pythonInterpreter.get(ref) != null;
    }
 
-   
-   
    @Override
    public <T> T instantiate(Class<T> interfaceType, String ref) throws BindingInstantiationException {
       final PyObject pyClass = pythonInterpreter.get(ref);

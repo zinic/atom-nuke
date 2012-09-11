@@ -1,0 +1,38 @@
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+   <modelVersion>4.0.0</modelVersion>
+
+   <parent>
+      <groupId>org.atomnuke</groupId>
+      <artifactId>project</artifactId>
+      <version>0.9.5.1-SNAPSHOT</version>
+   </parent>
+
+   <groupId>org.atomnuke.components</groupId>
+   <artifactId>components</artifactId>
+
+   <packaging>pom</packaging>
+
+   <name>Atom Nuke - Components</name>
+
+   <modules>
+      <!-- Sources -->
+      <module>sources/servlet</module>
+
+      <!-- Listeners -->
+
+      <!-- Bundle -->
+      <module>stock-bundle</module>
+   </modules>
+   
+   <dependencyManagement>
+      <dependencies>
+         <dependency>
+            <groupId>org.atomnuke.components.source</groupId>
+            <artifactId>http-servlet</artifactId>
+            <version>${project.version}</version>
+         </dependency>
+      </dependencies>
+   </dependencyManagement>
+</project>

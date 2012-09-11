@@ -4,14 +4,14 @@
    <modelVersion>4.0.0</modelVersion>
 
    <parent>
-      <groupId>org.atomnuke</groupId>
-      <artifactId>project</artifactId>
+      <groupId>org.atomnuke.components</groupId>
+      <artifactId>components</artifactId>
       <version>0.9.5.1-SNAPSHOT</version>
 
-      <relativePath>./../../../</relativePath>
+      <relativePath>./../../</relativePath>
    </parent>
 
-   <groupId>org.atomnuke</groupId>
+   <groupId>org.atomnuke.components.source</groupId>
    <artifactId>http-servlet</artifactId>
 
    <packaging>jar</packaging>

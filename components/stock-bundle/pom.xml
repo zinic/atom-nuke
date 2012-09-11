@@ -1,0 +1,60 @@
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+   <modelVersion>4.0.0</modelVersion>
+
+   <parent>
+      <groupId>org.atomnuke.components</groupId>
+      <artifactId>components</artifactId>
+      <version>0.9.5.1-SNAPSHOT</version>
+   </parent>
+
+   <groupId>org.atomnuke.components</groupId>
+   <artifactId>stock-sources</artifactId>
+
+   <packaging>ear</packaging>
+
+   <name>Atom Nuke - Components - Stock Bundle EAR</name>
+
+   <dependencies>
+      <dependency>
+         <groupId>org.atomnuke.components.source</groupId>
+         <artifactId>http-servlet</artifactId>
+      </dependency>
+   </dependencies>
+
+   <build>
+      <plugins>
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-ear-plugin</artifactId>
+            <version>2.7</version>
+
+            <extensions>true</extensions>
+
+            <executions>
+               <execution>
+                  <id>Package Ear Contents</id>
+
+                  <phase>package</phase>
+
+                  <goals>
+                     <goal>ear</goal>
+                  </goals>
+               </execution>
+            </executions>
+
+            <configuration>
+               <generateApplicationXml>false</generateApplicationXml>
+
+               <modules>
+                  <jarModule>
+                     <groupId>org.atomnuke.components.source</groupId>
+                     <artifactId>http-servlet</artifactId>
+                  </jarModule>
+               </modules>
+            </configuration>
+         </plugin>
+      </plugins>
+   </build>
+</project>

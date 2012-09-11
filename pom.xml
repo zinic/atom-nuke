@@ -17,7 +17,7 @@
       <module>container</module>
       <module>examples</module>
 
-      <module>components/sources/servlet</module>
+      <module>components</module>
    </modules>
 
    <description>
@@ -134,6 +134,12 @@
          <dependency>
             <groupId>com.rackspace.papi.commons</groupId>
             <artifactId>utilities</artifactId>
+            <version>2.3.1</version>
+         </dependency>
+
+         <dependency>
+            <groupId>com.rackspace.papi.commons</groupId>
+            <artifactId>configuration</artifactId>
             <version>2.3.1</version>
          </dependency>
 
