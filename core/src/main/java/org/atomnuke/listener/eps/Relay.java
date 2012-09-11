@@ -4,6 +4,8 @@ import java.util.LinkedList;
 import java.util.List;
 import org.atomnuke.atom.model.Entry;
 import org.atomnuke.atom.model.Feed;
+import org.atomnuke.context.InstanceContext;
+import org.atomnuke.context.SimpleInstanceContext;
 import org.atomnuke.listener.AtomListener;
 import org.atomnuke.listener.AtomListenerException;
 import org.atomnuke.listener.AtomListenerResult;
@@ -18,18 +20,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * EPS Relay - The event processing system relay
- *
- * "Oh, yes! For humans, touch can connect you to an object in a very personal
- * way; make it seem more real."
- *
- * -Jean-Luc Picard
+ * @deprecated Renamed to EventletRelay. It's suggested that programmers use the
+ * newer class over this one
+ * @see EventletRelay
  *
  * @author zinic
  */
+@Deprecated
 public class Relay implements AtomListener, AtomEventHandlerRelay {
 
    private static final Logger LOG = LoggerFactory.getLogger(Relay.class);
+   
    private final List<HandlerConduit> epsConduits;
    private TaskContext taskCtx;
 
@@ -57,12 +58,28 @@ public class Relay implements AtomListener, AtomEventHandlerRelay {
 
    @Override
    public void enlistHandler(AtomEventlet handler) throws InitializationException {
-      enlistHandler(handler, DefaultSelector.instance());
+      enlistHandlerContext(new SimpleInstanceContext<AtomEventlet>(handler), DefaultSelector.instance());
    }
 
    @Override
-   public synchronized void enlistHandler(AtomEventlet handler, Selector selector) throws InitializationException {
-      handler.init(taskCtx);
+   public void enlistHandler(AtomEventlet handler, Selector selector) throws InitializationException {
+      enlistHandlerContext(new SimpleInstanceContext<AtomEventlet>(handler), selector);
+   }
+
+   @Override
+   public void enlistHandlerContext(InstanceContext<AtomEventlet> handler) throws InitializationException {
+      enlistHandlerContext(handler, DefaultSelector.instance());
+   }
+
+   @Override
+   public synchronized void enlistHandlerContext(InstanceContext<AtomEventlet> handler, Selector selector) throws InitializationException {
+      handler.stepInto();
+
+      try {
+         handler.getInstance().init(taskCtx);
+      } finally {
+         handler.stepOut();
+      }
 
       epsConduits.add(new HandlerConduit(handler, selector));
    }

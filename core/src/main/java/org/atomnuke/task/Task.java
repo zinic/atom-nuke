@@ -1,5 +1,6 @@
 package org.atomnuke.task;
 
+import org.atomnuke.context.InstanceContext;
 import org.atomnuke.listener.AtomListener;
 import org.atomnuke.task.lifecycle.InitializationException;
 import org.atomnuke.util.TimeValue;
@@ -41,4 +42,13 @@ public interface Task {
     * @return
     */
    void addListener(AtomListener listener) throws InitializationException;
+
+   /**
+    * Adds an AtomListener to this task. The listener will begin receiving ATOM
+    * events during the task's next execution.
+    *
+    * @param listener
+    * @return
+    */
+   void addListenerContext(InstanceContext<? extends AtomListener> listener) throws InitializationException;
 }

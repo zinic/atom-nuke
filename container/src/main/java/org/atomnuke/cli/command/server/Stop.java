@@ -22,7 +22,7 @@ public class Stop extends AbstractNukeCommand {
 
    @Override
    public String getCommandDescription() {
-      return "Stops the currently running nuke instance.";
+      return "[NOT IMPLEMENTED] Stops the currently running nuke instance. [NOT IMPLEMENTED]";
    }
 
    @Override

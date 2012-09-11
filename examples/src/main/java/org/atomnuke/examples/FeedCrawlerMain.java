@@ -4,8 +4,7 @@ import java.util.concurrent.TimeUnit;
 import org.atomnuke.Nuke;
 import org.atomnuke.NukeKernel;
 import org.atomnuke.atom.model.Entry;
-import org.atomnuke.listener.eps.ReentrantRelay;
-import org.atomnuke.listener.eps.Relay;
+import org.atomnuke.listener.eps.EventletRelay;
 import org.atomnuke.listener.eps.eventlet.AtomEventlet;
 import org.atomnuke.listener.eps.eventlet.AtomEventletException;
 import org.atomnuke.listener.eps.eventlet.AtomEventletPartial;
@@ -32,13 +31,13 @@ public class FeedCrawlerMain {
 
       /*
        * Using a feed crawler factory simplifies creating feed crawlers
-       * 
+       *
        * You can specify a number of options as constructor parameters to the
-       * factory. Setting the state directory is usualy all you usually need to 
+       * factory. Setting the state directory is usualy all you usually need to
        * consider.
-       * 
+       *
        * new FeedCrawlerSourceFactory(new File("/path/to/my/state/dir"))
-       * 
+       *
        */
 
       final FeedCrawlerSourceFactory feedCrawlerFactory = new FeedCrawlerSourceFactory();
@@ -46,7 +45,7 @@ public class FeedCrawlerMain {
       /*
        * Nuke tasks represents the poller assigned to the new source that nuke
        * has been asked to follow.
-       * 
+       *
        * The polling intervale supports NANOSECOND to DAY grainularity.
        */
       final Task crawlerTask = nuke.follow(feedCrawlerFactory.newCrawlerSource("crawler-name", "http://feed.domain/feed/"), new TimeValue(1, TimeUnit.MINUTES));
@@ -55,7 +54,7 @@ public class FeedCrawlerMain {
        * Nuke has a smart way of turning feed pages into individual events
        * through a provided event listener called a Relay.
        */
-      final Relay eventRelay = new ReentrantRelay();
+      final EventletRelay eventRelay = new EventletRelay();
 
       /*
        * Register the relay to the source task. This allows the relay to recieve
@@ -98,10 +97,10 @@ public class FeedCrawlerMain {
       /*
        * Eventlets may opt to trigger on an event through the use of
        * a companion object called a Selector.
-       * 
+       *
        * The default selector: DefaultSelector.instance() selects all events
        * and is set when no selector is provided with an eventlet.
-       * 
+       *
        * The example below uses a provided selector that will filter events
        * based on the entry or feed and entry category terms. Only events that
        * have the desired category terms will be passed to the eventlet.
@@ -122,7 +121,7 @@ public class FeedCrawlerMain {
       /*
        * Sleep for some meaningful reason. The main thread can end and nuke will
        * continue to execute.
-       * 
+       *
        * Nuke has a shutdown hook, however relying on this system to gracefully
        * destroy all running tasks is not recommended. It is ideal for a
        * programmer to destroy the kernel as part of their program's life-cycle.
@@ -132,7 +131,7 @@ public class FeedCrawlerMain {
       /*
        * Destroying the nuke kernel will halt task scheduling and begin the
        * shutdown life-cycle of every task, listener and eventlet.
-       * 
+       *
        * This method blocks until all of the tasks have been destroyed.
        */
       nuke.destroy();

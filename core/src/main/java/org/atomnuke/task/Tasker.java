@@ -1,5 +1,6 @@
 package org.atomnuke.task;
 
+import org.atomnuke.context.InstanceContext;
 import org.atomnuke.source.AtomSource;
 import org.atomnuke.util.TimeValue;
 
@@ -9,7 +10,7 @@ import org.atomnuke.util.TimeValue;
  */
 public interface Tasker {
 
-   Task follow(AtomSource source);
+   Task follow(InstanceContext<? extends AtomSource> source);
 
-   Task follow(AtomSource source, TimeValue pollingInterval);
+   Task follow(InstanceContext<? extends AtomSource> source, TimeValue pollingInterval);
 }

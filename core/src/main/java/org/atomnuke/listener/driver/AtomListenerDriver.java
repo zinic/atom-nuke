@@ -2,6 +2,7 @@ package org.atomnuke.listener.driver;
 
 import org.atomnuke.atom.model.Entry;
 import org.atomnuke.atom.model.Feed;
+import org.atomnuke.context.InstanceContext;
 import org.atomnuke.listener.AtomListener;
 import org.atomnuke.listener.AtomListenerResult;
 import org.atomnuke.listener.ListenerResult;
@@ -16,7 +17,7 @@ import org.slf4j.LoggerFactory;
 public class AtomListenerDriver implements RegisteredListenerDriver {
 
    private static final Logger LOG = LoggerFactory.getLogger(AtomListenerDriver.class);
-   
+
    private final RegisteredListener registeredListener;
    private final Feed feed;
    private final Entry entry;
@@ -34,10 +35,10 @@ public class AtomListenerDriver implements RegisteredListenerDriver {
       this.feed = feed;
       this.entry = entry;
    }
-  
+
    @Override
    public void run() {
-      final ListenerResult result = drive(registeredListener.listener());
+      final ListenerResult result = drive(registeredListener.listenerContext());
 
       switch (result.getAction()) {
          case HALT:
@@ -48,17 +49,21 @@ public class AtomListenerDriver implements RegisteredListenerDriver {
       }
    }
 
-   private ListenerResult drive(AtomListener listener) {
+   private ListenerResult drive(InstanceContext<? extends AtomListener> listenerContext) {
+      listenerContext.stepInto();
+
       try {
          if (feed != null) {
-            return listener.feedPage(feed);
+            return listenerContext.getInstance().feedPage(feed);
          } else if (entry != null) {
-            return listener.entry(entry);
+            return listenerContext.getInstance().entry(entry);
          }
       } catch (Exception ex) {
          LOG.error(ex.getMessage(), ex);
 
          return AtomListenerResult.halt(ex.getMessage());
+      } finally {
+         listenerContext.stepOut();
       }
 
       return AtomListenerResult.halt("Feed document was null.");

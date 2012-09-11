@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import org.atomnuke.context.InstanceContext;
 import org.atomnuke.listener.manager.ListenerManager;
 import org.atomnuke.listener.manager.ListenerManagerImpl;
 import org.atomnuke.source.AtomSource;
@@ -11,6 +12,7 @@ import org.atomnuke.task.Task;
 import org.atomnuke.task.TaskImpl;
 import org.atomnuke.task.context.TaskContext;
 import org.atomnuke.task.context.TaskContextImpl;
+import org.atomnuke.task.lifecycle.InitializationException;
 import org.atomnuke.task.threading.ExecutionManager;
 import org.atomnuke.util.TimeValue;
 import org.slf4j.Logger;
@@ -27,7 +29,7 @@ public class TaskManagerImpl implements TaskManager {
    private final ExecutionManager executionManager;
    private final List<ManagedTask> pollingTasks;
    private final TaskContext taskContext;
-
+   
    private boolean allowSubmission;
 
    public TaskManagerImpl(ExecutionManager executionManager) {
@@ -46,6 +48,13 @@ public class TaskManagerImpl implements TaskManager {
       }
 
       pollingTasks.add(state);
+   }
+
+   @Override
+   public synchronized void init() throws InitializationException {
+      for (ManagedTask managedTask : pollingTasks) {
+         managedTask.init(taskContext);
+      }
    }
 
    @Override
@@ -106,12 +115,12 @@ public class TaskManagerImpl implements TaskManager {
    }
 
    @Override
-   public Task follow(AtomSource source) {
+   public Task follow(InstanceContext<? extends AtomSource> source) {
       return follow(source, new TimeValue(1, TimeUnit.MINUTES));
    }
 
    @Override
-   public Task follow(AtomSource source, TimeValue pollingInterval) {
+   public Task follow(InstanceContext<? extends AtomSource> source, TimeValue pollingInterval) {
       final ListenerManager listenerManager = new ListenerManagerImpl();
       final Task task = new TaskImpl(taskContext, pollingInterval, listenerManager);
       final ManagedTaskImpl managedTask = new ManagedTaskImpl(task, listenerManager, pollingInterval, executionManager, source);

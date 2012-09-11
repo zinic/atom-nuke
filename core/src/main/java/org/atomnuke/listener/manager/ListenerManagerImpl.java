@@ -5,6 +5,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
+import org.atomnuke.context.InstanceContext;
+import org.atomnuke.context.SimpleInstanceContext;
 import org.atomnuke.listener.AtomListener;
 import org.atomnuke.listener.ReentrantAtomListener;
 import org.atomnuke.listener.RegisteredListener;
@@ -53,6 +55,15 @@ public class ListenerManagerImpl implements ListenerManager {
          reentrant.set(false);
       }
 
-      listeners.add(new RegisteredListener(new AtomicCancellationRemote(), atomListener));
+      listeners.add(new RegisteredListener(new AtomicCancellationRemote(), new SimpleInstanceContext<AtomListener>(atomListener)));
+   }
+
+   @Override
+   public synchronized void addListener(InstanceContext<? extends AtomListener> atomListenerContext) {
+      if (!(atomListenerContext.getInstance() instanceof ReentrantAtomListener)) {
+         reentrant.set(false);
+      }
+
+      listeners.add(new RegisteredListener(new AtomicCancellationRemote(), atomListenerContext));
    }
 }

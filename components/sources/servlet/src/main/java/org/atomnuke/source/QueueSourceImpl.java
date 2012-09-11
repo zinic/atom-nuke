@@ -4,9 +4,6 @@ import java.util.LinkedList;
 import java.util.Queue;
 import org.atomnuke.atom.model.Entry;
 import org.atomnuke.source.impl.AtomSourceResultImpl;
-import org.atomnuke.task.context.TaskContext;
-import org.atomnuke.task.lifecycle.DestructionException;
-import org.atomnuke.task.lifecycle.InitializationException;
 
 /**
  *
@@ -21,14 +18,6 @@ public class QueueSourceImpl implements QueueSource {
    }
 
    @Override
-   public void init(TaskContext tc) throws InitializationException {
-   }
-
-   @Override
-   public void destroy(TaskContext tc) throws DestructionException {
-   }
-
-   @Override
    public synchronized void put(Entry e) {
       entryQueue.add(e);
    }
@@ -37,6 +26,6 @@ public class QueueSourceImpl implements QueueSource {
    public synchronized AtomSourceResult poll() throws AtomSourceException {
       final Entry nextEntry = entryQueue.poll();
 
-      return nextEntry != null ? new AtomSourceResultImpl(nextEntry) : null;
+      return new AtomSourceResultImpl(nextEntry);
    }
 }

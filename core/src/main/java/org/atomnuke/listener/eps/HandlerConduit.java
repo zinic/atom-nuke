@@ -3,6 +3,7 @@ package org.atomnuke.listener.eps;
 import org.atomnuke.listener.eps.eventlet.AtomEventletException;
 import org.atomnuke.atom.model.Entry;
 import org.atomnuke.atom.model.Feed;
+import org.atomnuke.context.InstanceContext;
 import org.atomnuke.listener.eps.eventlet.AtomEventlet;
 import org.atomnuke.listener.eps.selector.Selector;
 import org.atomnuke.listener.eps.selector.SelectorResult;
@@ -20,23 +21,35 @@ import org.slf4j.LoggerFactory;
 public class HandlerConduit implements TaskLifeCycle {
 
    private static final Logger LOG = LoggerFactory.getLogger(HandlerConduit.class);
-   
-   private final AtomEventlet eventHandler;
+
+   private final InstanceContext<AtomEventlet> eventHandler;
    private final Selector selector;
 
-   public HandlerConduit(AtomEventlet eventHandler, Selector selector) {
+   public HandlerConduit(InstanceContext<AtomEventlet> eventHandler, Selector selector) {
       this.eventHandler = eventHandler;
       this.selector = selector;
    }
 
    @Override
    public void init(TaskContext tc) throws InitializationException {
-      eventHandler.init(tc);
+      eventHandler.stepInto();
+
+      try {
+         eventHandler.getInstance().init(tc);
+      } finally {
+         eventHandler.stepOut();
+      }
    }
 
    @Override
    public void destroy(TaskContext tc) throws DestructionException {
-      eventHandler.destroy(tc);
+      eventHandler.stepInto();
+
+      try {
+         eventHandler.getInstance().destroy(tc);
+      } finally {
+         eventHandler.stepOut();
+      }
    }
 
    public SelectorResult select(Feed page) {
@@ -55,10 +68,14 @@ public class HandlerConduit implements TaskLifeCycle {
       final SelectorResult result = selector.select(entry);
 
       if (result == SelectorResult.PROCESS) {
+         eventHandler.stepInto();
+
          try {
-            eventHandler.entry(entry);
+            eventHandler.getInstance().entry(entry);
          } catch (AtomEventletException epe) {
             LOG.error(epe.getMessage(), epe);
+         } finally {
+            eventHandler.stepOut();
          }
       }
 

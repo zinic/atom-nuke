@@ -6,7 +6,7 @@
    <parent>
       <groupId>org.atomnuke.components</groupId>
       <artifactId>components</artifactId>
-      <version>0.9.5.1-SNAPSHOT</version>
+      <version>0.9.6-SNAPSHOT</version>
    </parent>
 
    <groupId>org.atomnuke.components</groupId>
@@ -20,6 +20,11 @@
       <dependency>
          <groupId>org.atomnuke.components.source</groupId>
          <artifactId>http-servlet</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>org.atomnuke.components.listener</groupId>
+         <artifactId>util-listeners</artifactId>
       </dependency>
    </dependencies>
 
@@ -51,6 +56,11 @@
                   <jarModule>
                      <groupId>org.atomnuke.components.source</groupId>
                      <artifactId>http-servlet</artifactId>
+                  </jarModule>
+
+                  <jarModule>
+                     <groupId>org.atomnuke.components.listener</groupId>
+                     <artifactId>util-listeners</artifactId>
                   </jarModule>
                </modules>
             </configuration>

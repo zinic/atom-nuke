@@ -5,7 +5,7 @@
 
    <groupId>org.atomnuke</groupId>
    <artifactId>project</artifactId>
-   <version>0.9.5.1-SNAPSHOT</version>
+   <version>0.9.6-SNAPSHOT</version>
 
    <packaging>pom</packaging>
 
@@ -79,6 +79,12 @@
          <dependency>
             <groupId>org.atomnuke</groupId>
             <artifactId>nuke</artifactId>
+            <version>${project.version}</version>
+         </dependency>
+
+         <dependency>
+            <groupId>org.atomnuke</groupId>
+            <artifactId>container</artifactId>
             <version>${project.version}</version>
          </dependency>
 

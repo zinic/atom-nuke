@@ -1,5 +1,7 @@
 package org.atomnuke.task;
 
+import org.atomnuke.context.InstanceContext;
+import org.atomnuke.context.SimpleInstanceContext;
 import org.atomnuke.listener.AtomListener;
 import org.atomnuke.listener.manager.ListenerManager;
 import org.atomnuke.task.context.TaskContext;
@@ -43,8 +45,18 @@ public class TaskImpl implements Task {
 
    @Override
    public void addListener(AtomListener listener) throws InitializationException {
-      listener.init(context);
-      
-      listenerManager.addListener(listener);
+      addListenerContext(new SimpleInstanceContext<AtomListener>(listener));
+   }
+
+   @Override
+   public void addListenerContext(InstanceContext<? extends AtomListener> listenerContext) throws InitializationException {
+      listenerContext.stepInto();
+
+      try {
+         listenerContext.getInstance().init(context);
+         listenerManager.addListener(listenerContext);
+      } finally {
+         listenerContext.stepOut();
+      }
    }
 }

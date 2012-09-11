@@ -6,6 +6,8 @@ import org.atomnuke.bindings.BindingInstantiationException;
 import org.atomnuke.bindings.lang.LanguageDescriptor;
 import org.atomnuke.bindings.lang.LanguageDescriptorImpl;
 import org.atomnuke.bindings.loader.Loader;
+import org.atomnuke.bindings.context.ClassLoaderContext;
+import org.atomnuke.context.InstanceContext;
 import org.atomnuke.config.model.LanguageType;
 
 /**
@@ -50,7 +52,7 @@ public class EarBindingContext implements BindingContext {
    }
 
    @Override
-   public <T> T instantiate(Class<T> interfaceType, String href) throws BindingInstantiationException {
+   public <T> InstanceContext<T> instantiate(Class<T> interfaceType, String href) throws BindingInstantiationException {
       final EarClassLoaderContext ctx = findCtxFor(href);
 
       if (ctx == null) {
@@ -58,12 +60,16 @@ public class EarBindingContext implements BindingContext {
       }
 
       final Thread currentThread = Thread.currentThread();
+      final ClassLoader earCtxClassLoader = ctx.getClassLoader();
       final ClassLoader threadCtxClassLoader = currentThread.getContextClassLoader();
-      currentThread.setContextClassLoader(ctx.getClassLoader());
+      
+      currentThread.setContextClassLoader(earCtxClassLoader);
 
       try {
-         final Object instance = Class.forName(href).newInstance();
-         return interfaceType.cast(instance);
+         final Class instanceClass = earCtxClassLoader.loadClass(href);
+         final Object instance = instanceClass.newInstance();
+
+         return new ClassLoaderContext<T>(ctx.getClassLoader(), interfaceType.cast(instance));
       } catch (Exception ex) {
          throw new BindingInstantiationException(ex.getMessage(), ex.getCause());
       } finally {

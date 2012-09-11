@@ -3,8 +3,6 @@ package org.atomnuke.servlet;
 import java.io.IOException;
 import java.util.GregorianCalendar;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
-import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -12,8 +10,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
-import org.atomnuke.Nuke;
-import org.atomnuke.NukeKernel;
 import org.atomnuke.atom.io.AtomReadException;
 import org.atomnuke.atom.io.AtomReaderFactory;
 import org.atomnuke.atom.io.ReaderResult;
@@ -21,12 +17,9 @@ import org.atomnuke.atom.io.reader.sax.SaxAtomReaderFactory;
 import org.atomnuke.atom.model.builder.EntryBuilder;
 import org.atomnuke.atom.model.builder.IdBuilder;
 import org.atomnuke.atom.model.builder.UpdatedBuilder;
-import org.atomnuke.listener.AtomListener;
+import org.atomnuke.source.AtomSource;
 import org.atomnuke.source.QueueSource;
-import org.atomnuke.source.QueueSourceImpl;
-import org.atomnuke.task.Task;
 import org.atomnuke.task.lifecycle.InitializationException;
-import org.atomnuke.util.TimeValue;
 import org.atomnuke.util.io.LimitedReadInputStream;
 import org.atomnuke.util.io.ReadLimitException;
 import org.slf4j.Logger;
@@ -36,9 +29,9 @@ import org.slf4j.LoggerFactory;
  *
  * @author zinic
  */
-public class HttpServletSource extends HttpServlet {
+public class AtomSinkServlet extends HttpServlet {
 
-   private static final Logger LOG = LoggerFactory.getLogger(HttpServletSource.class);
+   private static final Logger LOG = LoggerFactory.getLogger(AtomSinkServlet.class);
    private static final DatatypeFactory DATATYPE_FACTORY;
 
    static {
@@ -53,32 +46,11 @@ public class HttpServletSource extends HttpServlet {
 
    private final AtomReaderFactory atomReaderFactory;
    private final QueueSource queueSource;
-   private final Nuke nukeInstance;
 
-   public HttpServletSource(AtomListener... listeners) throws InitializationException {
-      queueSource = new QueueSourceImpl();
+   public AtomSinkServlet(QueueSource queueSource) throws InitializationException {
+      this.queueSource = queueSource;
+
       atomReaderFactory = new SaxAtomReaderFactory();
-      nukeInstance = new NukeKernel();
-
-      final Task followTask = nukeInstance.follow(queueSource, new TimeValue(10, TimeUnit.MILLISECONDS));
-
-      for (AtomListener listener : listeners) {
-         followTask.addListener(listener);
-      }
-   }
-
-   @Override
-   public void init(ServletConfig config) throws ServletException {
-      nukeInstance.start();
-
-      super.init(config);
-   }
-
-   @Override
-   public void destroy() {
-      nukeInstance.destroy();
-
-      super.destroy();
    }
 
    private static void notAllowed(HttpServletResponse resp) {

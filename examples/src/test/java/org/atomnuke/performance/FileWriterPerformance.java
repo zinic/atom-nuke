@@ -8,8 +8,7 @@ import org.atomnuke.NukeKernel;
 import org.atomnuke.examples.handler.FeedFileWriterHandler;
 import org.atomnuke.examples.listener.eventlet.CounterEventlet;
 import org.atomnuke.examples.source.EventGenerator;
-import org.atomnuke.listener.eps.ReentrantRelay;
-import org.atomnuke.listener.eps.Relay;
+import org.atomnuke.listener.eps.EventletRelay;
 import org.atomnuke.listener.eps.selectors.CategorySelector;
 import org.atomnuke.task.Task;
 import org.atomnuke.util.TimeValue;
@@ -23,10 +22,10 @@ public class FileWriterPerformance {
    public static void main(String[] args) throws Exception {
       final AtomicLong events = new AtomicLong(0);
 
-      final Relay relay = new ReentrantRelay();
+      final EventletRelay relay = new EventletRelay();
       relay.enlistHandler(new FeedFileWriterHandler(new File("/tmp/test.feed")), new CategorySelector(new String[]{"test"}, new String[]{"test"}));
       relay.enlistHandler(new CounterEventlet(events, false));
-      
+
       final Nuke nukeKernel = new NukeKernel();
 
       final Task task = nukeKernel.follow(new EventGenerator("Task 1", true), new TimeValue(1, TimeUnit.NANOSECONDS));
@@ -37,7 +36,7 @@ public class FileWriterPerformance {
       Thread.sleep(10000);
 
       nukeKernel.destroy();
-      
+
       System.out.println("Processed " + events.get() + " entry events in ten seconds.");
    }
 }

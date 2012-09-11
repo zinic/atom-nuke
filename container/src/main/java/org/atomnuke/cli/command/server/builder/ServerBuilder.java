@@ -1,14 +1,12 @@
 package org.atomnuke.cli.command.server.builder;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import org.atomnuke.Nuke;
-import org.atomnuke.NukeEnv;
 import org.atomnuke.NukeKernel;
 import org.atomnuke.bindings.BindingInstantiationException;
-import org.atomnuke.bindings.ear.EarBindingContext;
 import org.atomnuke.bindings.resolver.BindingResolver;
+import org.atomnuke.context.InstanceContext;
 import org.atomnuke.config.ConfigurationException;
 import org.atomnuke.config.ConfigurationHandler;
 import org.atomnuke.config.model.Binding;
@@ -17,12 +15,16 @@ import org.atomnuke.config.model.LanguageType;
 import org.atomnuke.config.model.Relay;
 import org.atomnuke.config.model.Sink;
 import org.atomnuke.config.model.Source;
+import org.atomnuke.context.SimpleInstanceContext;
 import org.atomnuke.listener.AtomListener;
+import org.atomnuke.listener.eps.EventletRelay;
 import org.atomnuke.listener.eps.eventlet.AtomEventlet;
 import org.atomnuke.source.AtomSource;
 import org.atomnuke.task.Task;
 import org.atomnuke.task.lifecycle.InitializationException;
 import org.atomnuke.util.TimeValueUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -30,9 +32,11 @@ import org.atomnuke.util.TimeValueUtil;
  */
 public class ServerBuilder {
 
-   private final Map<String, org.atomnuke.listener.eps.Relay> builtRelays;
-   private final Map<String, AtomEventlet> builtEventlets;
-   private final Map<String, AtomListener> builtListeners;
+   private static final Logger LOG = LoggerFactory.getLogger(ServerBuilder.class);
+
+   private final Map<String, InstanceContext<EventletRelay>> builtRelays;
+   private final Map<String, InstanceContext<AtomEventlet>> builtEventlets;
+   private final Map<String, InstanceContext<AtomListener>> builtListeners;
    private final Map<String, Task> registeredSources;
    private final BindingResolver bindingsResolver;
    private final ConfigurationHandler cfgHandler;
@@ -44,9 +48,9 @@ public class ServerBuilder {
 
       kernelBeingBuilt = new NukeKernel();
 
-      builtEventlets = new HashMap<String, AtomEventlet>();
-      builtListeners = new HashMap<String, AtomListener>();
-      builtRelays = new HashMap<String, org.atomnuke.listener.eps.Relay>();
+      builtEventlets = new HashMap<String, InstanceContext<AtomEventlet>>();
+      builtListeners = new HashMap<String, InstanceContext<AtomListener>>();
+      builtRelays = new HashMap<String, InstanceContext<EventletRelay>>();
 
       registeredSources = new HashMap<String, Task>();
    }
@@ -62,15 +66,15 @@ public class ServerBuilder {
       return kernelBeingBuilt;
    }
 
-   public AtomEventlet constructEventlet(LanguageType langType, String ref) throws BindingInstantiationException {
+   public InstanceContext<AtomEventlet> constructEventlet(LanguageType langType, String ref) throws BindingInstantiationException {
       return bindingsResolver.resolveEventlet(langType, ref);
    }
 
-   public AtomSource constructSource(LanguageType langType, String ref) throws BindingInstantiationException {
+   public InstanceContext<AtomSource> constructSource(LanguageType langType, String ref) throws BindingInstantiationException {
       return bindingsResolver.resolveSource(langType, ref);
    }
 
-   public AtomListener constructListener(LanguageType langType, String ref) throws BindingInstantiationException {
+   public InstanceContext<AtomListener> constructListener(LanguageType langType, String ref) throws BindingInstantiationException {
       return bindingsResolver.resolveListener(langType, ref);
    }
 
@@ -79,62 +83,81 @@ public class ServerBuilder {
          final Task source = registeredSources.get(binding.getTarget());
 
          if (source != null) {
-            final AtomListener atomListener = builtListeners.containsKey(binding.getReceiver()) ? builtListeners.get(binding.getReceiver()) : builtRelays.get(binding.getReceiver());
+            final InstanceContext<? extends AtomListener> atomListenerContext = builtListeners.containsKey(binding.getReceiver()) ? builtListeners.get(binding.getReceiver()) : builtRelays.get(binding.getReceiver());
 
-            if (atomListener == null) {
+            if (atomListenerContext == null) {
                throw new ConfigurationException("Unable to locate listener or realy, " + binding.getReceiver());
             }
 
+            atomListenerContext.stepInto();
+
             try {
-               source.addListener(atomListener);
+               source.addListenerContext(atomListenerContext);
             } catch (InitializationException ie) {
                throw new ConfigurationException("Atom listener initialization error: " + ie.getMessage(), ie);
+            } finally {
+               atomListenerContext.stepOut();
             }
          } else {
-            final org.atomnuke.listener.eps.Relay relay = builtRelays.get(binding.getTarget());
+            final InstanceContext<EventletRelay> relayContext = builtRelays.get(binding.getTarget());
 
-            if (relay == null) {
+            if (relayContext == null) {
                throw new ConfigurationException("Unable to locate source or relay, " + binding.getTarget());
             }
 
-            final AtomEventlet eventlet = builtEventlets.get(binding.getReceiver());
+            final InstanceContext<AtomEventlet> eventlet = builtEventlets.get(binding.getReceiver());
 
             if (eventlet == null) {
                throw new ConfigurationException("Unable to locate eventlet, " + binding.getReceiver());
             }
 
+            relayContext.stepInto();
+
             try {
-               relay.enlistHandler(eventlet);
+               relayContext.getInstance().enlistHandler(eventlet.getInstance());
             } catch (InitializationException ie) {
                throw new ConfigurationException("Eventlet initialization error: " + ie.getMessage(), ie);
+            } finally {
+               relayContext.stepOut();
             }
          }
       }
    }
 
-   public void constructSources() throws BindingInstantiationException, ConfigurationException {
+   public void constructSources() throws ConfigurationException {
       for (Source source : cfgHandler.getSources()) {
-         final Task newTask = kernelBeingBuilt.follow(constructSource(source.getType(), source.getHref()), TimeValueUtil.fromPollingInterval(source.getPollingInterval()));
-
-         registeredSources.put(source.getId(), newTask);
+         try {
+            final Task newTask = kernelBeingBuilt.follow(constructSource(source.getType(), source.getHref()), TimeValueUtil.fromPollingInterval(source.getPollingInterval()));
+            registeredSources.put(source.getId(), newTask);
+         } catch (BindingInstantiationException bie) {
+            LOG.error("Could not create source instance " + source.getId() + ". Reason: " + bie.getMessage(), bie);
+         }
       }
    }
 
-   public void constructRelays() throws BindingInstantiationException, ConfigurationException{
+   public void constructRelays() throws ConfigurationException {
       for (Relay relay : cfgHandler.getRelays()) {
-         builtRelays.put(relay.getId(), new org.atomnuke.listener.eps.Relay());
+         builtRelays.put(relay.getId(), new SimpleInstanceContext<EventletRelay>(new EventletRelay()));
       }
    }
 
-   public void constructListeners() throws BindingInstantiationException, ConfigurationException {
+   public void constructListeners() throws ConfigurationException {
       for (Sink sink : cfgHandler.getSinks()) {
-         builtListeners.put(sink.getId(), constructListener(sink.getType(), sink.getHref()));
+         try {
+            builtListeners.put(sink.getId(), constructListener(sink.getType(), sink.getHref()));
+         } catch (BindingInstantiationException bie) {
+            LOG.error("Could not create sink instance " + sink.getId() + ". Reason: " + bie.getMessage(), bie);
+         }
       }
    }
 
    public void constructEventlets() throws BindingInstantiationException, ConfigurationException {
       for (Eventlet eventlet : cfgHandler.getEventlets()) {
-         builtEventlets.put(eventlet.getId(), constructEventlet(eventlet.getType(), eventlet.getHref()));
+         try {
+            builtEventlets.put(eventlet.getId(), constructEventlet(eventlet.getType(), eventlet.getHref()));
+         } catch (BindingInstantiationException bie) {
+            LOG.error("Could not create eventlet instance " + eventlet.getId() + ". Reason: " + bie.getMessage(), bie);
+         }
       }
    }
 }

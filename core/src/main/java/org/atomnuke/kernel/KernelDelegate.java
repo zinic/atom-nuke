@@ -1,4 +1,4 @@
-package org.atomnuke;
+package org.atomnuke.kernel;
 
 import java.util.concurrent.TimeUnit;
 import org.atomnuke.task.manager.TaskManager;

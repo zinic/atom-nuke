@@ -6,7 +6,7 @@
    <parent>
       <groupId>org.atomnuke.components</groupId>
       <artifactId>components</artifactId>
-      <version>0.9.5.1-SNAPSHOT</version>
+      <version>0.9.6-SNAPSHOT</version>
 
       <relativePath>./../../</relativePath>
    </parent>
@@ -50,48 +50,8 @@
       </dependency>
 
       <dependency>
-         <groupId>xerces</groupId>
-         <artifactId>xercesImpl</artifactId>
-      </dependency>
-
-      <dependency>
-         <groupId>org.python</groupId>
-         <artifactId>jython</artifactId>
-      </dependency>
-
-      <dependency>
-         <groupId>xalan</groupId>
-         <artifactId>xalan</artifactId>
-      </dependency>
-
-      <dependency>
-         <groupId>org.codehaus.woodstox</groupId>
-         <artifactId>woodstox-core-asl</artifactId>
-      </dependency>
-
-      <dependency>
-         <groupId>org.apache.httpcomponents</groupId>
-         <artifactId>httpclient</artifactId>
-      </dependency>
-
-      <dependency>
-         <groupId>org.apache.commons</groupId>
-         <artifactId>commons-lang3</artifactId>
-      </dependency>
-
-      <dependency>
-         <groupId>org.apache.hadoop</groupId>
-         <artifactId>hadoop-client</artifactId>
-      </dependency>
-
-      <dependency>
          <groupId>com.rackspace.papi.commons</groupId>
          <artifactId>utilities</artifactId>
-      </dependency>
-
-      <dependency>
-         <groupId>com.rackspace.papi.commons</groupId>
-         <artifactId>classloader</artifactId>
       </dependency>
 
       <dependency>

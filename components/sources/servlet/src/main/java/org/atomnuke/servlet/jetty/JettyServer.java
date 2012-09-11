@@ -1,7 +1,8 @@
 package org.atomnuke.servlet.jetty;
 
 import org.atomnuke.listener.AtomListener;
-import org.atomnuke.servlet.HttpServletSource;
+import org.atomnuke.servlet.AtomSinkServlet;
+import org.atomnuke.source.QueueSource;
 import org.atomnuke.task.lifecycle.InitializationException;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
@@ -21,16 +22,16 @@ public class JettyServer {
    private final ServletContextHandler rootContext;
    private final Server server;
 
-   public JettyServer(int portNumber, AtomListener... listeners) {
+   public JettyServer(int portNumber, QueueSource queueSource) {
       server = new Server(portNumber);
       rootContext = new ServletContextHandler(server, "/");
 
-      init(listeners);
+      init(queueSource);
    }
 
-   private void init(AtomListener... listeners) {
+   private void init(QueueSource queueSource) {
       try {
-         rootContext.addServlet(new ServletHolder(new HttpServletSource(listeners)), "/*");
+         rootContext.addServlet(new ServletHolder(new AtomSinkServlet(queueSource)), "/*");
       } catch (InitializationException ie) {
          throw new RuntimeException("Failed to start. Reason: " + ie.getMessage());
       }

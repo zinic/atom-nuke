@@ -1,5 +1,6 @@
 package org.atomnuke.listener;
 
+import org.atomnuke.context.InstanceContext;
 import org.atomnuke.util.remote.CancellationRemote;
 
 /**
@@ -9,11 +10,11 @@ import org.atomnuke.util.remote.CancellationRemote;
 public class RegisteredListener {
 
    private final CancellationRemote cancellationRemote;
-   private final AtomListener listener;
+   private final InstanceContext<? extends AtomListener> listenerContext;
 
-   public RegisteredListener(CancellationRemote cancellationRemote, AtomListener listener) {
+   public RegisteredListener(CancellationRemote cancellationRemote, InstanceContext<? extends AtomListener> listenerContext) {
       this.cancellationRemote = cancellationRemote;
-      this.listener = listener;
+      this.listenerContext = listenerContext;
    }
 
    public CancellationRemote cancellationRemote() {
@@ -24,7 +25,7 @@ public class RegisteredListener {
       cancellationRemote.cancel();
    }
 
-   public AtomListener listener() {
-      return listener;
+   public InstanceContext<? extends AtomListener> listenerContext() {
+      return listenerContext;
    }
 }

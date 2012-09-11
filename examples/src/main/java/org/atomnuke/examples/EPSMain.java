@@ -7,7 +7,7 @@ import org.atomnuke.NukeKernel;
 import org.atomnuke.atom.model.Entry;
 import org.atomnuke.examples.handler.FeedFileWriterHandler;
 import org.atomnuke.examples.source.EventGenerator;
-import org.atomnuke.listener.eps.Relay;
+import org.atomnuke.listener.eps.EventletRelay;
 import org.atomnuke.listener.eps.eventlet.AtomEventletException;
 import org.atomnuke.listener.eps.eventlet.AtomEventletPartial;
 import org.atomnuke.listener.eps.selectors.CategorySelector;
@@ -35,11 +35,11 @@ public class EPSMain {
    public static void main(String[] args) throws Exception {
       // First relay for selecting feeds that have the category 'test' and only
       // the entries inside that feed that also have the category 'test'
-      final Relay relay1 = new Relay();
+      final EventletRelay relay1 = new EventletRelay();
 
       // Event eventlet partial makes delegate creation more simple
       relay1.enlistHandler(new AtomEventletPartial() {
-         
+
          @Override
          public void entry(Entry entry) throws AtomEventletException {
             System.out.println("Relay 1 - Entry: " + entry.id().toString());
@@ -49,7 +49,7 @@ public class EPSMain {
 
       // Second relay for selecting feeds that have the category 'test' and only
       // the entries inside that feed that have the category 'other-cat'
-      final Relay relay2 = new Relay();
+      final EventletRelay relay2 = new EventletRelay();
 
       // Creating your own handler allows you to implement the init and destroy
       // methods however you like
@@ -70,7 +70,7 @@ public class EPSMain {
       task3.addListener(relay1);
 
       nukeKernel.start();
-      
+
       Thread.sleep(10000);
 
       nukeKernel.destroy();
