@@ -20,11 +20,9 @@ import org.slf4j.LoggerFactory;
 public class UpdateContext<T> implements ConfigurationContext<T> {
 
    private static final Logger LOG = LoggerFactory.getLogger(UpdateContext.class);
-
    private final List<ListenerContext<T>> listenerContexts;
    private final CancellationRemote cancellationRemote;
    private final ConfigurationManager<T> manager;
-
    private UpdateTag lastUpdateTag;
 
    public UpdateContext(ConfigurationManager<T> manager) {
@@ -59,6 +57,7 @@ public class UpdateContext<T> implements ConfigurationContext<T> {
       for (Iterator<ListenerContext<T>> listenerContextItr = listenerContexts.iterator(); listenerContextItr.hasNext();) {
          final ListenerContext<T> nextCtx = listenerContextItr.next();
 
+         // Cancellation may happen at anytime, remotely - check for it on every poll
          if (nextCtx.cancellationRemote().canceled()) {
             listenerContextItr.remove();
             continue;
