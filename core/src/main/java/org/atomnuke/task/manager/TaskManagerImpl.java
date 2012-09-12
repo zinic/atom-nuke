@@ -29,7 +29,7 @@ public class TaskManagerImpl implements TaskManager {
    private final ExecutionManager executionManager;
    private final List<ManagedTask> pollingTasks;
    private final TaskContext taskContext;
-   
+
    private boolean allowSubmission;
 
    public TaskManagerImpl(ExecutionManager executionManager) {
@@ -113,11 +113,6 @@ public class TaskManagerImpl implements TaskManager {
       }
 
       return closestPollTime;
-   }
-
-   @Override
-   public Task follow(InstanceContext<? extends AtomSource> source) throws InitializationException {
-      return follow(source, new TimeValue(1, TimeUnit.MINUTES));
    }
 
    @Override

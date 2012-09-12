@@ -37,6 +37,15 @@ public interface Task {
    TimeValue interval();
 
    /**
+    * Adds an AtomListener to this task. This method wraps the listener and
+    * passes it to the other addListener method as a SimpleInstanceContext.
+    *
+    * @param listener
+    * @return the cancellation remote for the newly registered listener.
+    */
+   CancellationRemote addListener(AtomListener listener) throws InitializationException;
+
+   /**
     * Adds an AtomListener to this task. The tasker requires that an
     * InstanceContext be give for each AtomSource to allow for the abstraction
     * of system internals like custom class loaders.

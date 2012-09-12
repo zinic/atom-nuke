@@ -1,6 +1,7 @@
 package org.atomnuke.task;
 
 import org.atomnuke.context.InstanceContext;
+import org.atomnuke.context.SimpleInstanceContext;
 import org.atomnuke.listener.AtomListener;
 import org.atomnuke.listener.manager.ListenerManager;
 import org.atomnuke.task.context.TaskContext;
@@ -40,6 +41,11 @@ public class TaskImpl implements Task {
    @Override
    public TimeValue interval() {
       return interval;
+   }
+
+   @Override
+   public CancellationRemote addListener(AtomListener listener) throws InitializationException {
+      return addListener(new SimpleInstanceContext<AtomListener>(listener));
    }
 
    @Override

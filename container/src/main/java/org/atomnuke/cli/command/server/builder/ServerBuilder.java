@@ -32,7 +32,6 @@ import org.slf4j.LoggerFactory;
 public class ServerBuilder {
 
    private static final Logger LOG = LoggerFactory.getLogger(ServerBuilder.class);
-
    private final Map<String, InstanceContext<EventletRelay>> builtRelays;
    private final Map<String, InstanceContext<AtomEventlet>> builtEventlets;
    private final Map<String, InstanceContext<AtomListener>> builtListeners;
@@ -86,7 +85,7 @@ public class ServerBuilder {
             atomListenerContext.stepInto();
 
             try {
-               source.addListenerContext(atomListenerContext);
+               source.addListener(atomListenerContext);
             } catch (InitializationException ie) {
                throw new ConfigurationException("Atom listener initialization error: " + ie.getMessage(), ie);
             } finally {
@@ -121,10 +120,14 @@ public class ServerBuilder {
    public void constructSources(Nuke kernelBeingBuilt) throws ConfigurationException {
       for (Source source : cfgHandler.getSources()) {
          try {
-            final Task newTask = kernelBeingBuilt.follow(constructSource(source.getType(), source.getHref()), TimeValueUtil.fromPollingInterval(source.getPollingInterval()));
+            final InstanceContext<AtomSource> sourceContext = constructSource(source.getType(), source.getHref());
+            final Task newTask = kernelBeingBuilt.follow(sourceContext, TimeValueUtil.fromPollingInterval(source.getPollingInterval()));
+
             registeredSources.put(source.getId(), newTask);
          } catch (BindingInstantiationException bie) {
             LOG.error("Could not create source instance " + source.getId() + ". Reason: " + bie.getMessage(), bie);
+         } catch (InitializationException ie) {
+            LOG.error("Could not initialize source instance " + source.getId() + ". Reason: " + ie.getMessage(), ie);
          }
       }
    }

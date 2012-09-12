@@ -37,8 +37,8 @@ public class HDFSMain {
       // We want to crawl feeds in this case so let's register a few crawlers
       final FeedCrawlerSourceFactory crawlerFactory = new FeedCrawlerSourceFactory();
 
-      // Polls for the default of once per minute
-      final Task task1 = nuke.follow(crawlerFactory.newCrawlerSource("feed-1", "http://feed.com/feed1"));
+      // Polls once per minute
+      final Task task1 = nuke.follow(crawlerFactory.newCrawlerSource("feed-1", "http://feed.com/feed1"), new TimeValue(1, TimeUnit.MINUTES));
       task1.addListener(listener2);
 
       // Sets the polling interval to five minutes
