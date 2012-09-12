@@ -1,8 +1,8 @@
 package org.atomnuke.cli.command.source;
 
 import org.atomnuke.cli.command.AbstractNukeCommand;
-import org.atomnuke.config.ConfigurationHandler;
-import org.atomnuke.config.ConfigurationReader;
+import org.atomnuke.config.server.ServerConfigurationHandler;
+import org.atomnuke.util.config.io.ConfigurationReader;
 import org.atomnuke.config.model.Source;
 import org.atomnuke.util.cli.command.result.CommandResult;
 import org.atomnuke.util.cli.command.result.MessageResult;
@@ -13,8 +13,8 @@ import org.atomnuke.util.cli.command.result.MessageResult;
  */
 public class ListSources extends AbstractNukeCommand {
 
-   public ListSources(ConfigurationReader configurationReader) {
-      super(configurationReader);
+   public ListSources(ServerConfigurationHandler configurationHandler) {
+      super(configurationHandler);
    }
 
    @Override
@@ -29,7 +29,7 @@ public class ListSources extends AbstractNukeCommand {
 
    @Override
    public CommandResult perform(String[] arguments) throws Exception {
-      final ConfigurationHandler cfgHandler = getConfigurationReader().readConfiguration();
+      final ServerConfigurationHandler cfgHandler = getConfigHandler();
       final StringBuilder output = new StringBuilder();
 
       for (Source source : cfgHandler.getSources()) {

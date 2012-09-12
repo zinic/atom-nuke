@@ -1,6 +1,6 @@
 package org.atomnuke.cli.command.eps.eventlet;
 
-import org.atomnuke.config.ConfigurationReader;
+import org.atomnuke.config.server.ServerConfigurationHandler;
 import org.atomnuke.util.cli.command.AbstractCommandList;
 
 /**
@@ -9,8 +9,8 @@ import org.atomnuke.util.cli.command.AbstractCommandList;
  */
 public class EventletCommands extends AbstractCommandList {
 
-   public EventletCommands(ConfigurationReader configurationReader) {
-      super(new AddEventlet(configurationReader), new DeleteEventlet(configurationReader), new ListEventlets(configurationReader));
+   public EventletCommands(ServerConfigurationHandler configurationHandler) {
+      super(new AddEventlet(configurationHandler), new DeleteEventlet(configurationHandler), new ListEventlets(configurationHandler));
    }
 
    @Override

@@ -5,8 +5,10 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import org.atomnuke.atom.sax.impl.SaxAtomParser;
-import org.atomnuke.atom.stax.StaxAtomWriter;
+import org.atomnuke.atom.io.AtomReaderFactory;
+import org.atomnuke.atom.io.AtomWriterFactory;
+import org.atomnuke.atom.io.reader.sax.SaxAtomReaderFactory;
+import org.atomnuke.atom.io.writer.stax.StaxAtomWriterFactory;
 
 /**
  *
@@ -23,13 +25,14 @@ public class ParserPerformance {
       long tstampMillis = System.currentTimeMillis();
       int elapsed;
 
-      final StaxAtomWriter writer = new StaxAtomWriter();
-      final SaxAtomParser parser = new SaxAtomParser();
+      final AtomWriterFactory writerFactory = new StaxAtomWriterFactory();
+      final AtomReaderFactory readerFactory = new SaxAtomReaderFactory();
+
       final byte[] bytes = RawInputStreamReader.instance().readFully(open("PerformanceTestContents.xml"));
       final ByteArrayOutputStream output = new ByteArrayOutputStream();
 
       for (int i = 0; i < iterationLimit; i++) {
-         writer.write(output, parser.read(new ByteArrayInputStream(bytes)).getEntry());
+         writerFactory.getInstance().write(output, readerFactory.getInstance().read(new ByteArrayInputStream(bytes)).getEntry());
          output.reset();
       }
 

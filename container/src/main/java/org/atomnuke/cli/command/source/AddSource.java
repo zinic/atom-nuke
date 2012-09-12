@@ -1,8 +1,8 @@
 package org.atomnuke.cli.command.source;
 
 import org.atomnuke.cli.command.AbstractNukeCommand;
-import org.atomnuke.config.ConfigurationHandler;
-import org.atomnuke.config.ConfigurationReader;
+import org.atomnuke.config.server.ServerConfigurationHandler;
+import org.atomnuke.util.config.io.ConfigurationReader;
 import org.atomnuke.config.model.LanguageType;
 import org.atomnuke.config.model.PollingInterval;
 import org.atomnuke.config.model.Source;
@@ -19,8 +19,8 @@ public class AddSource extends AbstractNukeCommand {
 
    private static final int SOURCE_ID = 0, SOURCE_LANG = 1, SOURCE_REFERENCE = 2, POLLING_INTERVAL = 3, TIME_UNIT = 4;
 
-   public AddSource(ConfigurationReader configurationReader) {
-      super(configurationReader);
+   public AddSource(ServerConfigurationHandler configurationHandler) {
+      super(configurationHandler);
    }
 
    @Override
@@ -42,7 +42,7 @@ public class AddSource extends AbstractNukeCommand {
       final boolean hasPollingInterval = arguments.length > 3;
       final boolean hasTimeUnit = arguments.length > 4;
 
-      final ConfigurationHandler cfgHandler = getConfigurationReader().readConfiguration();
+      final ServerConfigurationHandler cfgHandler = getConfigHandler();
 
       if (cfgHandler.findSource(arguments[SOURCE_ID]) != null) {
          return new CommandFailure("A source with the id \"" + arguments[SOURCE_ID] + "\" already exists.");

@@ -1,8 +1,8 @@
 package org.atomnuke.command.sink;
 
 import org.atomnuke.cli.command.AbstractNukeCommand;
-import org.atomnuke.config.ConfigurationHandler;
-import org.atomnuke.config.ConfigurationReader;
+import org.atomnuke.config.server.ServerConfigurationHandler;
+import org.atomnuke.util.config.io.ConfigurationReader;
 import org.atomnuke.config.model.LanguageType;
 import org.atomnuke.config.model.Sink;
 import org.atomnuke.util.cli.command.result.CommandFailure;
@@ -17,8 +17,8 @@ public class AddSink extends AbstractNukeCommand {
 
    private static final int SINK_ID = 0, SINK_LANGUAGE = 1, SINK_REFERENCE = 2;
 
-   public AddSink(ConfigurationReader configurationReader) {
-      super(configurationReader);
+   public AddSink(ServerConfigurationHandler configurationHandler) {
+      super(configurationHandler);
    }
 
    @Override
@@ -37,7 +37,7 @@ public class AddSink extends AbstractNukeCommand {
          return new CommandFailure("Adding a sink requires three arguments: <sink-id> <language> <ref>");
       }
 
-      final ConfigurationHandler cfgHandler = getConfigurationReader().readConfiguration();
+      final ServerConfigurationHandler cfgHandler = getConfigHandler();
 
       if (cfgHandler.findSink(arguments[SINK_ID]) != null) {
          return new CommandFailure("A sink with the id \"" + arguments[SINK_ID] + "\" already exists.");
@@ -62,7 +62,7 @@ public class AddSink extends AbstractNukeCommand {
 
       cfgHandler.getSinks().add(newSink);
       cfgHandler.write();
-      
+
       return new CommandSuccess();
    }
 }

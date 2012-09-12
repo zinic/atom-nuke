@@ -3,18 +3,17 @@ package org.atomnuke.cli.command.server.builder;
 import java.util.HashMap;
 import java.util.Map;
 import org.atomnuke.Nuke;
-import org.atomnuke.NukeKernel;
 import org.atomnuke.bindings.BindingInstantiationException;
 import org.atomnuke.bindings.resolver.BindingResolver;
 import org.atomnuke.context.InstanceContext;
-import org.atomnuke.config.ConfigurationException;
-import org.atomnuke.config.ConfigurationHandler;
+import org.atomnuke.util.config.ConfigurationException;
 import org.atomnuke.config.model.Binding;
 import org.atomnuke.config.model.Eventlet;
 import org.atomnuke.config.model.LanguageType;
 import org.atomnuke.config.model.Relay;
 import org.atomnuke.config.model.Sink;
 import org.atomnuke.config.model.Source;
+import org.atomnuke.config.server.ServerConfigurationHandler;
 import org.atomnuke.context.SimpleInstanceContext;
 import org.atomnuke.listener.AtomListener;
 import org.atomnuke.listener.eps.EventletRelay;
@@ -39,14 +38,11 @@ public class ServerBuilder {
    private final Map<String, InstanceContext<AtomListener>> builtListeners;
    private final Map<String, Task> registeredSources;
    private final BindingResolver bindingsResolver;
-   private final ConfigurationHandler cfgHandler;
-   private final Nuke kernelBeingBuilt;
+   private final ServerConfigurationHandler cfgHandler;
 
-   public ServerBuilder(ConfigurationHandler cfgHandler, BindingResolver bindingsResolver) {
+   public ServerBuilder(ServerConfigurationHandler cfgHandler, BindingResolver bindingsResolver) {
       this.cfgHandler = cfgHandler;
       this.bindingsResolver = bindingsResolver;
-
-      kernelBeingBuilt = new NukeKernel();
 
       builtEventlets = new HashMap<String, InstanceContext<AtomEventlet>>();
       builtListeners = new HashMap<String, InstanceContext<AtomListener>>();
@@ -55,15 +51,13 @@ public class ServerBuilder {
       registeredSources = new HashMap<String, Task>();
    }
 
-   public Nuke build() throws BindingInstantiationException, ConfigurationException {
-      constructSources();
+   public void build(Nuke kernelBeingBuilt) throws BindingInstantiationException, ConfigurationException {
+      constructSources(kernelBeingBuilt);
       constructRelays();
       constructListeners();
       constructEventlets();
 
       processBindings();
-
-      return kernelBeingBuilt;
    }
 
    public InstanceContext<AtomEventlet> constructEventlet(LanguageType langType, String ref) throws BindingInstantiationException {
@@ -124,7 +118,7 @@ public class ServerBuilder {
       }
    }
 
-   public void constructSources() throws ConfigurationException {
+   public void constructSources(Nuke kernelBeingBuilt) throws ConfigurationException {
       for (Source source : cfgHandler.getSources()) {
          try {
             final Task newTask = kernelBeingBuilt.follow(constructSource(source.getType(), source.getHref()), TimeValueUtil.fromPollingInterval(source.getPollingInterval()));

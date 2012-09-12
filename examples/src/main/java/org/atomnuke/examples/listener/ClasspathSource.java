@@ -1,16 +1,15 @@
 package org.atomnuke.examples.listener;
 
-import org.atomnuke.atom.AtomParserException;
-import org.atomnuke.atom.ParserResult;
-import org.atomnuke.atom.Reader;
-import org.atomnuke.atom.sax.impl.SaxAtomParser;
-import org.atomnuke.task.lifecycle.DestructionException;
-import org.atomnuke.task.lifecycle.InitializationException;
+import java.io.InputStream;
+import org.atomnuke.atom.io.AtomReaderFactory;
+import org.atomnuke.atom.io.ReaderResult;
 import org.atomnuke.source.AtomSource;
 import org.atomnuke.source.AtomSourceException;
 import org.atomnuke.source.AtomSourceResult;
 import org.atomnuke.source.impl.AtomSourceResultImpl;
 import org.atomnuke.task.context.TaskContext;
+import org.atomnuke.task.lifecycle.DestructionException;
+import org.atomnuke.task.lifecycle.InitializationException;
 
 /**
  *
@@ -18,13 +17,28 @@ import org.atomnuke.task.context.TaskContext;
  */
 public class ClasspathSource implements AtomSource {
 
+   private final AtomReaderFactory atomReaderFactory;
    private final String resourcePath;
-   private final Reader reader;
 
-   public ClasspathSource(String resourcePath) {
+   public ClasspathSource(AtomReaderFactory atomReaderFactory, String resourcePath) {
+      this.atomReaderFactory = atomReaderFactory;
       this.resourcePath = resourcePath;
+   }
 
-      reader = new SaxAtomParser();
+   @Override
+   public AtomSourceResult poll() throws AtomSourceException {
+      try {
+         final InputStream in = ClasspathSource.class.getResourceAsStream(resourcePath);
+         final ReaderResult result = atomReaderFactory.getInstance().read(in);
+
+         if (result.isEntry()) {
+            return new AtomSourceResultImpl(result.getEntry());
+         } else {
+            return new AtomSourceResultImpl(result.getFeed());
+         }
+      } catch (Exception ex) {
+         throw new AtomSourceException(ex.getMessage(), ex);
+      }
    }
 
    @Override
@@ -33,20 +47,5 @@ public class ClasspathSource implements AtomSource {
 
    @Override
    public void destroy(TaskContext tc) throws DestructionException {
-   }
-
-   @Override
-   public AtomSourceResult poll() throws AtomSourceException {
-      try {
-         final ParserResult parserResult = reader.read(ClasspathSource.class.getResourceAsStream(resourcePath));
-
-         if (parserResult.getFeed() != null) {
-            return new AtomSourceResultImpl(parserResult.getFeed());
-         } else {
-            return new AtomSourceResultImpl(parserResult.getEntry());
-         }
-      } catch (AtomParserException ape) {
-         throw new AtomSourceException(ape);
-      }
    }
 }

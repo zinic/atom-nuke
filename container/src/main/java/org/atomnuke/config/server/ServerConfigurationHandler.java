@@ -1,5 +1,6 @@
-package org.atomnuke.config;
+package org.atomnuke.config.server;
 
+import org.atomnuke.util.config.ConfigurationException;
 import java.util.List;
 import org.atomnuke.config.model.Binding;
 import org.atomnuke.config.model.Bindings;
@@ -13,80 +14,77 @@ import org.atomnuke.config.model.Sink;
 import org.atomnuke.config.model.Sinks;
 import org.atomnuke.config.model.Source;
 import org.atomnuke.config.model.Sources;
+import org.atomnuke.util.config.io.ConfigurationManager;
 
 /**
  *
  * @author zinic
  */
-public class ConfigurationHandler {
+public class ServerConfigurationHandler {
 
-   private final ConfigurationManager managerReference;
-   private final ServerConfiguration configuration;
+   private final ConfigurationManager<ServerConfiguration> configurationManager;
+   private final ServerConfiguration configurationCopy;
 
-   public ConfigurationHandler(ConfigurationManager managerReference, ServerConfiguration configuration) {
-      this.managerReference = managerReference;
-      this.configuration = configuration;
+   public ServerConfigurationHandler(ConfigurationManager<ServerConfiguration> configurationManager, ServerConfiguration configurationCopy) {
+      this.configurationManager = configurationManager;
+      this.configurationCopy = configurationCopy;
    }
 
    public void write() throws ConfigurationException {
-      managerReference.write(configuration);
+      configurationManager.write(configurationCopy);
    }
 
    public ServerConfiguration getConfiguration() {
-      return configuration;
+      return configurationCopy;
    }
-   
+
    public List<Source> getSources() throws ConfigurationException {
-      if (configuration.getSources() == null) {
-         configuration.setSources(new Sources());
-         write();
+      if (configurationCopy.getSources() == null) {
+         configurationCopy.setSources(new Sources());
       }
 
-      return configuration.getSources().getSource();
+      return configurationCopy.getSources().getSource();
    }
 
    public List<Sink> getSinks() throws ConfigurationException {
-      if (configuration.getSinks() == null) {
-         configuration.setSinks(new Sinks());
-         write();
+      if (configurationCopy.getSinks() == null) {
+         configurationCopy.setSinks(new Sinks());
       }
 
-      return configuration.getSinks().getSink();
+      return configurationCopy.getSinks().getSink();
    }
 
    public List<Relay> getRelays() throws ConfigurationException {
-      if (configuration.getEps() == null) {
+      if (configurationCopy.getEps() == null) {
          final EventProcessingSystem eps = new EventProcessingSystem();
          eps.setEventlets(new Eventlets());
          eps.setRelays(new Relays());
 
-         configuration.setEps(eps);
-         write();
+         configurationCopy.setEps(eps);
       }
 
-      return configuration.getEps().getRelays().getRelay();
+      return configurationCopy.getEps().getRelays().getRelay();
    }
 
    public List<Eventlet> getEventlets() throws ConfigurationException {
-      if (configuration.getEps() == null) {
+      if (configurationCopy.getEps() == null) {
          final EventProcessingSystem eps = new EventProcessingSystem();
          eps.setEventlets(new Eventlets());
          eps.setRelays(new Relays());
 
-         configuration.setEps(eps);
-         write();
+         configurationCopy.setEps(eps);
       }
 
-      return configuration.getEps().getEventlets().getEventlet();
+      return configurationCopy.getEps().getEventlets().getEventlet();
    }
 
    public List<Binding> getBindings() throws ConfigurationException {
-      if (configuration.getBindings() == null) {
+      if (configurationCopy.getBindings() == null) {
          final Bindings bindings = new Bindings();
-         configuration.setBindings(bindings);
+         configurationCopy.setBindings(bindings);
       }
 
-      return configuration.getBindings().getBinding();
+      return configurationCopy.getBindings().getBinding();
    }
 
    public Relay findRelay(String id) throws ConfigurationException {

@@ -2,7 +2,7 @@ package org.atomnuke.cli.command.eps;
 
 import org.atomnuke.cli.command.eps.eventlet.EventletCommands;
 import org.atomnuke.cli.command.eps.relay.RelayCommands;
-import org.atomnuke.config.ConfigurationReader;
+import org.atomnuke.config.server.ServerConfigurationHandler;
 import org.atomnuke.util.cli.command.AbstractCommandList;
 
 /**
@@ -11,8 +11,8 @@ import org.atomnuke.util.cli.command.AbstractCommandList;
  */
 public class EPSCommands extends AbstractCommandList {
 
-   public EPSCommands(ConfigurationReader configurationReader) {
-      super(new RelayCommands(configurationReader), new EventletCommands(configurationReader));
+   public EPSCommands(ServerConfigurationHandler configurationHandler) {
+      super(new RelayCommands(configurationHandler), new EventletCommands(configurationHandler));
    }
 
    @Override

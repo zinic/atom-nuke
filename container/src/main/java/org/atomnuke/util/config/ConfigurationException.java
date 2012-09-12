@@ -1,4 +1,4 @@
-package org.atomnuke.config;
+package org.atomnuke.util.config;
 
 /**
  *

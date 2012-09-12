@@ -1,21 +1,9 @@
 package org.atomnuke.cli.command;
 
 import java.util.Iterator;
-import java.util.List;
-import org.atomnuke.config.ConfigurationException;
-import org.atomnuke.config.ConfigurationHandler;
-import org.atomnuke.config.ConfigurationReader;
+import org.atomnuke.util.config.ConfigurationException;
+import org.atomnuke.config.server.ServerConfigurationHandler;
 import org.atomnuke.config.model.Binding;
-import org.atomnuke.config.model.Bindings;
-import org.atomnuke.config.model.EventProcessingSystem;
-import org.atomnuke.config.model.Eventlet;
-import org.atomnuke.config.model.Eventlets;
-import org.atomnuke.config.model.Relay;
-import org.atomnuke.config.model.Relays;
-import org.atomnuke.config.model.Sink;
-import org.atomnuke.config.model.Sinks;
-import org.atomnuke.config.model.Source;
-import org.atomnuke.config.model.Sources;
 import org.atomnuke.util.cli.command.AbstractCommand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,11 +14,11 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class AbstractNukeCommand extends AbstractCommand {
 
-   private final ConfigurationReader configurationReader;
+   private final ServerConfigurationHandler configurationHandler;
    private final Logger logger;
 
-   public AbstractNukeCommand(ConfigurationReader configurationReader) {
-      this.configurationReader = configurationReader;
+   public AbstractNukeCommand(ServerConfigurationHandler configurationHandler) {
+      this.configurationHandler = configurationHandler;
       this.logger = logger();
    }
 
@@ -42,11 +30,11 @@ public abstract class AbstractNukeCommand extends AbstractCommand {
       return logger;
    }
 
-   protected final ConfigurationReader getConfigurationReader() {
-      return configurationReader;
+   protected final ServerConfigurationHandler getConfigHandler() {
+      return configurationHandler;
    }
 
-   protected void unbindReciever(ConfigurationHandler cfgHandler, String receiverId) throws ConfigurationException {
+   protected void unbindReciever(ServerConfigurationHandler cfgHandler, String receiverId) throws ConfigurationException {
       for (Iterator<Binding> bindingItr = cfgHandler.getBindings().iterator(); bindingItr.hasNext();) {
          if (bindingItr.next().getReceiver().equals(receiverId)) {
             bindingItr.remove();
@@ -56,7 +44,7 @@ public abstract class AbstractNukeCommand extends AbstractCommand {
       cfgHandler.write();
    }
 
-   protected void unbindTarget(ConfigurationHandler cfgHandler, String targetId) throws ConfigurationException {
+   protected void unbindTarget(ServerConfigurationHandler cfgHandler, String targetId) throws ConfigurationException {
       for (Iterator<Binding> bindingItr = cfgHandler.getBindings().iterator(); bindingItr.hasNext();) {
          if (bindingItr.next().getTarget().equals(targetId)) {
             bindingItr.remove();

@@ -1,8 +1,8 @@
 package org.atomnuke.cli.command.eps.eventlet;
 
 import org.atomnuke.cli.command.AbstractNukeCommand;
-import org.atomnuke.config.ConfigurationHandler;
-import org.atomnuke.config.ConfigurationReader;
+import org.atomnuke.config.server.ServerConfigurationHandler;
+import org.atomnuke.util.config.io.ConfigurationReader;
 import org.atomnuke.config.model.Eventlet;
 import org.atomnuke.config.model.LanguageType;
 import org.atomnuke.util.cli.command.result.CommandFailure;
@@ -17,8 +17,8 @@ public class AddEventlet extends AbstractNukeCommand {
 
    private static final int EVENTLET_ID = 0, EVENTLET_LANG = 1, EVENTLET_REFERENCE = 2;
 
-   public AddEventlet(ConfigurationReader configurationReader) {
-      super(configurationReader);
+   public AddEventlet(ServerConfigurationHandler configurationHandler) {
+      super(configurationHandler);
    }
 
    @Override
@@ -37,7 +37,7 @@ public class AddEventlet extends AbstractNukeCommand {
          return new CommandFailure("Adding an eventlet requires three arguments: <eventlet-id> <language> <ref>");
       }
 
-      final ConfigurationHandler cfgHandler = getConfigurationReader().readConfiguration();
+      final ServerConfigurationHandler cfgHandler = getConfigHandler();
 
       if (cfgHandler.findEventlet(arguments[EVENTLET_ID]) != null) {
          return new CommandFailure("An eventlet with the id \"" + arguments[EVENTLET_ID] + "\" already exists.");

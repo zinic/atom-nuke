@@ -1,6 +1,6 @@
 package org.atomnuke.cli.command.eps.relay;
 
-import org.atomnuke.config.ConfigurationReader;
+import org.atomnuke.config.server.ServerConfigurationHandler;
 import org.atomnuke.util.cli.command.AbstractCommandList;
 
 /**
@@ -9,8 +9,8 @@ import org.atomnuke.util.cli.command.AbstractCommandList;
  */
 public class RelayCommands extends AbstractCommandList {
 
-   public RelayCommands(ConfigurationReader configurationReader) {
-      super(new AddRelay(configurationReader), new DeleteRelay(configurationReader), new ListRelays(configurationReader));
+   public RelayCommands(ServerConfigurationHandler configurationHandler) {
+      super(new AddRelay(configurationHandler), new DeleteRelay(configurationHandler), new ListRelays(configurationHandler));
    }
 
    @Override

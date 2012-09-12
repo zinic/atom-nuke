@@ -2,8 +2,8 @@ package org.atomnuke.cli.command.eps.eventlet;
 
 import java.util.Iterator;
 import org.atomnuke.cli.command.AbstractNukeCommand;
-import org.atomnuke.config.ConfigurationHandler;
-import org.atomnuke.config.ConfigurationReader;
+import org.atomnuke.config.server.ServerConfigurationHandler;
+import org.atomnuke.util.config.io.ConfigurationReader;
 import org.atomnuke.config.model.Eventlet;
 import org.atomnuke.util.cli.command.result.CommandFailure;
 import org.atomnuke.util.cli.command.result.CommandResult;
@@ -17,8 +17,8 @@ public class DeleteEventlet extends AbstractNukeCommand {
 
    private static final int EVENTLET_ID = 0;
 
-   public DeleteEventlet(ConfigurationReader configurationReader) {
-      super(configurationReader);
+   public DeleteEventlet(ServerConfigurationHandler configurationHandler) {
+      super(configurationHandler);
    }
 
    @Override
@@ -37,13 +37,13 @@ public class DeleteEventlet extends AbstractNukeCommand {
          return new CommandFailure("Deleting a source requires one arguments: <sink-id>");
       }
 
-      final ConfigurationHandler cfgHandler = getConfigurationReader().readConfiguration();
+      final ServerConfigurationHandler cfgHandler = getConfigHandler();
 
       for (Iterator<Eventlet> eventletItr = cfgHandler.getEventlets().iterator(); eventletItr.hasNext();) {
          if (eventletItr.next().getId().equals(arguments[EVENTLET_ID])) {
             eventletItr.remove();
             unbindReciever(cfgHandler, arguments[EVENTLET_ID]);
-            
+
             cfgHandler.write();
             return new CommandSuccess();
          }

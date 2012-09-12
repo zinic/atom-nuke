@@ -1,6 +1,6 @@
 package org.atomnuke.command.sink;
 
-import org.atomnuke.config.ConfigurationReader;
+import org.atomnuke.config.server.ServerConfigurationHandler;
 import org.atomnuke.util.cli.command.AbstractCommandList;
 
 /**
@@ -9,8 +9,8 @@ import org.atomnuke.util.cli.command.AbstractCommandList;
  */
 public class SinkCommands extends AbstractCommandList {
 
-   public SinkCommands(ConfigurationReader configurationReader) {
-      super(new AddSink(configurationReader), new DeleteSink(configurationReader), new ListSinks(configurationReader));
+   public SinkCommands(ServerConfigurationHandler configurationHandler) {
+      super(new AddSink(configurationHandler), new DeleteSink(configurationHandler), new ListSinks(configurationHandler));
    }
 
    @Override
