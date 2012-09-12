@@ -8,7 +8,10 @@ import com.rackspace.papi.commons.config.resource.impl.ByteArrayConfigurationRes
 import com.rackspace.papi.commons.util.StringUtilities;
 import com.rackspace.papi.commons.util.classloader.ResourceDescriptor;
 import com.rackspace.papi.commons.util.classloader.digest.Sha1Digester;
+import com.rackspace.papi.commons.util.classloader.ear.EarArchiveEntryListener;
+import com.rackspace.papi.commons.util.classloader.ear.EarClassLoaderContext;
 import com.rackspace.papi.commons.util.classloader.ear.EarProcessingException;
+import com.rackspace.papi.commons.util.classloader.ear.SimpleEarClassLoaderContext;
 import com.rackspace.papi.commons.util.plugin.archive.ArchiveEntryDescriptor;
 import com.rackspace.papi.commons.util.plugin.archive.DeploymentAction;
 import com.rackspace.papi.commons.util.plugin.archive.EntryAction;

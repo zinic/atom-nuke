@@ -1,5 +1,7 @@
 package org.atomnuke.bindings.ear;
 
+import com.rackspace.papi.commons.util.classloader.ear.EarClassLoaderContext;
+import com.rackspace.papi.commons.util.classloader.ear.EarUnpacker;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
