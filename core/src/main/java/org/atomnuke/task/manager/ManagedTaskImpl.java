@@ -23,13 +23,11 @@ import org.slf4j.LoggerFactory;
 public class ManagedTaskImpl implements ManagedTask {
 
    private static final Logger LOG = LoggerFactory.getLogger(ManagedTaskImpl.class);
-
    private final InstanceContext<? extends AtomSource> atomSourceContext;
    private final ExecutionManager executorService;
    private final ListenerManager listenerManager;
    private final Task task;
    private final UUID id;
-   
    private TimeValue timestamp;
 
    public ManagedTaskImpl(Task task, ListenerManager listenerManager, TimeValue interval, ExecutionManager executorService, InstanceContext<? extends AtomSource> atomSourceContext) {
@@ -53,7 +51,6 @@ public class ManagedTaskImpl implements ManagedTask {
       task.cancel();
    }
 
-   @Override
    public boolean isReentrant() {
       return listenerManager.isReentrant();
    }
@@ -75,6 +72,8 @@ public class ManagedTaskImpl implements ManagedTask {
 
    @Override
    public void init(TaskContext taskContext) throws InitializationException {
+      LOG.debug("Initializing task: " + task);
+      
       atomSourceContext.stepInto();
 
       try {

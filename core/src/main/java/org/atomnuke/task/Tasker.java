@@ -2,15 +2,27 @@ package org.atomnuke.task;
 
 import org.atomnuke.context.InstanceContext;
 import org.atomnuke.source.AtomSource;
+import org.atomnuke.task.lifecycle.InitializationException;
 import org.atomnuke.util.TimeValue;
 
 /**
+ * A tasker represents an object that may schedule an AtomSource for polling.
+ *
+ * @see AtomSource
+ * @see InstanceContext
  *
  * @author zinic
  */
 public interface Tasker {
 
-   Task follow(InstanceContext<? extends AtomSource> source);
-
-   Task follow(InstanceContext<? extends AtomSource> source, TimeValue pollingInterval);
+   /**
+    * Follows an AtomSource at a defined polling rate. The tasker requires that
+    * an InstanceContext be give for each AtomSource to allow for the
+    * abstraction of system internals like custom class loaders.
+    *
+    * @param source the instance context of the source to be polled.
+    * @param pollingInterval the polling interval of this source.
+    * @return a new polling task instance.
+    */
+   Task follow(InstanceContext<? extends AtomSource> source, TimeValue pollingInterval) throws InitializationException;
 }

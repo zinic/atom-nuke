@@ -5,6 +5,7 @@ import org.atomnuke.context.InstanceContext;
 import org.atomnuke.listener.AtomListener;
 import org.atomnuke.listener.RegisteredListener;
 import org.atomnuke.task.lifecycle.InitializationException;
+import org.atomnuke.util.remote.CancellationRemote;
 
 /**
  *
@@ -12,9 +13,7 @@ import org.atomnuke.task.lifecycle.InitializationException;
  */
 public interface ListenerManager {
 
-   void addListener(AtomListener atomListener) throws InitializationException;
-
-   void addListener(InstanceContext<? extends AtomListener> atomListenerContext) throws InitializationException;
+   CancellationRemote addListener(InstanceContext<? extends AtomListener> atomListenerContext) throws InitializationException;
 
    boolean hasListeners();
 

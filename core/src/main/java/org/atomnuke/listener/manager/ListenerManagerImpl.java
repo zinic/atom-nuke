@@ -6,11 +6,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import org.atomnuke.context.InstanceContext;
-import org.atomnuke.context.SimpleInstanceContext;
 import org.atomnuke.listener.AtomListener;
 import org.atomnuke.listener.ReentrantAtomListener;
 import org.atomnuke.listener.RegisteredListener;
 import org.atomnuke.util.remote.AtomicCancellationRemote;
+import org.atomnuke.util.remote.CancellationRemote;
 
 /**
  *
@@ -50,20 +50,14 @@ public class ListenerManagerImpl implements ListenerManager {
    }
 
    @Override
-   public synchronized void addListener(AtomListener atomListener) {
-      if (!(atomListener instanceof ReentrantAtomListener)) {
-         reentrant.set(false);
-      }
-
-      listeners.add(new RegisteredListener(new AtomicCancellationRemote(), new SimpleInstanceContext<AtomListener>(atomListener)));
-   }
-
-   @Override
-   public synchronized void addListener(InstanceContext<? extends AtomListener> atomListenerContext) {
+   public synchronized CancellationRemote addListener(InstanceContext<? extends AtomListener> atomListenerContext) {
       if (!(atomListenerContext.getInstance() instanceof ReentrantAtomListener)) {
          reentrant.set(false);
       }
 
-      listeners.add(new RegisteredListener(new AtomicCancellationRemote(), atomListenerContext));
+      final CancellationRemote cancellationRemote = new AtomicCancellationRemote();
+      listeners.add(new RegisteredListener(cancellationRemote, atomListenerContext));
+
+      return cancellationRemote;
    }
 }

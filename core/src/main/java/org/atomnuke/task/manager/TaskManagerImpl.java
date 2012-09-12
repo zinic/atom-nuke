@@ -51,10 +51,7 @@ public class TaskManagerImpl implements TaskManager {
    }
 
    @Override
-   public synchronized void init() throws InitializationException {
-      for (ManagedTask managedTask : pollingTasks) {
-         managedTask.init(taskContext);
-      }
+   public void init() {
    }
 
    @Override
@@ -70,7 +67,11 @@ public class TaskManagerImpl implements TaskManager {
 
       // Destroy the tasks
       for (ManagedTask managedTask : pollingTasks) {
-         managedTask.destroy(taskContext);
+         try {
+            managedTask.destroy(taskContext);
+         } catch (Exception ex) {
+            LOG.error("Failed to destroy task: " + managedTask.id().toString() + ". Reason: " + ex.getMessage(), ex);
+         }
       }
    }
 
@@ -115,15 +116,17 @@ public class TaskManagerImpl implements TaskManager {
    }
 
    @Override
-   public Task follow(InstanceContext<? extends AtomSource> source) {
+   public Task follow(InstanceContext<? extends AtomSource> source) throws InitializationException {
       return follow(source, new TimeValue(1, TimeUnit.MINUTES));
    }
 
    @Override
-   public Task follow(InstanceContext<? extends AtomSource> source, TimeValue pollingInterval) {
+   public Task follow(InstanceContext<? extends AtomSource> source, TimeValue pollingInterval) throws InitializationException {
       final ListenerManager listenerManager = new ListenerManagerImpl();
       final Task task = new TaskImpl(taskContext, pollingInterval, listenerManager);
       final ManagedTaskImpl managedTask = new ManagedTaskImpl(task, listenerManager, pollingInterval, executionManager, source);
+
+      managedTask.init(taskContext);
       addTask(managedTask);
 
       return task;

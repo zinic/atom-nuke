@@ -5,6 +5,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import org.atomnuke.atom.model.Entry;
 import org.atomnuke.atom.model.Feed;
 import org.atomnuke.atom.model.builder.FeedBuilder;
+import org.atomnuke.context.SimpleInstanceContext;
 import org.atomnuke.listener.AtomListener;
 import org.atomnuke.listener.AtomListenerException;
 import org.atomnuke.listener.AtomListenerResult;
@@ -74,7 +75,7 @@ public class NukeKernelTest {
 
       for (int taskId = 1; taskId <= 30; taskId++) {
          final Task task = nukeKernel.follow(source, new TimeValue(10 * taskId, TimeUnit.NANOSECONDS));
-         task.addListener(listener);
+         task.addListener(new SimpleInstanceContext(listener));
       }
 
       nukeKernel.start();

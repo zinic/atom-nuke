@@ -26,24 +26,25 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * The Nuke kernel contains the references to a TaskManager, a cancellation
+ * remote and the runnable kernel logic delegate.
+ *
+ * This is the primary interface to the underlying event polling system.
  *
  * @author zinic
  */
 public class NukeKernel implements Nuke {
 
    private static final Logger LOG = LoggerFactory.getLogger(NukeKernel.class);
-
    private static final ThreadFactory DEFAULT_THREAD_FACTORY = new ThreadFactory() {
       @Override
       public Thread newThread(Runnable r) {
          return new Thread(r, "nuke-worker-" + TID.incrementAndGet());
       }
    };
-
    private static final int MAX_QUEUE_SIZE = 256000;
    private static final int NUM_PROCESSORS = Runtime.getRuntime().availableProcessors();
    private static final AtomicLong TID = new AtomicLong(0);
-
    private final CancellationRemote kernelCancellationRemote;
    private final TaskManager taskManager;
    private final KernelDelegate logic;
@@ -84,22 +85,12 @@ public class NukeKernel implements Nuke {
    }
 
    @Override
-   public Task follow(AtomSource source) {
-      return follow(new SimpleInstanceContext<AtomSource>(source));
-   }
-
-   @Override
-   public Task follow(AtomSource source, TimeValue pollingInterval) {
+   public Task follow(AtomSource source, TimeValue pollingInterval) throws InitializationException {
       return follow(new SimpleInstanceContext<AtomSource>(source), pollingInterval);
    }
 
    @Override
-   public Task follow(InstanceContext<? extends AtomSource> source) {
-      return taskManager.follow(source);
-   }
-
-   @Override
-   public Task follow(InstanceContext<? extends AtomSource> source, TimeValue pollingInterval) {
+   public Task follow(InstanceContext<? extends AtomSource> source, TimeValue pollingInterval) throws InitializationException {
       return taskManager.follow(source, pollingInterval);
    }
 
@@ -109,14 +100,10 @@ public class NukeKernel implements Nuke {
          throw new IllegalStateException("Crawler already started or destroyed.");
       }
 
-      LOG.info("Nuke kernel:" + this + " starting.");
+      LOG.info("Nuke kernel: " + toString() + " starting.");
 
-      try {
-         taskManager.init();
-         controlThread.start();
-      } catch(InitializationException ie){
-         throw new RuntimeException("Failed to init system. Reason: " + ie.getMessage(), ie);
-      }
+      taskManager.init();
+      controlThread.start();
    }
 
    @Override
@@ -128,6 +115,7 @@ public class NukeKernel implements Nuke {
       try {
          controlThread.join();
       } catch (InterruptedException ie) {
+         LOG.info("Nuke kernel interrupted while shutting down. Killing thread now.", ie);
          controlThread.interrupt();
       }
    }

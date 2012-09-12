@@ -4,11 +4,12 @@ import org.atomnuke.context.InstanceContext;
 import org.atomnuke.listener.AtomListener;
 import org.atomnuke.task.lifecycle.InitializationException;
 import org.atomnuke.util.TimeValue;
+import org.atomnuke.util.remote.CancellationRemote;
 
 /**
- * A Nuke Task represents an ATOM feed polling task. The task executes at a
- * regular interval defined by the method interval(). The task, when executed,
- * will dispatch ATOM events to any listeners registered to it.
+ * A Nuke Task represents an ATOM polling task. The task executes at a regular
+ * interval defined by the interval method. The task, when executed, will
+ * dispatch ATOM events to any listeners registered to it.
  *
  * @author zinic
  */
@@ -23,32 +24,28 @@ public interface Task {
    /**
     * Checks to see if this task has been canceled.
     *
-    * @return
+    * @return true if the task has been canceled, false otherwise.
     */
    boolean canceled();
 
    /**
     * Returns the polling interval of this task.
     *
-    * @return
+    * @return the time interval representing the desired polling interval of
+    * this task.
     */
    TimeValue interval();
 
    /**
-    * Adds an AtomListener to this task. The listener will begin receiving ATOM
-    * events during the task's next execution.
+    * Adds an AtomListener to this task. The tasker requires that an
+    * InstanceContext be give for each AtomSource to allow for the abstraction
+    * of system internals like custom class loaders.
+    *
+    * The listener will begin receiving ATOM events during the task's next
+    * execution.
     *
     * @param listener
-    * @return
+    * @return the cancellation remote for the newly registered listener.
     */
-   void addListener(AtomListener listener) throws InitializationException;
-
-   /**
-    * Adds an AtomListener to this task. The listener will begin receiving ATOM
-    * events during the task's next execution.
-    *
-    * @param listener
-    * @return
-    */
-   void addListenerContext(InstanceContext<? extends AtomListener> listener) throws InitializationException;
+   CancellationRemote addListener(InstanceContext<? extends AtomListener> listener) throws InitializationException;
 }
