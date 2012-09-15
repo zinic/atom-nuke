@@ -1,5 +1,6 @@
 package org.atomnuke.task;
 
+import java.util.UUID;
 import org.atomnuke.context.InstanceContext;
 import org.atomnuke.listener.AtomListener;
 import org.atomnuke.task.lifecycle.InitializationException;
@@ -16,17 +17,18 @@ import org.atomnuke.util.remote.CancellationRemote;
 public interface Task {
 
    /**
-    * Cancels the task's next execution. This stops all of the listeners
-    * assigned to this task.
+    * Gets the task ID as a UUID instance.
+    *
+    * @return the task ID UUID;
     */
-   void cancel();
+   UUID id();
 
    /**
-    * Checks to see if this task has been canceled.
+    * Gets the task's cancellation remote.
     *
-    * @return true if the task has been canceled, false otherwise.
+    * @return
     */
-   boolean canceled();
+   CancellationRemote cancellationRemote();
 
    /**
     * Returns the polling interval of this task.

@@ -3,7 +3,6 @@ package org.atomnuke.listener.manager;
 import java.util.List;
 import org.atomnuke.context.InstanceContext;
 import org.atomnuke.listener.AtomListener;
-import org.atomnuke.listener.RegisteredListener;
 import org.atomnuke.task.lifecycle.InitializationException;
 import org.atomnuke.util.remote.CancellationRemote;
 
@@ -19,5 +18,5 @@ public interface ListenerManager {
 
    boolean isReentrant();
 
-   List<RegisteredListener> listeners();
+   List<ManagedListener> listeners();
 }

@@ -1,5 +1,6 @@
 package org.atomnuke.task;
 
+import java.util.UUID;
 import org.atomnuke.context.InstanceContext;
 import org.atomnuke.context.SimpleInstanceContext;
 import org.atomnuke.listener.AtomListener;
@@ -20,22 +21,25 @@ public class TaskImpl implements Task {
    private final ListenerManager listenerManager;
    private final TaskContext context;
    private final TimeValue interval;
+   private final UUID taskId;
 
-   public TaskImpl(TaskContext context, TimeValue interval, ListenerManager listenerManager) {
-      this.cancelationRemote = new AtomicCancellationRemote();
+   public TaskImpl(UUID taskId, ListenerManager listenerManager, TaskContext context, TimeValue interval) {
       this.listenerManager = listenerManager;
       this.context = context;
       this.interval = interval;
+      this.taskId = taskId;
+
+      this.cancelationRemote = new AtomicCancellationRemote();
    }
 
    @Override
-   public boolean canceled() {
-      return cancelationRemote.canceled();
+   public UUID id() {
+      return taskId;
    }
 
    @Override
-   public void cancel() {
-      cancelationRemote.cancel();
+   public CancellationRemote cancellationRemote() {
+      return cancelationRemote;
    }
 
    @Override

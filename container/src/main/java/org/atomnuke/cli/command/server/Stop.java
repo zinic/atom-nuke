@@ -1,7 +1,7 @@
 package org.atomnuke.cli.command.server;
 
 import org.atomnuke.cli.command.AbstractNukeCommand;
-import org.atomnuke.config.server.ServerConfigurationHandler;
+import org.atomnuke.cli.CliConfigurationHandler;
 import org.atomnuke.util.cli.command.result.CommandResult;
 import org.atomnuke.util.cli.command.result.CommandSuccess;
 
@@ -11,7 +11,7 @@ import org.atomnuke.util.cli.command.result.CommandSuccess;
  */
 public class Stop extends AbstractNukeCommand {
 
-   public Stop(ServerConfigurationHandler configurationHandler) {
+   public Stop(CliConfigurationHandler configurationHandler) {
       super(configurationHandler);
    }
 

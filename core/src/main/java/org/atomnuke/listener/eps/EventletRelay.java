@@ -16,6 +16,7 @@ import org.atomnuke.listener.eps.selector.Selector;
 import org.atomnuke.task.context.TaskContext;
 import org.atomnuke.task.lifecycle.DestructionException;
 import org.atomnuke.task.lifecycle.InitializationException;
+import org.atomnuke.util.remote.CancellationRemote;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,6 +33,7 @@ import org.slf4j.LoggerFactory;
 public class EventletRelay implements AtomListener, AtomEventHandlerRelay {
 
    private static final Logger LOG = LoggerFactory.getLogger(EventletRelay.class);
+
    private final List<HandlerConduit> epsConduits;
    private TaskContext taskCtx;
 
@@ -58,22 +60,22 @@ public class EventletRelay implements AtomListener, AtomEventHandlerRelay {
    }
 
    @Override
-   public void enlistHandler(AtomEventlet handler) throws InitializationException {
-      enlistHandlerContext(new SimpleInstanceContext<AtomEventlet>(handler), DefaultSelector.instance());
+   public CancellationRemote enlistHandler(AtomEventlet handler) throws InitializationException {
+      return enlistHandlerContext(new SimpleInstanceContext<AtomEventlet>(handler), DefaultSelector.instance());
    }
 
    @Override
-   public void enlistHandler(AtomEventlet handler, Selector selector) throws InitializationException {
-      enlistHandlerContext(new SimpleInstanceContext<AtomEventlet>(handler), selector);
+   public CancellationRemote enlistHandler(AtomEventlet handler, Selector selector) throws InitializationException {
+      return enlistHandlerContext(new SimpleInstanceContext<AtomEventlet>(handler), selector);
    }
 
    @Override
-   public void enlistHandlerContext(InstanceContext<AtomEventlet> handler) throws InitializationException {
-      enlistHandlerContext(handler, DefaultSelector.instance());
+   public CancellationRemote enlistHandlerContext(InstanceContext<? extends AtomEventlet> handler) throws InitializationException {
+      return enlistHandlerContext(handler, DefaultSelector.instance());
    }
 
    @Override
-   public synchronized void enlistHandlerContext(InstanceContext<AtomEventlet> handler, Selector selector) throws InitializationException {
+   public synchronized CancellationRemote enlistHandlerContext(InstanceContext<? extends AtomEventlet> handler, Selector selector) throws InitializationException {
       handler.stepInto();
 
       try {
@@ -82,7 +84,10 @@ public class EventletRelay implements AtomListener, AtomEventHandlerRelay {
          handler.stepOut();
       }
 
-      epsConduits.add(new HandlerConduit(handler, selector));
+      final HandlerConduit newConduit = new HandlerConduit(handler, selector);
+      epsConduits.add(newConduit);
+
+      return newConduit.cancellationRemote();
    }
 
    @Override
@@ -99,8 +104,18 @@ public class EventletRelay implements AtomListener, AtomEventHandlerRelay {
       epsConduits.clear();
    }
 
+   private void garbageCollect() {
+      for (HandlerConduit conduit : copyConduits()) {
+         if (conduit.cancellationRemote().canceled()) {
+            destroyConduit(taskCtx, conduit);
+         }
+      }
+   }
+
    @Override
    public ListenerResult entry(Entry entry) throws AtomListenerException {
+      garbageCollect();
+
       for (HandlerConduit conduit : copyConduits()) {
          switch (conduit.select(entry)) {
             case HALT:
@@ -116,6 +131,8 @@ public class EventletRelay implements AtomListener, AtomEventHandlerRelay {
 
    @Override
    public ListenerResult feedPage(Feed page) throws AtomListenerException {
+      garbageCollect();
+
       for (HandlerConduit conduit : copyConduits()) {
          switch (conduit.select(page)) {
             case HALT:

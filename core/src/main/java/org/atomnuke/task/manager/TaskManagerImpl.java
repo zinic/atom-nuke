@@ -3,8 +3,9 @@ package org.atomnuke.task.manager;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
+import java.util.UUID;
 import org.atomnuke.context.InstanceContext;
+import org.atomnuke.context.SimpleInstanceContext;
 import org.atomnuke.listener.manager.ListenerManager;
 import org.atomnuke.listener.manager.ListenerManagerImpl;
 import org.atomnuke.source.AtomSource;
@@ -25,11 +26,9 @@ import org.slf4j.LoggerFactory;
 public class TaskManagerImpl implements TaskManager {
 
    private static final Logger LOG = LoggerFactory.getLogger(TaskManagerImpl.class);
-
    private final ExecutionManager executionManager;
    private final List<ManagedTask> pollingTasks;
    private final TaskContext taskContext;
-
    private boolean allowSubmission;
 
    public TaskManagerImpl(ExecutionManager executionManager) {
@@ -38,16 +37,6 @@ public class TaskManagerImpl implements TaskManager {
 
       pollingTasks = new LinkedList<ManagedTask>();
       allowSubmission = true;
-   }
-
-   public synchronized void addTask(ManagedTask state) {
-      if (!allowSubmission) {
-         // TODO:Implement - Consider returning a boolean value to communicate shutdown?
-         LOG.warn("This object has been destroyed and can no longer enlist tasks.");
-         return;
-      }
-
-      pollingTasks.add(state);
    }
 
    @Override
@@ -75,8 +64,17 @@ public class TaskManagerImpl implements TaskManager {
       }
    }
 
-   @Override
-   public synchronized List<ManagedTask> managedTasks() {
+   private synchronized void addTask(ManagedTask state) {
+      if (!allowSubmission) {
+         // TODO:Implement - Consider returning a boolean value to communicate shutdown?
+         LOG.warn("This object has been destroyed and can no longer enlist tasks.");
+         return;
+      }
+
+      pollingTasks.add(state);
+   }
+
+   private synchronized List<ManagedTask> activeTasks() {
       final List<ManagedTask> activeTasks = new LinkedList<ManagedTask>();
 
       for (Iterator<ManagedTask> managedTaskIter = pollingTasks.iterator(); managedTaskIter.hasNext();) {
@@ -93,11 +91,22 @@ public class TaskManagerImpl implements TaskManager {
    }
 
    @Override
+   public ManagedTask findTask(UUID taskId) {
+      for (ManagedTask managedTask : activeTasks()) {
+         if (managedTask.id().equals(taskId)) {
+            return managedTask;
+         }
+      }
+
+      return null;
+   }
+
+   @Override
    public TimeValue scheduleTasks() {
       final TimeValue now = TimeValue.now();
       TimeValue closestPollTime = null;
 
-      for (ManagedTask managedTask : managedTasks()) {
+      for (ManagedTask managedTask : activeTasks()) {
          final TimeValue nextPollTime = managedTask.nextPollTime();
 
          // Sould this task be scheduled? If so, is the task already in the execution queue?
@@ -116,9 +125,11 @@ public class TaskManagerImpl implements TaskManager {
    }
 
    @Override
-   public Task follow(InstanceContext<? extends AtomSource> source, TimeValue pollingInterval) throws InitializationException {
+   public Task follow(InstanceContext<AtomSource> source, TimeValue pollingInterval) throws InitializationException {
       final ListenerManager listenerManager = new ListenerManagerImpl();
-      final Task task = new TaskImpl(taskContext, pollingInterval, listenerManager);
+
+      final UUID taskId = UUID.randomUUID();
+      final Task task = new TaskImpl(taskId, listenerManager, taskContext, pollingInterval);
       final ManagedTaskImpl managedTask = new ManagedTaskImpl(task, listenerManager, pollingInterval, executionManager, source);
 
       managedTask.init(taskContext);

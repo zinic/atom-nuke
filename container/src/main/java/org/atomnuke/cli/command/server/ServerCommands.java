@@ -1,6 +1,6 @@
 package org.atomnuke.cli.command.server;
 
-import org.atomnuke.config.server.ServerConfigurationHandler;
+import org.atomnuke.cli.CliConfigurationHandler;
 import org.atomnuke.util.cli.command.AbstractCommandList;
 
 /**
@@ -9,7 +9,7 @@ import org.atomnuke.util.cli.command.AbstractCommandList;
  */
 public class ServerCommands extends AbstractCommandList {
 
-   public ServerCommands(ServerConfigurationHandler configurationHandler) {
+   public ServerCommands(CliConfigurationHandler configurationHandler) {
       super(new Start(configurationHandler), new Stop(configurationHandler));
    }
 

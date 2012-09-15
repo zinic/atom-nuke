@@ -18,7 +18,9 @@
 
    <modules>
       <!-- Sources -->
-      <module>sources/servlet</module>
+      <module>sources/feed-crawler</module>
+      <module>sources/http-listener</module>
+      <module>sources/util-sources</module>
 
       <!-- Listeners -->
       <module>listeners/util-listeners</module>
@@ -31,7 +33,19 @@
       <dependencies>
          <dependency>
             <groupId>org.atomnuke.components.source</groupId>
-            <artifactId>http-servlet</artifactId>
+            <artifactId>feed-crawler</artifactId>
+            <version>${project.version}</version>
+         </dependency>
+
+         <dependency>
+            <groupId>org.atomnuke.components.source</groupId>
+            <artifactId>http-listener</artifactId>
+            <version>${project.version}</version>
+         </dependency>
+
+         <dependency>
+            <groupId>org.atomnuke.components.source</groupId>
+            <artifactId>util-sources</artifactId>
             <version>${project.version}</version>
          </dependency>
 
@@ -39,6 +53,12 @@
             <groupId>org.atomnuke.components.listener</groupId>
             <artifactId>util-listeners</artifactId>
             <version>${project.version}</version>
+         </dependency>
+
+         <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.2</version>
          </dependency>
       </dependencies>
    </dependencyManagement>

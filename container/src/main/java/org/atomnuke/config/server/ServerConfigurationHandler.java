@@ -14,7 +14,6 @@ import org.atomnuke.config.model.Sink;
 import org.atomnuke.config.model.Sinks;
 import org.atomnuke.config.model.Source;
 import org.atomnuke.config.model.Sources;
-import org.atomnuke.util.config.io.ConfigurationManager;
 
 /**
  *
@@ -22,16 +21,10 @@ import org.atomnuke.util.config.io.ConfigurationManager;
  */
 public class ServerConfigurationHandler {
 
-   private final ConfigurationManager<ServerConfiguration> configurationManager;
    private final ServerConfiguration configurationCopy;
 
-   public ServerConfigurationHandler(ConfigurationManager<ServerConfiguration> configurationManager, ServerConfiguration configurationCopy) {
-      this.configurationManager = configurationManager;
+   public ServerConfigurationHandler(ServerConfiguration configurationCopy) {
       this.configurationCopy = configurationCopy;
-   }
-
-   public void write() throws ConfigurationException {
-      configurationManager.write(configurationCopy);
    }
 
    public ServerConfiguration getConfiguration() {

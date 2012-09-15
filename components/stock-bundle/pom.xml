@@ -19,7 +19,17 @@
    <dependencies>
       <dependency>
          <groupId>org.atomnuke.components.source</groupId>
-         <artifactId>http-servlet</artifactId>
+         <artifactId>feed-crawler</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>org.atomnuke.components.source</groupId>
+         <artifactId>http-listener</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>org.atomnuke.components.source</groupId>
+         <artifactId>util-sources</artifactId>
       </dependency>
 
       <dependency>
@@ -55,7 +65,17 @@
                <modules>
                   <jarModule>
                      <groupId>org.atomnuke.components.source</groupId>
-                     <artifactId>http-servlet</artifactId>
+                     <artifactId>feed-crawler</artifactId>
+                  </jarModule>
+
+                  <jarModule>
+                     <groupId>org.atomnuke.components.source</groupId>
+                     <artifactId>http-listener</artifactId>
+                  </jarModule>
+
+                  <jarModule>
+                     <groupId>org.atomnuke.components.source</groupId>
+                     <artifactId>util-sources</artifactId>
                   </jarModule>
 
                   <jarModule>

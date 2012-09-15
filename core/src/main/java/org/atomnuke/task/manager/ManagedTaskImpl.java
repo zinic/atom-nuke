@@ -2,7 +2,7 @@ package org.atomnuke.task.manager;
 
 import java.util.UUID;
 import org.atomnuke.context.InstanceContext;
-import org.atomnuke.listener.RegisteredListener;
+import org.atomnuke.listener.manager.ManagedListener;
 import org.atomnuke.listener.driver.AtomListenerDriver;
 import org.atomnuke.listener.manager.ListenerManager;
 import org.atomnuke.source.AtomSource;
@@ -23,14 +23,13 @@ import org.slf4j.LoggerFactory;
 public class ManagedTaskImpl implements ManagedTask {
 
    private static final Logger LOG = LoggerFactory.getLogger(ManagedTaskImpl.class);
-   private final InstanceContext<? extends AtomSource> atomSourceContext;
+   private final InstanceContext<AtomSource> atomSourceContext;
    private final ExecutionManager executorService;
    private final ListenerManager listenerManager;
    private final Task task;
-   private final UUID id;
    private TimeValue timestamp;
 
-   public ManagedTaskImpl(Task task, ListenerManager listenerManager, TimeValue interval, ExecutionManager executorService, InstanceContext<? extends AtomSource> atomSourceContext) {
+   public ManagedTaskImpl(Task task, ListenerManager listenerManager, TimeValue interval, ExecutionManager executorService, InstanceContext<AtomSource> atomSourceContext) {
       this.task = task;
 
       this.listenerManager = listenerManager;
@@ -38,17 +37,16 @@ public class ManagedTaskImpl implements ManagedTask {
       this.atomSourceContext = atomSourceContext;
 
       timestamp = TimeValue.now();
-      id = UUID.randomUUID();
    }
 
    @Override
    public boolean canceled() {
-      return task.canceled();
+      return task.cancellationRemote().canceled();
    }
 
    @Override
    public void cancel() {
-      task.cancel();
+      task.cancellationRemote().cancel();
    }
 
    public boolean isReentrant() {
@@ -57,7 +55,7 @@ public class ManagedTaskImpl implements ManagedTask {
 
    @Override
    public UUID id() {
-      return id;
+      return task.id();
    }
 
    @Override
@@ -73,7 +71,7 @@ public class ManagedTaskImpl implements ManagedTask {
    @Override
    public void init(TaskContext taskContext) throws InitializationException {
       LOG.debug("Initializing task: " + task);
-      
+
       atomSourceContext.stepInto();
 
       try {
@@ -82,14 +80,8 @@ public class ManagedTaskImpl implements ManagedTask {
          atomSourceContext.stepOut();
       }
 
-      for (RegisteredListener registeredListener : listenerManager.listeners()) {
-         registeredListener.listenerContext().stepInto();
-
-         try {
-            registeredListener.listenerContext().getInstance().init(taskContext);
-         } finally {
-            registeredListener.listenerContext().stepOut();
-         }
+      for (ManagedListener registeredListener : listenerManager.listeners()) {
+         registeredListener.init(taskContext);
       }
    }
 
@@ -97,7 +89,7 @@ public class ManagedTaskImpl implements ManagedTask {
    public void destroy(TaskContext taskContext) {
       LOG.debug("Destroying task: " + task);
 
-      for (RegisteredListener registeredListener : listenerManager.listeners()) {
+      for (ManagedListener registeredListener : listenerManager.listeners()) {
          registeredListener.listenerContext().stepInto();
 
          try {
@@ -131,7 +123,7 @@ public class ManagedTaskImpl implements ManagedTask {
    }
 
    private void dispatchToListeners(AtomSourceResult pollResult) {
-      for (RegisteredListener listener : listenerManager.listeners()) {
+      for (ManagedListener listener : listenerManager.listeners()) {
          if (pollResult.isFeedPage()) {
             executorService.queue(new AtomListenerDriver(listener, pollResult.feed()));
          } else {

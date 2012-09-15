@@ -1,7 +1,7 @@
 package org.atomnuke.cli.command.binding;
 
 import org.atomnuke.cli.command.AbstractNukeCommand;
-import org.atomnuke.config.server.ServerConfigurationHandler;
+import org.atomnuke.cli.CliConfigurationHandler;
 import org.atomnuke.util.config.io.ConfigurationReader;
 import org.atomnuke.config.model.Binding;
 import org.atomnuke.util.cli.command.result.CommandResult;
@@ -13,7 +13,7 @@ import org.atomnuke.util.cli.command.result.MessageResult;
  */
 public class ListBindings extends AbstractNukeCommand {
 
-   public ListBindings(ServerConfigurationHandler configurationHandler) {
+   public ListBindings(CliConfigurationHandler configurationHandler) {
       super(configurationHandler);
    }
 
@@ -29,7 +29,7 @@ public class ListBindings extends AbstractNukeCommand {
 
    @Override
    public CommandResult perform(String[] arguments) throws Exception {
-      final ServerConfigurationHandler cfgHandler = getConfigHandler();
+      final CliConfigurationHandler cfgHandler = getConfigHandler();
       final StringBuilder output = new StringBuilder();
 
       for (Binding binding : cfgHandler.getBindings()) {

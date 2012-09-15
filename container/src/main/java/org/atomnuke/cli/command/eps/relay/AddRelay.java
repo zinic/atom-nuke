@@ -1,7 +1,7 @@
 package org.atomnuke.cli.command.eps.relay;
 
 import org.atomnuke.cli.command.AbstractNukeCommand;
-import org.atomnuke.config.server.ServerConfigurationHandler;
+import org.atomnuke.cli.CliConfigurationHandler;
 import org.atomnuke.util.config.io.ConfigurationReader;
 import org.atomnuke.config.model.LanguageType;
 import org.atomnuke.config.model.Relay;
@@ -17,7 +17,7 @@ public class AddRelay extends AbstractNukeCommand {
 
    private static final int RELAY_ID = 0;
 
-   public AddRelay(ServerConfigurationHandler configurationHandler) {
+   public AddRelay(CliConfigurationHandler configurationHandler) {
       super(configurationHandler);
    }
 
@@ -36,7 +36,7 @@ public class AddRelay extends AbstractNukeCommand {
       if (arguments.length != 1) {
          return new CommandFailure("Adding a relay requires one arguments: <relay-id>");
       }
-      final ServerConfigurationHandler cfgHandler = getConfigHandler();
+      final CliConfigurationHandler cfgHandler = getConfigHandler();
 
       if (cfgHandler.findRelay(arguments[RELAY_ID]) != null) {
          return new CommandFailure("A relay with the id \"" + arguments[RELAY_ID] + "\" already exists.");

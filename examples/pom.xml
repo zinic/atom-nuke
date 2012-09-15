@@ -18,6 +18,18 @@
 
    <dependencies>
       <dependency>
+         <groupId>org.apache.hadoop</groupId>
+         <artifactId>hadoop-client</artifactId>
+         <version>1.0.3</version>
+      </dependency>
+
+      <dependency>
+         <groupId>org.atomnuke.components.source</groupId>
+         <artifactId>feed-crawler</artifactId>
+         <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
          <groupId>org.atomnuke</groupId>
          <artifactId>nuke</artifactId>
       </dependency>
@@ -48,18 +60,8 @@
       </dependency>
 
       <dependency>
-         <groupId>org.apache.httpcomponents</groupId>
-         <artifactId>httpclient</artifactId>
-      </dependency>
-
-      <dependency>
          <groupId>org.apache.commons</groupId>
          <artifactId>commons-lang3</artifactId>
-      </dependency>
-
-      <dependency>
-         <groupId>org.apache.hadoop</groupId>
-         <artifactId>hadoop-client</artifactId>
       </dependency>
 
       <dependency>

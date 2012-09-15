@@ -1,6 +1,6 @@
 package org.atomnuke.task.manager;
 
-import java.util.List;
+import java.util.UUID;
 import org.atomnuke.task.Tasker;
 import org.atomnuke.task.lifecycle.InitializationException;
 import org.atomnuke.util.TimeValue;
@@ -30,12 +30,12 @@ public interface TaskManager extends Tasker {
    void destroy();
 
    /**
-    * Returns a copy of all of the tasks currently registered to the Nuke
-    * scheduler.
+    * Looks up a ManagedTask by id.
     *
-    * @return a list of the currently scheduled managed tasks
+    * @param taskId the task ID to look up.
+    * @return the managed instance of the task, null otherwise.
     */
-   List<ManagedTask> managedTasks();
+   ManagedTask findTask(UUID taskId);
 
    /**
     * Advances the scheduler and dispatches tasks to the execution queue.

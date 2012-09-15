@@ -43,11 +43,6 @@
       </dependency>
 
       <dependency>
-         <groupId>org.apache.httpcomponents</groupId>
-         <artifactId>httpclient</artifactId>
-      </dependency>
-
-      <dependency>
          <groupId>org.apache.commons</groupId>
          <artifactId>commons-lang3</artifactId>
       </dependency>
@@ -129,7 +124,7 @@
 
    <build>
       <finalName>nuke-container</finalName>
-      
+
       <plugins>
          <plugin>
             <groupId>org.jvnet.jaxb2.maven2</groupId>

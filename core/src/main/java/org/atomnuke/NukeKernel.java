@@ -36,15 +36,19 @@ import org.slf4j.LoggerFactory;
 public class NukeKernel implements Nuke {
 
    private static final Logger LOG = LoggerFactory.getLogger(NukeKernel.class);
+
    private static final ThreadFactory DEFAULT_THREAD_FACTORY = new ThreadFactory() {
       @Override
       public Thread newThread(Runnable r) {
          return new Thread(r, "nuke-worker-" + TID.incrementAndGet());
       }
    };
+
+   private static final int NUM_PROCESSORS = Runtime.getRuntime().availableProcessors(), MAX_THREADS = NUM_PROCESSORS * 2;
    private static final int MAX_QUEUE_SIZE = 256000;
-   private static final int NUM_PROCESSORS = Runtime.getRuntime().availableProcessors();
+
    private static final AtomicLong TID = new AtomicLong(0);
+
    private final CancellationRemote kernelCancellationRemote;
    private final TaskManager taskManager;
    private final KernelDelegate logic;
@@ -60,7 +64,7 @@ public class NukeKernel implements Nuke {
     */
    public NukeKernel() {
       // Gimme all the processors :E
-      this(NUM_PROCESSORS, NUM_PROCESSORS * 2);
+      this(NUM_PROCESSORS, MAX_THREADS);
    }
 
    /**
@@ -84,13 +88,27 @@ public class NukeKernel implements Nuke {
       Runtime.getRuntime().addShutdownHook(new Thread(new KernelShutdownHook(this)));
    }
 
+   public NukeKernel(int corePoolSize, int maxPoolsize, TaskManager taskManager) {
+      final BlockingQueue<Runnable> runQueue = new LinkedBlockingQueue<Runnable>();
+      final ExecutorService execService = new NukeThreadPoolExecutor(corePoolSize, maxPoolsize, 30, TimeUnit.SECONDS, runQueue, DEFAULT_THREAD_FACTORY, new NukeRejectionHandler());
+      final ExecutionManager executionManager = new ExecutionManagerImpl(MAX_QUEUE_SIZE, runQueue, execService);
+
+      kernelCancellationRemote = new AtomicCancellationRemote();
+
+      this.taskManager = taskManager;
+      logic = new KernelDelegate(kernelCancellationRemote, executionManager, taskManager);
+      controlThread = new Thread(logic, "nuke-kernel-" + TID.incrementAndGet());
+
+      Runtime.getRuntime().addShutdownHook(new Thread(new KernelShutdownHook(this)));
+   }
+
    @Override
    public Task follow(AtomSource source, TimeValue pollingInterval) throws InitializationException {
       return follow(new SimpleInstanceContext<AtomSource>(source), pollingInterval);
    }
 
    @Override
-   public Task follow(InstanceContext<? extends AtomSource> source, TimeValue pollingInterval) throws InitializationException {
+   public Task follow(InstanceContext<AtomSource> source, TimeValue pollingInterval) throws InitializationException {
       return taskManager.follow(source, pollingInterval);
    }
 

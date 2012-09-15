@@ -2,7 +2,7 @@ package org.atomnuke.cli.command;
 
 import java.util.Iterator;
 import org.atomnuke.util.config.ConfigurationException;
-import org.atomnuke.config.server.ServerConfigurationHandler;
+import org.atomnuke.cli.CliConfigurationHandler;
 import org.atomnuke.config.model.Binding;
 import org.atomnuke.util.cli.command.AbstractCommand;
 import org.slf4j.Logger;
@@ -14,10 +14,10 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class AbstractNukeCommand extends AbstractCommand {
 
-   private final ServerConfigurationHandler configurationHandler;
+   private final CliConfigurationHandler configurationHandler;
    private final Logger logger;
 
-   public AbstractNukeCommand(ServerConfigurationHandler configurationHandler) {
+   public AbstractNukeCommand(CliConfigurationHandler configurationHandler) {
       this.configurationHandler = configurationHandler;
       this.logger = logger();
    }
@@ -30,11 +30,11 @@ public abstract class AbstractNukeCommand extends AbstractCommand {
       return logger;
    }
 
-   protected final ServerConfigurationHandler getConfigHandler() {
+   protected final CliConfigurationHandler getConfigHandler() {
       return configurationHandler;
    }
 
-   protected void unbindReciever(ServerConfigurationHandler cfgHandler, String receiverId) throws ConfigurationException {
+   protected void unbindReciever(CliConfigurationHandler cfgHandler, String receiverId) throws ConfigurationException {
       for (Iterator<Binding> bindingItr = cfgHandler.getBindings().iterator(); bindingItr.hasNext();) {
          if (bindingItr.next().getReceiver().equals(receiverId)) {
             bindingItr.remove();
@@ -44,7 +44,7 @@ public abstract class AbstractNukeCommand extends AbstractCommand {
       cfgHandler.write();
    }
 
-   protected void unbindTarget(ServerConfigurationHandler cfgHandler, String targetId) throws ConfigurationException {
+   protected void unbindTarget(CliConfigurationHandler cfgHandler, String targetId) throws ConfigurationException {
       for (Iterator<Binding> bindingItr = cfgHandler.getBindings().iterator(); bindingItr.hasNext();) {
          if (bindingItr.next().getTarget().equals(targetId)) {
             bindingItr.remove();

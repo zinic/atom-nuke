@@ -2,7 +2,7 @@ package org.atomnuke.cli.command.eps.relay;
 
 import java.util.Iterator;
 import org.atomnuke.cli.command.AbstractNukeCommand;
-import org.atomnuke.config.server.ServerConfigurationHandler;
+import org.atomnuke.cli.CliConfigurationHandler;
 import org.atomnuke.util.config.io.ConfigurationReader;
 import org.atomnuke.config.model.Relay;
 import org.atomnuke.util.cli.command.result.CommandFailure;
@@ -17,7 +17,7 @@ import org.atomnuke.util.cli.command.result.CommandSuccess;
 
    private static final int RELAY_ID = 0;
 
-   public DeleteRelay(ServerConfigurationHandler configurationHandler) {
+   public DeleteRelay(CliConfigurationHandler configurationHandler) {
       super(configurationHandler);
    }
 
@@ -37,7 +37,7 @@ import org.atomnuke.util.cli.command.result.CommandSuccess;
          return new CommandFailure("Deleting a relay requires one argument: <relay-id>");
       }
 
-      final ServerConfigurationHandler cfgHandler = getConfigHandler();
+      final CliConfigurationHandler cfgHandler = getConfigHandler();
 
       for (Iterator<Relay> relayItr = cfgHandler.getRelays().iterator(); relayItr.hasNext();) {
          if (relayItr.next().getId().equals(arguments[RELAY_ID])) {

@@ -12,7 +12,7 @@
    </parent>
 
    <groupId>org.atomnuke.components.source</groupId>
-   <artifactId>http-servlet</artifactId>
+   <artifactId>http-listener</artifactId>
 
    <packaging>jar</packaging>
 

@@ -2,7 +2,7 @@ package org.atomnuke;
 
 import java.io.File;
 import org.atomnuke.cli.command.Root;
-import org.atomnuke.config.server.ServerConfigurationHandler;
+import org.atomnuke.cli.CliConfigurationHandler;
 import org.atomnuke.config.model.ServerConfiguration;
 import org.atomnuke.config.server.ServerConfigurationManager;
 import org.atomnuke.util.cli.CommandDriver;
@@ -22,7 +22,7 @@ public final class NukeMain {
    public static void main(String[] args) throws Exception {
       final ConfigurationManager<ServerConfiguration> cfgManager = new ServerConfigurationManager(new File(NukeEnv.NUKE_HOME, NukeEnv.CONFIG_NAME));
 
-      final ServerConfigurationHandler handler = new ServerConfigurationHandler(cfgManager, cfgManager.read());
+      final CliConfigurationHandler handler = new CliConfigurationHandler(cfgManager, cfgManager.read());
 
       final Command rootCommand = new Root(handler);
 

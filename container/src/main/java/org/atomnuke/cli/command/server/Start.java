@@ -1,7 +1,7 @@
 package org.atomnuke.cli.command.server;
 
 import org.atomnuke.cli.command.AbstractNukeCommand;
-import org.atomnuke.config.server.ServerConfigurationHandler;
+import org.atomnuke.cli.CliConfigurationHandler;
 import org.atomnuke.container.NukeContainer;
 import org.atomnuke.util.cli.command.result.CommandResult;
 import org.atomnuke.util.cli.command.result.CommandSuccess;
@@ -12,7 +12,7 @@ import org.atomnuke.util.cli.command.result.CommandSuccess;
  */
 public class Start extends AbstractNukeCommand {
 
-   public Start(ServerConfigurationHandler configurationHandler) {
+   public Start(CliConfigurationHandler configurationHandler) {
       super(configurationHandler);
    }
 
@@ -28,7 +28,7 @@ public class Start extends AbstractNukeCommand {
 
    @Override
    public CommandResult perform(String[] arguments) throws Exception {
-      new NukeContainer().start(getConfigHandler());
+      new NukeContainer().start();
 
       return new CommandSuccess("");
    }

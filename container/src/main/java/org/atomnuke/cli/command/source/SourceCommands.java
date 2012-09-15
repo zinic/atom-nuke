@@ -1,6 +1,6 @@
 package org.atomnuke.cli.command.source;
 
-import org.atomnuke.config.server.ServerConfigurationHandler;
+import org.atomnuke.cli.CliConfigurationHandler;
 import org.atomnuke.util.cli.command.AbstractCommandList;
 
 /**
@@ -9,7 +9,7 @@ import org.atomnuke.util.cli.command.AbstractCommandList;
  */
 public class SourceCommands extends AbstractCommandList {
 
-   public SourceCommands(ServerConfigurationHandler configurationHandler) {
+   public SourceCommands(CliConfigurationHandler configurationHandler) {
       super(new AddSource(configurationHandler), new DeleteSource(configurationHandler), new ListSources(configurationHandler));
    }
 

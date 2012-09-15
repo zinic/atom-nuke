@@ -3,7 +3,7 @@ package org.atomnuke.cli.command.binding;
 import java.util.List;
 import java.util.UUID;
 import org.atomnuke.cli.command.AbstractNukeCommand;
-import org.atomnuke.config.server.ServerConfigurationHandler;
+import org.atomnuke.cli.CliConfigurationHandler;
 import org.atomnuke.util.config.io.ConfigurationReader;
 import org.atomnuke.config.model.Binding;
 import org.atomnuke.util.cli.command.result.CommandFailure;
@@ -18,7 +18,7 @@ public class AddBinding extends AbstractNukeCommand {
 
    private static final int TARGET_ID = 0, RECEIVER_ID = 1;
 
-   public AddBinding(ServerConfigurationHandler configurationHandler) {
+   public AddBinding(CliConfigurationHandler configurationHandler) {
       super(configurationHandler);
    }
 
@@ -38,7 +38,7 @@ public class AddBinding extends AbstractNukeCommand {
          return new CommandFailure("Creating a binding requires two arguments: <target-id> <receiver-id>");
       }
 
-      final ServerConfigurationHandler cfgHandler = getConfigHandler();
+      final CliConfigurationHandler cfgHandler = getConfigHandler();
 
       if (cfgHandler.findSource(arguments[TARGET_ID]) == null && cfgHandler.findRelay(arguments[TARGET_ID]) == null) {
          return new CommandFailure("Unable to locate a source or relay with the id, \"" + arguments[TARGET_ID] + "\"");

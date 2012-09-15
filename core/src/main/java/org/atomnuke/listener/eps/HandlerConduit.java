@@ -11,6 +11,8 @@ import org.atomnuke.task.lifecycle.DestructionException;
 import org.atomnuke.task.context.TaskContext;
 import org.atomnuke.task.lifecycle.InitializationException;
 import org.atomnuke.task.lifecycle.TaskLifeCycle;
+import org.atomnuke.util.remote.AtomicCancellationRemote;
+import org.atomnuke.util.remote.CancellationRemote;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,13 +23,16 @@ import org.slf4j.LoggerFactory;
 public class HandlerConduit implements TaskLifeCycle {
 
    private static final Logger LOG = LoggerFactory.getLogger(HandlerConduit.class);
-
-   private final InstanceContext<AtomEventlet> eventHandler;
+   
+   private final InstanceContext<? extends AtomEventlet> eventHandler;
+   private final CancellationRemote cancellationRemote;
    private final Selector selector;
 
-   public HandlerConduit(InstanceContext<AtomEventlet> eventHandler, Selector selector) {
+   public HandlerConduit(InstanceContext<? extends AtomEventlet> eventHandler, Selector selector) {
       this.eventHandler = eventHandler;
       this.selector = selector;
+
+      cancellationRemote = new AtomicCancellationRemote();
    }
 
    @Override
@@ -50,6 +55,10 @@ public class HandlerConduit implements TaskLifeCycle {
       } finally {
          eventHandler.stepOut();
       }
+   }
+
+   public CancellationRemote cancellationRemote() {
+      return cancellationRemote;
    }
 
    public SelectorResult select(Feed page) {

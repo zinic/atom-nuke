@@ -15,8 +15,6 @@
    <modules>
       <module>core</module>
       <module>container</module>
-      <module>examples</module>
-
       <module>components</module>
    </modules>
 
@@ -120,21 +118,9 @@
          </dependency>
 
          <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-            <version>4.2</version>
-         </dependency>
-
-         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>3.1</version>
-         </dependency>
-
-         <dependency>
-            <groupId>org.apache.hadoop</groupId>
-            <artifactId>hadoop-client</artifactId>
-            <version>1.0.3</version>
          </dependency>
 
          <dependency>

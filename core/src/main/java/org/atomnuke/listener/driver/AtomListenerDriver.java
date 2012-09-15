@@ -6,7 +6,7 @@ import org.atomnuke.context.InstanceContext;
 import org.atomnuke.listener.AtomListener;
 import org.atomnuke.listener.AtomListenerResult;
 import org.atomnuke.listener.ListenerResult;
-import org.atomnuke.listener.RegisteredListener;
+import org.atomnuke.listener.manager.ManagedListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,19 +18,19 @@ public class AtomListenerDriver implements RegisteredListenerDriver {
 
    private static final Logger LOG = LoggerFactory.getLogger(AtomListenerDriver.class);
 
-   private final RegisteredListener registeredListener;
+   private final ManagedListener registeredListener;
    private final Feed feed;
    private final Entry entry;
 
-   public AtomListenerDriver(RegisteredListener registeredListener, Entry entry) {
+   public AtomListenerDriver(ManagedListener registeredListener, Entry entry) {
       this(registeredListener, null, entry);
    }
 
-   public AtomListenerDriver(RegisteredListener registeredListener, Feed feed) {
+   public AtomListenerDriver(ManagedListener registeredListener, Feed feed) {
       this(registeredListener, feed, null);
    }
 
-   private AtomListenerDriver(RegisteredListener registeredListener, Feed feed, Entry entry) {
+   private AtomListenerDriver(ManagedListener registeredListener, Feed feed, Entry entry) {
       this.registeredListener = registeredListener;
       this.feed = feed;
       this.entry = entry;

@@ -8,7 +8,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.atomnuke.context.InstanceContext;
 import org.atomnuke.listener.AtomListener;
 import org.atomnuke.listener.ReentrantAtomListener;
-import org.atomnuke.listener.RegisteredListener;
 import org.atomnuke.util.remote.AtomicCancellationRemote;
 import org.atomnuke.util.remote.CancellationRemote;
 
@@ -18,11 +17,11 @@ import org.atomnuke.util.remote.CancellationRemote;
  */
 public class ListenerManagerImpl implements ListenerManager {
 
-   private final List<RegisteredListener> listeners;
+   private final List<ManagedListener> listeners;
    private final AtomicBoolean reentrant;
 
    public ListenerManagerImpl() {
-      listeners = new LinkedList<RegisteredListener>();
+      listeners = new LinkedList<ManagedListener>();
       reentrant = new AtomicBoolean(true);
    }
 
@@ -32,9 +31,9 @@ public class ListenerManagerImpl implements ListenerManager {
    }
 
    @Override
-   public synchronized List<RegisteredListener> listeners() {
-      for (Iterator<RegisteredListener> registeredListenerItr = listeners.iterator(); registeredListenerItr.hasNext();) {
-         final RegisteredListener registeredListener = registeredListenerItr.next();
+   public synchronized List<ManagedListener> listeners() {
+      for (Iterator<ManagedListener> registeredListenerItr = listeners.iterator(); registeredListenerItr.hasNext();) {
+         final ManagedListener registeredListener = registeredListenerItr.next();
 
          if (registeredListener.cancellationRemote().canceled()) {
             registeredListenerItr.remove();
@@ -56,7 +55,7 @@ public class ListenerManagerImpl implements ListenerManager {
       }
 
       final CancellationRemote cancellationRemote = new AtomicCancellationRemote();
-      listeners.add(new RegisteredListener(cancellationRemote, atomListenerContext));
+      listeners.add(new ManagedListener(cancellationRemote, atomListenerContext));
 
       return cancellationRemote;
    }

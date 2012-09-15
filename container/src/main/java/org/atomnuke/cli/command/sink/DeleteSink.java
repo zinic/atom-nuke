@@ -1,8 +1,8 @@
-package org.atomnuke.command.sink;
+package org.atomnuke.cli.command.sink;
 
 import java.util.Iterator;
 import org.atomnuke.cli.command.AbstractNukeCommand;
-import org.atomnuke.config.server.ServerConfigurationHandler;
+import org.atomnuke.cli.CliConfigurationHandler;
 import org.atomnuke.config.model.Sink;
 import org.atomnuke.util.cli.command.result.CommandFailure;
 import org.atomnuke.util.cli.command.result.CommandResult;
@@ -15,7 +15,7 @@ public class DeleteSink extends AbstractNukeCommand {
 
    private static final int SINK_ID = 0;
 
-   public DeleteSink(ServerConfigurationHandler configurationHandler) {
+   public DeleteSink(CliConfigurationHandler configurationHandler) {
       super(configurationHandler);
    }
 
@@ -35,7 +35,7 @@ public class DeleteSink extends AbstractNukeCommand {
          return new CommandFailure("Deleting a sink requires one arguments: <sink-id>");
       }
 
-      final ServerConfigurationHandler cfgHandler = getConfigHandler();
+      final CliConfigurationHandler cfgHandler = getConfigHandler();
 
       for (Iterator<Sink> sinkItr = cfgHandler.getSinks().iterator(); sinkItr.hasNext();) {
          if (sinkItr.next().getId().equals(arguments[SINK_ID])) {

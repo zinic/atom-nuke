@@ -48,5 +48,5 @@ public interface Nuke {
     * @throws InitializationException thrown when initializing the source fails
     * wit the current task context.
     */
-   Task follow(InstanceContext<? extends AtomSource> source, TimeValue pollingInterval) throws InitializationException;
+   Task follow(InstanceContext<AtomSource> source, TimeValue pollingInterval) throws InitializationException;
 }

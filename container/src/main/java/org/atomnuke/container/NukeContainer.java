@@ -5,21 +5,18 @@ import javax.xml.bind.JAXBException;
 import org.atomnuke.Nuke;
 import org.atomnuke.NukeEnv;
 import org.atomnuke.NukeKernel;
-import org.atomnuke.bindings.BindingInstantiationException;
 import org.atomnuke.bindings.BindingLoaderException;
 import org.atomnuke.bindings.loader.DirectoryLoaderManager;
 import org.atomnuke.bindings.resolver.BindingResolver;
 import org.atomnuke.bindings.resolver.BindingResolverImpl;
-import org.atomnuke.cli.command.server.builder.ServerBuilder;
-import org.atomnuke.config.server.ServerConfigurationHandler;
 import org.atomnuke.config.model.ServerConfiguration;
 import org.atomnuke.config.server.ServerConfigurationManager;
+import org.atomnuke.container.context.ContextManager;
 import org.atomnuke.util.config.ConfigurationException;
 import org.atomnuke.util.config.io.ConfigurationManager;
 import org.atomnuke.util.config.update.ConfigurationContext;
 import org.atomnuke.util.config.update.ConfigurationUpdateManager;
 import org.atomnuke.util.config.update.ConfigurationUpdateManagerImpl;
-import org.atomnuke.util.config.update.listener.ConfigurationListener;
 import org.atomnuke.util.thread.Poller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,6 +35,8 @@ public class NukeContainer {
    private final Nuke nukeInstance;
    private final Poller cfgPoller;
 
+   private ContextManager contextManager;
+
    public NukeContainer() {
       this(new NukeKernel());
    }
@@ -52,7 +51,7 @@ public class NukeContainer {
       this.cfgPollerThread = new Thread(cfgPoller, "Nuke Container - Configuration Poller");
    }
 
-   public void start(ServerConfigurationHandler cfgHandler) {
+   public void start() {
       final long initTime = System.currentTimeMillis();
 
       LOG.info("Starting Nuke container...");
@@ -68,36 +67,23 @@ public class NukeContainer {
          throw new ContainerInitException(ble);
       }
 
-      cfgPollerThread.start();
-      nukeInstance.start();
+      contextManager = new ContextManager(bindingsResolver, nukeInstance);
 
       try {
          final ConfigurationManager<ServerConfiguration> cfgManager = new ServerConfigurationManager(new File(NukeEnv.NUKE_HOME, NukeEnv.CONFIG_NAME));
          final ConfigurationContext<ServerConfiguration> configurationContext = configurationUpdateManager.register("org.atomnuke.container.cfg", cfgManager);
 
-         configurationContext.addListener(new ConfigurationListener<ServerConfiguration>() {
-            @Override
-            public void updated(ServerConfiguration configuration) throws ConfigurationException {
-               final ServerBuilder serverBuilder = new ServerBuilder(new ServerConfigurationHandler(cfgManager, configuration), bindingsResolver);
-
-               try {
-                  serverBuilder.build(nukeInstance);
-               } catch (BindingInstantiationException bie) {
-                  LOG.error("An error occured while initializing bindings. Reason: " + bie.getMessage(), bie);
-
-                  throw new ContainerInitException(bie);
-               } catch (ConfigurationException ce) {
-                  LOG.error("An error occured while handling the configuration. Reason: " + ce.getMessage(), ce);
-
-                  throw new ContainerInitException(ce);
-               }
-            }
-         });
+         configurationContext.addListener(contextManager);
       } catch (JAXBException jaxbe) {
          LOG.error(jaxbe.getMessage(), jaxbe);
+         throw new ContainerInitException(jaxbe);
       } catch (ConfigurationException ce) {
          LOG.error(ce.getMessage(), ce);
+         throw new ContainerInitException(ce);
       }
+
+      cfgPollerThread.start();
+      nukeInstance.start();
 
       LOG.info("Nuke container started. Elapsed start-up time: " + (System.currentTimeMillis() - initTime) + "ms.");
    }

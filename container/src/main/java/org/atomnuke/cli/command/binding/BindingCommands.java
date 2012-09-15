@@ -1,6 +1,6 @@
 package org.atomnuke.cli.command.binding;
 
-import org.atomnuke.config.server.ServerConfigurationHandler;
+import org.atomnuke.cli.CliConfigurationHandler;
 import org.atomnuke.util.cli.command.AbstractCommandList;
 
 /**
@@ -9,7 +9,7 @@ import org.atomnuke.util.cli.command.AbstractCommandList;
  */
 public class BindingCommands extends AbstractCommandList {
 
-   public BindingCommands(ServerConfigurationHandler configurationHandler) {
+   public BindingCommands(CliConfigurationHandler configurationHandler) {
       super(new AddBinding(configurationHandler), new DeleteBinding(configurationHandler), new ListBindings(configurationHandler));
    }
 

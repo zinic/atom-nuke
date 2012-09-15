@@ -1,6 +1,6 @@
-package org.atomnuke.command.sink;
+package org.atomnuke.cli.command.sink;
 
-import org.atomnuke.config.server.ServerConfigurationHandler;
+import org.atomnuke.cli.CliConfigurationHandler;
 import org.atomnuke.util.cli.command.AbstractCommandList;
 
 /**
@@ -9,7 +9,7 @@ import org.atomnuke.util.cli.command.AbstractCommandList;
  */
 public class SinkCommands extends AbstractCommandList {
 
-   public SinkCommands(ServerConfigurationHandler configurationHandler) {
+   public SinkCommands(CliConfigurationHandler configurationHandler) {
       super(new AddSink(configurationHandler), new DeleteSink(configurationHandler), new ListSinks(configurationHandler));
    }
 
