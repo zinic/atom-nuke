@@ -1,17 +1,18 @@
 package org.atomnuke.util.config.update;
 
 import org.atomnuke.util.config.io.ConfigurationManager;
-import org.atomnuke.util.config.io.marshall.ConfigurationMarshaller;
 
 /**
  *
  * @author zinic
  */
-public interface ConfigurationUpdateManager<T> {
+public interface ConfigurationUpdateManager {
 
-   ConfigurationContext<T> get(String name);
+   void update();
 
-   ConfigurationContext<T> register(String name, ConfigurationManager<T> configurationManager);
+   ConfigurationContext get(String name);
+
+   <T> ConfigurationContext<T> register(String name, ConfigurationManager<T> configurationManager);
 
    boolean unregister(String name);
 }

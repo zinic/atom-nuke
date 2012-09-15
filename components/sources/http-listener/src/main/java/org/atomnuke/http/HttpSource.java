@@ -33,6 +33,10 @@ public class HttpSource implements AtomSource {
    public void init(TaskContext tc) throws InitializationException {
       try {
          jettyServer.start();
+
+         while (!jettyServer.isStarted()) {
+            Thread.sleep(100);
+         }
       } catch (Exception ex) {
          throw new InitializationException(ex.getMessage(), ex.getCause());
       }
@@ -42,6 +46,10 @@ public class HttpSource implements AtomSource {
    public void destroy(TaskContext tc) throws DestructionException {
       try {
          jettyServer.stop();
+
+         while (!jettyServer.isStopped() || !jettyServer.isFailed()) {
+            Thread.sleep(100);
+         }
       } catch (Exception ex) {
          throw new DestructionException(ex.getMessage(), ex.getCause());
       }

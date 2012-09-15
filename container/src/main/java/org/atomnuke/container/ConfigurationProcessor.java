@@ -41,7 +41,9 @@ public class ConfigurationProcessor {
       this.bindingsResolver = bindingsResolver;
    }
 
-   public void build(Nuke kernelBeingBuilt) throws ConfigurationException {
+   public void merge(Nuke kernelBeingBuilt) throws ConfigurationException {
+      LOG.info("Reading configuration");
+      
       processSources(kernelBeingBuilt);
       constructRelays();
       constructListeners();
@@ -71,7 +73,7 @@ public class ConfigurationProcessor {
                final InstanceContext<AtomSource> sourceContext = constructSource(source.getType(), source.getHref());
                final Task newTask = kernelBeingBuilt.follow(sourceContext, TimeValueUtil.fromPollingInterval(source.getPollingInterval()));
 
-               containerContext.registerTask(source.getId(), newTask);
+               containerContext.registerSource(source.getId(), newTask);
 
             } catch (BindingInstantiationException bie) {
                LOG.error("Could not create source instance " + source.getId() + ". Reason: " + bie.getMessage(), bie);

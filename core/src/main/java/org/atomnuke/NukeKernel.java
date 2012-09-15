@@ -1,5 +1,7 @@
 package org.atomnuke;
 
+import java.util.LinkedList;
+import java.util.List;
 import org.atomnuke.kernel.KernelDelegate;
 import org.atomnuke.kernel.KernelShutdownHook;
 import org.atomnuke.kernel.NukeRejectionHandler;
@@ -36,20 +38,17 @@ import org.slf4j.LoggerFactory;
 public class NukeKernel implements Nuke {
 
    private static final Logger LOG = LoggerFactory.getLogger(NukeKernel.class);
-
    private static final ThreadFactory DEFAULT_THREAD_FACTORY = new ThreadFactory() {
       @Override
       public Thread newThread(Runnable r) {
          return new Thread(r, "nuke-worker-" + TID.incrementAndGet());
       }
    };
-
    private static final int NUM_PROCESSORS = Runtime.getRuntime().availableProcessors(), MAX_THREADS = NUM_PROCESSORS * 2;
    private static final int MAX_QUEUE_SIZE = 256000;
-
    private static final AtomicLong TID = new AtomicLong(0);
-
    private final CancellationRemote kernelCancellationRemote;
+   private final List<Runnable> shutdownTasks;
    private final TaskManager taskManager;
    private final KernelDelegate logic;
    private final Thread controlThread;
@@ -84,6 +83,7 @@ public class NukeKernel implements Nuke {
       taskManager = new TaskManagerImpl(executionManager);
       logic = new KernelDelegate(kernelCancellationRemote, executionManager, taskManager);
       controlThread = new Thread(logic, "nuke-kernel-" + TID.incrementAndGet());
+      shutdownTasks = new LinkedList<Runnable>();
 
       Runtime.getRuntime().addShutdownHook(new Thread(new KernelShutdownHook(this)));
    }
@@ -98,8 +98,13 @@ public class NukeKernel implements Nuke {
       this.taskManager = taskManager;
       logic = new KernelDelegate(kernelCancellationRemote, executionManager, taskManager);
       controlThread = new Thread(logic, "nuke-kernel-" + TID.incrementAndGet());
+      shutdownTasks = new LinkedList<Runnable>();
 
       Runtime.getRuntime().addShutdownHook(new Thread(new KernelShutdownHook(this)));
+   }
+
+   public void addShutdownTask(Runnable r) {
+      shutdownTasks.add(r);
    }
 
    @Override
@@ -135,6 +140,14 @@ public class NukeKernel implements Nuke {
       } catch (InterruptedException ie) {
          LOG.info("Nuke kernel interrupted while shutting down. Killing thread now.", ie);
          controlThread.interrupt();
+      }
+
+      for (Runnable shutdownTask : shutdownTasks) {
+         try {
+            shutdownTask.run();
+         } catch (Exception ex) {
+            // TODO:Log
+         }
       }
    }
 }

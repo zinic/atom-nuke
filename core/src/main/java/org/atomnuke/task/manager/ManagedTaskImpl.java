@@ -100,6 +100,16 @@ public class ManagedTaskImpl implements ManagedTask {
             registeredListener.listenerContext().stepOut();
          }
       }
+
+      atomSourceContext.stepInto();
+
+      try {
+         atomSourceContext.getInstance().destroy(taskContext);
+      } catch(DestructionException de) {
+         LOG.error("Failed to destroy task " + task + " reason: " + de.getMessage(), de);
+      } finally {
+         atomSourceContext.stepOut();
+      }
    }
 
    @Override

@@ -18,7 +18,6 @@ import org.slf4j.LoggerFactory;
 public class JettyServer {
 
    private static final Logger LOG = LoggerFactory.getLogger(JettyServer.class);
-
    private final ServletContextHandler rootContext;
    private final Server server;
 
@@ -35,6 +34,30 @@ public class JettyServer {
       } catch (InitializationException ie) {
          throw new RuntimeException("Failed to start. Reason: " + ie.getMessage());
       }
+   }
+
+   public boolean isRunning() {
+      return server.isRunning();
+   }
+
+   public boolean isStarted() {
+      return server.isStarted();
+   }
+
+   public boolean isStarting() {
+      return server.isStarting();
+   }
+
+   public boolean isStopping() {
+      return server.isStopping();
+   }
+
+   public boolean isStopped() {
+      return server.isStopped();
+   }
+
+   public boolean isFailed() {
+      return server.isFailed();
    }
 
    public void start() throws Exception {

@@ -25,7 +25,6 @@ import org.slf4j.LoggerFactory;
 public class ContainerContext {
 
    private static final Logger LOG = LoggerFactory.getLogger(ContainerContext.class);
-
    private final Map<String, InstanceContext<AtomListener>> listeners;
    private final Map<String, InstanceContext<AtomEventlet>> eventlets;
    private final Map<String, InstanceContext<EventletRelay>> relays;
@@ -60,19 +59,28 @@ public class ContainerContext {
    }
 
    public void registerRelay(String name, InstanceContext<AtomListener> instanceCtx) {
+      LOG.info("Registering relay: " + name);
+
       listeners.put(name, instanceCtx);
    }
 
    public void registerSink(String name, InstanceContext<AtomListener> instanceCtx) {
+      LOG.info("Registering listeners: " + name);
+
       listeners.put(name, instanceCtx);
    }
 
    public void registerEventlet(String name, InstanceContext<AtomEventlet> instanceCtx) {
+      LOG.info("Registering eventlet: " + name);
+
       eventlets.put(name, instanceCtx);
    }
 
-   public void registerTask(String name, Task task) {
+   public void registerSource(String name, Task task) {
+      LOG.info("Registering source: " + name);
+
       tasks.put(name, task);
+      cancellationRemotes.put(name, task.cancellationRemote());
    }
 
    public void process(List<Binding> bindingsToMerge) throws ConfigurationException {
@@ -85,15 +93,17 @@ public class ContainerContext {
          }
       }
 
+      for (Binding binding : bindingsToAdd) {
+         bind(binding);
+      }
+
       for (String breakId : bindingsToBreak) {
+         LOG.info("Breaking binding: " + breakId);
+
          bindings.remove(breakId);
       }
 
       garbageCollect();
-
-      for (Binding binding : bindingsToAdd) {
-         bind(binding);
-      }
    }
 
    private boolean hasTargetBindingFor(String id) {
@@ -156,11 +166,16 @@ public class ContainerContext {
       }
 
       for (CancellationRemote cancellationRemote : garbageQueue) {
-         cancellationRemote.cancel();
+         // TODO: Refactor this so there aren't any nulls
+         if (cancellationRemote != null) {
+            cancellationRemote.cancel();
+         }
       }
    }
 
    private void bind(Binding binding) throws ConfigurationException {
+      LOG.info("Binding " + binding.getReceiver() + " to source " + binding.getTarget());
+
       final Task source = tasks.get(binding.getTarget());
 
       if (source != null) {
@@ -173,21 +188,6 @@ public class ContainerContext {
          } else {
             throw new ConfigurationException("Unable to locate source or relay, " + binding.getTarget());
          }
-      }
-   }
-
-   private void bind(EventletRelay source, Binding binding) throws ConfigurationException {
-      final InstanceContext<? extends AtomEventlet> eventletCtx = eventlets.get(binding.getReceiver());
-
-      if (eventletCtx == null) {
-         throw new ConfigurationException("Unable to locate eventlet, " + binding.getReceiver() + ".");
-      }
-
-      try {
-         cancellationRemotes.put(binding.getReceiver(), source.enlistHandlerContext(eventletCtx));
-         bindings.put(binding.getId(), binding);
-      } catch (InitializationException ie) {
-         LOG.error("Failed to initialize listener, " + binding.getReceiver() + ". Reason: " + ie.getMessage(), ie);
       }
    }
 
@@ -205,6 +205,21 @@ public class ContainerContext {
 
       try {
          cancellationRemotes.put(binding.getReceiver(), source.addListener(listenerCtx));
+         bindings.put(binding.getId(), binding);
+      } catch (InitializationException ie) {
+         LOG.error("Failed to initialize listener, " + binding.getReceiver() + ". Reason: " + ie.getMessage(), ie);
+      }
+   }
+
+   private void bind(EventletRelay source, Binding binding) throws ConfigurationException {
+      final InstanceContext<? extends AtomEventlet> eventletCtx = eventlets.get(binding.getReceiver());
+
+      if (eventletCtx == null) {
+         throw new ConfigurationException("Unable to locate eventlet, " + binding.getReceiver() + ".");
+      }
+
+      try {
+         cancellationRemotes.put(binding.getReceiver(), source.enlistHandlerContext(eventletCtx));
          bindings.put(binding.getId(), binding);
       } catch (InitializationException ie) {
          LOG.error("Failed to initialize listener, " + binding.getReceiver() + ". Reason: " + ie.getMessage(), ie);

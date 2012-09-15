@@ -76,14 +76,26 @@ public class TaskManagerImpl implements TaskManager {
 
    private synchronized List<ManagedTask> activeTasks() {
       final List<ManagedTask> activeTasks = new LinkedList<ManagedTask>();
+      final List<ManagedTask> destroyableTasks = new LinkedList<ManagedTask>();
 
       for (Iterator<ManagedTask> managedTaskIter = pollingTasks.iterator(); managedTaskIter.hasNext();) {
-         final ManagedTask potentiallyActiveTask = managedTaskIter.next();
+         final ManagedTask managedTask = managedTaskIter.next();
 
-         if (!potentiallyActiveTask.canceled()) {
-            activeTasks.add(potentiallyActiveTask);
+         // Cancellation of a task may occur at anytime
+         if (!managedTask.canceled()) {
+            activeTasks.add(managedTask);
          } else {
+            // If the task has been canceled, schedule it for destruction
+            destroyableTasks.add(managedTask);
             managedTaskIter.remove();
+         }
+      }
+
+      for (ManagedTask managedTask : destroyableTasks) {
+         try {
+            managedTask.destroy(taskContext);
+         } catch (Exception ex) {
+            LOG.error("Failed to destroy task: " + managedTask.id().toString() + ". Reason: " + ex.getMessage(), ex);
          }
       }
 

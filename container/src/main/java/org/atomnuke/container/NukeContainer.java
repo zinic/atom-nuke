@@ -17,6 +17,7 @@ import org.atomnuke.util.config.io.ConfigurationManager;
 import org.atomnuke.util.config.update.ConfigurationContext;
 import org.atomnuke.util.config.update.ConfigurationUpdateManager;
 import org.atomnuke.util.config.update.ConfigurationUpdateManagerImpl;
+import org.atomnuke.util.config.update.ConfigurationUpdateRunnable;
 import org.atomnuke.util.thread.Poller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,8 +32,7 @@ public class NukeContainer {
    private static final long DEFAULT_CFG_POLL_TIME_MS = 15000;
 
    private final ConfigurationUpdateManager configurationUpdateManager;
-   private final Thread cfgPollerThread;
-   private final Nuke nukeInstance;
+   private final NukeKernel nukeInstance;
    private final Poller cfgPoller;
 
    private ContextManager contextManager;
@@ -41,31 +41,33 @@ public class NukeContainer {
       this(new NukeKernel());
    }
 
-   public NukeContainer(Nuke nukeInstance) {
+   public NukeContainer(NukeKernel nukeInstance) {
       this.nukeInstance = nukeInstance;
 
-      final ConfigurationUpdateManagerImpl newUpdateManagerImpl = new ConfigurationUpdateManagerImpl();
       configurationUpdateManager = new ConfigurationUpdateManagerImpl();
-
-      cfgPoller = new Poller(newUpdateManagerImpl, DEFAULT_CFG_POLL_TIME_MS);
-      this.cfgPollerThread = new Thread(cfgPoller, "Nuke Container - Configuration Poller");
+      cfgPoller = new Poller("Nuke Container - Configuration Poller", new ConfigurationUpdateRunnable(configurationUpdateManager), DEFAULT_CFG_POLL_TIME_MS);
    }
 
    public void start() {
       final long initTime = System.currentTimeMillis();
 
       LOG.info("Starting Nuke container...");
+      LOG.debug("Building loader manager.");
 
       final BindingResolver bindingsResolver = BindingResolverImpl.defaultResolver();
       final DirectoryLoaderManager loaderManager = new DirectoryLoaderManager(NukeEnv.NUKE_LIB, bindingsResolver.registeredBindingContexts());
 
       try {
+         LOG.debug("Loader manager starting.");
+
          loaderManager.load();
       } catch (BindingLoaderException ble) {
-         LOG.error("An error occured while loading bindings. Reason: " + ble.getMessage(), ble);
+         LOG.debug("An error occured while loading bindings. Reason: " + ble.getMessage(), ble);
 
          throw new ContainerInitException(ble);
       }
+
+      LOG.debug("Building context manager.");
 
       contextManager = new ContextManager(bindingsResolver, nukeInstance);
 
@@ -82,7 +84,18 @@ public class NukeContainer {
          throw new ContainerInitException(ce);
       }
 
-      cfgPollerThread.start();
+      LOG.debug("Kickstarting bootstrap threads.");
+
+      cfgPoller.start();
+
+      nukeInstance.addShutdownTask(new Runnable() {
+
+         @Override
+         public void run() {
+            cfgPoller.destroy();
+         }
+      });
+
       nukeInstance.start();
 
       LOG.info("Nuke container started. Elapsed start-up time: " + (System.currentTimeMillis() - initTime) + "ms.");

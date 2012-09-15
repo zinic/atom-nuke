@@ -9,16 +9,18 @@ import org.slf4j.LoggerFactory;
  *
  * @author zinic
  */
-public class Poller implements Runnable {
+public class Poller extends Thread {
 
    private static final Logger LOG = LoggerFactory.getLogger(Poller.class);
 
-   private final long interval;
    private final Runnable task;
-   private volatile boolean shouldContinue;
-   private Thread taskThread;
+   private final long interval;
 
-   public Poller(Runnable task, long interval) {
+   private volatile boolean shouldContinue;
+
+   public Poller(String name, Runnable task, long interval) {
+      super(name);
+
       this.interval = interval;
       this.task = task;
 
@@ -27,9 +29,7 @@ public class Poller implements Runnable {
 
    @Override
    public void run() {
-      taskThread = Thread.currentThread();
-
-      while (shouldContinue && !taskThread.isInterrupted()) {
+      while (shouldContinue && !isInterrupted()) {
          try {
             task.run();
 
@@ -38,7 +38,7 @@ public class Poller implements Runnable {
                wait(interval);
             }
          } catch (InterruptedException ie) {
-            LOG.warn("Poller interrupted.");
+            LOG.warn("Poller " + getName() + " interrupted.");
             shouldContinue = false;
          }
       }
@@ -49,6 +49,6 @@ public class Poller implements Runnable {
 
       // Notify and interrupt the task thread
       notify();
-      taskThread.interrupt();
+      interrupt();
    }
 }

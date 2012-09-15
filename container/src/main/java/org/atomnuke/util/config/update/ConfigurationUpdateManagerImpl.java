@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author zinic
  */
-public class ConfigurationUpdateManagerImpl<T> implements ConfigurationUpdateManager<T>, Runnable {
+public class ConfigurationUpdateManagerImpl implements ConfigurationUpdateManager {
 
    private static final Logger LOG = LoggerFactory.getLogger(ConfigurationUpdateManagerImpl.class);
 
@@ -23,6 +23,17 @@ public class ConfigurationUpdateManagerImpl<T> implements ConfigurationUpdateMan
 
    public ConfigurationUpdateManagerImpl() {
       updateContexts = new HashMap<String, UpdateContext>();
+   }
+
+   @Override
+   public void update() {
+      for (UpdateContext contextToDispatch : getDispatchList()) {
+         try {
+            contextToDispatch.dispatch();
+         } catch (ConfigurationException ce) {
+            LOG.error("Exception during configuration read: " + ce.getMessage(), ce);
+         }
+      }
    }
 
    private synchronized List<UpdateContext> getDispatchList() {
@@ -51,27 +62,24 @@ public class ConfigurationUpdateManagerImpl<T> implements ConfigurationUpdateMan
    }
 
    @Override
-   public void run() {
-      for (UpdateContext contextToDispatch : getDispatchList()) {
-         try {
-            contextToDispatch.dispatch();
-         } catch (ConfigurationException ce) {
-            LOG.error("Exception during configuration read: " + ce.getMessage(), ce);
-         }
+   public synchronized <T> ConfigurationContext<T> register(String name, ConfigurationManager<T> configurationManager) {
+      final ConfigurationContext context = updateContexts.get(name);
+
+      if (context != null) {
+         LOG.error("Configuration already under update watch. This registration attempt will be ignored for: " + name);
+
+         return context;
       }
-   }
 
-   @Override
-   public ConfigurationContext<T> get(String name) {
-      return updateContexts.get(name);
-   }
-
-   @Override
-   public synchronized ConfigurationContext<T> register(String name, ConfigurationManager<T> configurationManager) {
       final UpdateContext<T> newContext = new UpdateContext<T>(configurationManager);
       updateContexts.put(name, newContext);
 
       return newContext;
+   }
+
+   @Override
+   public synchronized UpdateContext get(String name) {
+      return updateContexts.get(name);
    }
 
    @Override
