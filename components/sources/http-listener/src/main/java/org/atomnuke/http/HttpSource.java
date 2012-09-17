@@ -47,7 +47,7 @@ public class HttpSource implements AtomSource {
       try {
          jettyServer.stop();
 
-         while (!jettyServer.isStopped() || !jettyServer.isFailed()) {
+         while (!jettyServer.isStopped() && !jettyServer.isFailed()) {
             Thread.sleep(100);
          }
       } catch (Exception ex) {

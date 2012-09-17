@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  *
- * Because I don't like Java Timer =/
+ * Because I don't like Java Timer :p
  *
  * @author zinic
  */
@@ -44,7 +44,7 @@ public class Poller extends Thread {
       }
    }
 
-   public synchronized void destroy() {
+   public synchronized void haltPolling() {
       shouldContinue = false;
 
       // Notify and interrupt the task thread

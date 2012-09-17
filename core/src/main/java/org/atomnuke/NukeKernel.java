@@ -1,9 +1,7 @@
 package org.atomnuke;
 
-import java.util.LinkedList;
-import java.util.List;
 import org.atomnuke.kernel.KernelDelegate;
-import org.atomnuke.kernel.KernelShutdownHook;
+import org.atomnuke.kernel.NukeKernelShutdownHook;
 import org.atomnuke.kernel.NukeRejectionHandler;
 import org.atomnuke.kernel.NukeThreadPoolExecutor;
 import java.util.concurrent.BlockingQueue;
@@ -17,6 +15,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 import org.atomnuke.context.InstanceContext;
 import org.atomnuke.context.SimpleInstanceContext;
+import org.atomnuke.kernel.KernelShutdownHook;
 import org.atomnuke.source.AtomSource;
 import org.atomnuke.task.Task;
 import org.atomnuke.task.lifecycle.InitializationException;
@@ -38,17 +37,23 @@ import org.slf4j.LoggerFactory;
 public class NukeKernel implements Nuke {
 
    private static final Logger LOG = LoggerFactory.getLogger(NukeKernel.class);
+
    private static final ThreadFactory DEFAULT_THREAD_FACTORY = new ThreadFactory() {
       @Override
       public Thread newThread(Runnable r) {
          return new Thread(r, "nuke-worker-" + TID.incrementAndGet());
       }
    };
+
+   private static final long MAX_WAIT_TIME_FOR_SHUTDOWN = 15000;
+
    private static final int NUM_PROCESSORS = Runtime.getRuntime().availableProcessors(), MAX_THREADS = NUM_PROCESSORS * 2;
    private static final int MAX_QUEUE_SIZE = 256000;
+
    private static final AtomicLong TID = new AtomicLong(0);
+
    private final CancellationRemote kernelCancellationRemote;
-   private final List<Runnable> shutdownTasks;
+   private final KernelShutdownHook kernelShutdownHook;
    private final TaskManager taskManager;
    private final KernelDelegate logic;
    private final Thread controlThread;
@@ -83,28 +88,12 @@ public class NukeKernel implements Nuke {
       taskManager = new TaskManagerImpl(executionManager);
       logic = new KernelDelegate(kernelCancellationRemote, executionManager, taskManager);
       controlThread = new Thread(logic, "nuke-kernel-" + TID.incrementAndGet());
-      shutdownTasks = new LinkedList<Runnable>();
 
-      Runtime.getRuntime().addShutdownHook(new Thread(new KernelShutdownHook(this)));
+      kernelShutdownHook = new NukeKernelShutdownHook();
    }
 
-   public NukeKernel(int corePoolSize, int maxPoolsize, TaskManager taskManager) {
-      final BlockingQueue<Runnable> runQueue = new LinkedBlockingQueue<Runnable>();
-      final ExecutorService execService = new NukeThreadPoolExecutor(corePoolSize, maxPoolsize, 30, TimeUnit.SECONDS, runQueue, DEFAULT_THREAD_FACTORY, new NukeRejectionHandler());
-      final ExecutionManager executionManager = new ExecutionManagerImpl(MAX_QUEUE_SIZE, runQueue, execService);
-
-      kernelCancellationRemote = new AtomicCancellationRemote();
-
-      this.taskManager = taskManager;
-      logic = new KernelDelegate(kernelCancellationRemote, executionManager, taskManager);
-      controlThread = new Thread(logic, "nuke-kernel-" + TID.incrementAndGet());
-      shutdownTasks = new LinkedList<Runnable>();
-
-      Runtime.getRuntime().addShutdownHook(new Thread(new KernelShutdownHook(this)));
-   }
-
-   public void addShutdownTask(Runnable r) {
-      shutdownTasks.add(r);
+   public KernelShutdownHook shutdownHook() {
+      return kernelShutdownHook;
    }
 
    @Override
@@ -123,6 +112,22 @@ public class NukeKernel implements Nuke {
          throw new IllegalStateException("Crawler already started or destroyed.");
       }
 
+      kernelShutdownHook.enlistShutdownHook(new Runnable() {
+         @Override
+         public void run() {
+            taskManager.destroy();
+            kernelCancellationRemote.cancel();
+
+            try {
+               controlThread.join(MAX_WAIT_TIME_FOR_SHUTDOWN);
+            } catch (InterruptedException ie) {
+               LOG.info("Nuke kernel interrupted while shutting down. Killing thread now.", ie);
+
+               controlThread.interrupt();
+            }
+         }
+      });
+
       LOG.info("Nuke kernel: " + toString() + " starting.");
 
       taskManager.init();
@@ -131,23 +136,6 @@ public class NukeKernel implements Nuke {
 
    @Override
    public void destroy() {
-      taskManager.destroy();
-
-      kernelCancellationRemote.cancel();
-
-      try {
-         controlThread.join();
-      } catch (InterruptedException ie) {
-         LOG.info("Nuke kernel interrupted while shutting down. Killing thread now.", ie);
-         controlThread.interrupt();
-      }
-
-      for (Runnable shutdownTask : shutdownTasks) {
-         try {
-            shutdownTask.run();
-         } catch (Exception ex) {
-            // TODO:Log
-         }
-      }
+      kernelShutdownHook.shutdown();
    }
 }

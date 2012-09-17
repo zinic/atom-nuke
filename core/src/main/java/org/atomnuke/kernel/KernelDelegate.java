@@ -14,8 +14,8 @@ import org.slf4j.LoggerFactory;
  */
 public class KernelDelegate implements Runnable {
 
-   private static final Logger LOG = LoggerFactory.getLogger(KernelDelegate.class);
    private static final TimeValue ZERO_NANOSECONDS = new TimeValue(0, TimeUnit.NANOSECONDS);
+   private static final Logger LOG = LoggerFactory.getLogger(KernelDelegate.class);
    private final CancellationRemote crawlerCancellationRemote;
    private final ExecutionManager executionManager;
    private final TaskManager taskManager;
@@ -55,9 +55,11 @@ public class KernelDelegate implements Runnable {
          }
 
          try {
+            final long sleepMillseconds = sleepTime.value(TimeUnit.MILLISECONDS);
+
             // Sleep if there's nothing to poll at the moment
-            if (sleepTime.value() > 0) {
-               sleepTime.sleep();
+            if (sleepMillseconds > 0) {
+               Thread.sleep(sleepMillseconds);
             } else {
                // Yield if we're not going to sleep
                Thread.yield();

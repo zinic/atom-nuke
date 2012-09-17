@@ -1,27 +1,12 @@
 package org.atomnuke.kernel;
 
-import org.atomnuke.Nuke;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  *
  * @author zinic
  */
-public class KernelShutdownHook implements Runnable {
+public interface KernelShutdownHook {
 
-   private static final Logger LOG = LoggerFactory.getLogger(KernelShutdownHook.class);
+   void enlistShutdownHook(Runnable r);
 
-   private final Nuke nukeRef;
-
-   public KernelShutdownHook(Nuke nukeRef) {
-      this.nukeRef = nukeRef;
-   }
-
-   @Override
-   public void run() {
-      LOG.info("Process shutting down. Destroying nuke kernel: " + nukeRef);
-
-      nukeRef.destroy();
-   }
+   void shutdown();
 }

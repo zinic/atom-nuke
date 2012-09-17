@@ -77,10 +77,6 @@ public class TimeValue implements Comparable<TimeValue> {
       return compareTo(otherTimeValue) < 0;
    }
 
-   public void sleep() throws InterruptedException {
-      unit().sleep(value);
-   }
-
    @Override
    public int compareTo(TimeValue otherTimeValue) {
       final TimeValue compareValue = subtract(otherTimeValue);

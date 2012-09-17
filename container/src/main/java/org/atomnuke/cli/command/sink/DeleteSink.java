@@ -6,6 +6,7 @@ import org.atomnuke.cli.CliConfigurationHandler;
 import org.atomnuke.config.model.Sink;
 import org.atomnuke.util.cli.command.result.CommandFailure;
 import org.atomnuke.util.cli.command.result.CommandResult;
+import org.atomnuke.util.cli.command.result.CommandSuccess;
 
 /**
  *
@@ -43,9 +44,11 @@ public class DeleteSink extends AbstractNukeCommand {
             unbindReciever(cfgHandler, arguments[SINK_ID]);
 
             cfgHandler.write();
-            break;
+
+            return new CommandSuccess();
          }
       }
-         return new CommandFailure("No sink with an id matching, \"" + arguments[SINK_ID] + "\" seems to exist.");
+
+      return new CommandFailure("No sink with an id matching, \"" + arguments[SINK_ID] + "\" seems to exist.");
    }
 }

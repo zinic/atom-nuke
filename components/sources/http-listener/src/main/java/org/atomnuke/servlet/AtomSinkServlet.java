@@ -81,6 +81,8 @@ public class AtomSinkServlet extends HttpServlet {
                resp.getWriter().append("Request entity must be an Entry.");
             }
          } catch (AtomReadException ape) {
+            LOG.error(ape.getMessage(), ape);
+
             final Throwable cause = ape.getCause();
 
             if (cause instanceof ReadLimitException) {

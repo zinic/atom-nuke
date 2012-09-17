@@ -9,4 +9,5 @@ if [ ! -e ./target/nuke-container.jar ]; then
    fi
 fi
 
+#java -agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=y -jar ./target/nuke-container.jar $@
 java -jar ./target/nuke-container.jar $@

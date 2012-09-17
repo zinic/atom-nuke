@@ -21,8 +21,9 @@ public final class NukeMain {
 
    public static void main(String[] args) throws Exception {
       final ConfigurationManager<ServerConfiguration> cfgManager = new ServerConfigurationManager(new File(NukeEnv.NUKE_HOME, NukeEnv.CONFIG_NAME));
+      final ServerConfiguration previousCfg = cfgManager.read();
 
-      final CliConfigurationHandler handler = new CliConfigurationHandler(cfgManager, cfgManager.read());
+      final CliConfigurationHandler handler = new CliConfigurationHandler(cfgManager, previousCfg != null ? previousCfg : new ServerConfiguration());
 
       final Command rootCommand = new Root(handler);
 
