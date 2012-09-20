@@ -9,8 +9,8 @@
       <version>0.9.6.2-SNAPSHOT</version>
    </parent>
 
-   <groupId>org.atomnuke</groupId>
-   <artifactId>container</artifactId>
+   <groupId>org.atomnuke.container</groupId>
+   <artifactId>flask</artifactId>
 
    <packaging>jar</packaging>
 
@@ -30,6 +30,11 @@
       <dependency>
          <groupId>org.python</groupId>
          <artifactId>jython</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>rhino</groupId>
+         <artifactId>js</artifactId>
       </dependency>
 
       <dependency>

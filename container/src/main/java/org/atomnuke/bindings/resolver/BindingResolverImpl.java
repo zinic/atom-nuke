@@ -9,7 +9,7 @@ import org.atomnuke.bindings.BindingContext;
 import org.atomnuke.bindings.BindingInstantiationException;
 import org.atomnuke.bindings.ear.EarBindingContext;
 import org.atomnuke.bindings.jython.PythonInterpreterContext;
-import org.atomnuke.bindings.context.ClassLoaderContext;
+import org.atomnuke.bindings.rhinojs.RhinoInterpreterContext;
 import org.atomnuke.context.InstanceContext;
 import org.atomnuke.config.model.LanguageType;
 import org.atomnuke.listener.AtomListener;
@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
 public class BindingResolverImpl implements BindingResolver {
 
    private static final Logger LOG = LoggerFactory.getLogger(BindingResolverImpl.class);
-   private static final BindingResolver DEFAULT_RESOLVER = new BindingResolverImpl(new EarBindingContext(new File(NukeEnv.NUKE_DEPLOY)), new PythonInterpreterContext(LOG.isDebugEnabled()));
+   private static final BindingResolver DEFAULT_RESOLVER = new BindingResolverImpl(new EarBindingContext(new File(NukeEnv.NUKE_DEPLOY)), new PythonInterpreterContext(LOG.isDebugEnabled()), RhinoInterpreterContext.newInstance());
 
    public static BindingResolver defaultResolver() {
       return DEFAULT_RESOLVER;

@@ -58,10 +58,10 @@ public class ContainerContext {
       return tasks.containsKey(name);
    }
 
-   public void registerRelay(String name, InstanceContext<AtomListener> instanceCtx) {
+   public void registerRelay(String name, InstanceContext<EventletRelay> instanceCtx) {
       LOG.info("Registering relay: " + name);
 
-      listeners.put(name, instanceCtx);
+      relays.put(name, instanceCtx);
    }
 
    public void registerSink(String name, InstanceContext<AtomListener> instanceCtx) {

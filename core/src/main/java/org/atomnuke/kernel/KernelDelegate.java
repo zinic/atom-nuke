@@ -16,9 +16,11 @@ public class KernelDelegate implements Runnable {
 
    private static final TimeValue ZERO_NANOSECONDS = new TimeValue(0, TimeUnit.NANOSECONDS);
    private static final Logger LOG = LoggerFactory.getLogger(KernelDelegate.class);
+
    private final CancellationRemote crawlerCancellationRemote;
    private final ExecutionManager executionManager;
    private final TaskManager taskManager;
+   
    private int drainMagnitude;
 
    public KernelDelegate(CancellationRemote crawlerCancellationRemote, ExecutionManager executionManager, TaskManager taskManager) {
