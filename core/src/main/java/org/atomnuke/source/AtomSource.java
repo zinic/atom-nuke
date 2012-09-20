@@ -1,5 +1,6 @@
 package org.atomnuke.source;
 
+import org.atomnuke.source.result.AtomSourceResult;
 import org.atomnuke.task.lifecycle.TaskLifeCycle;
 
 /**

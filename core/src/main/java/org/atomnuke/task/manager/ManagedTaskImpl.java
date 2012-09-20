@@ -6,7 +6,8 @@ import org.atomnuke.listener.manager.ManagedListener;
 import org.atomnuke.listener.driver.AtomListenerDriver;
 import org.atomnuke.listener.manager.ListenerManager;
 import org.atomnuke.source.AtomSource;
-import org.atomnuke.source.AtomSourceResult;
+import org.atomnuke.source.result.AtomSourceResult;
+import org.atomnuke.source.result.ResultType;
 import org.atomnuke.task.Task;
 import org.atomnuke.task.context.TaskContext;
 import org.atomnuke.task.lifecycle.DestructionException;
@@ -121,7 +122,7 @@ public class ManagedTaskImpl implements ManagedTask {
          try {
             final AtomSourceResult pollResult = atomSourceContext.getInstance().poll();
 
-            if (!pollResult.isEmpty()) {
+            if (pollResult.type() != ResultType.EMPTY) {
                dispatchToListeners(pollResult);
             }
          } catch (Exception ex) {
@@ -134,7 +135,7 @@ public class ManagedTaskImpl implements ManagedTask {
 
    private void dispatchToListeners(AtomSourceResult pollResult) {
       for (ManagedListener listener : listenerManager.listeners()) {
-         if (pollResult.isFeedPage()) {
+         if (pollResult.type() == ResultType.FEED) {
             executorService.queue(new AtomListenerDriver(listener, pollResult.feed()));
          } else {
             executorService.queue(new AtomListenerDriver(listener, pollResult.entry()));

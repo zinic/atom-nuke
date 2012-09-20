@@ -3,7 +3,7 @@ package org.atomnuke.http;
 import org.atomnuke.servlet.jetty.JettyServer;
 import org.atomnuke.source.AtomSource;
 import org.atomnuke.source.AtomSourceException;
-import org.atomnuke.source.AtomSourceResult;
+import org.atomnuke.source.result.AtomSourceResult;
 import org.atomnuke.source.QueueSource;
 import org.atomnuke.source.QueueSourceImpl;
 import org.atomnuke.task.context.TaskContext;

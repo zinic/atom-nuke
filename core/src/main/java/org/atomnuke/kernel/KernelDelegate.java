@@ -14,13 +14,11 @@ import org.slf4j.LoggerFactory;
  */
 public class KernelDelegate implements Runnable {
 
-   private static final TimeValue ZERO_NANOSECONDS = new TimeValue(0, TimeUnit.NANOSECONDS);
    private static final Logger LOG = LoggerFactory.getLogger(KernelDelegate.class);
-
+   private static long ONE_MILLISECOND_IN_NANOS = 1000000;
    private final CancellationRemote crawlerCancellationRemote;
    private final ExecutionManager executionManager;
    private final TaskManager taskManager;
-   
    private int drainMagnitude;
 
    public KernelDelegate(CancellationRemote crawlerCancellationRemote, ExecutionManager executionManager, TaskManager taskManager) {
@@ -36,7 +34,7 @@ public class KernelDelegate implements Runnable {
       // Run until canceled
       while (!crawlerCancellationRemote.canceled()) {
          final TimeValue now = TimeValue.now();
-         TimeValue sleepTime = null;
+         TimeValue sleepTime;
 
          // Sleep till the next polling time or for a couple of milliseconds
          if (executionManager.draining()) {
@@ -48,27 +46,30 @@ public class KernelDelegate implements Runnable {
          } else {
             drainMagnitude -= drainMagnitude == 0 ? 1 : 0;
 
-            final TimeValue closestPollTime = taskManager.scheduleTasks();
-            final TimeValue nextSleep = closestPollTime != null ? closestPollTime.subtract(now) : ZERO_NANOSECONDS;
-
-            if (sleepTime == null || nextSleep.isLessThan(sleepTime)) {
-               sleepTime = nextSleep;
-            }
+            sleepTime = taskManager.scheduleTasks();
          }
 
-         try {
-            final long sleepMillseconds = sleepTime.value(TimeUnit.MILLISECONDS);
+         if (sleepTime.isGreaterThan(TimeValue.zero())) {
+            try {
+               long sleepNanos = sleepTime.subtract(now).value(TimeUnit.NANOSECONDS);
 
-            // Sleep if there's nothing to poll at the moment
-            if (sleepMillseconds > 0) {
-               Thread.sleep(sleepMillseconds);
-            } else {
-               // Yield if we're not going to sleep
-               Thread.yield();
+               while (sleepNanos > 0) {
+                  final long then = System.nanoTime();
+
+                  // Sleep if there's nothing to poll at the moment
+                  if (sleepNanos > ONE_MILLISECOND_IN_NANOS) {
+                     Thread.sleep(sleepNanos / ONE_MILLISECOND_IN_NANOS);
+                  } else {
+                     // Yield if we're not going to sleep
+                     Thread.yield();
+                  }
+
+                  sleepNanos -= System.nanoTime() - then;
+               }
+            } catch (InterruptedException ie) {
+               LOG.warn("KernelDelegate interrupted. Shutting down right now.", ie);
+               break;
             }
-         } catch (InterruptedException ie) {
-            LOG.warn("KernelDelegate interrupted. Shutting down right now.", ie);
-            break;
          }
       }
    }

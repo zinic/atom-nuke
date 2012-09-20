@@ -8,6 +8,8 @@ import java.util.concurrent.TimeUnit;
  */
 public class TimeValue implements Comparable<TimeValue> {
 
+   private static final TimeValue ZERO_NANOSECONDS = new TimeValue(0, TimeUnit.NANOSECONDS);
+
    public static TimeValue now() {
       return new TimeValue(System.nanoTime(), TimeUnit.NANOSECONDS);
    }
@@ -15,6 +17,11 @@ public class TimeValue implements Comparable<TimeValue> {
    public static TimeValue now(TimeUnit unit) {
       return now().convert(unit);
    }
+
+   public static TimeValue zero() {
+      return ZERO_NANOSECONDS;
+   }
+
    private final TimeUnit unit;
    private final long value;
 

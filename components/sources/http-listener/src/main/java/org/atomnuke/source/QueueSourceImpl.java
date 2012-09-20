@@ -1,9 +1,10 @@
 package org.atomnuke.source;
 
+import org.atomnuke.source.result.AtomSourceResult;
 import java.util.LinkedList;
 import java.util.Queue;
 import org.atomnuke.atom.model.Entry;
-import org.atomnuke.source.impl.AtomSourceResultImpl;
+import org.atomnuke.source.result.AtomSourceResultImpl;
 
 /**
  *
@@ -24,8 +25,10 @@ public class QueueSourceImpl implements QueueSource {
 
    @Override
    public synchronized AtomSourceResult poll() throws AtomSourceException {
-      final Entry nextEntry = entryQueue.poll();
+      if (entryQueue.isEmpty()) {
+         return new AtomSourceResultImpl();
+      }
 
-      return new AtomSourceResultImpl(nextEntry);
+      return new AtomSourceResultImpl(entryQueue.poll());
    }
 }

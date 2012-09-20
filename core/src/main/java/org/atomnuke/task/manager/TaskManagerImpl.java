@@ -128,12 +128,11 @@ public class TaskManagerImpl implements TaskManager {
          } else if (closestPollTime == null || closestPollTime.isGreaterThan(nextPollTime)) {
             // If the closest polling time is null or later than this task's
             // next polling time, it becomes the next time the kernel wakes
-
             closestPollTime = nextPollTime;
          }
       }
 
-      return closestPollTime;
+      return closestPollTime != null ? closestPollTime : TimeValue.zero();
    }
 
    @Override

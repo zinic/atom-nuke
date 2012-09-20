@@ -3,6 +3,7 @@ package org.atomnuke.container;
 import org.atomnuke.Nuke;
 import org.atomnuke.bindings.BindingInstantiationException;
 import org.atomnuke.bindings.resolver.BindingResolver;
+import org.atomnuke.config.model.Binding;
 import org.atomnuke.context.InstanceContext;
 import org.atomnuke.util.config.ConfigurationException;
 import org.atomnuke.config.model.Eventlet;
@@ -30,7 +31,6 @@ import org.slf4j.LoggerFactory;
 public class ConfigurationProcessor {
 
    private static final Logger LOG = LoggerFactory.getLogger(ConfigurationProcessor.class);
-
    private final ServerConfigurationHandler cfgHandler;
    private final BindingResolver bindingsResolver;
    private final ContainerContext containerContext;
@@ -43,7 +43,7 @@ public class ConfigurationProcessor {
 
    public void merge(Nuke kernelBeingBuilt) throws ConfigurationException {
       LOG.info("Reading configuration");
-      
+
       processSources(kernelBeingBuilt);
       constructRelays();
       constructListeners();
@@ -68,7 +68,7 @@ public class ConfigurationProcessor {
       for (Source source : cfgHandler.getSources()) {
          final String sourceId = source.getId();
 
-         if (!containerContext.hasTask(sourceId)) {
+         if (hasSourceBinding(sourceId) && !containerContext.hasTask(sourceId)) {
             try {
                final InstanceContext<AtomSource> sourceContext = constructSource(source.getType(), source.getHref());
                final Task newTask = kernelBeingBuilt.follow(sourceContext, TimeValueUtil.fromPollingInterval(source.getPollingInterval()));
@@ -84,11 +84,32 @@ public class ConfigurationProcessor {
       }
    }
 
+   public boolean hasSourceBinding(String name) throws ConfigurationException {
+      for (Binding binding : cfgHandler.getBindings()) {
+         if (binding.getTarget().equals(name)) {
+            return true;
+         }
+      }
+
+      return false;
+   }
+
+   public boolean hasListenerBinding(String name) throws ConfigurationException {
+      for (Binding binding : cfgHandler.getBindings()) {
+         if (binding.getReceiver().equals(name)) {
+            return true;
+         }
+      }
+
+      return false;
+   }
+
    public void constructRelays() throws ConfigurationException {
       for (Relay relay : cfgHandler.getRelays()) {
          final String relayId = relay.getId();
 
-         if (!containerContext.hasRelay(relayId)) {
+
+         if (hasListenerBinding(relayId) && !containerContext.hasRelay(relayId)) {
             containerContext.registerRelay(relay.getId(), new SimpleInstanceContext<EventletRelay>(new EventletRelay()));
          }
       }
@@ -98,7 +119,7 @@ public class ConfigurationProcessor {
       for (Sink sink : cfgHandler.getSinks()) {
          final String sinkId = sink.getId();
 
-         if (!containerContext.hasSink(sinkId)) {
+         if (hasListenerBinding(sinkId) && !containerContext.hasSink(sinkId)) {
             try {
                containerContext.registerSink(sink.getId(), constructListener(sink.getType(), sink.getHref()));
 
@@ -113,7 +134,7 @@ public class ConfigurationProcessor {
       for (Eventlet eventlet : cfgHandler.getEventlets()) {
          final String eventletId = eventlet.getId();
 
-         if (!containerContext.hasEventlet(eventletId)) {
+         if (hasListenerBinding(eventletId) && !containerContext.hasEventlet(eventletId)) {
             try {
                containerContext.registerEventlet(eventlet.getId(), constructEventlet(eventlet.getType(), eventlet.getHref()));
             } catch (BindingInstantiationException bie) {
