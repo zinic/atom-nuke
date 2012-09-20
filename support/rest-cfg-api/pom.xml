@@ -6,9 +6,9 @@
    <parent>
       <groupId>org.atomnuke</groupId>
       <artifactId>project</artifactId>
-      <version>0.9.6.2-SNAPSHOT</version>
+      <version>0.9.7-SNAPSHOT</version>
 
-      <relativePath>./../</relativePath>
+      <relativePath>./../../</relativePath>
    </parent>
 
    <groupId>org.atomnuke.container.modules</groupId>
