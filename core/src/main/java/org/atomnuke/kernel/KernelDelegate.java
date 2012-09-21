@@ -33,44 +33,48 @@ public class KernelDelegate implements Runnable {
    public void run() {
       // Run until canceled
       while (!crawlerCancellationRemote.canceled()) {
-         final TimeValue now = TimeValue.now();
-         TimeValue sleepTime;
+         TimeValue sleepTill;
 
          // Sleep till the next polling time or for a couple of milliseconds
          if (executionManager.draining()) {
             drainMagnitude += drainMagnitude == 1000 ? 0 : 1;
 
-            sleepTime = new TimeValue(2 * drainMagnitude, TimeUnit.MILLISECONDS);
+            sleepTill = TimeValue.now().add(new TimeValue(2 * drainMagnitude, TimeUnit.MILLISECONDS));
 
-            LOG.error("Execution queue too large to continue polling. Yielding " + sleepTime.value() + " millisecond to allow queue to drain.");
+            LOG.error("Execution queue too large to continue polling. Yielding till " + sleepTill.value(TimeUnit.MILLISECONDS) + " to allow queue to drain.");
          } else {
             drainMagnitude -= drainMagnitude == 0 ? 1 : 0;
 
-            sleepTime = taskManager.scheduleTasks();
+            sleepTill = taskManager.scheduleTasks();
          }
 
-         if (sleepTime.isGreaterThan(TimeValue.zero())) {
-            try {
-               long sleepNanos = sleepTime.subtract(now).value(TimeUnit.NANOSECONDS);
+         sleep(sleepTill);
+      }
+   }
 
-               while (sleepNanos > 0) {
-                  final long then = System.nanoTime();
+   private void sleep(TimeValue sleepTill) {
+      final long totalNanoseconds = sleepTill.subtract(TimeValue.now()).value(TimeUnit.NANOSECONDS);
 
-                  // Sleep if there's nothing to poll at the moment
-                  if (sleepNanos > ONE_MILLISECOND_IN_NANOS) {
-                     Thread.sleep(sleepNanos / ONE_MILLISECOND_IN_NANOS);
-                  } else {
-                     // Yield if we're not going to sleep
-                     Thread.yield();
-                  }
+      try {
+         if (totalNanoseconds > ONE_MILLISECOND_IN_NANOS) {
+            final long milliseconds = totalNanoseconds / ONE_MILLISECOND_IN_NANOS;
+            final int nanoseconds = (int) (totalNanoseconds % ONE_MILLISECOND_IN_NANOS);
 
-                  sleepNanos -= System.nanoTime() - then;
-               }
-            } catch (InterruptedException ie) {
-               LOG.warn("KernelDelegate interrupted. Shutting down right now.", ie);
-               break;
-            }
+            Thread.sleep(milliseconds, nanoseconds);
+         } else {
+            long sleepTime = totalNanoseconds - System.nanoTime();
+
+            do {
+               final long then = System.nanoTime();
+
+               Thread.yield();
+
+               sleepTime -= System.nanoTime() - then;
+            } while (sleepTime > 0);
          }
+      } catch (InterruptedException ie) {
+         LOG.warn("KernelDelegate interrupted. Shutting down right now.", ie);
+         crawlerCancellationRemote.cancel();
       }
    }
 }

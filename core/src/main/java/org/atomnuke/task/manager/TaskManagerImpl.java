@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 import org.atomnuke.context.InstanceContext;
 import org.atomnuke.context.SimpleInstanceContext;
 import org.atomnuke.listener.manager.ListenerManager;
@@ -26,6 +27,9 @@ import org.slf4j.LoggerFactory;
 public class TaskManagerImpl implements TaskManager {
 
    private static final Logger LOG = LoggerFactory.getLogger(TaskManagerImpl.class);
+
+   private static final TimeValue THREE_MILLISECONDS = new TimeValue(3, TimeUnit.MILLISECONDS);
+
    private final ExecutionManager executionManager;
    private final List<ManagedTask> pollingTasks;
    private final TaskContext taskContext;
@@ -116,23 +120,27 @@ public class TaskManagerImpl implements TaskManager {
    @Override
    public TimeValue scheduleTasks() {
       final TimeValue now = TimeValue.now();
-      TimeValue closestPollTime = null;
+      TimeValue closestPollTime = now.add(THREE_MILLISECONDS);
 
       for (ManagedTask managedTask : activeTasks()) {
-         final TimeValue nextPollTime = managedTask.nextPollTime();
+         TimeValue nextPollTime = managedTask.nextPollTime();
 
          // Sould this task be scheduled? If so, is the task already in the execution queue?
          if (now.isGreaterThan(nextPollTime) && !executionManager.submitted(managedTask.id())) {
             executionManager.submit(managedTask.id(), managedTask);
             managedTask.scheduled();
-         } else if (closestPollTime == null || closestPollTime.isGreaterThan(nextPollTime)) {
+
+            nextPollTime = managedTask.nextPollTime();
+         }
+
+         if (closestPollTime.isGreaterThan(nextPollTime)) {
             // If the closest polling time is null or later than this task's
             // next polling time, it becomes the next time the kernel wakes
             closestPollTime = nextPollTime;
          }
       }
 
-      return closestPollTime != null ? closestPollTime : TimeValue.zero();
+      return closestPollTime;
    }
 
    @Override
