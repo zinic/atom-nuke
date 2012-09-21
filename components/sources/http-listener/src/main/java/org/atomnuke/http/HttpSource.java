@@ -43,7 +43,7 @@ public class HttpSource implements AtomSource {
    }
 
    @Override
-   public void destroy(TaskContext tc) throws DestructionException {
+   public void destroy() throws DestructionException {
       try {
          jettyServer.stop();
 

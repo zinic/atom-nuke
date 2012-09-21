@@ -34,6 +34,46 @@
    <!-- Configuration ComplexType definitions -->
    <xs:element name="nuke" type="nuke:ServerConfiguration" />
 
+   <xs:complexType name="Parameters">
+      <xs:annotation>
+         <xs:documentation>
+            <html:p>
+            </html:p>
+         </xs:documentation>
+      </xs:annotation>
+
+      <xs:sequence>
+         <xs:element name="param" type="nuke:Parameter" minOccurs="0" maxOccurs="unbounded" />
+      </xs:sequence>
+   </xs:complexType>
+
+   <xs:complexType name="Parameter">
+      <xs:annotation>
+         <xs:documentation>
+            <html:p>
+            </html:p>
+         </xs:documentation>
+      </xs:annotation>
+
+      <xs:attribute name="name" type="xs:string" use="required">
+         <xs:annotation>
+            <xs:documentation>
+               <html:p>
+               </html:p>
+            </xs:documentation>
+         </xs:annotation>
+      </xs:attribute>
+
+      <xs:attribute name="value" type="xs:string" use="required">
+         <xs:annotation>
+            <xs:documentation>
+               <html:p>
+               </html:p>
+            </xs:documentation>
+         </xs:annotation>
+      </xs:attribute>
+   </xs:complexType>
+
    <xs:complexType name="ServerConfiguration">
       <xs:annotation>
          <xs:documentation>
@@ -84,6 +124,10 @@
             </html:p>
          </xs:documentation>
       </xs:annotation>
+
+      <xs:sequence>
+         <xs:element name="parameters" type="nuke:Parameters" minOccurs="0" maxOccurs="1" />
+      </xs:sequence>
 
       <xs:attribute name="id" type="xs:string" use="required">
          <xs:annotation>

@@ -5,8 +5,6 @@ import org.atomnuke.context.InstanceContext;
 import org.atomnuke.context.SimpleInstanceContext;
 import org.atomnuke.listener.AtomListener;
 import org.atomnuke.listener.manager.ListenerManager;
-import org.atomnuke.task.context.TaskContext;
-import org.atomnuke.task.lifecycle.InitializationException;
 import org.atomnuke.util.TimeValue;
 import org.atomnuke.util.remote.AtomicCancellationRemote;
 import org.atomnuke.util.remote.CancellationRemote;
@@ -19,13 +17,11 @@ public class TaskImpl implements Task {
 
    private final CancellationRemote cancelationRemote;
    private final ListenerManager listenerManager;
-   private final TaskContext context;
    private final TimeValue interval;
    private final UUID taskId;
 
-   public TaskImpl(UUID taskId, ListenerManager listenerManager, TaskContext context, TimeValue interval) {
+   public TaskImpl(UUID taskId, ListenerManager listenerManager, TimeValue interval) {
       this.listenerManager = listenerManager;
-      this.context = context;
       this.interval = interval;
       this.taskId = taskId;
 
@@ -48,19 +44,12 @@ public class TaskImpl implements Task {
    }
 
    @Override
-   public CancellationRemote addListener(AtomListener listener) throws InitializationException {
+   public CancellationRemote addListener(AtomListener listener) {
       return addListener(new SimpleInstanceContext<AtomListener>(listener));
    }
 
    @Override
-   public CancellationRemote addListener(InstanceContext<? extends AtomListener> listenerContext) throws InitializationException {
-      listenerContext.stepInto();
-
-      try {
-         listenerContext.getInstance().init(context);
-         return listenerManager.addListener(listenerContext);
-      } finally {
-         listenerContext.stepOut();
-      }
+   public CancellationRemote addListener(InstanceContext<? extends AtomListener> listenerContext) {
+      return listenerManager.addListener(listenerContext);
    }
 }

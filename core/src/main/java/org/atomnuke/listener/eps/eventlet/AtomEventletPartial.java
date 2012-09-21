@@ -18,6 +18,6 @@ public abstract class AtomEventletPartial implements AtomEventlet {
    }
 
    @Override
-   public void destroy(TaskContext tc) throws DestructionException {
+   public void destroy() throws DestructionException {
    }
 }

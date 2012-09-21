@@ -31,6 +31,6 @@ public class NullSink implements AtomListener {
    }
 
    @Override
-   public void destroy(TaskContext tc) throws DestructionException {
+   public void destroy() throws DestructionException {
    }
 }

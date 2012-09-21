@@ -87,14 +87,14 @@ public class ManagedTaskImpl implements ManagedTask {
    }
 
    @Override
-   public void destroy(TaskContext taskContext) {
+   public void destroy() {
       LOG.debug("Destroying task: " + task);
 
       for (ManagedListener registeredListener : listenerManager.listeners()) {
          registeredListener.listenerContext().stepInto();
 
          try {
-            registeredListener.listenerContext().getInstance().destroy(taskContext);
+            registeredListener.listenerContext().getInstance().destroy();
          } catch (DestructionException sde) {
             LOG.error(sde.getMessage(), sde);
          } finally {
@@ -105,7 +105,7 @@ public class ManagedTaskImpl implements ManagedTask {
       atomSourceContext.stepInto();
 
       try {
-         atomSourceContext.getInstance().destroy(taskContext);
+         atomSourceContext.getInstance().destroy();
       } catch(DestructionException de) {
          LOG.error("Failed to destroy task " + task + " reason: " + de.getMessage(), de);
       } finally {

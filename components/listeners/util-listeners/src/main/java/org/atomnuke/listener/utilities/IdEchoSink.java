@@ -1,5 +1,6 @@
 package org.atomnuke.listener.utilities;
 
+import java.util.Map;
 import org.atomnuke.atom.model.Entry;
 import org.atomnuke.atom.model.Feed;
 import org.atomnuke.listener.AtomListener;
@@ -40,9 +41,13 @@ public class IdEchoSink implements AtomListener {
 
    @Override
    public void init(TaskContext tc) throws InitializationException {
+      for (Map.Entry<String, String> param : tc.instanceParameters().entrySet()) {
+         LOG.info("Sink init for: " + toString() + ". Parameter, \"" + param.getKey() + "\" has value: " + param.getValue());
+      }
    }
 
    @Override
-   public void destroy(TaskContext tc) throws DestructionException {
+   public void destroy() throws DestructionException {
+      LOG.info("Echo sink destroyed.");
    }
 }

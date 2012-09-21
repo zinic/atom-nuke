@@ -52,7 +52,7 @@ public class FeedCrawlerSource implements AtomSource {
    }
 
    @Override
-   public void destroy(TaskContext tc) throws DestructionException {
+   public void destroy() throws DestructionException {
       writeState();
    }
 

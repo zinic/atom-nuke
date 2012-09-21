@@ -10,7 +10,7 @@ import org.atomnuke.util.cli.command.AbstractCommandList;
 public class ServerCommands extends AbstractCommandList {
 
    public ServerCommands(CliConfigurationHandler configurationHandler) {
-      super(new Start(configurationHandler), new Stop(configurationHandler));
+      super(configurationHandler, new Start(configurationHandler), new Stop(configurationHandler));
    }
 
    @Override

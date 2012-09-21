@@ -1,13 +1,15 @@
 package org.atomnuke.util.cli.command;
 
+import org.atomnuke.cli.CliConfigurationHandler;
+
 /**
  *
  * @author zinic
  */
 public class RootCommand extends AbstractCommandList {
 
-    public RootCommand(Command... availableCommands) {
-        super(availableCommands);
+    public RootCommand(CliConfigurationHandler handler, Command... availableCommands) {
+        super(handler, availableCommands);
     }
 
     @Override

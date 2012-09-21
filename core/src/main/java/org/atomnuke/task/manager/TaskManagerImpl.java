@@ -6,15 +6,11 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import org.atomnuke.context.InstanceContext;
-import org.atomnuke.context.SimpleInstanceContext;
 import org.atomnuke.listener.manager.ListenerManager;
 import org.atomnuke.listener.manager.ListenerManagerImpl;
 import org.atomnuke.source.AtomSource;
 import org.atomnuke.task.Task;
 import org.atomnuke.task.TaskImpl;
-import org.atomnuke.task.context.TaskContext;
-import org.atomnuke.task.context.TaskContextImpl;
-import org.atomnuke.task.lifecycle.InitializationException;
 import org.atomnuke.task.threading.ExecutionManager;
 import org.atomnuke.util.TimeValue;
 import org.slf4j.Logger;
@@ -32,12 +28,10 @@ public class TaskManagerImpl implements TaskManager {
 
    private final ExecutionManager executionManager;
    private final List<ManagedTask> pollingTasks;
-   private final TaskContext taskContext;
    private boolean allowSubmission;
 
    public TaskManagerImpl(ExecutionManager executionManager) {
       this.executionManager = executionManager;
-      this.taskContext = new TaskContextImpl(this);
 
       pollingTasks = new LinkedList<ManagedTask>();
       allowSubmission = true;
@@ -61,7 +55,7 @@ public class TaskManagerImpl implements TaskManager {
       // Destroy the tasks
       for (ManagedTask managedTask : pollingTasks) {
          try {
-            managedTask.destroy(taskContext);
+            managedTask.destroy();
          } catch (Exception ex) {
             LOG.error("Failed to destroy task: " + managedTask.id().toString() + ". Reason: " + ex.getMessage(), ex);
          }
@@ -97,7 +91,7 @@ public class TaskManagerImpl implements TaskManager {
 
       for (ManagedTask managedTask : destroyableTasks) {
          try {
-            managedTask.destroy(taskContext);
+            managedTask.destroy();
          } catch (Exception ex) {
             LOG.error("Failed to destroy task: " + managedTask.id().toString() + ". Reason: " + ex.getMessage(), ex);
          }
@@ -144,14 +138,13 @@ public class TaskManagerImpl implements TaskManager {
    }
 
    @Override
-   public Task follow(InstanceContext<AtomSource> source, TimeValue pollingInterval) throws InitializationException {
+   public Task follow(InstanceContext<AtomSource> source, TimeValue pollingInterval) {
       final ListenerManager listenerManager = new ListenerManagerImpl();
 
       final UUID taskId = UUID.randomUUID();
-      final Task task = new TaskImpl(taskId, listenerManager, taskContext, pollingInterval);
-      final ManagedTaskImpl managedTask = new ManagedTaskImpl(task, listenerManager, pollingInterval, executionManager, source);
+      final Task task = new TaskImpl(taskId, listenerManager, pollingInterval);
 
-      managedTask.init(taskContext);
+      final ManagedTaskImpl managedTask = new ManagedTaskImpl(task, listenerManager, pollingInterval, executionManager, source);
       addTask(managedTask);
 
       return task;

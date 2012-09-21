@@ -2,7 +2,6 @@ package org.atomnuke.task;
 
 import org.atomnuke.context.InstanceContext;
 import org.atomnuke.source.AtomSource;
-import org.atomnuke.task.lifecycle.InitializationException;
 import org.atomnuke.util.TimeValue;
 
 /**
@@ -14,7 +13,7 @@ import org.atomnuke.util.TimeValue;
  * @author zinic
  */
 public interface Tasker {
-   
+
    /**
     * Follows an AtomSource at a defined polling rate. The tasker requires that
     * an InstanceContext be give for each AtomSource to allow for the
@@ -24,5 +23,5 @@ public interface Tasker {
     * @param pollingInterval the polling interval of this source.
     * @return a new polling task instance.
     */
-   Task follow(InstanceContext<AtomSource> source, TimeValue pollingInterval) throws InitializationException;
+   Task follow(InstanceContext<AtomSource> source, TimeValue pollingInterval);
 }

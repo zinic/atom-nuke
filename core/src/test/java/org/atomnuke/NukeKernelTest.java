@@ -44,7 +44,7 @@ public class NukeKernelTest {
          }
 
          @Override
-         public void destroy(TaskContext tc) throws DestructionException {
+         public void destroy() throws DestructionException {
          }
       };
 
@@ -69,7 +69,7 @@ public class NukeKernelTest {
          }
 
          @Override
-         public void destroy(TaskContext tc) throws DestructionException {
+         public void destroy() throws DestructionException {
          }
       };
 

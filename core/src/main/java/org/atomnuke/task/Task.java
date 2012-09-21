@@ -45,7 +45,7 @@ public interface Task {
     * @param listener
     * @return the cancellation remote for the newly registered listener.
     */
-   CancellationRemote addListener(AtomListener listener) throws InitializationException;
+   CancellationRemote addListener(AtomListener listener);
 
    /**
     * Adds an AtomListener to this task. The tasker requires that an
@@ -58,5 +58,5 @@ public interface Task {
     * @param listener
     * @return the cancellation remote for the newly registered listener.
     */
-   CancellationRemote addListener(InstanceContext<? extends AtomListener> listener) throws InitializationException;
+   CancellationRemote addListener(InstanceContext<? extends AtomListener> listener);
 }

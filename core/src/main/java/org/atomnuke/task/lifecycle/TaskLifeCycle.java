@@ -26,5 +26,5 @@ public interface TaskLifeCycle {
     */
    void init(TaskContext tc) throws InitializationException;
 
-   void destroy(TaskContext tc) throws DestructionException;
+   void destroy() throws DestructionException;
 }

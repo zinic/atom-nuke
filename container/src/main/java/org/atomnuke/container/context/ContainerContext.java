@@ -203,12 +203,8 @@ public class ContainerContext {
          throw new ConfigurationException("Unable to locate listener or realy, " + binding.getReceiver() + ".");
       }
 
-      try {
-         cancellationRemotes.put(binding.getReceiver(), source.addListener(listenerCtx));
-         bindings.put(binding.getId(), binding);
-      } catch (InitializationException ie) {
-         LOG.error("Failed to initialize listener, " + binding.getReceiver() + ". Reason: " + ie.getMessage(), ie);
-      }
+      cancellationRemotes.put(binding.getReceiver(), source.addListener(listenerCtx));
+      bindings.put(binding.getId(), binding);
    }
 
    private void bind(EventletRelay source, Binding binding) throws ConfigurationException {
@@ -218,11 +214,7 @@ public class ContainerContext {
          throw new ConfigurationException("Unable to locate eventlet, " + binding.getReceiver() + ".");
       }
 
-      try {
-         cancellationRemotes.put(binding.getReceiver(), source.enlistHandlerContext(eventletCtx));
-         bindings.put(binding.getId(), binding);
-      } catch (InitializationException ie) {
-         LOG.error("Failed to initialize listener, " + binding.getReceiver() + ". Reason: " + ie.getMessage(), ie);
-      }
+      cancellationRemotes.put(binding.getReceiver(), source.enlistHandlerContext(eventletCtx));
+      bindings.put(binding.getId(), binding);
    }
 }

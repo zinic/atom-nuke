@@ -1,5 +1,6 @@
 package org.atomnuke.task.context;
 
+import java.util.Map;
 import org.atomnuke.task.Tasker;
 
 /**
@@ -8,5 +9,15 @@ import org.atomnuke.task.Tasker;
  */
 public interface TaskContext {
 
+   /**
+    *
+    * @return
+    */
    Tasker submitter();
+
+   /**
+    * 
+    * @return
+    */
+   Map<String, String> instanceParameters();
 }

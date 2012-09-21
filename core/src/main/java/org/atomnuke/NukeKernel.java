@@ -37,7 +37,6 @@ import org.slf4j.LoggerFactory;
 public class NukeKernel implements Nuke {
 
    private static final Logger LOG = LoggerFactory.getLogger(NukeKernel.class);
-
    private static final ThreadFactory DEFAULT_THREAD_FACTORY = new ThreadFactory() {
       @Override
       public Thread newThread(Runnable r) {
@@ -46,10 +45,8 @@ public class NukeKernel implements Nuke {
    };
 
    private static final long MAX_WAIT_TIME_FOR_SHUTDOWN = 15000;
-
    private static final int NUM_PROCESSORS = Runtime.getRuntime().availableProcessors(), MAX_THREADS = NUM_PROCESSORS * 2;
    private static final int MAX_QUEUE_SIZE = 256000;
-
    private static final AtomicLong TID = new AtomicLong(0);
 
    private final CancellationRemote kernelCancellationRemote;
@@ -92,17 +89,35 @@ public class NukeKernel implements Nuke {
       kernelShutdownHook = new NukeKernelShutdownHook();
    }
 
+   /**
+    * Initializes a new Nuke kernel.
+    *
+    * @param corePoolSize sets the number of threads that the execution pool
+    * will retain during normal operation.
+    * @param maxPoolsize sets the maximum number of threads that the execution
+    * pool may spawn.
+    */
+   public NukeKernel(ExecutionManager executionManager, TaskManager taskManager) {
+      this.taskManager = taskManager;
+
+      kernelCancellationRemote = new AtomicCancellationRemote();
+      logic = new KernelDelegate(kernelCancellationRemote, executionManager, taskManager);
+      controlThread = new Thread(logic, "nuke-kernel-" + TID.incrementAndGet());
+
+      kernelShutdownHook = new NukeKernelShutdownHook();
+   }
+
    public KernelShutdownHook shutdownHook() {
       return kernelShutdownHook;
    }
 
    @Override
-   public Task follow(AtomSource source, TimeValue pollingInterval) throws InitializationException {
+   public Task follow(AtomSource source, TimeValue pollingInterval) {
       return follow(new SimpleInstanceContext<AtomSource>(source), pollingInterval);
    }
 
    @Override
-   public Task follow(InstanceContext<AtomSource> source, TimeValue pollingInterval) throws InitializationException {
+   public Task follow(InstanceContext<AtomSource> source, TimeValue pollingInterval) {
       return taskManager.follow(source, pollingInterval);
    }
 

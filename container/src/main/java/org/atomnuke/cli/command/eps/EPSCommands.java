@@ -12,7 +12,7 @@ import org.atomnuke.util.cli.command.AbstractCommandList;
 public class EPSCommands extends AbstractCommandList {
 
    public EPSCommands(CliConfigurationHandler configurationHandler) {
-      super(new RelayCommands(configurationHandler), new EventletCommands(configurationHandler));
+      super(configurationHandler, new RelayCommands(configurationHandler), new EventletCommands(configurationHandler));
    }
 
    @Override
