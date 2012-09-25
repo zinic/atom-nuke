@@ -6,7 +6,7 @@ import org.atomnuke.Nuke;
 import org.atomnuke.NukeKernel;
 import org.atomnuke.examples.listener.eventlet.PrintStreamEventlet;
 import org.atomnuke.examples.source.EventGenerator;
-import org.atomnuke.listener.eps.Relay;
+import org.atomnuke.listener.eps.EventletRelay;
 import org.atomnuke.task.Task;
 import org.atomnuke.util.TimeValue;
 
@@ -22,7 +22,7 @@ public class EventGeneratorMain {
 
       for (int taskId = 1; taskId <= 30; taskId++) {
          final Task task = nukeKernel.follow(new EventGenerator("Task " + taskId, true), new TimeValue(100 * taskId, TimeUnit.NANOSECONDS));
-         final Relay relay = new Relay();
+         final EventletRelay relay = new EventletRelay();
 
          relay.enlistHandler(new PrintStreamEventlet(System.out, "Task " + taskId + " - Listener 1", eventsProcessed));
          relay.enlistHandler(new PrintStreamEventlet(System.out, "Task " + taskId + " - Listener 2", eventsProcessed));

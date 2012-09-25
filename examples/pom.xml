@@ -6,7 +6,7 @@
    <parent>
       <groupId>org.atomnuke</groupId>
       <artifactId>project</artifactId>
-      <version>0.9.7.1-SNAPSHOT</version>
+      <version>0.9.8-SNAPSHOT</version>
    </parent>
 
    <groupId>org.atomnuke</groupId>
@@ -35,8 +35,9 @@
       </dependency>
 
       <dependency>
-         <groupId>org.atomnuke</groupId>
-         <artifactId>container</artifactId>
+         <groupId>org.atomnuke.container</groupId>
+         <artifactId>flask</artifactId>
+         <version>${project.version}</version>
       </dependency>
 
       <dependency>

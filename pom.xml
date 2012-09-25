@@ -5,7 +5,7 @@
 
    <groupId>org.atomnuke</groupId>
    <artifactId>project</artifactId>
-   <version>0.9.7.1-SNAPSHOT</version>
+   <version>0.9.8-SNAPSHOT</version>
 
    <packaging>pom</packaging>
 
@@ -177,6 +177,14 @@
    </dependencyManagement>
 
    <profiles>
+      <profile>
+         <id>build-examples</id>
+
+         <modules>
+            <module>examples</module>
+         </modules>
+      </profile>
+
       <profile>
          <id>runjar</id>
 

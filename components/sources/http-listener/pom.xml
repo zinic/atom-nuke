@@ -6,7 +6,7 @@
    <parent>
       <groupId>org.atomnuke.components</groupId>
       <artifactId>components</artifactId>
-      <version>0.9.7.1-SNAPSHOT</version>
+      <version>0.9.8-SNAPSHOT</version>
 
       <relativePath>./../../</relativePath>
    </parent>

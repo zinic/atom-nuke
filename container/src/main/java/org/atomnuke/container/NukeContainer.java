@@ -53,9 +53,12 @@ public class NukeContainer {
          return new Thread(r, "nuke-worker-" + TID.incrementAndGet());
       }
    };
+
    private static final AtomicLong TID = new AtomicLong(0);
+
    private static final int NUM_PROCESSORS = Runtime.getRuntime().availableProcessors(), MAX_THREADS = NUM_PROCESSORS * 2;
    private static final int MAX_QUEUE_SIZE = 256000;
+
    private final ServiceManager serviceManager;
    private TaskManager taskManager;
    private NukeKernel nukeInstance;

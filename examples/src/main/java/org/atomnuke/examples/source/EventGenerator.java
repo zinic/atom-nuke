@@ -51,7 +51,7 @@ public class EventGenerator implements AtomSource {
    }
 
    @Override
-   public void destroy(TaskContext tc) throws DestructionException {
+   public void destroy() throws DestructionException {
    }
 
    private Entry buildEntry(String id) {

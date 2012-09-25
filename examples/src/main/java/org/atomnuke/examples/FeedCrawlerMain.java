@@ -78,7 +78,7 @@ public class FeedCrawlerMain {
          }
 
          @Override
-         public void destroy(TaskContext tc) throws DestructionException {
+         public void destroy() throws DestructionException {
             System.out.println("Example eventlet destroyed.");
          }
       });

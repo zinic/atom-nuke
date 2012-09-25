@@ -49,7 +49,7 @@ public class FeedFileWriterHandler implements AtomEventlet {
    }
 
    @Override
-   public void destroy(TaskContext tc) throws DestructionException {
+   public void destroy() throws DestructionException {
       try {
          fileOutput.flush();
          fileOutput.close();

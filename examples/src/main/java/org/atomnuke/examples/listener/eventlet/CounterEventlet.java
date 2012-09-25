@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
 public class CounterEventlet implements AtomEventlet {
 
    private static final Logger LOG = LoggerFactory.getLogger(CounterEventlet.class);
-   
+
    protected final AtomicLong entryEvents;
    private boolean log;
 
@@ -35,7 +35,7 @@ public class CounterEventlet implements AtomEventlet {
    }
 
    @Override
-   public void destroy(TaskContext tc) throws DestructionException {
+   public void destroy() throws DestructionException {
       if (log) {
          LOG.info("Processed " + entryEvents.toString() + " events.");
       }
@@ -44,7 +44,7 @@ public class CounterEventlet implements AtomEventlet {
    @Override
    public void entry(Entry entry) throws AtomEventletException {
       final long events = entryEvents.incrementAndGet();
-      
+
       if (log && events % 1000 == 0) {
          LOG.info("Processed " + events + " events.");
       }

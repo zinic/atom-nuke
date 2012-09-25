@@ -32,7 +32,7 @@ public class PrintStreamEventlet extends CounterEventlet {
    }
 
    @Override
-   public void destroy(TaskContext tc) throws DestructionException {
+   public void destroy() throws DestructionException {
       out.println("PrintStreamOutputListener(" + toString() + ") destroyed.");
    }
 
