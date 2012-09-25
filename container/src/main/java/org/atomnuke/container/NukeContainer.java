@@ -2,6 +2,7 @@ package org.atomnuke.container;
 
 import java.io.File;
 import java.util.Collections;
+import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -32,6 +33,10 @@ import org.atomnuke.util.config.update.ConfigurationContext;
 import org.atomnuke.util.config.update.ConfigurationUpdateManager;
 import org.atomnuke.container.service.config.ConfigurationService;
 import org.atomnuke.service.context.ServiceContextImpl;
+import org.atomnuke.task.context.TaskContext;
+import org.atomnuke.task.context.TaskContextImpl;
+import org.atomnuke.task.lifecycle.InitializationException;
+import org.atomnuke.task.lifecycle.TaskLifeCycle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,27 +47,34 @@ import org.slf4j.LoggerFactory;
 public class NukeContainer {
 
    private static final Logger LOG = LoggerFactory.getLogger(NukeContainer.class);
-
    private static final ThreadFactory DEFAULT_THREAD_FACTORY = new ThreadFactory() {
       @Override
       public Thread newThread(Runnable r) {
          return new Thread(r, "nuke-worker-" + TID.incrementAndGet());
       }
    };
-
    private static final AtomicLong TID = new AtomicLong(0);
-
    private static final int NUM_PROCESSORS = Runtime.getRuntime().availableProcessors(), MAX_THREADS = NUM_PROCESSORS * 2;
    private static final int MAX_QUEUE_SIZE = 256000;
-
    private final ServiceManager serviceManager;
+   private TaskManager taskManager;
    private NukeKernel nukeInstance;
-
    private ContextManager contextManager;
-
 
    public NukeContainer() {
       this.serviceManager = new ServiceManagerImpl();
+   }
+
+   public NukeKernel nukeInstance() {
+      return nukeInstance;
+   }
+
+   public void init(TaskLifeCycle tlc) throws InitializationException {
+      init(tlc, Collections.EMPTY_MAP);
+   }
+
+   public void init(TaskLifeCycle tlc, Map<String, String> params) throws InitializationException {
+      tlc.init(new TaskContextImpl(params, serviceManager, taskManager));
    }
 
    public void start() {
@@ -89,8 +101,8 @@ public class NukeContainer {
       final BlockingQueue<Runnable> runQueue = new LinkedBlockingQueue<Runnable>();
       final ExecutorService execService = new NukeThreadPoolExecutor(NUM_PROCESSORS, MAX_THREADS, 30, TimeUnit.SECONDS, runQueue, DEFAULT_THREAD_FACTORY, new NukeRejectionHandler());
       final ExecutionManager executionManager = new ExecutionManagerImpl(MAX_QUEUE_SIZE, runQueue, execService);
-      final TaskManager taskManager = new TaskManagerImpl(executionManager);
 
+      taskManager = new TaskManagerImpl(executionManager);
       nukeInstance = new NukeKernel(executionManager, taskManager);
 
       LOG.debug("Building context manager.");
@@ -99,29 +111,25 @@ public class NukeContainer {
 
       LOG.debug("Buidling services.");
 
-      final ConfigurationUpdateManager cfgUpdateService = serviceManager.findService(ConfigurationUpdateManager.class);
-
-      if (cfgUpdateService != null) {
-         try {
-            final ConfigurationManager<ServerConfiguration> cfgManager = new ServerConfigurationManager(new File(NukeEnv.NUKE_HOME, NukeEnv.CONFIG_NAME));
-            final ConfigurationContext<ServerConfiguration> configurationContext = cfgUpdateService.register("org.atomnuke.container.cfg", cfgManager);
-
-            configurationContext.addListener(contextManager);
-         } catch (JAXBException jaxbe) {
-            LOG.error(jaxbe.getMessage(), jaxbe);
-            throw new ContainerInitException(jaxbe);
-         } catch (ConfigurationException ce) {
-            LOG.error(ce.getMessage(), ce);
-            throw new ContainerInitException(ce);
-         }
-      }
-
-      LOG.debug("Services init.");
-
       final ConfigurationService cfgService = new ConfigurationService();
       cfgService.init(new ServiceContextImpl(Collections.EMPTY_MAP, serviceManager));
 
       serviceManager.register(cfgService);
+
+      LOG.debug("Registering configuration listener.");
+
+      try {
+         final ConfigurationManager<ServerConfiguration> cfgManager = new ServerConfigurationManager(new File(NukeEnv.NUKE_HOME, NukeEnv.CONFIG_NAME));
+         final ConfigurationContext<ServerConfiguration> configurationContext = ((ConfigurationUpdateManager) cfgService.instance()).register("org.atomnuke.container.cfg", cfgManager);
+
+         configurationContext.addListener(contextManager);
+      } catch (JAXBException jaxbe) {
+         LOG.error(jaxbe.getMessage(), jaxbe);
+         throw new ContainerInitException(jaxbe);
+      } catch (ConfigurationException ce) {
+         LOG.error(ce.getMessage(), ce);
+         throw new ContainerInitException(ce);
+      }
 
       LOG.debug("Kernel thread start.");
 
