@@ -1,12 +1,12 @@
 package org.atomnuke.bindings.context;
 
-import org.atomnuke.context.AbstractInstanceContext;
+import org.atomnuke.plugin.AbstractInstanceEnvironment;
 
 /**
  *
  * @author zinic
  */
-public class ClassLoaderContext<T> extends AbstractInstanceContext<T> {
+public class ClassLoaderContext<T> extends AbstractInstanceEnvironment<T> {
 
    private final ThreadLocal<ClassLoader> previousContext;
    private final ClassLoader classLoader;

@@ -2,14 +2,14 @@ package org.atomnuke.bindings.ear;
 
 import com.rackspace.papi.commons.util.classloader.ear.EarClassLoaderContext;
 import java.io.File;
-import org.atomnuke.bindings.BindingContext;
+import org.atomnuke.bindings.context.BindingContext;
 import org.atomnuke.bindings.BindingInstantiationException;
 import org.atomnuke.bindings.context.ClassLoaderContext;
 import org.atomnuke.bindings.lang.LanguageDescriptor;
 import org.atomnuke.bindings.lang.LanguageDescriptorImpl;
 import org.atomnuke.bindings.loader.Loader;
 import org.atomnuke.config.model.LanguageType;
-import org.atomnuke.context.InstanceContext;
+import org.atomnuke.plugin.InstanceEnvironment;
 
 /**
  *
@@ -18,7 +18,7 @@ import org.atomnuke.context.InstanceContext;
 public class EarBindingContext implements BindingContext {
 
    private static final LanguageDescriptor LANGUAGE_DESCRIPTOR = new LanguageDescriptorImpl(LanguageType.JAVA, ".ear");
-   
+
    private final EarLoader loader;
 
    public EarBindingContext(File deploymentDir) {
@@ -53,7 +53,7 @@ public class EarBindingContext implements BindingContext {
    }
 
    @Override
-   public <T> InstanceContext<T> instantiate(Class<T> interfaceType, String href) throws BindingInstantiationException {
+   public <T> InstanceEnvironment<T> instantiate(Class<T> interfaceType, String href) throws BindingInstantiationException {
       final EarClassLoaderContext ctx = findCtxFor(href);
 
       if (ctx == null) {

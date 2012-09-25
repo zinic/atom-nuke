@@ -1,16 +1,8 @@
-package org.atomnuke.util.config.update.service;
+package org.atomnuke.container.service.config;
 
-import java.io.File;
-import javax.xml.bind.JAXBException;
-import org.atomnuke.NukeEnv;
-import org.atomnuke.config.model.ServerConfiguration;
-import org.atomnuke.config.server.ServerConfigurationManager;
-import org.atomnuke.container.ContainerInitException;
-import org.atomnuke.container.service.Service;
+import org.atomnuke.service.Service;
 import org.atomnuke.container.service.annotation.NukeService;
-import org.atomnuke.util.config.ConfigurationException;
-import org.atomnuke.util.config.io.ConfigurationManager;
-import org.atomnuke.util.config.update.ConfigurationContext;
+import org.atomnuke.service.context.ServiceContext;
 import org.atomnuke.util.config.update.ConfigurationUpdateManager;
 import org.atomnuke.util.config.update.ConfigurationUpdateManagerImpl;
 import org.atomnuke.util.config.update.ConfigurationUpdateRunnable;
@@ -40,7 +32,7 @@ public class ConfigurationService implements Service {
    }
 
    @Override
-   public void init() {
+   public void init(ServiceContext sc) {
       cfgPoller.start();
    }
 

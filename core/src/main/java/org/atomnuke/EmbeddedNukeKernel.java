@@ -1,11 +1,12 @@
 package org.atomnuke;
 
 import java.util.concurrent.atomic.AtomicLong;
-import org.atomnuke.context.InstanceContext;
-import org.atomnuke.context.SimpleInstanceContext;
+import org.atomnuke.plugin.InstanceEnvironment;
+import org.atomnuke.plugin.local.LocalInstanceEnvironment;
 import org.atomnuke.kernel.KernelDelegate;
-import org.atomnuke.kernel.KernelShutdownHook;
-import org.atomnuke.kernel.NukeKernelShutdownHook;
+import org.atomnuke.kernel.resource.Destroyable;
+import org.atomnuke.kernel.shutdown.ShutdownHook;
+import org.atomnuke.kernel.shutdown.KernelShutdownHook;
 import org.atomnuke.source.AtomSource;
 import org.atomnuke.task.Task;
 import org.atomnuke.task.manager.TaskManager;
@@ -28,7 +29,7 @@ public class EmbeddedNukeKernel implements Nuke {
    private static final AtomicLong TID = new AtomicLong(0);
 
    private final CancellationRemote kernelCancellationRemote;
-   private final KernelShutdownHook kernelShutdownHook;
+   private final ShutdownHook kernelShutdownHook;
    private final TaskManager taskManager;
    private final KernelDelegate logic;
    private final Thread controlThread;
@@ -48,20 +49,20 @@ public class EmbeddedNukeKernel implements Nuke {
       logic = new KernelDelegate(kernelCancellationRemote, executionManager, taskManager);
       controlThread = new Thread(logic, "nuke-kernel-" + TID.incrementAndGet());
 
-      kernelShutdownHook = new NukeKernelShutdownHook();
+      kernelShutdownHook = new KernelShutdownHook();
    }
 
-   public KernelShutdownHook shutdownHook() {
+   public ShutdownHook shutdownHook() {
       return kernelShutdownHook;
    }
 
    @Override
    public Task follow(AtomSource source, TimeValue pollingInterval) {
-      return follow(new SimpleInstanceContext<AtomSource>(source), pollingInterval);
+      return follow(new LocalInstanceEnvironment<AtomSource>(source), pollingInterval);
    }
 
    @Override
-   public Task follow(InstanceContext<AtomSource> source, TimeValue pollingInterval) {
+   public Task follow(InstanceEnvironment<AtomSource> source, TimeValue pollingInterval) {
       return taskManager.follow(source, pollingInterval);
    }
 
@@ -71,9 +72,9 @@ public class EmbeddedNukeKernel implements Nuke {
          throw new IllegalStateException("Crawler already started or destroyed.");
       }
 
-      kernelShutdownHook.enlistShutdownHook(new Runnable() {
+      kernelShutdownHook.enlist(new Destroyable() {
          @Override
-         public void run() {
+         public void destroy() {
             taskManager.destroy();
             kernelCancellationRemote.cancel();
 

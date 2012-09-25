@@ -1,9 +1,9 @@
 package org.atomnuke.bindings.resolver;
 
 import java.util.List;
-import org.atomnuke.bindings.BindingContext;
+import org.atomnuke.bindings.context.BindingContext;
 import org.atomnuke.bindings.BindingInstantiationException;
-import org.atomnuke.context.InstanceContext;
+import org.atomnuke.plugin.InstanceEnvironment;
 import org.atomnuke.config.model.LanguageType;
 import org.atomnuke.listener.AtomListener;
 import org.atomnuke.listener.eps.eventlet.AtomEventlet;
@@ -17,9 +17,9 @@ public interface BindingResolver {
 
    List<BindingContext> registeredBindingContexts();
 
-   InstanceContext<AtomEventlet> resolveEventlet(LanguageType type, String ref) throws BindingInstantiationException;
+   InstanceEnvironment<AtomEventlet> resolveEventlet(LanguageType type, String ref) throws BindingInstantiationException;
 
-   InstanceContext<AtomListener> resolveListener(LanguageType type, String ref) throws BindingInstantiationException;
+   InstanceEnvironment<AtomListener> resolveListener(LanguageType type, String ref) throws BindingInstantiationException;
 
-   InstanceContext<AtomSource> resolveSource(LanguageType type, String ref) throws BindingInstantiationException;
+   InstanceEnvironment<AtomSource> resolveSource(LanguageType type, String ref) throws BindingInstantiationException;
 }

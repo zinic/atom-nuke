@@ -1,14 +1,14 @@
-package org.atomnuke.context;
+package org.atomnuke.plugin;
 
 /**
  *
  * @author zinic
  */
-public abstract class AbstractInstanceContext<T> implements InstanceContext<T> {
+public abstract class AbstractInstanceEnvironment<T> implements InstanceEnvironment<T> {
 
    private final T instance;
 
-   public AbstractInstanceContext(T instance) {
+   public AbstractInstanceEnvironment(T instance) {
       this.instance = instance;
    }
 

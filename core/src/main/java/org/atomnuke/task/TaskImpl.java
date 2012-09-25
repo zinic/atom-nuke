@@ -1,8 +1,8 @@
 package org.atomnuke.task;
 
 import java.util.UUID;
-import org.atomnuke.context.InstanceContext;
-import org.atomnuke.context.SimpleInstanceContext;
+import org.atomnuke.plugin.InstanceEnvironment;
+import org.atomnuke.plugin.local.LocalInstanceEnvironment;
 import org.atomnuke.listener.AtomListener;
 import org.atomnuke.listener.manager.ListenerManager;
 import org.atomnuke.util.TimeValue;
@@ -45,11 +45,11 @@ public class TaskImpl implements Task {
 
    @Override
    public CancellationRemote addListener(AtomListener listener) {
-      return addListener(new SimpleInstanceContext<AtomListener>(listener));
+      return addListener(new LocalInstanceEnvironment<AtomListener>(listener));
    }
 
    @Override
-   public CancellationRemote addListener(InstanceContext<? extends AtomListener> listenerContext) {
+   public CancellationRemote addListener(InstanceEnvironment<? extends AtomListener> listenerContext) {
       return listenerManager.addListener(listenerContext);
    }
 }

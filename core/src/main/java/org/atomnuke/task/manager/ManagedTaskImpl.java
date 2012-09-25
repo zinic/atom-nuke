@@ -1,7 +1,7 @@
 package org.atomnuke.task.manager;
 
 import java.util.UUID;
-import org.atomnuke.context.InstanceContext;
+import org.atomnuke.plugin.InstanceEnvironment;
 import org.atomnuke.listener.manager.ManagedListener;
 import org.atomnuke.listener.driver.AtomListenerDriver;
 import org.atomnuke.listener.manager.ListenerManager;
@@ -24,13 +24,13 @@ import org.slf4j.LoggerFactory;
 public class ManagedTaskImpl implements ManagedTask {
 
    private static final Logger LOG = LoggerFactory.getLogger(ManagedTaskImpl.class);
-   private final InstanceContext<AtomSource> atomSourceContext;
+   private final InstanceEnvironment<AtomSource> atomSourceContext;
    private final ExecutionManager executorService;
    private final ListenerManager listenerManager;
    private final Task task;
    private TimeValue timestamp;
 
-   public ManagedTaskImpl(Task task, ListenerManager listenerManager, TimeValue interval, ExecutionManager executorService, InstanceContext<AtomSource> atomSourceContext) {
+   public ManagedTaskImpl(Task task, ListenerManager listenerManager, TimeValue interval, ExecutionManager executorService, InstanceEnvironment<AtomSource> atomSourceContext) {
       this.task = task;
 
       this.listenerManager = listenerManager;

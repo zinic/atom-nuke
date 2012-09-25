@@ -1,6 +1,7 @@
-package org.atomnuke.kernel;
+package org.atomnuke.kernel.shutdown;
 
 import java.util.Stack;
+import org.atomnuke.kernel.resource.Destroyable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -8,14 +9,15 @@ import org.slf4j.LoggerFactory;
  *
  * @author zinic
  */
-public class NukeKernelShutdownHook implements Runnable, KernelShutdownHook {
+public class KernelShutdownHook implements Runnable, ShutdownHook {
 
-   private static final Logger LOG = LoggerFactory.getLogger(NukeKernelShutdownHook.class);
-   private final Stack<Runnable> childHooks;
+   private static final Logger LOG = LoggerFactory.getLogger(KernelShutdownHook.class);
+
+   private final Stack<Destroyable> childHooks;
    private boolean shutdown;
 
-   public NukeKernelShutdownHook() {
-      childHooks = new Stack<Runnable>();
+   public KernelShutdownHook() {
+      childHooks = new Stack<Destroyable>();
       shutdown = false;
 
       registerWithRuntime();
@@ -26,9 +28,9 @@ public class NukeKernelShutdownHook implements Runnable, KernelShutdownHook {
    }
 
    @Override
-   public synchronized void enlistShutdownHook(Runnable r) {
+   public synchronized void enlist(Destroyable destroyable) {
       if (!shutdown) {
-         childHooks.push(r);
+         childHooks.push(destroyable);
       }
    }
 
@@ -49,12 +51,12 @@ public class NukeKernelShutdownHook implements Runnable, KernelShutdownHook {
 
    private void callHooks() {
       while (!childHooks.isEmpty()) {
-         final Runnable shutdownHook = childHooks.pop();
+         final Destroyable shutdownHook = childHooks.pop();
 
          try {
             LOG.info("Running destroy hook, " + shutdownHook + ".");
 
-            shutdownHook.run();
+            shutdownHook.destroy();
          } catch (Exception ex) {
             LOG.info("Failure occured while calling destroy hook, " + shutdownHook + ". Reason: " + ex.getMessage(), ex);
          }

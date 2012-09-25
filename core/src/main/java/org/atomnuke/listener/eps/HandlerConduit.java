@@ -3,7 +3,7 @@ package org.atomnuke.listener.eps;
 import org.atomnuke.listener.eps.eventlet.AtomEventletException;
 import org.atomnuke.atom.model.Entry;
 import org.atomnuke.atom.model.Feed;
-import org.atomnuke.context.InstanceContext;
+import org.atomnuke.plugin.InstanceEnvironment;
 import org.atomnuke.listener.eps.eventlet.AtomEventlet;
 import org.atomnuke.listener.eps.selector.Selector;
 import org.atomnuke.listener.eps.selector.SelectorResult;
@@ -21,11 +21,11 @@ public class HandlerConduit {
 
    private static final Logger LOG = LoggerFactory.getLogger(HandlerConduit.class);
 
-   private final InstanceContext<? extends AtomEventlet> eventHandler;
+   private final InstanceEnvironment<? extends AtomEventlet> eventHandler;
    private final CancellationRemote cancellationRemote;
    private final Selector selector;
 
-   public HandlerConduit(InstanceContext<? extends AtomEventlet> eventHandler, Selector selector) {
+   public HandlerConduit(InstanceEnvironment<? extends AtomEventlet> eventHandler, Selector selector) {
       this.eventHandler = eventHandler;
       this.selector = selector;
 

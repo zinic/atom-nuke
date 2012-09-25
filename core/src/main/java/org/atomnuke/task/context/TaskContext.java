@@ -1,23 +1,17 @@
 package org.atomnuke.task.context;
 
-import java.util.Map;
+import org.atomnuke.context.Context;
 import org.atomnuke.task.Tasker;
 
 /**
  *
  * @author zinic
  */
-public interface TaskContext {
+public interface TaskContext extends Context {
 
    /**
     *
     * @return
     */
    Tasker submitter();
-
-   /**
-    * 
-    * @return
-    */
-   Map<String, String> instanceParameters();
 }

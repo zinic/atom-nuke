@@ -1,8 +1,7 @@
 package org.atomnuke.container;
 
 import java.io.File;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.Collections;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -19,7 +18,8 @@ import org.atomnuke.bindings.resolver.BindingResolverImpl;
 import org.atomnuke.config.model.ServerConfiguration;
 import org.atomnuke.config.server.ServerConfigurationManager;
 import org.atomnuke.container.context.ContextManager;
-import org.atomnuke.container.service.Service;
+import org.atomnuke.service.ServiceManager;
+import org.atomnuke.service.ServiceManagerImpl;
 import org.atomnuke.kernel.NukeRejectionHandler;
 import org.atomnuke.kernel.NukeThreadPoolExecutor;
 import org.atomnuke.task.manager.TaskManager;
@@ -30,7 +30,8 @@ import org.atomnuke.util.config.ConfigurationException;
 import org.atomnuke.util.config.io.ConfigurationManager;
 import org.atomnuke.util.config.update.ConfigurationContext;
 import org.atomnuke.util.config.update.ConfigurationUpdateManager;
-import org.atomnuke.util.config.update.service.ConfigurationService;
+import org.atomnuke.container.service.config.ConfigurationService;
+import org.atomnuke.service.context.ServiceContextImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,27 +55,14 @@ public class NukeContainer {
    private static final int NUM_PROCESSORS = Runtime.getRuntime().availableProcessors(), MAX_THREADS = NUM_PROCESSORS * 2;
    private static final int MAX_QUEUE_SIZE = 256000;
 
-   private final List<Service> registeredServices;
+   private final ServiceManager serviceManager;
    private NukeKernel nukeInstance;
 
    private ContextManager contextManager;
 
 
    public NukeContainer() {
-      this.registeredServices = new LinkedList<Service>();
-
-      // Lazy svc add
-      registeredServices.add(new ConfigurationService());
-   }
-
-   private <T> T findService(Class<T> serviceInterface) {
-      for (Service service : registeredServices) {
-         if (serviceInterface.isAssignableFrom(service.instance().getClass())) {
-            return serviceInterface.cast(service.instance());
-         }
-      }
-
-      return null;
+      this.serviceManager = new ServiceManagerImpl();
    }
 
    public void start() {
@@ -107,11 +95,11 @@ public class NukeContainer {
 
       LOG.debug("Building context manager.");
 
-      contextManager = new ContextManager(bindingsResolver, nukeInstance, taskManager);
+      contextManager = new ContextManager(serviceManager, bindingsResolver, nukeInstance, taskManager);
 
       LOG.debug("Buidling services.");
 
-      final ConfigurationUpdateManager cfgUpdateService = findService(ConfigurationUpdateManager.class);
+      final ConfigurationUpdateManager cfgUpdateService = serviceManager.findService(ConfigurationUpdateManager.class);
 
       if (cfgUpdateService != null) {
          try {
@@ -130,23 +118,14 @@ public class NukeContainer {
 
       LOG.debug("Services init.");
 
-      for (Service svc : registeredServices) {
-         svc.init();
-      }
+      final ConfigurationService cfgService = new ConfigurationService();
+      cfgService.init(new ServiceContextImpl(Collections.EMPTY_MAP, serviceManager));
+
+      serviceManager.register(cfgService);
 
       LOG.debug("Kernel thread start.");
 
-      nukeInstance.shutdownHook().enlistShutdownHook(new Runnable() {
-
-         @Override
-         public void run() {
-            LOG.info("Shutting down services.");
-
-            for (Service svc : registeredServices) {
-               svc.destroy();
-            }
-         }
-      });
+      nukeInstance.shutdownHook().enlist(serviceManager);
 
       nukeInstance.start();
 

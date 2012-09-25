@@ -1,4 +1,4 @@
-package org.atomnuke.context;
+package org.atomnuke.plugin;
 
 /**
  * An instance context represents a context sandbox that surrounds a loaded
@@ -7,7 +7,7 @@ package org.atomnuke.context;
  *
  * @author zinic
  */
-public interface InstanceContext<T> {
+public interface InstanceEnvironment<T> {
 
    /**
     * Retrieves the instance this context surrounds.

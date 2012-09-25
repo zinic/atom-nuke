@@ -1,12 +1,12 @@
 package org.atomnuke.bindings.jython;
 
-import org.atomnuke.bindings.BindingContext;
+import org.atomnuke.bindings.context.BindingContext;
 import org.atomnuke.bindings.BindingInstantiationException;
 import org.atomnuke.bindings.lang.LanguageDescriptor;
 import org.atomnuke.bindings.lang.LanguageDescriptorImpl;
 import org.atomnuke.bindings.loader.Loader;
-import org.atomnuke.context.InstanceContext;
-import org.atomnuke.context.SimpleInstanceContext;
+import org.atomnuke.plugin.InstanceEnvironment;
+import org.atomnuke.plugin.local.LocalInstanceEnvironment;
 import org.atomnuke.config.model.LanguageType;
 import org.python.core.Options;
 import org.python.core.PyObject;
@@ -46,7 +46,7 @@ public class PythonInterpreterContext implements BindingContext {
    }
 
    @Override
-   public <T> InstanceContext<T> instantiate(Class<T> interfaceType, String ref) throws BindingInstantiationException {
+   public <T> InstanceEnvironment<T> instantiate(Class<T> interfaceType, String ref) throws BindingInstantiationException {
       final PyObject pyClass = pythonInterpreter.get(ref);
 
       // Create a new object reference of the Jython class store into PyObject
@@ -54,7 +54,7 @@ public class PythonInterpreterContext implements BindingContext {
 
       // Call __tojava__ method on the new object along with the interface name
       // to create the java bytecode
-      return new SimpleInstanceContext<T>((T) newObj.__tojava__(interfaceType));
+      return new LocalInstanceEnvironment<T>((T) newObj.__tojava__(interfaceType));
    }
 
    @Override

@@ -1,23 +1,20 @@
-package org.atomnuke.task.context;
+package org.atomnuke.service.context;
 
 import java.util.Map;
 import org.atomnuke.service.ServiceManager;
-import org.atomnuke.task.Tasker;
 
 /**
  *
  * @author zinic
  */
-public class TaskContextImpl implements TaskContext {
+public class ServiceContextImpl implements ServiceContext {
 
    private final Map<String, String> parameters;
    private final ServiceManager services;
-   private final Tasker submitter;
 
-   public TaskContextImpl(Map<String, String> parameters, ServiceManager services, Tasker submitter) {
+   public ServiceContextImpl(Map<String, String> parameters, ServiceManager services) {
       this.parameters = parameters;
       this.services = services;
-      this.submitter = submitter;
    }
 
    @Override
@@ -28,10 +25,5 @@ public class TaskContextImpl implements TaskContext {
    @Override
    public Map<String, String> parameters() {
       return parameters;
-   }
-
-   @Override
-   public Tasker submitter() {
-      return submitter;
    }
 }

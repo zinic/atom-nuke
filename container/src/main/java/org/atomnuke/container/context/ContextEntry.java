@@ -1,6 +1,6 @@
 package org.atomnuke.container.context;
 
-import org.atomnuke.context.InstanceContext;
+import org.atomnuke.plugin.InstanceEnvironment;
 import org.atomnuke.util.remote.CancellationRemote;
 
 /**

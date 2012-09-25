@@ -1,4 +1,4 @@
-package org.atomnuke.container.service;
+package org.atomnuke.service;
 
 /**
  *

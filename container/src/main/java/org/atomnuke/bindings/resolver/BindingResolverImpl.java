@@ -5,12 +5,12 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import org.atomnuke.NukeEnv;
-import org.atomnuke.bindings.BindingContext;
+import org.atomnuke.bindings.context.BindingContext;
 import org.atomnuke.bindings.BindingInstantiationException;
 import org.atomnuke.bindings.ear.EarBindingContext;
 import org.atomnuke.bindings.jython.PythonInterpreterContext;
 import org.atomnuke.bindings.rhinojs.RhinoInterpreterContext;
-import org.atomnuke.context.InstanceContext;
+import org.atomnuke.plugin.InstanceEnvironment;
 import org.atomnuke.config.model.LanguageType;
 import org.atomnuke.listener.AtomListener;
 import org.atomnuke.listener.eps.eventlet.AtomEventlet;
@@ -47,7 +47,7 @@ public class BindingResolverImpl implements BindingResolver {
    }
 
    @Override
-   public InstanceContext<AtomListener> resolveListener(LanguageType type, String ref) throws BindingInstantiationException {
+   public InstanceEnvironment<AtomListener> resolveListener(LanguageType type, String ref) throws BindingInstantiationException {
       for (BindingContext context : contexts) {
          if (context.language().languageType() == type && context.hasRef(ref)) {
             return context.instantiate(AtomListener.class, ref);
@@ -58,7 +58,7 @@ public class BindingResolverImpl implements BindingResolver {
    }
 
    @Override
-   public InstanceContext<AtomSource> resolveSource(LanguageType type, String ref) throws BindingInstantiationException {
+   public InstanceEnvironment<AtomSource> resolveSource(LanguageType type, String ref) throws BindingInstantiationException {
       for (BindingContext context : contexts) {
          if (context.language().languageType() == type && context.hasRef(ref)) {
             return context.instantiate(AtomSource.class, ref);
@@ -69,7 +69,7 @@ public class BindingResolverImpl implements BindingResolver {
    }
 
    @Override
-   public InstanceContext<AtomEventlet> resolveEventlet(LanguageType type, String ref) throws BindingInstantiationException {
+   public InstanceEnvironment<AtomEventlet> resolveEventlet(LanguageType type, String ref) throws BindingInstantiationException {
       for (BindingContext context : contexts) {
          if (context.language().languageType() == type && context.hasRef(ref)) {
             return context.instantiate(AtomEventlet.class, ref);

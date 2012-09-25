@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
-import org.atomnuke.context.InstanceContext;
+import org.atomnuke.plugin.InstanceEnvironment;
 import org.atomnuke.listener.manager.ListenerManager;
 import org.atomnuke.listener.manager.ListenerManagerImpl;
 import org.atomnuke.source.AtomSource;
@@ -138,7 +138,7 @@ public class TaskManagerImpl implements TaskManager {
    }
 
    @Override
-   public Task follow(InstanceContext<AtomSource> source, TimeValue pollingInterval) {
+   public Task follow(InstanceEnvironment<AtomSource> source, TimeValue pollingInterval) {
       final ListenerManager listenerManager = new ListenerManagerImpl();
 
       final UUID taskId = UUID.randomUUID();

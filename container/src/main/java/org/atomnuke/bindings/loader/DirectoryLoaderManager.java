@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
-import org.atomnuke.bindings.BindingContext;
+import org.atomnuke.bindings.context.BindingContext;
 import org.atomnuke.bindings.BindingLoaderException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
 public class DirectoryLoaderManager {
 
    private static final Logger LOG = LoggerFactory.getLogger(DirectoryLoaderManager.class);
-   
+
    private final List<BindingContext> bindingContexts;
    private final File libraryDirectory;
 
@@ -31,7 +31,7 @@ public class DirectoryLoaderManager {
             throw new BindingLoaderException("Unable to make library directory: " + libraryDirectory.getAbsolutePath());
          }
       }
-      
+
       if (!libraryDirectory.isDirectory()) {
          throw new BindingLoaderException(libraryDirectory.getAbsolutePath() + " is not a valid library directory.");
       }

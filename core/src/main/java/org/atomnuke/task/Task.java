@@ -1,7 +1,7 @@
 package org.atomnuke.task;
 
 import java.util.UUID;
-import org.atomnuke.context.InstanceContext;
+import org.atomnuke.plugin.InstanceEnvironment;
 import org.atomnuke.listener.AtomListener;
 import org.atomnuke.task.lifecycle.InitializationException;
 import org.atomnuke.util.TimeValue;
@@ -58,5 +58,5 @@ public interface Task {
     * @param listener
     * @return the cancellation remote for the newly registered listener.
     */
-   CancellationRemote addListener(InstanceContext<? extends AtomListener> listener);
+   CancellationRemote addListener(InstanceEnvironment<? extends AtomListener> listener);
 }

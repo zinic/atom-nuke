@@ -41,7 +41,7 @@ public class IdEchoSink implements AtomListener {
 
    @Override
    public void init(TaskContext tc) throws InitializationException {
-      for (Map.Entry<String, String> param : tc.instanceParameters().entrySet()) {
+      for (Map.Entry<String, String> param : tc.parameters().entrySet()) {
          LOG.info("Sink init for: " + toString() + ". Parameter, \"" + param.getKey() + "\" has value: " + param.getValue());
       }
    }

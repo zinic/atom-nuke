@@ -5,6 +5,7 @@ import org.atomnuke.bindings.resolver.BindingResolver;
 import org.atomnuke.config.model.ServerConfiguration;
 import org.atomnuke.config.server.ServerConfigurationHandler;
 import org.atomnuke.container.ConfigurationProcessor;
+import org.atomnuke.service.ServiceManager;
 import org.atomnuke.task.Tasker;
 import org.atomnuke.util.config.ConfigurationException;
 import org.atomnuke.util.config.update.listener.ConfigurationListener;
@@ -17,10 +18,12 @@ public class ContextManager implements ConfigurationListener<ServerConfiguration
 
    private final ContainerContext containerContext;
    private final BindingResolver bindingResolver;
+   private final ServiceManager services;
    private final Nuke nukeReference;
    private final Tasker tasker;
 
-   public ContextManager(BindingResolver bindingResolver, Nuke nukeReference, Tasker tasker) {
+   public ContextManager(ServiceManager services, BindingResolver bindingResolver, Nuke nukeReference, Tasker tasker) {
+      this.services = services;
       this.tasker = tasker;
       this.bindingResolver = bindingResolver;
       this.nukeReference = nukeReference;
@@ -30,6 +33,6 @@ public class ContextManager implements ConfigurationListener<ServerConfiguration
 
    @Override
    public void updated(ServerConfiguration configuration) throws ConfigurationException {
-      new ConfigurationProcessor(tasker, containerContext, new ServerConfigurationHandler(configuration), bindingResolver).merge(nukeReference);
+      new ConfigurationProcessor(services, tasker, containerContext, new ServerConfigurationHandler(configuration), bindingResolver).merge(nukeReference);
    }
 }

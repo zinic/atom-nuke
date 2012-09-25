@@ -3,13 +3,13 @@ package org.atomnuke.bindings.rhinojs;
 import javax.script.Invocable;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
-import org.atomnuke.bindings.BindingContext;
+import org.atomnuke.bindings.context.BindingContext;
 import org.atomnuke.bindings.BindingInstantiationException;
 import org.atomnuke.bindings.lang.LanguageDescriptor;
 import org.atomnuke.bindings.lang.LanguageDescriptorImpl;
 import org.atomnuke.bindings.loader.Loader;
 import org.atomnuke.config.model.LanguageType;
-import org.atomnuke.context.InstanceContext;
+import org.atomnuke.plugin.InstanceEnvironment;
 
 /**
  *
@@ -61,7 +61,7 @@ public class RhinoInterpreterContext implements BindingContext {
    }
 
    @Override
-   public <T> InstanceContext<T> instantiate(Class<T> interfaceType, String href) throws BindingInstantiationException {
+   public <T> InstanceEnvironment<T> instantiate(Class<T> interfaceType, String href) throws BindingInstantiationException {
       try {
          final Invocable inv = (Invocable) jsEngine;
          final Object builderFunctionRef = jsEngine.get(href);

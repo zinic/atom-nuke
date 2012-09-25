@@ -2,7 +2,7 @@ package org.atomnuke.listener.driver;
 
 import org.atomnuke.atom.model.Entry;
 import org.atomnuke.atom.model.Feed;
-import org.atomnuke.context.InstanceContext;
+import org.atomnuke.plugin.InstanceEnvironment;
 import org.atomnuke.listener.AtomListener;
 import org.atomnuke.listener.AtomListenerResult;
 import org.atomnuke.listener.ListenerResult;
@@ -49,7 +49,7 @@ public class AtomListenerDriver implements RegisteredListenerDriver {
       }
    }
 
-   private ListenerResult drive(InstanceContext<? extends AtomListener> listenerContext) {
+   private ListenerResult drive(InstanceEnvironment<? extends AtomListener> listenerContext) {
       listenerContext.stepInto();
 
       try {
