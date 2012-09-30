@@ -23,6 +23,7 @@ import org.atomnuke.atom.io.AtomReadException;
 import org.atomnuke.atom.io.AtomReaderFactory;
 import org.atomnuke.atom.io.ReaderResult;
 import org.atomnuke.source.result.AtomSourceResultImpl;
+import org.atomnuke.source.result.ResultType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -86,7 +87,7 @@ public class FeedCrawlerSource implements AtomSource {
       try {
          final AtomSourceResult result = read(location);
 
-         if (result.isFeedPage()) {
+         if (result.type() == ResultType.FEED) {
             for (Link pageLink : result.feed().links()) {
                if (pageLink.rel().equalsIgnoreCase("previous")) {
                   location = pageLink.href();

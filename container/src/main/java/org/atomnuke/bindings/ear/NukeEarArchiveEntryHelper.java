@@ -8,7 +8,7 @@ import com.rackspace.papi.commons.config.resource.impl.ByteArrayConfigurationRes
 import com.rackspace.papi.commons.util.StringUtilities;
 import com.rackspace.papi.commons.util.classloader.ResourceDescriptor;
 import com.rackspace.papi.commons.util.classloader.digest.Sha1Digester;
-import com.rackspace.papi.commons.util.classloader.ear.EarArchiveEntryListener;
+import com.rackspace.papi.commons.util.classloader.ear.EarArchiveEntryHelper;
 import com.rackspace.papi.commons.util.classloader.ear.EarClassLoaderContext;
 import com.rackspace.papi.commons.util.classloader.ear.EarProcessingException;
 import com.rackspace.papi.commons.util.classloader.ear.SimpleEarClassLoaderContext;
@@ -26,9 +26,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.jar.Manifest;
 
-public class NukeEarArchiveEntryListener implements EarArchiveEntryListener {
+public class NukeEarArchiveEntryHelper implements EarArchiveEntryHelper {
 
-   private static final Logger LOG = LoggerFactory.getLogger(NukeEarArchiveEntryListener.class);
+   private static final Logger LOG = LoggerFactory.getLogger(NukeEarArchiveEntryHelper.class);
    private static final List<String> DEFAULT_ACCEPTED_RESOURCE_EXTENSIONS = Arrays.asList("xml", "properties");
    private static final ConfigurationParser<ApplicationType> APPLICATION_XML_PARSER;
 
@@ -44,15 +44,15 @@ public class NukeEarArchiveEntryListener implements EarArchiveEntryListener {
 
    private final SimpleEarClassLoaderContext context;
 
-   public NukeEarArchiveEntryListener(File deploymentRoot) {
+   public NukeEarArchiveEntryHelper(File deploymentRoot) {
       this(new SimpleEarClassLoaderContext(deploymentRoot));
    }
 
-   public NukeEarArchiveEntryListener(ClassLoader absoluteParent, File deploymentRoot) {
+   public NukeEarArchiveEntryHelper(ClassLoader absoluteParent, File deploymentRoot) {
       this(new SimpleEarClassLoaderContext(absoluteParent, deploymentRoot));
    }
 
-   private NukeEarArchiveEntryListener(SimpleEarClassLoaderContext context) {
+   private NukeEarArchiveEntryHelper(SimpleEarClassLoaderContext context) {
       this.context = context;
    }
 

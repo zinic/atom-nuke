@@ -35,7 +35,7 @@ public class EarLoader implements Loader {
    @Override
    public void load(InputStream in) throws BindingLoaderException {
       try {
-         final EarClassLoaderContext ctx = earUnpacker.read(new NukeEarArchiveEntryListener(Thread.currentThread().getContextClassLoader(), earUnpacker.getDeploymentDirectory()), in);
+         final EarClassLoaderContext ctx = earUnpacker.read(new NukeEarArchiveEntryHelper(Thread.currentThread().getContextClassLoader(), earUnpacker.getDeploymentDirectory()), in);
          loadedPackages.put(ctx.getEarDescriptor().getApplicationName(), ctx);
       } catch (IOException ioe) {
          LOG.error(ioe.getMessage(), ioe);
