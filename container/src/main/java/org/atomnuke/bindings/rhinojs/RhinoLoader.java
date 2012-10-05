@@ -2,8 +2,8 @@ package org.atomnuke.bindings.rhinojs;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URI;
 import javax.script.ScriptEngine;
-import javax.script.ScriptException;
 import org.atomnuke.bindings.BindingLoaderException;
 import org.atomnuke.bindings.loader.Loader;
 
@@ -20,11 +20,15 @@ public class RhinoLoader implements Loader {
    }
 
    @Override
-   public void load(InputStream in) throws BindingLoaderException {
+   public void load(URI inputLocation) throws BindingLoaderException {
       try {
+         final InputStream in = inputLocation.toURL().openStream();
+
          javascriptEngine.eval(new InputStreamReader(in));
-      } catch (ScriptException se) {
-         throw new BindingLoaderException("Javascript error: " + se.getMessage(), se);
+
+         in.close();
+      } catch (Exception se) {
+         throw new BindingLoaderException("Failed to load Javascript file. Reason: " + se.getMessage(), se);
       }
    }
 }

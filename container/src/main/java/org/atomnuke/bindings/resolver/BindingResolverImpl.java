@@ -14,6 +14,7 @@ import org.atomnuke.plugin.InstanceEnvironment;
 import org.atomnuke.config.model.LanguageType;
 import org.atomnuke.listener.AtomListener;
 import org.atomnuke.listener.eps.eventlet.AtomEventlet;
+import org.atomnuke.service.ServiceManager;
 import org.atomnuke.source.AtomSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,9 +26,13 @@ import org.slf4j.LoggerFactory;
 public class BindingResolverImpl implements BindingResolver {
 
    private static final Logger LOG = LoggerFactory.getLogger(BindingResolverImpl.class);
-   private static final BindingResolver DEFAULT_RESOLVER = new BindingResolverImpl(new EarBindingContext(new File(NukeEnv.NUKE_DEPLOY)), new PythonInterpreterContext(LOG.isDebugEnabled()), RhinoInterpreterContext.newInstance());
 
-   public static BindingResolver defaultResolver() {
+   public static BindingResolver defaultResolver(ServiceManager serviceManager) {
+      final BindingResolver DEFAULT_RESOLVER = new BindingResolverImpl(
+              new EarBindingContext(serviceManager, new File(NukeEnv.NUKE_DEPLOY)),
+              new PythonInterpreterContext(LOG.isDebugEnabled()),
+              RhinoInterpreterContext.newInstance());
+
       return DEFAULT_RESOLVER;
    }
 

@@ -1,8 +1,6 @@
 package org.atomnuke.bindings.loader;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.List;
 import org.atomnuke.bindings.context.BindingContext;
 import org.atomnuke.bindings.BindingLoaderException;
@@ -16,7 +14,7 @@ import org.slf4j.LoggerFactory;
 public class DirectoryLoaderManager {
 
    private static final Logger LOG = LoggerFactory.getLogger(DirectoryLoaderManager.class);
-
+   
    private final List<BindingContext> bindingContexts;
    private final File libraryDirectory;
 
@@ -55,17 +53,10 @@ public class DirectoryLoaderManager {
             }
 
             if (load) {
-               try {
-                  final FileInputStream fin = new FileInputStream(file);
-                  context.loader().load(fin);
-                  fin.close();
+               context.loader().load(file.toURI());
 
-                  LOG.info("Loaded file: " + file.getAbsolutePath());
-
-                  break;
-               } catch (IOException ioe) {
-                  throw new BindingLoaderException("I/O Error: " + ioe.getMessage(), ioe);
-               }
+               LOG.info("Loaded file: " + file.getAbsolutePath());
+               break;
             }
          }
       }

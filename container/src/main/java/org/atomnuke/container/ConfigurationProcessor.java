@@ -7,7 +7,6 @@ import org.atomnuke.bindings.BindingInstantiationException;
 import org.atomnuke.bindings.resolver.BindingResolver;
 import org.atomnuke.config.model.Binding;
 import org.atomnuke.plugin.InstanceEnvironment;
-import org.atomnuke.util.config.ConfigurationException;
 import org.atomnuke.config.model.Eventlet;
 import org.atomnuke.config.model.LanguageType;
 import org.atomnuke.config.model.Parameter;
@@ -28,6 +27,7 @@ import org.atomnuke.task.Tasker;
 import org.atomnuke.task.context.TaskContextImpl;
 import org.atomnuke.task.lifecycle.InitializationException;
 import org.atomnuke.util.TimeValueUtil;
+import org.atomnuke.util.config.ConfigurationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,7 +38,7 @@ import org.slf4j.LoggerFactory;
 public class ConfigurationProcessor {
 
    private static final Logger LOG = LoggerFactory.getLogger(ConfigurationProcessor.class);
-   
+
    private final ServerConfigurationHandler cfgHandler;
    private final BindingResolver bindingsResolver;
    private final ContainerContext containerContext;
@@ -65,7 +65,7 @@ public class ConfigurationProcessor {
       return paramMap;
    }
 
-   public void merge(Nuke kernelBeingBuilt) throws ConfigurationException {
+   public void merge(Nuke kernelBeingBuilt) throws ConfigurationException  {
       LOG.info("Reading configuration");
 
       processSources(kernelBeingBuilt);
@@ -88,7 +88,7 @@ public class ConfigurationProcessor {
       return bindingsResolver.resolveListener(langType, ref);
    }
 
-   public boolean hasSourceBinding(String name) throws ConfigurationException {
+   public boolean hasSourceBinding(String name) throws ConfigurationException  {
       for (Binding binding : cfgHandler.getBindings()) {
          if (binding.getTarget().equals(name)) {
             return true;
@@ -98,7 +98,7 @@ public class ConfigurationProcessor {
       return false;
    }
 
-   public boolean hasListenerBinding(String name) throws ConfigurationException {
+   public boolean hasListenerBinding(String name) throws ConfigurationException  {
       for (Binding binding : cfgHandler.getBindings()) {
          if (binding.getReceiver().equals(name)) {
             return true;
@@ -108,7 +108,7 @@ public class ConfigurationProcessor {
       return false;
    }
 
-   public void processSources(Nuke kernelBeingBuilt) throws ConfigurationException {
+   public void processSources(Nuke kernelBeingBuilt) throws ConfigurationException  {
       for (Source source : cfgHandler.getSources()) {
          final String sourceId = source.getId();
 
@@ -134,7 +134,7 @@ public class ConfigurationProcessor {
       }
    }
 
-   public void processRelays() throws ConfigurationException {
+   public void processRelays() throws ConfigurationException  {
       for (Relay relay : cfgHandler.getRelays()) {
          final String relayId = relay.getId();
 
@@ -145,7 +145,7 @@ public class ConfigurationProcessor {
       }
    }
 
-   public void processListeners() throws ConfigurationException {
+   public void processListeners() throws ConfigurationException  {
       for (Sink sink : cfgHandler.getSinks()) {
          final String sinkId = sink.getId();
 
@@ -163,16 +163,16 @@ public class ConfigurationProcessor {
                containerContext.registerSink(sink.getId(), listenerCtx);
             } catch (BindingInstantiationException bie) {
                LOG.error("Could not create sink instance " + sink.getId() + ". Reason: " + bie.getMessage(), bie);
-               throw new ConfigurationException(bie);
+               throw new ConfigurationException (bie);
             } catch (InitializationException ie) {
                LOG.error("Could not initialize sink instance " + sink.getId() + ". Reason: " + ie.getMessage(), ie);
-               throw new ConfigurationException(ie);
+               throw new ConfigurationException (ie);
             }
          }
       }
    }
 
-   public void processEventlets() throws ConfigurationException {
+   public void processEventlets() throws ConfigurationException  {
       for (Eventlet eventlet : cfgHandler.getEventlets()) {
          final String eventletId = eventlet.getId();
 
@@ -196,10 +196,10 @@ public class ConfigurationProcessor {
                containerContext.registerEventlet(eventlet.getId(), eventletCtx);
             } catch (BindingInstantiationException bie) {
                LOG.error("Could not create eventlet instance " + eventlet.getId() + ". Reason: " + bie.getMessage(), bie);
-               throw new ConfigurationException(bie);
+               throw new ConfigurationException (bie);
             } catch (InitializationException ie) {
                LOG.error("Could not initialize eventlet instance " + eventlet.getId() + ". Reason: " + ie.getMessage(), ie);
-               throw new ConfigurationException(ie);
+               throw new ConfigurationException (ie);
             }
          }
       }

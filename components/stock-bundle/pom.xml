@@ -36,6 +36,11 @@
          <groupId>org.atomnuke.components.listener</groupId>
          <artifactId>util-listeners</artifactId>
       </dependency>
+
+      <dependency>
+         <groupId>org.atomnuke.components.services</groupId>
+         <artifactId>configuration</artifactId>
+      </dependency>
    </dependencies>
 
    <build>
@@ -81,6 +86,11 @@
                   <jarModule>
                      <groupId>org.atomnuke.components.listener</groupId>
                      <artifactId>util-listeners</artifactId>
+                  </jarModule>
+
+                  <jarModule>
+                     <groupId>org.atomnuke.components.services</groupId>
+                     <artifactId>configuration</artifactId>
                   </jarModule>
                </modules>
             </configuration>

@@ -25,6 +25,9 @@
       <!-- Listeners -->
       <module>listeners/util-listeners</module>
 
+      <!-- Services -->
+      <module>services/config</module>
+
       <!-- Bundle -->
       <module>stock-bundle</module>
    </modules>
@@ -52,6 +55,12 @@
          <dependency>
             <groupId>org.atomnuke.components.listener</groupId>
             <artifactId>util-listeners</artifactId>
+            <version>${project.version}</version>
+         </dependency>
+
+         <dependency>
+            <groupId>org.atomnuke.components.services</groupId>
+            <artifactId>configuration</artifactId>
             <version>${project.version}</version>
          </dependency>
 

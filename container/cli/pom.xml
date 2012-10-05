@@ -7,19 +7,26 @@
       <groupId>org.atomnuke</groupId>
       <artifactId>project</artifactId>
       <version>0.9.8-SNAPSHOT</version>
+
+      <relativePath>./../..</relativePath>
    </parent>
 
    <groupId>org.atomnuke.container</groupId>
-   <artifactId>flask</artifactId>
+   <artifactId>flask-cli</artifactId>
 
    <packaging>jar</packaging>
 
-   <name>Atom Nuke - Container (Flask)</name>
+   <name>Atom Nuke - Container - Command Line Interface</name>
 
    <dependencies>
       <dependency>
          <groupId>org.atomnuke</groupId>
          <artifactId>nuke</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>org.atomnuke.container</groupId>
+         <artifactId>flask</artifactId>
       </dependency>
 
       <dependency>
@@ -68,11 +75,6 @@
       </dependency>
 
       <dependency>
-         <groupId>com.rackspace.papi.external</groupId>
-         <artifactId>jee6-schemas</artifactId>
-      </dependency>
-
-      <dependency>
          <groupId>org.slf4j</groupId>
          <artifactId>slf4j-api</artifactId>
       </dependency>
@@ -94,26 +96,45 @@
       </dependency>
    </dependencies>
 
+   <profiles>
+      <profile>
+         <id>runjar</id>
+
+         <activation>
+            <activeByDefault>true</activeByDefault>
+         </activation>
+
+         <build>
+            <plugins>
+               <plugin>
+                  <groupId>org.apache.maven.plugins</groupId>
+                  <artifactId>maven-shade-plugin</artifactId>
+                  <version>1.7.1</version>
+
+                  <executions>
+                     <execution>
+                        <phase>package</phase>
+
+                        <goals>
+                           <goal>shade</goal>
+                        </goals>
+
+                        <configuration>
+                           <transformers>
+                              <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                 <mainClass>org.atomnuke.NukeMain</mainClass>
+                              </transformer>
+                           </transformers>
+                        </configuration>
+                     </execution>
+                  </executions>
+               </plugin>
+            </plugins>
+         </build>
+      </profile>
+   </profiles>
+
    <build>
-      <finalName>nuke-container</finalName>
-
-      <plugins>
-         <plugin>
-            <groupId>org.jvnet.jaxb2.maven2</groupId>
-            <artifactId>maven-jaxb2-plugin</artifactId>
-
-            <configuration>
-               <schemaDirectory>src/main/resources/META-INF/schema/</schemaDirectory>
-
-               <schemasInclude>
-                  <include>*.xsd</include>
-               </schemasInclude>
-
-               <bindingsInclude>
-                  <include>*.xjb</include>
-               </bindingsInclude>
-            </configuration>
-         </plugin>
-      </plugins>
+      <finalName>flask-cli</finalName>
    </build>
 </project>

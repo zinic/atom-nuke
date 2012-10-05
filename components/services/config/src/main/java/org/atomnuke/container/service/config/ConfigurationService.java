@@ -6,8 +6,8 @@ import org.atomnuke.service.context.ServiceContext;
 import org.atomnuke.util.config.update.ConfigurationUpdateManager;
 import org.atomnuke.util.config.update.ConfigurationUpdateManagerImpl;
 import org.atomnuke.util.config.update.ConfigurationUpdateRunnable;
-
 import org.atomnuke.util.thread.Poller;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -1,6 +1,6 @@
 package org.atomnuke.bindings.ear;
 
-import com.rackspace.papi.commons.util.classloader.ear.EarClassLoaderContext;
+import org.atomnuke.container.classloader.ear.EarClassLoaderContext;
 import java.io.File;
 import org.atomnuke.bindings.context.BindingContext;
 import org.atomnuke.bindings.BindingInstantiationException;
@@ -10,6 +10,7 @@ import org.atomnuke.bindings.lang.LanguageDescriptorImpl;
 import org.atomnuke.bindings.loader.Loader;
 import org.atomnuke.config.model.LanguageType;
 import org.atomnuke.plugin.InstanceEnvironment;
+import org.atomnuke.service.ServiceManager;
 
 /**
  *
@@ -21,8 +22,8 @@ public class EarBindingContext implements BindingContext {
 
    private final EarLoader loader;
 
-   public EarBindingContext(File deploymentDir) {
-      loader = new EarLoader(deploymentDir);
+   public EarBindingContext(ServiceManager serviceManager, File deploymentDir) {
+      loader = new EarLoader(serviceManager, deploymentDir);
    }
 
    @Override

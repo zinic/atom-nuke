@@ -1,6 +1,6 @@
 package org.atomnuke.bindings.loader;
 
-import java.io.InputStream;
+import java.net.URI;
 import org.atomnuke.bindings.BindingLoaderException;
 
 /**
@@ -9,5 +9,5 @@ import org.atomnuke.bindings.BindingLoaderException;
  */
 public interface Loader {
 
-   void load(InputStream in) throws BindingLoaderException;
+   void load(URI in) throws BindingLoaderException;
 }
