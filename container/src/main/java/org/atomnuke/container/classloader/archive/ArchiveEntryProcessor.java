@@ -14,7 +14,6 @@ import java.util.jar.JarInputStream;
 public class ArchiveEntryProcessor {
 
    private static final Logger LOG = LoggerFactory.getLogger(ArchiveEntryProcessor.class);
-
    private final ArchiveResource archiveResource;
    private final ArchiveEntryHelper helper;
    private final File unpackDirectory;
@@ -49,25 +48,30 @@ public class ArchiveEntryProcessor {
       OutputStream outputStreamReference = byteArrayOutput;
 
       if (packingAction == DeploymentAction.UNPACK_ENTRY) {
+         if (archiveResource.archiveLocation().getScheme().startsWith("file")) {
+            checkParentDirectory(unpackDirectory, archiveResource);
+         }
+
          outputStreamReference = new OutputStreamSplitter(byteArrayOutput, new FileOutputStream(unpackTargetFor(unpackDirectory, archiveResource)));
       }
 
       RawInputStreamReader.instance().copyTo(jarInputStream, outputStreamReference);
+      outputStreamReference.close();
 
       // add to internal resource hashtable
       return byteArrayOutput.toByteArray();
    }
 
-   public static File unpackTargetFor(File unpackRootDirectory, ArchiveResource resource) {
+   private static File unpackTargetFor(File unpackRootDirectory, ArchiveResource resource) {
       final String prefix = resource.path();
       final File targetDir = new File(unpackRootDirectory, StringUtilities.isBlank(prefix) ? "" : prefix);
 
       return new File(targetDir, resource.simpleName() + "." + resource.extension());
    }
 
-   private void checkParentDirectory(File targetFile) {
-      final File targetDir = targetFile.getParentFile();
-      final DirectoryHelper directoryHelper = new DirectoryHelper(targetDir);
+   private static void checkParentDirectory(File unpackRootDirectory, ArchiveResource resource) {
+      final File targetDir = unpackTargetFor(unpackRootDirectory, resource);
+      final DirectoryHelper directoryHelper = new DirectoryHelper(targetDir.getParentFile());
 
       if (!directoryHelper.exists() && !directoryHelper.createTargetDirectory()) {
          LOG.error("Unable to create target directory for unpacking artifact - Target directory: " + targetDir);
@@ -75,10 +79,6 @@ public class ArchiveEntryProcessor {
    }
 
    private ArchiveStackElement descendIntoEntry(final byte[] entryBytes) throws IOException {
-      if (archiveResource.archiveLocation().getScheme().startsWith("file")) {
-         checkParentDirectory(new File(archiveResource.archiveLocation()));
-      }
-
       final JarInputStream embeddedJarInputStream = new JarInputStream(new ByteArrayInputStream(entryBytes));
 
       // TODO: This totally doesn't belong here

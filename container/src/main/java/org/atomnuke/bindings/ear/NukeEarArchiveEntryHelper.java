@@ -60,7 +60,7 @@ public class NukeEarArchiveEntryHelper implements EarArchiveEntryHelper {
 
    @Override
    public final EntryAction nextJarEntry(ArchiveResource descriptor) {
-      DeploymentAction deploymentAction = descriptor.resourceType() == ResourceType.EAR
+      DeploymentAction deploymentAction = (descriptor.resourceType() == ResourceType.EAR || descriptor.resourceType() == ResourceType.JAR)
               ? DeploymentAction.UNPACK_ENTRY
               : DeploymentAction.DO_NOT_UNPACK_ENTRY;
 
