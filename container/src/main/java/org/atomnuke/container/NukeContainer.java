@@ -32,6 +32,9 @@ import org.atomnuke.util.config.io.ConfigurationManager;
 import org.atomnuke.util.config.update.ConfigurationContext;
 import org.atomnuke.util.config.update.ConfigurationUpdateManager;
 import org.atomnuke.container.service.config.ConfigurationService;
+import org.atomnuke.plugin.local.LocalInstanceEnvironment;
+import org.atomnuke.service.ServiceDescriptor;
+import org.atomnuke.service.ServiceLifeCycle;
 import org.atomnuke.service.context.ServiceContextImpl;
 import org.atomnuke.task.context.TaskContext;
 import org.atomnuke.task.context.TaskContextImpl;
@@ -117,13 +120,13 @@ public class NukeContainer {
       final ConfigurationService cfgService = new ConfigurationService();
       cfgService.init(new ServiceContextImpl(Collections.EMPTY_MAP, serviceManager));
 
-      serviceManager.register(cfgService);
+      serviceManager.register(new ServiceDescriptor("Stock cfg service", new LocalInstanceEnvironment<ServiceLifeCycle>(cfgService)));
 
       LOG.debug("Registering configuration listener.");
 
       try {
          final ConfigurationManager<ServerConfiguration> cfgManager = new ServerConfigurationManager(new File(NukeEnv.NUKE_HOME, NukeEnv.CONFIG_NAME));
-         final ConfigurationContext<ServerConfiguration> configurationContext = ((ConfigurationUpdateManager) cfgService.instance()).register("org.atomnuke.container.cfg", cfgManager);
+         final ConfigurationContext<ServerConfiguration> configurationContext = serviceManager.findService(ConfigurationUpdateManager.class).register("org.atomnuke.container.cfg", cfgManager);
 
          configurationContext.addListener(contextManager);
       } catch (JAXBException jaxbe) {

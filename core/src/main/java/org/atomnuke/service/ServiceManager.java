@@ -8,7 +8,7 @@ import org.atomnuke.kernel.resource.Destroyable;
  */
 public interface ServiceManager extends Destroyable {
 
-   void register(Service serviceInterface);
+   void register(Service service);
 
    <T> T findService(Class<T> serviceInterface);
 }

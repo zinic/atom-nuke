@@ -1,12 +1,14 @@
 package org.atomnuke.service;
 
+import org.atomnuke.plugin.InstanceEnvironment;
+
 /**
  *
  * @author zinic
  */
-public interface Service extends ServiceLifeCycle {
+public interface Service {
 
    String name();
 
-   Object instance();
+   InstanceEnvironment<ServiceLifeCycle> instanceEnvironment();
 }
