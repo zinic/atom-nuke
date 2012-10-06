@@ -1,8 +1,8 @@
 package org.atomnuke.listener.eps;
 
-import org.atomnuke.plugin.InstanceEnvironment;
 import org.atomnuke.listener.eps.eventlet.AtomEventlet;
 import org.atomnuke.listener.eps.selector.Selector;
+import org.atomnuke.plugin.Environment;
 import org.atomnuke.util.remote.CancellationRemote;
 
 /**
@@ -15,7 +15,7 @@ public interface AtomEventHandlerRelay {
 
    CancellationRemote enlistHandler(AtomEventlet handler, Selector selector);
 
-   CancellationRemote enlistHandlerContext(InstanceEnvironment<? extends AtomEventlet> handler);
+   CancellationRemote enlistHandlerContext(Environment environment, AtomEventlet handler);
 
-   CancellationRemote enlistHandlerContext(InstanceEnvironment<? extends AtomEventlet> handler, Selector selector);
+   CancellationRemote enlistHandlerContext(Environment environment, AtomEventlet handler, Selector selector);
 }

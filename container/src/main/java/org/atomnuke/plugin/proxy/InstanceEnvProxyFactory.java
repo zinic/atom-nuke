@@ -1,6 +1,6 @@
 package org.atomnuke.plugin.proxy;
 
-import org.atomnuke.plugin.InstanceEnvironment;
+import org.atomnuke.plugin.InstanceContext;
 
 /**
  *
@@ -8,5 +8,5 @@ import org.atomnuke.plugin.InstanceEnvironment;
  */
 public interface InstanceEnvProxyFactory {
 
-   <T> T newProxy(Class<T> masqueradeClass, InstanceEnvironment<T> env);
+   <T> T newProxy(Class<T> masqueradeClass, InstanceContext<T> env);
 }

@@ -2,7 +2,7 @@ package org.atomnuke.service;
 
 import java.util.LinkedList;
 import java.util.List;
-import org.atomnuke.plugin.InstanceEnvironment;
+import org.atomnuke.plugin.InstanceContext;
 import org.atomnuke.plugin.proxy.InstanceEnvProxyFactory;
 import org.atomnuke.plugin.proxy.japi.JapiProxyFactory;
 import org.slf4j.Logger;
@@ -32,12 +32,12 @@ public class ServiceManagerImpl implements ServiceManager {
    public synchronized void destroy() {
       for (Service service : registeredServices) {
          try {
-            service.instanceEnvironment().stepInto();
-            service.instanceEnvironment().getInstance().destroy();
+            service.instanceContext().environment().stepInto();
+            service.instanceContext().instance().destroy();
          } catch (Exception ex) {
             LOG.error("Failure in destroying container service, \"" + service.name() + "\" - Reason: " + ex.getMessage(), ex);
          } finally {
-            service.instanceEnvironment().stepOut();
+            service.instanceContext().environment().stepOut();
          }
       }
    }
@@ -50,10 +50,10 @@ public class ServiceManagerImpl implements ServiceManager {
    @Override
    public synchronized <T> T findService(Class<T> serviceInterface) {
       for (Service service : registeredServices) {
-         final Object serviceInstance = service.instanceEnvironment().getInstance();
+         final Object serviceInstance = service.instanceContext().instance();
 
          if (serviceInterface.isAssignableFrom(serviceInstance.getClass())) {
-            return (T) proxyFactory.newProxy(serviceInterface, (InstanceEnvironment<T>) service.instanceEnvironment());
+            return (T) proxyFactory.newProxy(serviceInterface, (InstanceContext<T>) service.instanceContext());
          }
       }
 

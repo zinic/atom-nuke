@@ -14,6 +14,4 @@ import org.atomnuke.container.service.construct.reflection.GenericReflectionCons
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface NukeService {
-
-   Class<? extends Constructor> constructor() default GenericReflectionConstructor.class;
 }

@@ -1,24 +1,29 @@
 package org.atomnuke.container.classloader;
 
-import org.atomnuke.container.classloader.archive.ArchiveResource;
-
 import java.util.Arrays;
+import org.atomnuke.container.packaging.archive.ResourceType;
 
 public class ResourceDescriptor {
 
-   private final ArchiveResource descriptor;
+   private final String resourcePath;
+   private final ResourceType resourceType;
    private final byte[] digestBytes;
 
-   public ResourceDescriptor(ArchiveResource descriptor, byte[] digestBytes) {
-      this.descriptor = descriptor;
-      this.digestBytes = Arrays.copyOf(digestBytes, digestBytes.length);
+   public ResourceDescriptor(String resourcePath, ResourceType resourceType, byte[] digestBytes) {
+      this.resourcePath = resourcePath;
+      this.resourceType = resourceType;
+      this.digestBytes = digestBytes;
+   }
+
+   public ResourceType type() {
+      return resourceType;
    }
 
    public byte[] digestBytes() {
       return digestBytes;
    }
 
-   public ArchiveResource archiveEntry() {
-      return descriptor;
+   public String resourcePath() {
+      return resourcePath;
    }
 }

@@ -7,12 +7,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.atomnuke.config.model.Binding;
-import org.atomnuke.plugin.InstanceEnvironment;
+import org.atomnuke.plugin.InstanceContext;
 import org.atomnuke.listener.AtomListener;
 import org.atomnuke.listener.eps.EventletRelay;
 import org.atomnuke.listener.eps.eventlet.AtomEventlet;
 import org.atomnuke.task.Task;
-import org.atomnuke.task.lifecycle.InitializationException;
 import org.atomnuke.util.config.ConfigurationException;
 import org.atomnuke.util.remote.CancellationRemote;
 import org.slf4j.Logger;
@@ -25,17 +24,18 @@ import org.slf4j.LoggerFactory;
 public class ContainerContext {
 
    private static final Logger LOG = LoggerFactory.getLogger(ContainerContext.class);
-   private final Map<String, InstanceEnvironment<AtomListener>> listeners;
-   private final Map<String, InstanceEnvironment<AtomEventlet>> eventlets;
-   private final Map<String, InstanceEnvironment<EventletRelay>> relays;
+
+   private final Map<String, InstanceContext<AtomListener>> listeners;
+   private final Map<String, InstanceContext<AtomEventlet>> eventlets;
+   private final Map<String, InstanceContext<EventletRelay>> relays;
    private final Map<String, CancellationRemote> cancellationRemotes;
    private final Map<String, Task> tasks;
    private final Map<String, Binding> bindings;
 
    public ContainerContext() {
-      listeners = new HashMap<String, InstanceEnvironment<AtomListener>>();
-      eventlets = new HashMap<String, InstanceEnvironment<AtomEventlet>>();
-      relays = new HashMap<String, InstanceEnvironment<EventletRelay>>();
+      listeners = new HashMap<String, InstanceContext<AtomListener>>();
+      eventlets = new HashMap<String, InstanceContext<AtomEventlet>>();
+      relays = new HashMap<String, InstanceContext<EventletRelay>>();
 
       cancellationRemotes = new HashMap<String, CancellationRemote>();
       tasks = new HashMap<String, Task>();
@@ -58,19 +58,19 @@ public class ContainerContext {
       return tasks.containsKey(name);
    }
 
-   public void registerRelay(String name, InstanceEnvironment<EventletRelay> instanceCtx) {
+   public void registerRelay(String name, InstanceContext<EventletRelay> instanceCtx) {
       LOG.info("Registering relay: " + name);
 
       relays.put(name, instanceCtx);
    }
 
-   public void registerSink(String name, InstanceEnvironment<AtomListener> instanceCtx) {
+   public void registerSink(String name, InstanceContext<AtomListener> instanceCtx) {
       LOG.info("Registering listeners: " + name);
 
       listeners.put(name, instanceCtx);
    }
 
-   public void registerEventlet(String name, InstanceEnvironment<AtomEventlet> instanceCtx) {
+   public void registerEventlet(String name, InstanceContext<AtomEventlet> instanceCtx) {
       LOG.info("Registering eventlet: " + name);
 
       eventlets.put(name, instanceCtx);
@@ -181,40 +181,40 @@ public class ContainerContext {
       if (source != null) {
          bind(source, binding);
       } else {
-         final InstanceEnvironment<EventletRelay> relayContext = relays.get(binding.getTarget());
+         final InstanceContext<EventletRelay> relayContext = relays.get(binding.getTarget());
 
          if (relayContext != null) {
-            bind(relayContext.getInstance(), binding);
+            bind(relayContext.instance(), binding);
          } else {
             throw new ConfigurationException("Unable to locate source or relay, " + binding.getTarget());
          }
       }
    }
 
-   private InstanceEnvironment<? extends AtomListener> findAtomListener(String id) {
-      final InstanceEnvironment<AtomListener> listenerContext = listeners.get(id);
+   private InstanceContext<? extends AtomListener> findAtomListener(String id) {
+      final InstanceContext<AtomListener> listenerContext = listeners.get(id);
       return listenerContext != null ? listenerContext : relays.get(id);
    }
 
    private void bind(Task source, Binding binding) throws ConfigurationException {
-      final InstanceEnvironment<? extends AtomListener> listenerCtx = findAtomListener(binding.getReceiver());
+      final InstanceContext<? extends AtomListener> listenerCtx = findAtomListener(binding.getReceiver());
 
       if (listenerCtx == null) {
          throw new ConfigurationException("Unable to locate listener or realy, " + binding.getReceiver() + ".");
       }
 
-      cancellationRemotes.put(binding.getReceiver(), source.addListener(listenerCtx));
+      cancellationRemotes.put(binding.getReceiver(), source.addListener(listenerCtx.environment(), listenerCtx.instance()));
       bindings.put(binding.getId(), binding);
    }
 
    private void bind(EventletRelay source, Binding binding) throws ConfigurationException {
-      final InstanceEnvironment<? extends AtomEventlet> eventletCtx = eventlets.get(binding.getReceiver());
+      final InstanceContext<? extends AtomEventlet> eventletCtx = eventlets.get(binding.getReceiver());
 
       if (eventletCtx == null) {
          throw new ConfigurationException("Unable to locate eventlet, " + binding.getReceiver() + ".");
       }
 
-      cancellationRemotes.put(binding.getReceiver(), source.enlistHandlerContext(eventletCtx));
+      cancellationRemotes.put(binding.getReceiver(), source.enlistHandlerContext(eventletCtx.environment(), eventletCtx.instance()));
       bindings.put(binding.getId(), binding);
    }
 }

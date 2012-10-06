@@ -1,19 +1,17 @@
 package org.atomnuke.bindings.context;
 
-import org.atomnuke.plugin.AbstractInstanceEnvironment;
+import org.atomnuke.plugin.Environment;
 
 /**
  *
  * @author zinic
  */
-public class ClassLoaderContext<T> extends AbstractInstanceEnvironment<T> {
+public class ClassLoaderEnvironment implements Environment {
 
    private final ThreadLocal<ClassLoader> previousContext;
    private final ClassLoader classLoader;
 
-   public ClassLoaderContext(ClassLoader classLoader, T instance) {
-      super(instance);
-
+   public ClassLoaderEnvironment(ClassLoader classLoader) {
       this.classLoader = classLoader;
       previousContext = new ThreadLocal<ClassLoader>();
    }
@@ -28,8 +26,8 @@ public class ClassLoaderContext<T> extends AbstractInstanceEnvironment<T> {
 
    @Override
    public void stepOut() {
-      if (previousContext == null) {
-         throw new IllegalStateException("ClassLoader was not stepped into.");
+      if (previousContext.get() == null) {
+         return;
       }
 
       final Thread currentThread = Thread.currentThread();

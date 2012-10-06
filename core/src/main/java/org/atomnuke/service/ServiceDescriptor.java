@@ -1,6 +1,6 @@
 package org.atomnuke.service;
 
-import org.atomnuke.plugin.InstanceEnvironment;
+import org.atomnuke.plugin.InstanceContext;
 
 /**
  *
@@ -8,10 +8,10 @@ import org.atomnuke.plugin.InstanceEnvironment;
  */
 public class ServiceDescriptor implements Service {
 
-   private final InstanceEnvironment<ServiceLifeCycle> instanceEnvironment;
+   private final InstanceContext<ServiceLifeCycle> instanceEnvironment;
    private final String name;
 
-   public ServiceDescriptor(String name, InstanceEnvironment<ServiceLifeCycle> instanceEnvironment) {
+   public ServiceDescriptor(String name, InstanceContext<ServiceLifeCycle> instanceEnvironment) {
       this.instanceEnvironment = instanceEnvironment;
       this.name = name;
    }
@@ -22,7 +22,7 @@ public class ServiceDescriptor implements Service {
    }
 
    @Override
-   public InstanceEnvironment<ServiceLifeCycle> instanceEnvironment() {
+   public InstanceContext<ServiceLifeCycle> instanceContext() {
       return instanceEnvironment;
    }
 }

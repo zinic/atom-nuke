@@ -2,7 +2,7 @@ package org.atomnuke.plugin.proxy.japi;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
-import org.atomnuke.plugin.InstanceEnvironment;
+import org.atomnuke.plugin.InstanceContext;
 
 /**
  *
@@ -10,20 +10,20 @@ import org.atomnuke.plugin.InstanceEnvironment;
  */
 public class InstanceEnvrionmentProxy implements InvocationHandler {
 
-   private final InstanceEnvironment instanceEnvironment;
+   private final InstanceContext instanceCtx;
 
-   public InstanceEnvrionmentProxy(InstanceEnvironment instanceEnvironment) {
-      this.instanceEnvironment = instanceEnvironment;
+   public InstanceEnvrionmentProxy(InstanceContext instanceEnvironment) {
+      this.instanceCtx = instanceEnvironment;
    }
 
    @Override
    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
       try {
-         instanceEnvironment.stepInto();
+         instanceCtx.environment().stepInto();
 
          return method.invoke(proxy, args);
       } finally {
-         instanceEnvironment.stepOut();
+         instanceCtx.environment().stepOut();
       }
    }
 }

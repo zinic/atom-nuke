@@ -3,10 +3,10 @@ package org.atomnuke.container;
 import java.util.HashMap;
 import java.util.Map;
 import org.atomnuke.Nuke;
+import org.atomnuke.bindings.BindingContextManager;
 import org.atomnuke.bindings.BindingInstantiationException;
-import org.atomnuke.bindings.resolver.BindingResolver;
 import org.atomnuke.config.model.Binding;
-import org.atomnuke.plugin.InstanceEnvironment;
+import org.atomnuke.plugin.InstanceContext;
 import org.atomnuke.config.model.Eventlet;
 import org.atomnuke.config.model.LanguageType;
 import org.atomnuke.config.model.Parameter;
@@ -20,6 +20,7 @@ import org.atomnuke.plugin.local.LocalInstanceEnvironment;
 import org.atomnuke.listener.AtomListener;
 import org.atomnuke.listener.eps.EventletRelay;
 import org.atomnuke.listener.eps.eventlet.AtomEventlet;
+import org.atomnuke.plugin.InstanceContextImpl;
 import org.atomnuke.service.ServiceManager;
 import org.atomnuke.source.AtomSource;
 import org.atomnuke.task.Task;
@@ -40,12 +41,12 @@ public class ConfigurationProcessor {
    private static final Logger LOG = LoggerFactory.getLogger(ConfigurationProcessor.class);
 
    private final ServerConfigurationHandler cfgHandler;
-   private final BindingResolver bindingsResolver;
+   private final BindingContextManager bindingsResolver;
    private final ContainerContext containerContext;
    private final ServiceManager services;
    private final Tasker tasker;
 
-   public ConfigurationProcessor(ServiceManager services, Tasker tasker, ContainerContext containerContext, ServerConfigurationHandler cfgHandler, BindingResolver bindingsResolver) {
+   public ConfigurationProcessor(ServiceManager services, Tasker tasker, ContainerContext containerContext, ServerConfigurationHandler cfgHandler, BindingContextManager bindingsResolver) {
       this.services = services;
       this.tasker = tasker;
       this.containerContext = containerContext;
@@ -76,15 +77,15 @@ public class ConfigurationProcessor {
       containerContext.process(cfgHandler.getBindings());
    }
 
-   public InstanceEnvironment<AtomEventlet> constructEventlet(LanguageType langType, String ref) throws BindingInstantiationException {
+   public InstanceContext<AtomEventlet> constructEventlet(LanguageType langType, String ref) throws BindingInstantiationException {
       return bindingsResolver.resolveEventlet(langType, ref);
    }
 
-   public InstanceEnvironment<AtomSource> constructSource(LanguageType langType, String ref) throws BindingInstantiationException {
+   public InstanceContext<AtomSource> constructSource(LanguageType langType, String ref) throws BindingInstantiationException {
       return bindingsResolver.resolveSource(langType, ref);
    }
 
-   public InstanceEnvironment<AtomListener> constructListener(LanguageType langType, String ref) throws BindingInstantiationException {
+   public InstanceContext<AtomListener> constructListener(LanguageType langType, String ref) throws BindingInstantiationException {
       return bindingsResolver.resolveListener(langType, ref);
    }
 
@@ -114,13 +115,13 @@ public class ConfigurationProcessor {
 
          if (hasSourceBinding(sourceId) && !containerContext.hasTask(sourceId)) {
             try {
-               final InstanceEnvironment<AtomSource> sourceContext = constructSource(source.getType(), source.getHref());
-               sourceContext.stepInto();
+               final InstanceContext<AtomSource> sourceContext = constructSource(source.getType(), source.getHref());
+               sourceContext.environment().stepInto();
 
                try {
-                  sourceContext.getInstance().init(new TaskContextImpl(parametersToMap(source.getParameters()), services, tasker));
+                  sourceContext.instance().init(new TaskContextImpl(parametersToMap(source.getParameters()), services, tasker));
                } finally {
-                  sourceContext.stepOut();
+                  sourceContext.environment().stepOut();
                }
 
                final Task newTask = kernelBeingBuilt.follow(sourceContext, TimeValueUtil.fromPollingInterval(source.getPollingInterval()));
@@ -140,7 +141,7 @@ public class ConfigurationProcessor {
 
 
          if (hasListenerBinding(relayId) && !containerContext.hasRelay(relayId)) {
-            containerContext.registerRelay(relay.getId(), new LocalInstanceEnvironment<EventletRelay>(new EventletRelay()));
+            containerContext.registerRelay(relay.getId(), new InstanceContextImpl<EventletRelay>(LocalInstanceEnvironment.getInstance(), new EventletRelay()));
          }
       }
    }
@@ -151,13 +152,13 @@ public class ConfigurationProcessor {
 
          if (hasListenerBinding(sinkId) && !containerContext.hasSink(sinkId)) {
             try {
-               final InstanceEnvironment<AtomListener> listenerCtx = constructListener(sink.getType(), sink.getHref());
-               listenerCtx.stepInto();
+               final InstanceContext<AtomListener> listenerCtx = constructListener(sink.getType(), sink.getHref());
+               listenerCtx.environment().stepInto();
 
                try {
-                  listenerCtx.getInstance().init(new TaskContextImpl(parametersToMap(sink.getParameters()), services, tasker));
+                  listenerCtx.instance().init(new TaskContextImpl(parametersToMap(sink.getParameters()), services, tasker));
                } finally {
-                  listenerCtx.stepOut();
+                  listenerCtx.environment().stepOut();
                }
 
                containerContext.registerSink(sink.getId(), listenerCtx);
@@ -184,13 +185,13 @@ public class ConfigurationProcessor {
             }
 
             try {
-               final InstanceEnvironment<AtomEventlet> eventletCtx = constructEventlet(eventlet.getType(), eventlet.getHref());
-               eventletCtx.stepInto();
+               final InstanceContext<AtomEventlet> eventletCtx = constructEventlet(eventlet.getType(), eventlet.getHref());
+               eventletCtx.environment().stepInto();
 
                try {
-                  eventletCtx.getInstance().init(new TaskContextImpl(parametersToMap(eventlet.getParameters()), services, tasker));
+                  eventletCtx.instance().init(new TaskContextImpl(parametersToMap(eventlet.getParameters()), services, tasker));
                } finally {
-                  eventletCtx.stepOut();
+                  eventletCtx.environment().stepOut();
                }
 
                containerContext.registerEventlet(eventlet.getId(), eventletCtx);

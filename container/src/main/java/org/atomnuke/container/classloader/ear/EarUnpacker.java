@@ -43,14 +43,14 @@ public class EarUnpacker {
    public EarClassLoaderContext read(EarArchiveEntryHelper entryListener, URI location) throws IOException {
       final JarInputStream jarInputStream = new JarInputStream(location.toURL().openStream());
       final Stack<ArchiveStackElement> archiveStack = new Stack<ArchiveStackElement>();
-      archiveStack.push(new ArchiveStackElement(jarInputStream, archiveResourceBuilder.build(location, location.toString(), location.getPath())));
+      archiveStack.push(new ArchiveStackElement(jarInputStream, archiveResourceBuilder.build(location, location.getPath())));
 
       while (archiveStack.size() > 0) {
          ArchiveStackElement currentStackElement = archiveStack.pop();
          JarEntry nextJarEntry = currentStackElement.inputStream().getNextJarEntry();
 
          while (nextJarEntry != null) {
-            final ArchiveResource entryDescriptor = archiveResourceBuilder.build(currentStackElement.resource().archiveLocation(), currentStackElement.resource().fullName(), nextJarEntry.getName());
+            final ArchiveResource entryDescriptor = archiveResourceBuilder.build(currentStackElement.resource().archiveLocation(), nextJarEntry.getName());
             final EntryAction actionToTake = entryDescriptor != null ? entryListener.nextJarEntry(entryDescriptor) : EntryAction.SKIP;
 
             if (actionToTake.processingAction() != ProcessingAction.SKIP) {

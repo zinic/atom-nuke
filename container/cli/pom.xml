@@ -31,7 +31,7 @@
 
       <dependency>
          <groupId>org.atomnuke.support</groupId>
-         <artifactId>configuration</artifactId>
+         <artifactId>configuration-support</artifactId>
       </dependency>
 
       <dependency>

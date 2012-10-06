@@ -24,12 +24,17 @@
 
       <dependency>
          <groupId>org.atomnuke.support</groupId>
-         <artifactId>configuration</artifactId>
+         <artifactId>configuration-support</artifactId>
       </dependency>
 
       <dependency>
          <groupId>org.javassist</groupId>
          <artifactId>javassist</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>org.reflections</groupId>
+         <artifactId>reflections</artifactId>
       </dependency>
 
       <dependency>

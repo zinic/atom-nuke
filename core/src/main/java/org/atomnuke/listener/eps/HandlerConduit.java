@@ -3,10 +3,11 @@ package org.atomnuke.listener.eps;
 import org.atomnuke.listener.eps.eventlet.AtomEventletException;
 import org.atomnuke.atom.model.Entry;
 import org.atomnuke.atom.model.Feed;
-import org.atomnuke.plugin.InstanceEnvironment;
+import org.atomnuke.plugin.InstanceContext;
 import org.atomnuke.listener.eps.eventlet.AtomEventlet;
 import org.atomnuke.listener.eps.selector.Selector;
 import org.atomnuke.listener.eps.selector.SelectorResult;
+import org.atomnuke.plugin.Environment;
 import org.atomnuke.task.lifecycle.DestructionException;
 import org.atomnuke.util.remote.AtomicCancellationRemote;
 import org.atomnuke.util.remote.CancellationRemote;
@@ -21,24 +22,25 @@ public class HandlerConduit {
 
    private static final Logger LOG = LoggerFactory.getLogger(HandlerConduit.class);
 
-   private final InstanceEnvironment<? extends AtomEventlet> eventHandler;
    private final CancellationRemote cancellationRemote;
+   private final Environment environment;
+   private final AtomEventlet eventlet;
    private final Selector selector;
 
-   public HandlerConduit(InstanceEnvironment<? extends AtomEventlet> eventHandler, Selector selector) {
-      this.eventHandler = eventHandler;
+   public HandlerConduit(Environment environment, AtomEventlet eventlet, Selector selector) {
+      this.environment = environment;
+      this.eventlet = eventlet;
       this.selector = selector;
 
       cancellationRemote = new AtomicCancellationRemote();
    }
 
    public void destroy() throws DestructionException {
-      eventHandler.stepInto();
-
       try {
-         eventHandler.getInstance().destroy();
+         environment.stepInto();
+         eventlet.destroy();
       } finally {
-         eventHandler.stepOut();
+         environment.stepOut();
       }
    }
 
@@ -62,14 +64,13 @@ public class HandlerConduit {
       final SelectorResult result = selector.select(entry);
 
       if (result == SelectorResult.PROCESS) {
-         eventHandler.stepInto();
-
          try {
-            eventHandler.getInstance().entry(entry);
+            environment.stepInto();
+            eventlet.entry(entry);
          } catch (AtomEventletException epe) {
             LOG.error(epe.getMessage(), epe);
          } finally {
-            eventHandler.stepOut();
+            environment.stepOut();
          }
       }
 

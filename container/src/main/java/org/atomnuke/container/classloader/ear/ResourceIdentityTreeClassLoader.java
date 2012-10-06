@@ -17,7 +17,6 @@ import org.atomnuke.container.classloader.archive.ResourceType;
 public class ResourceIdentityTreeClassLoader extends ClassLoader {
 
    private static final Logger LOG = LoggerFactory.getLogger(ResourceIdentityTreeClassLoader.class);
-   
    private final ResourceIdentityTree classPathIdentityTree;
    private final ClassLoader parentClassLoader;
    private final File resourceRoot;
@@ -81,8 +80,8 @@ public class ResourceIdentityTreeClassLoader extends ClassLoader {
 
    @Override
    protected Class<?> findClass(String classPath) throws ClassNotFoundException {
-      final String resourcePath = classPath.replaceAll("\\.", "/") + ".class";
-      final ResourceDescriptor descriptor = classPathIdentityTree.resourceDescriptorFor(resourcePath);
+      final String resourcePath = "/" + classPath.replaceAll("\\.", "/") + ".class";
+      final ResourceDescriptor descriptor = classPathIdentityTree.lookupClasspath(resourcePath);
 
       if (descriptor != null) {
          try {
@@ -101,7 +100,7 @@ public class ResourceIdentityTreeClassLoader extends ClassLoader {
       URL resourceUrl = super.findResource(resourcePath);
 
       if (resourceUrl == null) {
-         final ResourceDescriptor descriptor = classPathIdentityTree.resourceDescriptorFor(resourcePath);
+         final ResourceDescriptor descriptor = classPathIdentityTree.lookupClasspath(resourcePath);
 
          if (descriptor != null) {
             resourceUrl = descriptorToUrl(descriptor);
@@ -114,23 +113,24 @@ public class ResourceIdentityTreeClassLoader extends ClassLoader {
    }
 
    final Class<?> defineClass(ResourceDescriptor descriptor) throws IOException {
-      final URL resourceUrl = descriptorToUrl(descriptor);
+//      final URL resourceUrl = descriptorToUrl(descriptor);
+//
+//      if (resourceUrl == null) {
+//         return null;
+//      }
+//
+//      final ByteArrayOutputStream out = createOutputStream(resourceUrl);
+//
+//      final String packageName = StringUtilities.trim(descriptor.archiveEntry().path(), "/").replaceAll("/", ".");
+//
+//      if (getPackage(packageName) == null) {
+//         definePackage(packageName, null, null, null, null, null, null, null);
+//      }
+//
+//      final byte[] classBytes = out.toByteArray();
 
-      if (resourceUrl == null) {
-         return null;
-      }
-
-      final ByteArrayOutputStream out = createOutputStream(resourceUrl);
-
-      final String packageName = StringUtilities.trim(descriptor.archiveEntry().path(), "/").replaceAll("/", ".");
-
-      if (getPackage(packageName) == null) {
-         definePackage(packageName, null, null, null, null, null, null, null);
-      }
-
-      final byte[] classBytes = out.toByteArray();
-
-      return defineClass(packageName + "." + descriptor.archiveEntry().simpleName(), classBytes, 0, classBytes.length);
+//      return defineClass(packageName + "." + descriptor.archiveEntry().simpleName(), classBytes, 0, classBytes.length);
+      return null;
    }
 
    private ByteArrayOutputStream createOutputStream(URL resourceUrl) throws IOException {
@@ -153,28 +153,6 @@ public class ResourceIdentityTreeClassLoader extends ClassLoader {
    }
 
    private URL descriptorToUrl(ResourceDescriptor descriptor) {
-      final String urlString = descriptor.archiveEntry().resourceType() == ResourceType.JAR
-              ? buildJarResourceUrl(descriptor)
-              : buildFileResourceUrl(descriptor);
-      try {
-         return new URL(urlString);
-      } catch (MalformedURLException murle) {
-         LOG.error("Malformed URL in class loader. URL: " + urlString);
-         return null;
-      }
-   }
-
-   private String buildFileResourceUrl(ResourceDescriptor descriptor) {
-      final StringBuilder urlBuffer = new StringBuilder();
-      urlBuffer.append("file:").append(resourceRoot.getAbsolutePath()).append('/').append(descriptor.archiveEntry().fullName());
-
-      return urlBuffer.toString();
-   }
-
-   private String buildJarResourceUrl(ResourceDescriptor descriptor) {
-      final StringBuilder urlBuffer = new StringBuilder();
-      urlBuffer.append("jar:").append(descriptor.archiveEntry().archiveLocation().toString()).append("!/").append(descriptor.archiveEntry().fullName());
-
-      return urlBuffer.toString();
+      return null;
    }
 }

@@ -1,7 +1,7 @@
 package org.atomnuke.task.manager;
 
 import java.util.UUID;
-import org.atomnuke.plugin.InstanceEnvironment;
+import org.atomnuke.plugin.InstanceContext;
 import org.atomnuke.listener.manager.ManagedListener;
 import org.atomnuke.listener.driver.AtomListenerDriver;
 import org.atomnuke.listener.manager.ListenerManager;
@@ -24,13 +24,13 @@ import org.slf4j.LoggerFactory;
 public class ManagedTaskImpl implements ManagedTask {
 
    private static final Logger LOG = LoggerFactory.getLogger(ManagedTaskImpl.class);
-   private final InstanceEnvironment<AtomSource> atomSourceContext;
+   private final InstanceContext<AtomSource> atomSourceContext;
    private final ExecutionManager executorService;
    private final ListenerManager listenerManager;
    private final Task task;
    private TimeValue timestamp;
 
-   public ManagedTaskImpl(Task task, ListenerManager listenerManager, TimeValue interval, ExecutionManager executorService, InstanceEnvironment<AtomSource> atomSourceContext) {
+   public ManagedTaskImpl(Task task, ListenerManager listenerManager, TimeValue interval, ExecutionManager executorService, InstanceContext<AtomSource> atomSourceContext) {
       this.task = task;
 
       this.listenerManager = listenerManager;
@@ -76,7 +76,7 @@ public class ManagedTaskImpl implements ManagedTask {
       atomSourceContext.stepInto();
 
       try {
-         atomSourceContext.getInstance().init(taskContext);
+         atomSourceContext.instance().init(taskContext);
       } finally {
          atomSourceContext.stepOut();
       }
@@ -94,7 +94,7 @@ public class ManagedTaskImpl implements ManagedTask {
          registeredListener.listenerContext().stepInto();
 
          try {
-            registeredListener.listenerContext().getInstance().destroy();
+            registeredListener.listenerContext().instance().destroy();
          } catch (DestructionException sde) {
             LOG.error(sde.getMessage(), sde);
          } finally {
@@ -105,7 +105,7 @@ public class ManagedTaskImpl implements ManagedTask {
       atomSourceContext.stepInto();
 
       try {
-         atomSourceContext.getInstance().destroy();
+         atomSourceContext.instance().destroy();
       } catch(DestructionException de) {
          LOG.error("Failed to destroy task " + task + " reason: " + de.getMessage(), de);
       } finally {
@@ -120,7 +120,7 @@ public class ManagedTaskImpl implements ManagedTask {
          atomSourceContext.stepInto();
 
          try {
-            final AtomSourceResult pollResult = atomSourceContext.getInstance().poll();
+            final AtomSourceResult pollResult = atomSourceContext.instance().poll();
 
             if (pollResult.type() != ResultType.EMPTY) {
                dispatchToListeners(pollResult);

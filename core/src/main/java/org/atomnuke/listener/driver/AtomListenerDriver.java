@@ -2,7 +2,7 @@ package org.atomnuke.listener.driver;
 
 import org.atomnuke.atom.model.Entry;
 import org.atomnuke.atom.model.Feed;
-import org.atomnuke.plugin.InstanceEnvironment;
+import org.atomnuke.plugin.InstanceContext;
 import org.atomnuke.listener.AtomListener;
 import org.atomnuke.listener.AtomListenerResult;
 import org.atomnuke.listener.ListenerResult;
@@ -49,14 +49,14 @@ public class AtomListenerDriver implements RegisteredListenerDriver {
       }
    }
 
-   private ListenerResult drive(InstanceEnvironment<? extends AtomListener> listenerContext) {
+   private ListenerResult drive(InstanceContext<? extends AtomListener> listenerContext) {
       listenerContext.stepInto();
 
       try {
          if (feed != null) {
-            return listenerContext.getInstance().feedPage(feed);
+            return listenerContext.instance().feedPage(feed);
          } else if (entry != null) {
-            return listenerContext.getInstance().entry(entry);
+            return listenerContext.instance().entry(entry);
          }
       } catch (Exception ex) {
          LOG.error(ex.getMessage(), ex);

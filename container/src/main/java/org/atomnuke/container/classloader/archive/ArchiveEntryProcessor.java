@@ -14,6 +14,7 @@ import java.util.jar.JarInputStream;
 public class ArchiveEntryProcessor {
 
    private static final Logger LOG = LoggerFactory.getLogger(ArchiveEntryProcessor.class);
+   
    private final ArchiveResource archiveResource;
    private final ArchiveEntryHelper helper;
    private final File unpackDirectory;
@@ -79,11 +80,12 @@ public class ArchiveEntryProcessor {
    }
 
    private ArchiveStackElement descendIntoEntry(final byte[] entryBytes) throws IOException {
+      final File unpakTarget = unpackTargetFor(unpackDirectory, archiveResource);
       final JarInputStream embeddedJarInputStream = new JarInputStream(new ByteArrayInputStream(entryBytes));
 
       // TODO: This totally doesn't belong here
       // ManifestProcessor.processManifest(ArchiveEntryDescriptorBuilder.build(archiveEntryDescriptor.getArchiveLocation(), ArchiveResource.ROOT_ARCHIVE, ManifestProcessor.MANIFEST_PATH), embeddedJarInputStream, helper);
 
-      return new ArchiveStackElement(embeddedJarInputStream, archiveResource);
+      return new ArchiveStackElement(embeddedJarInputStream, ArchiveResourceBuilder.instance().build(unpakTarget.toURI(), unpakTarget.getAbsolutePath()));
    }
 }

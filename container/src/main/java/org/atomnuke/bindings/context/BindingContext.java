@@ -1,9 +1,10 @@
 package org.atomnuke.bindings.context;
 
+import java.net.URI;
 import org.atomnuke.bindings.BindingInstantiationException;
-import org.atomnuke.bindings.loader.Loader;
+import org.atomnuke.bindings.BindingLoaderException;
 import org.atomnuke.bindings.lang.LanguageDescriptor;
-import org.atomnuke.plugin.InstanceEnvironment;
+import org.atomnuke.plugin.Environment;
 
 /**
  *
@@ -13,9 +14,11 @@ public interface BindingContext {
 
    LanguageDescriptor language();
 
-   Loader loader();
+   void load(URI in) throws BindingLoaderException;
 
    boolean hasRef(String ref);
 
-   <T> InstanceEnvironment<T> instantiate(Class<T> interfaceType, String href) throws BindingInstantiationException;
+   Environment environment();
+
+   <T> T instantiate(Class<T> interfaceType, String href) throws BindingInstantiationException;
 }

@@ -98,7 +98,7 @@
 
          <dependency>
             <groupId>org.atomnuke.support</groupId>
-            <artifactId>configuration</artifactId>
+            <artifactId>configuration-support</artifactId>
             <version>${project.version}</version>
          </dependency>
 
@@ -125,6 +125,12 @@
             <groupId>org.python</groupId>
             <artifactId>jython</artifactId>
             <version>2.5.2</version>
+         </dependency>
+
+         <dependency>
+            <groupId>org.reflections</groupId>
+            <artifactId>reflections</artifactId>
+            <version>0.9.8</version>
          </dependency>
 
          <dependency>

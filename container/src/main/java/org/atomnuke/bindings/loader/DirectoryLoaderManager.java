@@ -1,9 +1,19 @@
 package org.atomnuke.bindings.loader;
 
 import java.io.File;
-import java.util.List;
-import org.atomnuke.bindings.context.BindingContext;
+import java.net.URI;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import org.atomnuke.bindings.BindingContextManagerFactory;
 import org.atomnuke.bindings.BindingLoaderException;
+import org.atomnuke.container.packaging.DeployedPackage;
+import org.atomnuke.container.packaging.PackageContext;
+import org.atomnuke.container.packaging.PackageLoader;
+import org.atomnuke.container.packaging.PackageLoaderImpl;
+import org.atomnuke.container.packaging.Unpacker;
+import org.atomnuke.container.packaging.UnpackerException;
+import org.atomnuke.container.packaging.archive.zip.ArchiveExtractor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,15 +25,22 @@ public class DirectoryLoaderManager {
 
    private static final Logger LOG = LoggerFactory.getLogger(DirectoryLoaderManager.class);
    
-   private final List<BindingContext> bindingContexts;
+   private final Map<DeployedPackage, PackageContext> loadedPackages;
+   private final Unpacker archiveUnpacker;
    private final File libraryDirectory;
 
-   public DirectoryLoaderManager(String libraryDirectory, List<BindingContext> bindingContexts) {
-      this.libraryDirectory = new File(libraryDirectory);
-      this.bindingContexts = bindingContexts;
+   public DirectoryLoaderManager(File deploymentDirectory, File libraryDirectory) {
+      this.libraryDirectory = libraryDirectory;
+
+      loadedPackages = new HashMap<DeployedPackage, PackageContext>();
+      archiveUnpacker = new ArchiveExtractor(deploymentDirectory);
    }
 
-   public void load() throws BindingLoaderException {
+   public Collection<PackageContext> loadedPackageContexts() {
+      return loadedPackages.values();
+   }
+
+   public void load(BindingContextManagerFactory bindingContextManagerFactory) throws BindingLoaderException {
       if (!libraryDirectory.exists()) {
          if (!libraryDirectory.mkdirs()) {
             throw new BindingLoaderException("Unable to make library directory: " + libraryDirectory.getAbsolutePath());
@@ -34,29 +51,26 @@ public class DirectoryLoaderManager {
          throw new BindingLoaderException(libraryDirectory.getAbsolutePath() + " is not a valid library directory.");
       }
 
-      for (File file : libraryDirectory.listFiles()) {
-         if (file.isDirectory()) {
+      for (File archive : libraryDirectory.listFiles()) {
+         if (archive.isDirectory()) {
             // Ignore this for now
             continue;
          }
 
-         final String fileName = file.getName();
+         final URI archiveUri = archive.toURI();
 
-         for (BindingContext context : bindingContexts) {
-            boolean load = false;
+         if (archiveUnpacker.canUnpack(archiveUri)) {
+            final PackageLoader packageLoader = new PackageLoaderImpl(bindingContextManagerFactory);
 
-            for (String extension : context.language().fileExtensions()) {
-               if (fileName.endsWith(extension)) {
-                  load = true;
-                  break;
-               }
-            }
+            try {
+               final DeployedPackage deployedPackage = archiveUnpacker.unpack(archiveUri);
+               final PackageContext packageContext = packageLoader.load(deployedPackage);
 
-            if (load) {
-               context.loader().load(file.toURI());
+               loadedPackages.put(deployedPackage, packageContext);
 
-               LOG.info("Loaded file: " + file.getAbsolutePath());
-               break;
+               LOG.info("Loaded file: " + archive.getAbsolutePath());
+            } catch (UnpackerException ue) {
+               throw new BindingLoaderException(ue);
             }
          }
       }

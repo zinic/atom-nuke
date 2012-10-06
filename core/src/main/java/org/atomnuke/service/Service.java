@@ -1,6 +1,6 @@
 package org.atomnuke.service;
 
-import org.atomnuke.plugin.InstanceEnvironment;
+import org.atomnuke.plugin.InstanceContext;
 
 /**
  *
@@ -10,5 +10,5 @@ public interface Service {
 
    String name();
 
-   InstanceEnvironment<ServiceLifeCycle> instanceEnvironment();
+   InstanceContext<ServiceLifeCycle> instanceContext();
 }

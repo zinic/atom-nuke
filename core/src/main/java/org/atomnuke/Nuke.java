@@ -1,6 +1,6 @@
 package org.atomnuke;
 
-import org.atomnuke.plugin.InstanceEnvironment;
+import org.atomnuke.plugin.InstanceContext;
 import org.atomnuke.kernel.shutdown.ShutdownHook;
 import org.atomnuke.source.AtomSource;
 import org.atomnuke.task.Task;
@@ -49,7 +49,7 @@ public interface Nuke {
     * @throws InitializationException thrown when initializing the source fails
     * wit the current task context.
     */
-   Task follow(InstanceEnvironment<AtomSource> source, TimeValue pollingInterval);
+   Task follow(InstanceContext<AtomSource> source, TimeValue pollingInterval);
 
    ShutdownHook shutdownHook();
 }

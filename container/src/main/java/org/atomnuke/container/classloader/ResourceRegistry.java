@@ -1,20 +1,18 @@
 package org.atomnuke.container.classloader;
 
-import java.util.Set;
+import java.util.Collection;
 
-public interface ResourceRegistry extends Cloneable {
+public interface ResourceRegistry {
 
-   /**
-    *
-    * @param classPath Class path definition should be delimited by '/' instead of '.'
-    *
-    * @return ResourceDescriptor
-    */
-   ResourceDescriptor resourceDescriptorFor(String classPath);
+   ResourceDescriptor lookupClasspath(String classPath);
+
+   ResourceDescriptor lookupResource(String resourcePath);
 
    boolean hasConflictingIdentity(ResourceDescriptor resource);
 
    void register(ResourceDescriptor resource);
 
-   Set<String> registeredResources();
+   void classpathAlias(String classpathAlias, String resourcePath);
+
+   Collection<ResourceDescriptor> resources();
 }

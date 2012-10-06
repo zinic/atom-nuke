@@ -13,7 +13,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
-import org.atomnuke.plugin.InstanceEnvironment;
+import org.atomnuke.plugin.InstanceContext;
 import org.atomnuke.plugin.local.LocalInstanceEnvironment;
 import org.atomnuke.kernel.resource.Destroyable;
 import org.atomnuke.kernel.shutdown.ShutdownHook;
@@ -119,7 +119,7 @@ public class NukeKernel implements Nuke {
    }
 
    @Override
-   public Task follow(InstanceEnvironment<AtomSource> source, TimeValue pollingInterval) {
+   public Task follow(InstanceContext<AtomSource> source, TimeValue pollingInterval) {
       return taskManager.follow(source, pollingInterval);
    }
 

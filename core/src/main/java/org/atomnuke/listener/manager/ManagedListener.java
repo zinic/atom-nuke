@@ -1,6 +1,6 @@
 package org.atomnuke.listener.manager;
 
-import org.atomnuke.plugin.InstanceEnvironment;
+import org.atomnuke.plugin.InstanceContext;
 import org.atomnuke.listener.AtomListener;
 import org.atomnuke.task.context.TaskContext;
 import org.atomnuke.task.lifecycle.InitializationException;
@@ -12,10 +12,10 @@ import org.atomnuke.util.remote.CancellationRemote;
  */
 public class ManagedListener {
 
-   private final InstanceEnvironment<? extends AtomListener> listenerContext;
+   private final InstanceContext<? extends AtomListener> listenerContext;
    private final CancellationRemote cancellationRemote;
 
-   public ManagedListener(CancellationRemote cancellationRemote, InstanceEnvironment<? extends AtomListener> listenerContext) {
+   public ManagedListener(CancellationRemote cancellationRemote, InstanceContext<? extends AtomListener> listenerContext) {
       this.cancellationRemote = cancellationRemote;
       this.listenerContext = listenerContext;
    }
@@ -28,7 +28,7 @@ public class ManagedListener {
       listenerContext.stepInto();
 
       try {
-         listenerContext.getInstance().init(tc);
+         listenerContext.instance().init(tc);
       } finally {
          listenerContext.stepOut();
       }
@@ -38,7 +38,7 @@ public class ManagedListener {
       cancellationRemote.cancel();
    }
 
-   public InstanceEnvironment<? extends AtomListener> listenerContext() {
+   public InstanceContext<? extends AtomListener> listenerContext() {
       return listenerContext;
    }
 }

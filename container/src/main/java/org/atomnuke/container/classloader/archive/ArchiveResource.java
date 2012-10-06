@@ -8,14 +8,14 @@ public class ArchiveResource {
    private final ResourceType resourceType;
    private final URI archiveLocation;
 
-   public ArchiveResource(String fullName, String resourcePath, String simpleName, String extension, URI archiveLocation) {
+   public ArchiveResource(String resourcePath, String simpleName, String extension, URI archiveLocation) {
       resourceType = ResourceType.findResourceTypeForExtension(extension);
 
       this.resourcePath = resourcePath;
       this.simpleName = simpleName;
       this.extension = extension;
-      this.fullName = fullName;
       this.archiveLocation = archiveLocation;
+      this.fullName = (resourcePath.endsWith("/") ? resourcePath : resourcePath + "/") + simpleName + "." + extension;
    }
 
    public ResourceType resourceType() {

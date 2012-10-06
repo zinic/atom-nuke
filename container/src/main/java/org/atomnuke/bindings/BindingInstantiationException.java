@@ -6,6 +6,10 @@ package org.atomnuke.bindings;
  */
 public class BindingInstantiationException extends Exception {
 
+   public BindingInstantiationException(Throwable cause) {
+      super(cause);
+   }
+
    public BindingInstantiationException(String message) {
       super(message);
    }

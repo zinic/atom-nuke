@@ -1,7 +1,7 @@
 package org.atomnuke.plugin.proxy.japi;
 
 import java.lang.reflect.Proxy;
-import org.atomnuke.plugin.InstanceEnvironment;
+import org.atomnuke.plugin.InstanceContext;
 import org.atomnuke.plugin.proxy.InstanceEnvProxyFactory;
 
 /**
@@ -17,7 +17,7 @@ public class JapiProxyFactory implements InstanceEnvProxyFactory {
    }
 
    @Override
-   public <T> T newProxy(Class<T> masqueradeClass, InstanceEnvironment<T> env) {
+   public <T> T newProxy(Class<T> masqueradeClass, InstanceContext<T> env) {
       return (T) Proxy.newProxyInstance(
               Thread.currentThread().getContextClassLoader(), new Class[]{masqueradeClass}, new InstanceEnvrionmentProxy(env));
    }

@@ -1,6 +1,6 @@
 package org.atomnuke.task;
 
-import org.atomnuke.plugin.InstanceEnvironment;
+import org.atomnuke.plugin.InstanceContext;
 import org.atomnuke.source.AtomSource;
 import org.atomnuke.util.TimeValue;
 
@@ -23,5 +23,5 @@ public interface Tasker {
     * @param pollingInterval the polling interval of this source.
     * @return a new polling task instance.
     */
-   Task follow(InstanceEnvironment<AtomSource> source, TimeValue pollingInterval);
+   Task follow(InstanceContext<AtomSource> source, TimeValue pollingInterval);
 }

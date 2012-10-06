@@ -1,15 +1,18 @@
 package org.atomnuke.bindings.rhinojs;
 
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URI;
 import javax.script.Invocable;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import org.atomnuke.bindings.context.BindingContext;
 import org.atomnuke.bindings.BindingInstantiationException;
+import org.atomnuke.bindings.BindingLoaderException;
 import org.atomnuke.bindings.lang.LanguageDescriptor;
 import org.atomnuke.bindings.lang.LanguageDescriptorImpl;
-import org.atomnuke.bindings.loader.Loader;
 import org.atomnuke.config.model.LanguageType;
-import org.atomnuke.plugin.InstanceEnvironment;
+import org.atomnuke.plugin.Environment;
 
 /**
  *
@@ -32,17 +35,12 @@ public class RhinoInterpreterContext implements BindingContext {
 
       return new RhinoInterpreterContext(scriptEngineManager, classLoader);
    }
-   private final ScriptEngineManager scriptEngineManager;
-   private final ClassLoader internalLoader;
+   private final RhinoJsEnvrionment rhinoJsEnvrionment;
    private final ScriptEngine jsEngine;
-   private final RhinoLoader loader;
 
    public RhinoInterpreterContext(ScriptEngineManager scriptEngineManager, ClassLoader internalLoader) {
-      this.scriptEngineManager = scriptEngineManager;
-      this.internalLoader = internalLoader;
-
       jsEngine = scriptEngineManager.getEngineByName("javascript");
-      loader = new RhinoLoader(jsEngine);
+      rhinoJsEnvrionment = new RhinoJsEnvrionment(internalLoader);
    }
 
    @Override
@@ -51,24 +49,38 @@ public class RhinoInterpreterContext implements BindingContext {
    }
 
    @Override
-   public Loader loader() {
-      return loader;
-   }
-
-   @Override
    public boolean hasRef(String ref) {
       return jsEngine.get(ref) != null;
    }
 
    @Override
-   public <T> InstanceEnvironment<T> instantiate(Class<T> interfaceType, String href) throws BindingInstantiationException {
+   public Environment environment() {
+      return rhinoJsEnvrionment;
+   }
+
+   @Override
+   public void load(URI inputLocation) throws BindingLoaderException {
+      try {
+         final InputStream in = inputLocation.toURL().openStream();
+
+         jsEngine.eval(new InputStreamReader(in));
+
+         in.close();
+      } catch (Exception se) {
+         throw new BindingLoaderException("Failed to load Javascript file. Reason: " + se.getMessage(), se);
+      }
+   }
+
+   @Override
+   public <T> T instantiate(Class<T> interfaceType, String href) throws BindingInstantiationException {
       try {
          final Invocable inv = (Invocable) jsEngine;
          final Object builderFunctionRef = jsEngine.get(href);
 
          if (builderFunctionRef != null) {
             final Object instanceRef = inv.invokeFunction(href, new Object[0]);
-            return new RhinoInstanceContext<T>(internalLoader, inv.getInterface(instanceRef, interfaceType));
+
+            return inv.getInterface(instanceRef, interfaceType);
          }
 
          throw new BindingInstantiationException("Unable to lookup function: " + href + " in the javascript engine global scope.");
