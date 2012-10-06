@@ -1,4 +1,4 @@
-package org.atomnuke.container.classloader;
+package org.atomnuke.container.packaging.resource;
 
 import java.util.Collection;
 

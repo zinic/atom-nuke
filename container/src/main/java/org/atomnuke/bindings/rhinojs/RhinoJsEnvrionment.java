@@ -1,6 +1,6 @@
 package org.atomnuke.bindings.rhinojs;
 
-import org.atomnuke.bindings.context.ClassLoaderEnvironment;
+import org.atomnuke.plugin.env.ClassLoaderEnvironment;
 
 /**
  *

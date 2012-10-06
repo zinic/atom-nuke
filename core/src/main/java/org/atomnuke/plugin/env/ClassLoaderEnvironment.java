@@ -1,4 +1,4 @@
-package org.atomnuke.bindings.context;
+package org.atomnuke.plugin.env;
 
 import org.atomnuke.plugin.Environment;
 

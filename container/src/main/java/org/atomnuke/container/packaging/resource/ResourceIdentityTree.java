@@ -1,4 +1,4 @@
-package org.atomnuke.container.classloader;
+package org.atomnuke.container.packaging.resource;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -32,7 +32,7 @@ public class ResourceIdentityTree implements ResourceRegistry {
 
    @Override
    public void register(ResourceDescriptor resource) {
-      resourceIdentityTree.put(resource.resourcePath(), resource);
+      resourceIdentityTree.put(resource.deployedPath(), resource);
    }
 
    @Override
@@ -49,7 +49,7 @@ public class ResourceIdentityTree implements ResourceRegistry {
 
    @Override
    public boolean hasConflictingIdentity(ResourceDescriptor resourceDescriptor) {
-      final ResourceDescriptor internalDescriptor = resourceIdentityTree.get(resourceDescriptor.resourcePath());
+      final ResourceDescriptor internalDescriptor = resourceIdentityTree.get(resourceDescriptor.deployedPath());
 
       if (internalDescriptor != null) {
          // If the identies are not equal then this may be a potential conflict

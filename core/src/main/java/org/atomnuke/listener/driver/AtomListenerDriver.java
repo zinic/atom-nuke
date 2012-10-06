@@ -50,9 +50,9 @@ public class AtomListenerDriver implements RegisteredListenerDriver {
    }
 
    private ListenerResult drive(InstanceContext<? extends AtomListener> listenerContext) {
-      listenerContext.stepInto();
-
       try {
+         listenerContext.environment().stepInto();
+         
          if (feed != null) {
             return listenerContext.instance().feedPage(feed);
          } else if (entry != null) {
@@ -63,7 +63,7 @@ public class AtomListenerDriver implements RegisteredListenerDriver {
 
          return AtomListenerResult.halt(ex.getMessage());
       } finally {
-         listenerContext.stepOut();
+         listenerContext.environment().stepOut();
       }
 
       return AtomListenerResult.halt("Feed document was null.");

@@ -6,7 +6,7 @@ import java.net.URI;
 import javax.script.Invocable;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
-import org.atomnuke.bindings.context.BindingContext;
+import org.atomnuke.bindings.context.BindingEnvironment;
 import org.atomnuke.bindings.BindingInstantiationException;
 import org.atomnuke.bindings.BindingLoaderException;
 import org.atomnuke.bindings.lang.LanguageDescriptor;
@@ -18,7 +18,7 @@ import org.atomnuke.plugin.Environment;
  *
  * @author zinic
  */
-public class RhinoInterpreterContext implements BindingContext {
+public class RhinoInterpreterContext implements BindingEnvironment {
 
    private static final LanguageDescriptor LANGUAGE_DESCRIPTOR = new LanguageDescriptorImpl(LanguageType.JAVASCRIPT, ".js");
 
@@ -35,6 +35,7 @@ public class RhinoInterpreterContext implements BindingContext {
 
       return new RhinoInterpreterContext(scriptEngineManager, classLoader);
    }
+
    private final RhinoJsEnvrionment rhinoJsEnvrionment;
    private final ScriptEngine jsEngine;
 
@@ -59,10 +60,9 @@ public class RhinoInterpreterContext implements BindingContext {
    }
 
    @Override
-   public void load(URI inputLocation) throws BindingLoaderException {
+   public void load(String relativePath, URI inputLocation) throws BindingLoaderException {
       try {
          final InputStream in = inputLocation.toURL().openStream();
-
          jsEngine.eval(new InputStreamReader(in));
 
          in.close();

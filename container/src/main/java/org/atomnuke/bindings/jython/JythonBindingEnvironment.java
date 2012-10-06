@@ -2,10 +2,10 @@ package org.atomnuke.bindings.jython;
 
 import java.io.InputStream;
 import java.net.URI;
-import org.atomnuke.bindings.context.BindingContext;
+import org.atomnuke.bindings.context.BindingEnvironment;
 import org.atomnuke.bindings.BindingInstantiationException;
 import org.atomnuke.bindings.BindingLoaderException;
-import org.atomnuke.bindings.context.ClassLoaderEnvironment;
+import org.atomnuke.plugin.env.ClassLoaderEnvironment;
 import org.atomnuke.bindings.lang.LanguageDescriptor;
 import org.atomnuke.bindings.lang.LanguageDescriptorImpl;
 import org.atomnuke.config.model.LanguageType;
@@ -19,18 +19,18 @@ import org.python.util.PythonInterpreter;
  *
  * @author zinic
  */
-public class PythonInterpreterContext implements BindingContext {
+public class JythonBindingEnvironment implements BindingEnvironment {
 
    private static final LanguageDescriptor LANGUAGE_DESCRIPTOR = new LanguageDescriptorImpl(LanguageType.PYTHON, ".py");
 
    private final PythonInterpreter pythonInterpreter;
    private final Environment pythonEnvironment;
 
-   public PythonInterpreterContext() {
+   public JythonBindingEnvironment() {
       this(false);
    }
 
-   public PythonInterpreterContext(boolean beVerbose) {
+   public JythonBindingEnvironment(boolean beVerbose) {
       if (!beVerbose) {
          // Quiet Jython
          Options.verbose = -1;
@@ -38,7 +38,7 @@ public class PythonInterpreterContext implements BindingContext {
 
 //      pythonInterpreter.setErr(outputStream);
 //      pythonInterpreter.setOut(outputStream);
-      
+
       final ClassLoader loader = new ClassLoader() {
       };
 
@@ -47,7 +47,7 @@ public class PythonInterpreterContext implements BindingContext {
       final PySystemState systemState = new PySystemState();
       systemState.setClassLoader(loader);
 
-      pythonInterpreter = new PythonInterpreter(new PyObject(), systemState);
+      pythonInterpreter = new PythonInterpreter(null, systemState);
    }
 
    @Override
@@ -61,10 +61,9 @@ public class PythonInterpreterContext implements BindingContext {
    }
 
    @Override
-   public void load(URI input) throws BindingLoaderException {
+   public void load(String relativePath, URI input) throws BindingLoaderException {
       try {
          final InputStream in = input.toURL().openStream();
-
          pythonInterpreter.execfile(in);
 
          in.close();

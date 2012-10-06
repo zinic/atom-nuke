@@ -5,12 +5,13 @@ import java.util.concurrent.atomic.AtomicLong;
 import org.atomnuke.atom.model.Entry;
 import org.atomnuke.atom.model.Feed;
 import org.atomnuke.atom.model.builder.FeedBuilder;
-import org.atomnuke.plugin.local.LocalInstanceEnvironment;
 import org.atomnuke.listener.AtomListener;
+import org.atomnuke.plugin.local.LocalInstanceEnvironment;
 import org.atomnuke.listener.AtomListenerException;
 import org.atomnuke.listener.AtomListenerResult;
 import org.atomnuke.listener.ListenerResult;
 import org.atomnuke.listener.ReentrantAtomListener;
+import org.atomnuke.plugin.InstanceContextImpl;
 import org.atomnuke.source.AtomSource;
 import org.atomnuke.source.AtomSourceException;
 import org.atomnuke.source.result.AtomSourceResult;
@@ -49,7 +50,6 @@ public class NukeKernelTest {
       };
 
       final AtomListener listener = new ReentrantAtomListener() {
-
          @Override
          public ListenerResult entry(Entry entry) throws AtomListenerException {
             eventsProcessed.incrementAndGet();
@@ -75,7 +75,7 @@ public class NukeKernelTest {
 
       for (int taskId = 1; taskId <= 30; taskId++) {
          final Task task = nukeKernel.follow(source, new TimeValue(10 * taskId, TimeUnit.NANOSECONDS));
-         task.addListener(new LocalInstanceEnvironment(listener));
+         task.addListener(new InstanceContextImpl<AtomListener>(LocalInstanceEnvironment.getInstance(), listener));
       }
 
       nukeKernel.start();

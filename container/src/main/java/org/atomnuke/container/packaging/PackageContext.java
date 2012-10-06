@@ -1,6 +1,6 @@
 package org.atomnuke.container.packaging;
 
-import org.atomnuke.bindings.BindingContextManager;
+import org.atomnuke.bindings.PackageBindings;
 
 /**
  *
@@ -10,5 +10,5 @@ public interface PackageContext {
 
    String name();
 
-   BindingContextManager bindingContextManager();
+   PackageBindings packageBindings();
 }

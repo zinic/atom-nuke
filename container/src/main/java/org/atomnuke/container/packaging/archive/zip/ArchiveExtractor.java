@@ -1,21 +1,22 @@
 package org.atomnuke.container.packaging.archive.zip;
 
+import com.rackspace.papi.commons.util.SystemUtils;
 import com.rackspace.papi.commons.util.io.MessageDigesterOutputStream;
 import com.rackspace.papi.commons.util.io.OutputStreamSplitter;
 import com.rackspace.papi.commons.util.io.RawInputStreamReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URI;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.UUID;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
-import org.atomnuke.container.classloader.ResourceDescriptor;
-import org.atomnuke.container.classloader.ResourceIdentityTree;
+import org.atomnuke.container.packaging.resource.ResourceDescriptor;
+import org.atomnuke.container.packaging.resource.ResourceIdentityTree;
 import org.atomnuke.container.packaging.DeployedPackage;
 import org.atomnuke.container.packaging.DeployedPackageImpl;
 import org.atomnuke.container.packaging.Unpacker;
@@ -47,7 +48,7 @@ public class ArchiveExtractor implements Unpacker {
    private final File deploymentRoot;
 
    public ArchiveExtractor(File deploymentRoot) {
-      this.deploymentRoot = deploymentRoot;
+      this.deploymentRoot = new File(deploymentRoot, UUID.randomUUID() + "." + SystemUtils.getPid());
       archivesToUnpack = new LinkedList<EmbeddedArchive>();
    }
 
@@ -127,13 +128,12 @@ public class ArchiveExtractor implements Unpacker {
             outputStreamSplitter.close();
 
             // Register the new resource
-            resourceIdentityTree.register(new ResourceDescriptor(extractionTarget.getAbsolutePath(), archiveResource.type(), digesterStream.getDigest()));
+            resourceIdentityTree.register(new ResourceDescriptor(extractionTarget.getAbsolutePath(), archiveResource.name(), archiveResource.type(), digesterStream.getDigest()));
          }
       }
-
-      if (!new File(location).delete()) {
-         LOG.info("Failed to delete temp archive. This may make the deployment directory messy but shouldn't hurt anything.");
-      }
+//      if (!new File(location).delete()) {
+//         LOG.info("Failed to delete temp archive. This may make the deployment directory messy but shouldn't hurt anything.");
+//      }
    }
 
    private void unpackRootArchive(URI archiveLocation, final ResourceType uriType, final ResourceIdentityTree resourceIdentityTree) throws IOException {

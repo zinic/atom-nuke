@@ -5,7 +5,7 @@ import java.net.URI;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import org.atomnuke.bindings.BindingContextManagerFactory;
+import org.atomnuke.bindings.BindingEnvironmentManager;
 import org.atomnuke.bindings.BindingLoaderException;
 import org.atomnuke.container.packaging.DeployedPackage;
 import org.atomnuke.container.packaging.PackageContext;
@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
 public class DirectoryLoaderManager {
 
    private static final Logger LOG = LoggerFactory.getLogger(DirectoryLoaderManager.class);
-   
+
    private final Map<DeployedPackage, PackageContext> loadedPackages;
    private final Unpacker archiveUnpacker;
    private final File libraryDirectory;
@@ -40,7 +40,7 @@ public class DirectoryLoaderManager {
       return loadedPackages.values();
    }
 
-   public void load(BindingContextManagerFactory bindingContextManagerFactory) throws BindingLoaderException {
+   public void load(BindingEnvironmentManager bindingContextManagerFactory) throws BindingLoaderException {
       if (!libraryDirectory.exists()) {
          if (!libraryDirectory.mkdirs()) {
             throw new BindingLoaderException("Unable to make library directory: " + libraryDirectory.getAbsolutePath());

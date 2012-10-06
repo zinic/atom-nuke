@@ -203,7 +203,7 @@ public class ContainerContext {
          throw new ConfigurationException("Unable to locate listener or realy, " + binding.getReceiver() + ".");
       }
 
-      cancellationRemotes.put(binding.getReceiver(), source.addListener(listenerCtx.environment(), listenerCtx.instance()));
+      cancellationRemotes.put(binding.getReceiver(), source.addListener(listenerCtx));
       bindings.put(binding.getId(), binding);
    }
 

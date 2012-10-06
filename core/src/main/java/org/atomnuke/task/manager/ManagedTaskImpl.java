@@ -73,12 +73,11 @@ public class ManagedTaskImpl implements ManagedTask {
    public void init(TaskContext taskContext) throws InitializationException {
       LOG.debug("Initializing task: " + task);
 
-      atomSourceContext.stepInto();
-
       try {
+         atomSourceContext.environment().stepInto();
          atomSourceContext.instance().init(taskContext);
       } finally {
-         atomSourceContext.stepOut();
+         atomSourceContext.environment().stepOut();
       }
 
       for (ManagedListener registeredListener : listenerManager.listeners()) {
@@ -91,25 +90,23 @@ public class ManagedTaskImpl implements ManagedTask {
       LOG.debug("Destroying task: " + task);
 
       for (ManagedListener registeredListener : listenerManager.listeners()) {
-         registeredListener.listenerContext().stepInto();
-
          try {
+            registeredListener.listenerContext().environment().stepInto();
             registeredListener.listenerContext().instance().destroy();
          } catch (DestructionException sde) {
             LOG.error(sde.getMessage(), sde);
          } finally {
-            registeredListener.listenerContext().stepOut();
+            registeredListener.listenerContext().environment().stepOut();
          }
       }
 
-      atomSourceContext.stepInto();
-
       try {
+         atomSourceContext.environment().stepInto();
          atomSourceContext.instance().destroy();
-      } catch(DestructionException de) {
+      } catch (DestructionException de) {
          LOG.error("Failed to destroy task " + task + " reason: " + de.getMessage(), de);
       } finally {
-         atomSourceContext.stepOut();
+         atomSourceContext.environment().stepOut();
       }
    }
 
@@ -117,9 +114,9 @@ public class ManagedTaskImpl implements ManagedTask {
    public void run() {
       // Only poll if we have listeners
       if (listenerManager.hasListeners()) {
-         atomSourceContext.stepInto();
-
          try {
+            atomSourceContext.environment().stepInto();
+
             final AtomSourceResult pollResult = atomSourceContext.instance().poll();
 
             if (pollResult.type() != ResultType.EMPTY) {
@@ -128,7 +125,7 @@ public class ManagedTaskImpl implements ManagedTask {
          } catch (Exception ex) {
             LOG.error(ex.getMessage(), ex);
          } finally {
-            atomSourceContext.stepOut();
+            atomSourceContext.environment().stepOut();
          }
       }
    }

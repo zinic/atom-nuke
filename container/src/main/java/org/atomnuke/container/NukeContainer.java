@@ -12,10 +12,10 @@ import java.util.concurrent.atomic.AtomicLong;
 import javax.xml.bind.JAXBException;
 import org.atomnuke.NukeEnv;
 import org.atomnuke.NukeKernel;
+import org.atomnuke.bindings.BindingEnvironmentManager;
 import org.atomnuke.bindings.BindingLoaderException;
 import org.atomnuke.bindings.loader.DirectoryLoaderManager;
-import org.atomnuke.bindings.resolver.BindingResolver;
-import org.atomnuke.bindings.resolver.BindingResolverImpl;
+import org.atomnuke.bindings.stock.BindingEnvironmentManagerImpl;
 import org.atomnuke.config.model.ServerConfiguration;
 import org.atomnuke.config.server.ServerConfigurationManager;
 import org.atomnuke.container.context.ContextManager;
@@ -83,13 +83,13 @@ public class NukeContainer {
       LOG.info("Starting Nuke container...");
       LOG.debug("Building loader manager.");
 
-      final BindingResolver bindingsResolver = BindingResolverImpl.defaultResolver(serviceManager);
-      final DirectoryLoaderManager loaderManager = new DirectoryLoaderManager(NukeEnv.NUKE_LIB, bindingsResolver.registeredBindingContexts());
+      final DirectoryLoaderManager loaderManager = new DirectoryLoaderManager(new File(NukeEnv.NUKE_DEPLOY), new File(NukeEnv.NUKE_LIB));
+      final BindingEnvironmentManager bindingEnvironmentManager = new BindingEnvironmentManagerImpl();
 
       try {
          LOG.debug("Loader manager starting.");
 
-         loaderManager.load();
+         loaderManager.load(bindingEnvironmentManager);
       } catch (BindingLoaderException ble) {
          LOG.debug("An error occured while loading bindings. Reason: " + ble.getMessage(), ble);
 
@@ -107,7 +107,7 @@ public class NukeContainer {
 
       LOG.debug("Building context manager.");
 
-      contextManager = new ContextManager(serviceManager, bindingsResolver, nukeInstance, taskManager);
+      contextManager = new ContextManager(serviceManager, loaderManager.loadedPackageContexts(), nukeInstance, taskManager);
 
       LOG.debug("Registering configuration listener.");
 

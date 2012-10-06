@@ -6,8 +6,8 @@ import java.io.InputStream;
 import java.net.URI;
 import org.atomnuke.bindings.BindingInstantiationException;
 import org.atomnuke.bindings.BindingLoaderException;
-import org.atomnuke.bindings.context.BindingContext;
-import org.atomnuke.bindings.context.ClassLoaderEnvironment;
+import org.atomnuke.bindings.context.BindingEnvironment;
+import org.atomnuke.plugin.env.ClassLoaderEnvironment;
 import org.atomnuke.bindings.lang.LanguageDescriptor;
 import org.atomnuke.bindings.lang.LanguageDescriptorImpl;
 import org.atomnuke.config.model.LanguageType;
@@ -17,7 +17,7 @@ import org.atomnuke.plugin.Environment;
  *
  * @author zinic
  */
-public class ClassLoaderBindingContext implements BindingContext {
+public class ClassLoaderBindingContext implements BindingEnvironment {
 
    private static final LanguageDescriptor LANGUAGE_DESCRIPTOR = new LanguageDescriptorImpl(LanguageType.JAVA, ".class");
 
@@ -27,7 +27,6 @@ public class ClassLoaderBindingContext implements BindingContext {
          super.defineClass(name, bytes, 0, bytes.length);
       }
    }
-
    private final ClassLoaderEnvironment environment;
    private final NukeSimpleClassLoader classLoader;
 
@@ -42,15 +41,19 @@ public class ClassLoaderBindingContext implements BindingContext {
    }
 
    @Override
-   public void load(URI in) throws BindingLoaderException {
-      final String classPath = in.getPath().replace(".class", "").replace("/", ".");
+   public void load(String relativePath, URI resourceLocation) throws BindingLoaderException {
+      final String classPath = relativePath.replace(".class", "").replace("/", ".");
 
       try {
-         final InputStream inputStream = in.toURL().openStream();
+         classLoader.loadClass(classPath);
+      } catch (ClassNotFoundException cnfe) {
+         try {
+            final InputStream inputStream = resourceLocation.toURL().openStream();
 
-         classLoader.defineClass(classPath, RawInputStreamReader.instance().readFully(inputStream));
-      } catch (IOException ioe) {
-         throw new BindingLoaderException(ioe);
+            classLoader.defineClass(classPath, RawInputStreamReader.instance().readFully(inputStream));
+         } catch (IOException ioe) {
+            throw new BindingLoaderException(ioe);
+         }
       }
    }
 

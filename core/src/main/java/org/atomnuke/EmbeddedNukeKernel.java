@@ -7,6 +7,7 @@ import org.atomnuke.kernel.KernelDelegate;
 import org.atomnuke.kernel.resource.Destroyable;
 import org.atomnuke.kernel.shutdown.ShutdownHook;
 import org.atomnuke.kernel.shutdown.KernelShutdownHook;
+import org.atomnuke.plugin.InstanceContextImpl;
 import org.atomnuke.source.AtomSource;
 import org.atomnuke.task.Task;
 import org.atomnuke.task.manager.TaskManager;
@@ -58,7 +59,7 @@ public class EmbeddedNukeKernel implements Nuke {
 
    @Override
    public Task follow(AtomSource source, TimeValue pollingInterval) {
-      return follow(new LocalInstanceEnvironment<AtomSource>(source), pollingInterval);
+      return follow(new InstanceContextImpl<AtomSource>(LocalInstanceEnvironment.getInstance(), source), pollingInterval);
    }
 
    @Override

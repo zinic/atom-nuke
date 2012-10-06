@@ -25,12 +25,11 @@ public class ManagedListener {
    }
 
    public void init(TaskContext tc) throws InitializationException {
-      listenerContext.stepInto();
-
       try {
+         listenerContext.environment().stepInto();
          listenerContext.instance().init(tc);
       } finally {
-         listenerContext.stepOut();
+         listenerContext.environment().stepOut();
       }
    }
 

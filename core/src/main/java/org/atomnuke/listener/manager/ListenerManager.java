@@ -2,7 +2,7 @@ package org.atomnuke.listener.manager;
 
 import java.util.List;
 import org.atomnuke.listener.AtomListener;
-import org.atomnuke.plugin.Environment;
+import org.atomnuke.plugin.InstanceContext;
 import org.atomnuke.util.remote.CancellationRemote;
 
 /**
@@ -11,7 +11,7 @@ import org.atomnuke.util.remote.CancellationRemote;
  */
 public interface ListenerManager {
 
-   CancellationRemote addListener(Environment environment, AtomListener atomListener);
+   CancellationRemote addListener(InstanceContext<? extends AtomListener> atomListenerContext);
 
    boolean hasListeners();
 

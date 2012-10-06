@@ -17,9 +17,9 @@ import org.atomnuke.plugin.InstanceContext;
 import org.atomnuke.plugin.local.LocalInstanceEnvironment;
 import org.atomnuke.kernel.resource.Destroyable;
 import org.atomnuke.kernel.shutdown.ShutdownHook;
+import org.atomnuke.plugin.InstanceContextImpl;
 import org.atomnuke.source.AtomSource;
 import org.atomnuke.task.Task;
-import org.atomnuke.task.lifecycle.InitializationException;
 import org.atomnuke.task.manager.TaskManager;
 import org.atomnuke.task.manager.TaskManagerImpl;
 import org.atomnuke.task.threading.ExecutionManager;
@@ -115,7 +115,7 @@ public class NukeKernel implements Nuke {
 
    @Override
    public Task follow(AtomSource source, TimeValue pollingInterval) {
-      return follow(new LocalInstanceEnvironment<AtomSource>(source), pollingInterval);
+      return follow(new InstanceContextImpl<AtomSource>(LocalInstanceEnvironment.getInstance(), source), pollingInterval);
    }
 
    @Override

@@ -10,11 +10,11 @@ import org.atomnuke.plugin.Environment;
  *
  * @author zinic
  */
-public interface BindingContext {
+public interface BindingEnvironment {
 
    LanguageDescriptor language();
 
-   void load(URI in) throws BindingLoaderException;
+   void load(String relativePath, URI in) throws BindingLoaderException;
 
    boolean hasRef(String ref);
 

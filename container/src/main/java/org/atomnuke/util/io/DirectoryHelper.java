@@ -1,4 +1,4 @@
-package org.atomnuke.container.classloader.archive.util;
+package org.atomnuke.util.io;
 
 import java.io.File;
 

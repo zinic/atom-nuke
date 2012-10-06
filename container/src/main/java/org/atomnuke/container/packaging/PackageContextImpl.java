@@ -1,6 +1,6 @@
 package org.atomnuke.container.packaging;
 
-import org.atomnuke.bindings.BindingContextManager;
+import org.atomnuke.bindings.PackageBindings;
 
 /**
  *
@@ -8,10 +8,10 @@ import org.atomnuke.bindings.BindingContextManager;
  */
 public class PackageContextImpl implements PackageContext {
 
-   private final BindingContextManager bindingContextManager;
+   private final PackageBindings bindingContextManager;
    private final String name;
 
-   public PackageContextImpl(String name, BindingContextManager bindingsManager) {
+   public PackageContextImpl(String name, PackageBindings bindingsManager) {
       this.bindingContextManager = bindingsManager;
       this.name = name;
    }
@@ -21,7 +21,7 @@ public class PackageContextImpl implements PackageContext {
       return name;
    }
 
-   public BindingContextManager bindingContextManager() {
+   public PackageBindings packageBindings() {
       return bindingContextManager;
    }
 }

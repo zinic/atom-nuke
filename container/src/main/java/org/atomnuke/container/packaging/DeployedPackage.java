@@ -1,7 +1,7 @@
 package org.atomnuke.container.packaging;
 
 import java.net.URI;
-import org.atomnuke.container.classloader.ResourceRegistry;
+import org.atomnuke.container.packaging.resource.ResourceRegistry;
 
 /**
  *
