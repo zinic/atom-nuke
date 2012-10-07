@@ -1,10 +1,16 @@
 package org.atomnuke.service.context;
 
-import org.atomnuke.context.Context;
+import java.util.Map;
 
 /**
  *
  * @author zinic
  */
-public interface ServiceContext extends Context {
+public interface ServiceContext {
+
+   /**
+    *
+    * @return
+    */
+   Map<String, String> parameters();
 }

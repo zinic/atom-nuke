@@ -1,7 +1,7 @@
 package org.atomnuke.container.packaging;
 
 import java.net.URI;
-import org.atomnuke.container.packaging.resource.ResourceRegistry;
+import org.atomnuke.container.packaging.resource.ResourceManager;
 
 /**
  *
@@ -11,5 +11,5 @@ public interface DeployedPackage {
 
    URI archiveUri();
 
-   ResourceRegistry resourceRegistry();
+   ResourceManager resourceManager();
 }

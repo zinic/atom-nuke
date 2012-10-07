@@ -21,6 +21,7 @@ public class PackageContextImpl implements PackageContext {
       return name;
    }
 
+   @Override
    public PackageBindings packageBindings() {
       return bindingContextManager;
    }

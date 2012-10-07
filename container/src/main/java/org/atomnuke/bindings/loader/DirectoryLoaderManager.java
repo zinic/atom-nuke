@@ -5,7 +5,7 @@ import java.net.URI;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import org.atomnuke.bindings.BindingEnvironmentManager;
+import org.atomnuke.bindings.BindingEnvironmentFactory;
 import org.atomnuke.bindings.BindingLoaderException;
 import org.atomnuke.container.packaging.DeployedPackage;
 import org.atomnuke.container.packaging.PackageContext;
@@ -40,7 +40,7 @@ public class DirectoryLoaderManager {
       return loadedPackages.values();
    }
 
-   public void load(BindingEnvironmentManager bindingContextManagerFactory) throws BindingLoaderException {
+   public void load(BindingEnvironmentFactory bindingContextManagerFactory) throws BindingLoaderException {
       if (!libraryDirectory.exists()) {
          if (!libraryDirectory.mkdirs()) {
             throw new BindingLoaderException("Unable to make library directory: " + libraryDirectory.getAbsolutePath());

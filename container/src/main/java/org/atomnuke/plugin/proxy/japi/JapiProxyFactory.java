@@ -3,6 +3,8 @@ package org.atomnuke.plugin.proxy.japi;
 import java.lang.reflect.Proxy;
 import org.atomnuke.plugin.InstanceContext;
 import org.atomnuke.plugin.proxy.InstanceEnvProxyFactory;
+import org.atomnuke.service.Service;
+import org.atomnuke.service.ServiceLifeCycle;
 
 /**
  *
@@ -17,8 +19,16 @@ public class JapiProxyFactory implements InstanceEnvProxyFactory {
    }
 
    @Override
-   public <T> T newProxy(Class<T> masqueradeClass, InstanceContext<T> env) {
+   public <T> T newInstanceContextProxy(Class<T> masqueradeClass, InstanceContext<T> env) {
       return (T) Proxy.newProxyInstance(
-              Thread.currentThread().getContextClassLoader(), new Class[]{masqueradeClass}, new InstanceEnvrionmentProxy(env));
+              Thread.currentThread().getContextClassLoader(), new Class[]{masqueradeClass}, new ObjectEnvironmentProxy(env));
+   }
+
+   @Override
+   public <T> T newServiceProxy(Class<T> masqueradeClass, Service svc) {
+      final InstanceContext<ServiceLifeCycle> svcInstanceContext = svc.instanceContext();
+
+      return (T) Proxy.newProxyInstance(
+              Thread.currentThread().getContextClassLoader(), new Class[]{masqueradeClass}, new ServiceProxy(svcInstanceContext.environment(), svcInstanceContext.instance()));
    }
 }

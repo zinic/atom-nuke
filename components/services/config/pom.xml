@@ -6,7 +6,7 @@
    <parent>
       <groupId>org.atomnuke.components</groupId>
       <artifactId>components</artifactId>
-      <version>0.9.8-SNAPSHOT</version>
+      <version>0.9.9-SNAPSHOT</version>
 
       <relativePath>./../../</relativePath>
    </parent>
@@ -37,6 +37,21 @@
       <dependency>
          <groupId>com.rackspace.papi.commons</groupId>
          <artifactId>utilities</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>com.sun.xml.bind</groupId>
+         <artifactId>jaxb</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>com.sun.xml.bind</groupId>
+         <artifactId>jaxb-libs</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>com.sun.xml.bind</groupId>
+         <artifactId>jaxb-impl</artifactId>
       </dependency>
 
       <dependency>

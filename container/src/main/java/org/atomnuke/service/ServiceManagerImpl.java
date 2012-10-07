@@ -50,10 +50,10 @@ public class ServiceManagerImpl implements ServiceManager {
    @Override
    public synchronized <T> T findService(Class<T> serviceInterface) {
       for (Service service : registeredServices) {
-         final Object serviceInstance = service.instanceContext().instance();
+         final ServiceLifeCycle serviceLifeCycle = service.instanceContext().instance();
 
-         if (serviceInterface.isAssignableFrom(serviceInstance.getClass())) {
-            return (T) proxyFactory.newProxy(serviceInterface, (InstanceContext<T>) service.instanceContext());
+         if (serviceLifeCycle.provides(serviceInterface)) {
+            return (T) proxyFactory.newServiceProxy(serviceInterface, service);
          }
       }
 

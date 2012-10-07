@@ -12,17 +12,21 @@ import java.util.concurrent.atomic.AtomicLong;
 import javax.xml.bind.JAXBException;
 import org.atomnuke.NukeEnv;
 import org.atomnuke.NukeKernel;
-import org.atomnuke.bindings.BindingEnvironmentManager;
+import org.atomnuke.bindings.BindingEnvironmentFactory;
+import org.atomnuke.bindings.BindingInstantiationException;
 import org.atomnuke.bindings.BindingLoaderException;
 import org.atomnuke.bindings.loader.DirectoryLoaderManager;
 import org.atomnuke.bindings.stock.BindingEnvironmentManagerImpl;
 import org.atomnuke.config.model.ServerConfiguration;
 import org.atomnuke.config.server.ServerConfigurationManager;
 import org.atomnuke.container.context.ContextManager;
+import org.atomnuke.container.packaging.PackageContext;
+import org.atomnuke.container.packaging.resource.ResourceManagerImpl;
 import org.atomnuke.service.ServiceManager;
 import org.atomnuke.service.ServiceManagerImpl;
 import org.atomnuke.kernel.NukeRejectionHandler;
 import org.atomnuke.kernel.NukeThreadPoolExecutor;
+import org.atomnuke.service.Service;
 import org.atomnuke.task.manager.TaskManager;
 import org.atomnuke.task.manager.TaskManagerImpl;
 import org.atomnuke.task.threading.ExecutionManager;
@@ -50,12 +54,9 @@ public class NukeContainer {
          return new Thread(r, "nuke-worker-" + TID.incrementAndGet());
       }
    };
-
    private static final AtomicLong TID = new AtomicLong(0);
-
    private static final int NUM_PROCESSORS = Runtime.getRuntime().availableProcessors(), MAX_THREADS = NUM_PROCESSORS * 2;
    private static final int MAX_QUEUE_SIZE = 256000;
-
    private final ServiceManager serviceManager;
    private TaskManager taskManager;
    private NukeKernel nukeInstance;
@@ -84,7 +85,7 @@ public class NukeContainer {
       LOG.debug("Building loader manager.");
 
       final DirectoryLoaderManager loaderManager = new DirectoryLoaderManager(new File(NukeEnv.NUKE_DEPLOY), new File(NukeEnv.NUKE_LIB));
-      final BindingEnvironmentManager bindingEnvironmentManager = new BindingEnvironmentManagerImpl();
+      final BindingEnvironmentFactory bindingEnvironmentManager = new BindingEnvironmentManagerImpl();
 
       try {
          LOG.debug("Loader manager starting.");
@@ -94,6 +95,17 @@ public class NukeContainer {
          LOG.debug("An error occured while loading bindings. Reason: " + ble.getMessage(), ble);
 
          throw new ContainerInitException(ble);
+      }
+
+      LOG.debug("Loading services.");
+
+      for (PackageContext pkg : loaderManager.loadedPackageContexts()) {
+         try {
+            for (Service svc : pkg.packageBindings().resolveServices()) {
+               serviceManager.register(svc);
+            }
+         } catch (BindingInstantiationException bie) {
+         }
       }
 
       LOG.debug("Building nuke kernel.");

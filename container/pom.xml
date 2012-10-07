@@ -6,7 +6,7 @@
    <parent>
       <groupId>org.atomnuke</groupId>
       <artifactId>project</artifactId>
-      <version>0.9.8-SNAPSHOT</version>
+      <version>0.9.9-SNAPSHOT</version>
    </parent>
 
    <groupId>org.atomnuke.container</groupId>
@@ -85,6 +85,21 @@
       <dependency>
          <groupId>org.slf4j</groupId>
          <artifactId>slf4j-log4j12</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>com.sun.xml.bind</groupId>
+         <artifactId>jaxb-impl</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>com.sun.xml.bind</groupId>
+         <artifactId>jaxb</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>com.sun.xml.bind</groupId>
+         <artifactId>jaxb-libs</artifactId>
       </dependency>
 
       <dependency>

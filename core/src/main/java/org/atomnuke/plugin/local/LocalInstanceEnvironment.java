@@ -1,6 +1,10 @@
 package org.atomnuke.plugin.local;
 
+import java.util.Collections;
+import java.util.List;
 import org.atomnuke.plugin.Environment;
+import org.atomnuke.plugin.ReferenceInstantiationException;
+import org.atomnuke.service.Service;
 
 /**
  *
@@ -15,6 +19,30 @@ public class LocalInstanceEnvironment implements Environment {
    }
 
    private LocalInstanceEnvironment() {
+   }
+
+   @Override
+   public List<Service> instantiateServices() throws ReferenceInstantiationException {
+      return Collections.EMPTY_LIST;
+   }
+
+   @Override
+   public <T> T instantiate(Class<T> interfaceType, String referenceName) throws ReferenceInstantiationException {
+      try {
+         return interfaceType.cast(Class.forName(referenceName).newInstance());
+      } catch (Exception ex) {
+         throw new ReferenceInstantiationException(ex);
+      }
+   }
+
+   @Override
+   public boolean hasReference(String referenceName) {
+      try {
+         Class.forName(referenceName);
+         return true;
+      } catch (ClassNotFoundException cnfe) {
+         return false;
+      }
    }
 
    @Override

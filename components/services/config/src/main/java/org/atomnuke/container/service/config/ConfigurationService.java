@@ -19,8 +19,8 @@ import org.slf4j.LoggerFactory;
 public class ConfigurationService implements ServiceLifeCycle {
 
    public static String CFG_POLLER_PROPERTY_KEY = "org.atomnuke.container.service.config.ConfigurationService.poll_interval_ms";
-   private static final long DEFAULT_CFG_POLL_TIME_MS = 15000;
 
+   private static final long DEFAULT_CFG_POLL_TIME_MS = 15000;
    private static final Logger LOG = LoggerFactory.getLogger(ConfigurationService.class);
 
    private final ConfigurationUpdateManager cfgUpdateMangaer;
@@ -28,6 +28,16 @@ public class ConfigurationService implements ServiceLifeCycle {
 
    public ConfigurationService() {
       cfgUpdateMangaer = new ConfigurationUpdateManagerImpl();
+   }
+
+   @Override
+   public boolean provides(Class serviceInterface) {
+      return serviceInterface.isAssignableFrom(cfgUpdateMangaer.getClass());
+   }
+
+   @Override
+   public Object instance() {
+      return cfgUpdateMangaer;
    }
 
    @Override
@@ -39,7 +49,7 @@ public class ConfigurationService implements ServiceLifeCycle {
 
          try {
             pollerTime = Long.parseLong(configuredPollTime);
-         } catch(NumberFormatException nfe) {
+         } catch (NumberFormatException nfe) {
             LOG.error("Value: " + configuredPollTime + " is not a valid number. The configuration poller accepts time periods in ms.", nfe);
          }
       }

@@ -15,8 +15,8 @@ import java.util.Queue;
 import java.util.UUID;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
-import org.atomnuke.container.packaging.resource.ResourceDescriptor;
-import org.atomnuke.container.packaging.resource.ResourceIdentityTree;
+import org.atomnuke.container.packaging.resource.ResourceDescriptorImpl;
+import org.atomnuke.container.packaging.resource.ResourceManagerImpl;
 import org.atomnuke.container.packaging.DeployedPackage;
 import org.atomnuke.container.packaging.DeployedPackageImpl;
 import org.atomnuke.container.packaging.Unpacker;
@@ -54,7 +54,7 @@ public class ArchiveExtractor implements Unpacker {
 
    @Override
    public DeployedPackage unpack(URI archiveLocation) throws UnpackerException {
-      final ResourceIdentityTree resourceIdentityTree = new ResourceIdentityTree();
+      final ResourceManagerImpl resourceIdentityTree = new ResourceManagerImpl();
       final ResourceType uriType = ResourceType.findResourceTypeForName(archiveLocation.toString());
 
       try {
@@ -81,12 +81,13 @@ public class ArchiveExtractor implements Unpacker {
       return false;
    }
 
-   private void unpackZipFormatArchive(ResourceIdentityTree resourceIdentityTree, URI location, int previousDepth) throws IOException {
+   private void unpackZipFormatArchive(ResourceManagerImpl resourceIdentityTree, URI location, int previousDepth) throws IOException {
       final ZipInputStream rootInputStream = new ZipInputStream(location.toURL().openStream());
       ZipEntry entry;
 
       while ((entry = rootInputStream.getNextEntry()) != null) {
          final File extractionTarget = new File(deploymentRoot + File.separator + entry.getName());
+         final URI extractionTargetUri = extractionTarget.toURI();
 
          if (entry.isDirectory()) {
             if (!extractionTarget.exists() && !extractionTarget.mkdirs()) {
@@ -105,12 +106,7 @@ public class ArchiveExtractor implements Unpacker {
                case EAR:
                case JAR:
                case ZIP:
-                  archivesToUnpack.add(new EmbeddedArchive(archiveResource, extractionTarget.toURI(), previousDepth + 1));
-                  break;
-
-               case CLASS:
-                  final String classname = entry.getName().replace(".class", "");
-                  resourceIdentityTree.classpathAlias(classname.replace("/", "."), extractionTarget.getAbsolutePath());
+                  archivesToUnpack.add(new EmbeddedArchive(archiveResource, extractionTargetUri, previousDepth + 1));
                   break;
             }
 
@@ -128,7 +124,8 @@ public class ArchiveExtractor implements Unpacker {
             outputStreamSplitter.close();
 
             // Register the new resource
-            resourceIdentityTree.register(new ResourceDescriptor(extractionTarget.getAbsolutePath(), archiveResource.name(), archiveResource.type(), digesterStream.getDigest()));
+            resourceIdentityTree.register(new ResourceDescriptorImpl(extractionTargetUri, archiveResource.name(), archiveResource.type(), digesterStream.getDigest()));
+            resourceIdentityTree.alias(archiveResource.name(), extractionTargetUri);
          }
       }
 //      if (!new File(location).delete()) {
@@ -136,7 +133,7 @@ public class ArchiveExtractor implements Unpacker {
 //      }
    }
 
-   private void unpackRootArchive(URI archiveLocation, final ResourceType uriType, final ResourceIdentityTree resourceIdentityTree) throws IOException {
+   private void unpackRootArchive(URI archiveLocation, final ResourceType uriType, final ResourceManagerImpl resourceIdentityTree) throws IOException {
       switch (uriType) {
          case EAR:
          case JAR:
@@ -149,7 +146,7 @@ public class ArchiveExtractor implements Unpacker {
       }
    }
 
-   private void unpackEmbeddedArchives(final ResourceIdentityTree resourceIdentityTree, URI archiveLocation) throws IOException {
+   private void unpackEmbeddedArchives(final ResourceManagerImpl resourceIdentityTree, URI archiveLocation) throws IOException {
       while (!archivesToUnpack.isEmpty()) {
          final EmbeddedArchive nextArchive = archivesToUnpack.poll();
 
