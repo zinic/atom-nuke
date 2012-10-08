@@ -1,20 +1,15 @@
 package org.atomnuke.plugin.proxy.japi;
 
-import org.atomnuke.plugin.Environment;
 import org.atomnuke.plugin.InstanceContext;
-import org.atomnuke.service.ServiceLifeCycle;
+import org.atomnuke.service.Service;
 
 /**
  *
  * @author zinic
  */
-public class ServiceProxy extends ObjectEnvironmentProxy {
+public class ServiceProxy extends InstanceEnvironmentProxy {
 
-   public ServiceProxy(InstanceContext<ServiceLifeCycle> svcInstanceContext) {
-      this(svcInstanceContext.environment(), svcInstanceContext.instance());
-   }
-
-   public ServiceProxy(Environment environment, ServiceLifeCycle service) {
-      super(environment, service.instance());
+   public ServiceProxy(InstanceContext<Service> svc) {
+      super(svc.environment(), svc.instance().instance());
    }
 }

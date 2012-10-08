@@ -9,16 +9,16 @@ import org.atomnuke.plugin.InstanceContext;
  *
  * @author zinic
  */
-public class ObjectEnvironmentProxy implements InvocationHandler {
+public class InstanceEnvironmentProxy implements InvocationHandler {
 
    private final Environment environment;
    private final Object target;
 
-   public ObjectEnvironmentProxy(InstanceContext instanceContext) {
+   public InstanceEnvironmentProxy(InstanceContext instanceContext) {
       this(instanceContext.environment(), instanceContext.instance());
    }
 
-   public ObjectEnvironmentProxy(Environment environment, Object target) {
+   protected InstanceEnvironmentProxy(Environment environment, Object target) {
       this.environment = environment;
       this.target = target;
    }

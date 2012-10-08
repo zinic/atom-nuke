@@ -2,7 +2,7 @@ package org.atomnuke.bindings.jython;
 
 import java.io.InputStream;
 import org.atomnuke.bindings.context.BindingEnvironment;
-import org.atomnuke.bindings.BindingLoaderException;
+import org.atomnuke.bindings.PackageLoaderException;
 import org.atomnuke.bindings.lang.LanguageDescriptor;
 import org.atomnuke.bindings.lang.LanguageDescriptorImpl;
 import org.atomnuke.config.model.LanguageType;
@@ -51,14 +51,14 @@ public class JythonBindingEnvironment implements BindingEnvironment {
    }
 
    @Override
-   public void load(Resource resource) throws BindingLoaderException {
+   public void load(Resource resource) throws PackageLoaderException {
       try {
          final InputStream in = resource.location().toURL().openStream();
          pythonInterpreter.execfile(in);
 
          in.close();
       } catch (Exception ex) {
-         throw new BindingLoaderException("Failed to load python script. Reason: " + ex.getMessage(), ex);
+         throw new PackageLoaderException("Failed to load python script. Reason: " + ex.getMessage(), ex);
       }
    }
 

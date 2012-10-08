@@ -8,10 +8,6 @@ import org.atomnuke.service.context.ServiceContext;
  */
 public interface ServiceLifeCycle {
 
-   boolean provides(Class serviceInterface);
-
-   Object instance();
-
    void init(ServiceContext sc);
 
    void destroy();

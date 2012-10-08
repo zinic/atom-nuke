@@ -1,7 +1,7 @@
 package org.atomnuke.container.service.config;
 
 import org.atomnuke.container.service.annotation.NukeService;
-import org.atomnuke.service.ServiceLifeCycle;
+import org.atomnuke.service.Service;
 import org.atomnuke.service.context.ServiceContext;
 import org.atomnuke.util.config.update.ConfigurationUpdateManager;
 import org.atomnuke.util.config.update.ConfigurationUpdateManagerImpl;
@@ -16,10 +16,10 @@ import org.slf4j.LoggerFactory;
  * @author zinic
  */
 @NukeService
-public class ConfigurationService implements ServiceLifeCycle {
+public class ConfigurationService implements Service {
 
    public static String CFG_POLLER_PROPERTY_KEY = "org.atomnuke.container.service.config.ConfigurationService.poll_interval_ms";
-   
+
    private static final long DEFAULT_CFG_POLL_TIME_MS = 15000;
    private static final Logger LOG = LoggerFactory.getLogger(ConfigurationService.class);
 
@@ -31,13 +31,18 @@ public class ConfigurationService implements ServiceLifeCycle {
    }
 
    @Override
-   public boolean provides(Class serviceInterface) {
-      return serviceInterface.isAssignableFrom(cfgUpdateMangaer.getClass());
+   public Object instance() {
+      return cfgUpdateMangaer;
    }
 
    @Override
-   public Object instance() {
-      return cfgUpdateMangaer;
+   public String name() {
+      return "Nuke stock configuration service";
+   }
+
+   @Override
+   public boolean provides(Class serviceInterface) {
+      return serviceInterface.isAssignableFrom(cfgUpdateMangaer.getClass());
    }
 
    @Override

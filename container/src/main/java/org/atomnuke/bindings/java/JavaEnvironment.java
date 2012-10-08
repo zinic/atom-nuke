@@ -9,10 +9,7 @@ import org.atomnuke.bindings.scanner.ClassLoaderScanner;
 import org.atomnuke.bindings.scanner.ClassVisitor;
 import org.atomnuke.container.packaging.resource.ResourceManager;
 import org.atomnuke.container.service.annotation.NukeService;
-import org.atomnuke.plugin.InstanceContextImpl;
-import org.atomnuke.plugin.ReferenceInstantiationException;
 import org.atomnuke.service.Service;
-import org.atomnuke.service.ServiceDescriptor;
 import org.atomnuke.service.ServiceLifeCycle;
 import org.atomnuke.service.context.ServiceContext;
 import org.atomnuke.service.context.ServiceContextImpl;
@@ -26,7 +23,7 @@ import org.slf4j.LoggerFactory;
 public class JavaEnvironment extends ClassLoaderEnvironment {
 
    private static final Logger LOG = LoggerFactory.getLogger(JavaEnvironment.class);
-   
+
    private final ClassLoaderScanner classLoaderScanner;
 
    public JavaEnvironment(ResourceManager resourceManager, ClassLoader classLoader) {
@@ -63,7 +60,7 @@ public class JavaEnvironment extends ClassLoaderEnvironment {
                final ServiceLifeCycle serviceInstance = (ServiceLifeCycle) serviceClass.newInstance();
                serviceInstance.init(serviceContext);
 
-               builtServices.add(new ServiceDescriptor(null, new InstanceContextImpl<ServiceLifeCycle>(this, serviceInstance)));
+               builtServices.add((Service) serviceInstance);
             } catch (Exception ex) {
                LOG.error("Service init failed for service class: " + serviceClass.getName() + " - Reason: " + ex.getMessage(), ex);
             }

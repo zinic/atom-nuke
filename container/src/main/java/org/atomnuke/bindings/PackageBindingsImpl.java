@@ -26,11 +26,15 @@ public class PackageBindingsImpl implements PackageBindings {
    }
 
    @Override
-   public List<Service> resolveServices() throws ReferenceInstantiationException {
-      final List<Service> services = new LinkedList<Service>();
+   public List<InstanceContext<Service>> resolveServices() throws ReferenceInstantiationException {
+      final List<InstanceContext<Service>> services = new LinkedList<InstanceContext<Service>>();
 
       for (BindingEnvironment bindingEnvironment : availableBindingEnvironments) {
-         services.addAll(bindingEnvironment.environment().services());
+         final Environment env = bindingEnvironment.environment();
+
+         for (Service discoveredService : env.services()) {
+            services.add(new InstanceContextImpl<Service>(env, discoveredService));
+         }
       }
 
       return services;

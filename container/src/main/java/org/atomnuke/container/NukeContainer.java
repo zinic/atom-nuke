@@ -12,20 +12,16 @@ import java.util.concurrent.atomic.AtomicLong;
 import javax.xml.bind.JAXBException;
 import org.atomnuke.NukeEnv;
 import org.atomnuke.NukeKernel;
-import org.atomnuke.bindings.BindingEnvironmentFactory;
-import org.atomnuke.bindings.BindingLoaderException;
 import org.atomnuke.bindings.loader.DirectoryLoaderManager;
 import org.atomnuke.bindings.stock.BindingEnvironmentManagerImpl;
 import org.atomnuke.config.model.ServerConfiguration;
 import org.atomnuke.config.server.ServerConfigurationManager;
 import org.atomnuke.container.context.ContextManager;
-import org.atomnuke.container.packaging.PackageContext;
 import org.atomnuke.service.ServiceManager;
 import org.atomnuke.service.ServiceManagerImpl;
 import org.atomnuke.kernel.NukeRejectionHandler;
 import org.atomnuke.kernel.NukeThreadPoolExecutor;
-import org.atomnuke.plugin.ReferenceInstantiationException;
-import org.atomnuke.service.Service;
+import org.atomnuke.service.context.ServiceContextImpl;
 import org.atomnuke.task.manager.TaskManager;
 import org.atomnuke.task.manager.TaskManagerImpl;
 import org.atomnuke.task.threading.ExecutionManager;
@@ -88,18 +84,12 @@ public class NukeContainer {
       LOG.info("Starting Nuke container...");
       LOG.debug("Building loader manager.");
 
-      final DirectoryLoaderManager loaderManager = new DirectoryLoaderManager(serviceManager, new File(NukeEnv.NUKE_DEPLOY), new File(NukeEnv.NUKE_LIB));
-      final BindingEnvironmentFactory bindingEnvironmentManager = new BindingEnvironmentManagerImpl();
+      final DirectoryLoaderManager loaderManager = new DirectoryLoaderManager(
+              new BindingEnvironmentManagerImpl(), serviceManager, new File(NukeEnv.NUKE_DEPLOY), new File(NukeEnv.NUKE_LIB));
 
-      try {
-         LOG.debug("Loader manager starting.");
+      LOG.debug("Loader manager starting.");
 
-         loaderManager.load(bindingEnvironmentManager);
-      } catch (BindingLoaderException ble) {
-         LOG.debug("An error occured while loading bindings. Reason: " + ble.getMessage(), ble);
-
-         throw new ContainerInitException(ble);
-      }
+      loaderManager.init(new ServiceContextImpl(Collections.EMPTY_MAP));
 
       LOG.debug("Building nuke kernel.");
 
@@ -121,13 +111,12 @@ public class NukeContainer {
 
          if (cfgUpdateManager == null) {
             LOG.error("No configuration service available. Expected service interface is: " + ConfigurationUpdateManager.class.getName());
-            System.exit(1);
+         } else {
+            final ConfigurationManager<ServerConfiguration> cfgManager = new ServerConfigurationManager(new File(NukeEnv.NUKE_HOME, NukeEnv.CONFIG_NAME));
+            final ConfigurationContext<ServerConfiguration> configurationContext = cfgUpdateManager.register("org.atomnuke.container.cfg", cfgManager);
+
+            configurationContext.addListener(contextManager);
          }
-
-         final ConfigurationManager<ServerConfiguration> cfgManager = new ServerConfigurationManager(new File(NukeEnv.NUKE_HOME, NukeEnv.CONFIG_NAME));
-         final ConfigurationContext<ServerConfiguration> configurationContext = cfgUpdateManager.register("org.atomnuke.container.cfg", cfgManager);
-
-         configurationContext.addListener(contextManager);
       } catch (JAXBException jaxbe) {
          LOG.error(jaxbe.getMessage(), jaxbe);
          throw new ContainerInitException(jaxbe);

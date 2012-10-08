@@ -18,6 +18,7 @@ public class RhinoJsEnvrionment extends ClassLoaderEnvironment {
 
    public RhinoJsEnvrionment(ScriptEngine jsEngine, ClassLoader classLoader) {
       super(classLoader);
+      
       this.jsEngine = jsEngine;
    }
 

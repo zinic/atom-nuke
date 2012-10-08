@@ -2,7 +2,7 @@ package org.atomnuke.container.packaging;
 
 import java.util.List;
 import org.atomnuke.bindings.BindingEnvironmentFactory;
-import org.atomnuke.bindings.BindingLoaderException;
+import org.atomnuke.bindings.PackageLoaderException;
 import org.atomnuke.bindings.PackageBindingsImpl;
 import org.atomnuke.bindings.context.BindingEnvironment;
 import org.atomnuke.container.packaging.resource.Resource;
@@ -36,7 +36,7 @@ public class PackageLoaderImpl implements PackageLoader {
          if (env != null) {
             try {
                env.load(resource);
-            } catch (BindingLoaderException ble) {
+            } catch (PackageLoaderException ble) {
                LOG.error("Failed to load deployed resource: " + deployedPackage.archiveUri() + ". Reason: " + ble.getMessage(), ble);
             }
          }

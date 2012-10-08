@@ -16,8 +16,8 @@ public class ServiceManagerImpl implements ServiceManager {
 
    private static final Logger LOG = LoggerFactory.getLogger(ServiceManagerImpl.class);
 
+   private final List<InstanceContext<Service>> registeredServices;
    private final InstanceEnvProxyFactory proxyFactory;
-   private final List<Service> registeredServices;
 
    public ServiceManagerImpl() {
       this(JapiProxyFactory.getInstance());
@@ -25,34 +25,33 @@ public class ServiceManagerImpl implements ServiceManager {
 
    public ServiceManagerImpl(InstanceEnvProxyFactory proxyFactory) {
       this.proxyFactory = proxyFactory;
-      registeredServices = new LinkedList<Service>();
+      registeredServices = new LinkedList<InstanceContext<Service>>();
    }
 
    @Override
    public synchronized void destroy() {
-      for (Service service : registeredServices) {
+      for (InstanceContext<Service> serviceCtx : registeredServices) {
          try {
-            service.instanceContext().environment().stepInto();
-            service.instanceContext().instance().destroy();
+            serviceCtx.environment().stepInto();
+
+            serviceCtx.instance().destroy();
          } catch (Exception ex) {
-            LOG.error("Failure in destroying container service, \"" + service.name() + "\" - Reason: " + ex.getMessage(), ex);
+            LOG.error("Failure in destroying container service, \"" + serviceCtx.instance().name() + "\" - Reason: " + ex.getMessage(), ex);
          } finally {
-            service.instanceContext().environment().stepOut();
+            serviceCtx.environment().stepOut();
          }
       }
    }
 
    @Override
-   public synchronized void register(Service service) {
+   public synchronized void register(InstanceContext<Service> service) {
       registeredServices.add(service);
    }
 
    @Override
    public synchronized <T> T findService(Class<T> serviceInterface) {
-      for (Service service : registeredServices) {
-         final ServiceLifeCycle serviceLifeCycle = service.instanceContext().instance();
-
-         if (serviceLifeCycle.provides(serviceInterface)) {
+      for (InstanceContext<Service> service : registeredServices) {
+         if (service.instance().provides(serviceInterface)) {
             return (T) proxyFactory.newServiceProxy(serviceInterface, service);
          }
       }

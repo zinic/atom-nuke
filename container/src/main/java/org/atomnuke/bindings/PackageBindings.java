@@ -15,7 +15,7 @@ import org.atomnuke.source.AtomSource;
  */
 public interface PackageBindings {
 
-   List<Service> resolveServices() throws ReferenceInstantiationException;
+   List<InstanceContext<Service>> resolveServices() throws ReferenceInstantiationException;
 
    InstanceContext<AtomEventlet> resolveEventlet(LanguageType type, String ref) throws ReferenceInstantiationException;
 

@@ -11,5 +11,5 @@ public interface InstanceEnvProxyFactory {
 
    <T> T newInstanceContextProxy(Class<T> masqueradeClass, InstanceContext<T> env);
 
-   <T> T newServiceProxy(Class<T> masqueradeClass, Service svc);
+   <T> T newServiceProxy(Class<T> masqueradeClass, InstanceContext<Service> svc);
 }
