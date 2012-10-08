@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
 public class ConfigurationService implements ServiceLifeCycle {
 
    public static String CFG_POLLER_PROPERTY_KEY = "org.atomnuke.container.service.config.ConfigurationService.poll_interval_ms";
-
+   
    private static final long DEFAULT_CFG_POLL_TIME_MS = 15000;
    private static final Logger LOG = LoggerFactory.getLogger(ConfigurationService.class);
 
@@ -54,15 +54,18 @@ public class ConfigurationService implements ServiceLifeCycle {
          }
       }
 
+      LOG.info("Nuke configuration poller starting...");
+
       cfgPoller = new Poller("Nuke Container - Configuration Poller", new ConfigurationUpdateRunnable(cfgUpdateMangaer), pollerTime);
       cfgPoller.start();
    }
 
    @Override
    public void destroy() {
-      cfgPoller.haltPolling();
+      LOG.info("Nuke configuration poller stopping...");
 
       try {
+         cfgPoller.haltPolling();
          cfgPoller.join();
       } catch (InterruptedException ie) {
          LOG.error("Interrupted while waiting for the cfg poller thread to exit. Attempting to kill thread and exit.", ie);

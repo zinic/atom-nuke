@@ -14,6 +14,9 @@ import org.atomnuke.container.packaging.PackageLoaderImpl;
 import org.atomnuke.container.packaging.Unpacker;
 import org.atomnuke.container.packaging.UnpackerException;
 import org.atomnuke.container.packaging.archive.zip.ArchiveExtractor;
+import org.atomnuke.plugin.ReferenceInstantiationException;
+import org.atomnuke.service.Service;
+import org.atomnuke.service.ServiceManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,10 +29,12 @@ public class DirectoryLoaderManager {
    private static final Logger LOG = LoggerFactory.getLogger(DirectoryLoaderManager.class);
 
    private final Map<DeployedPackage, PackageContext> loadedPackages;
+   private final ServiceManager serviceManager;
    private final Unpacker archiveUnpacker;
    private final File libraryDirectory;
 
-   public DirectoryLoaderManager(File deploymentDirectory, File libraryDirectory) {
+   public DirectoryLoaderManager(ServiceManager serviceManager, File deploymentDirectory, File libraryDirectory) {
+      this.serviceManager = serviceManager;
       this.libraryDirectory = libraryDirectory;
 
       loadedPackages = new HashMap<DeployedPackage, PackageContext>();
@@ -38,6 +43,18 @@ public class DirectoryLoaderManager {
 
    public Collection<PackageContext> loadedPackageContexts() {
       return loadedPackages.values();
+   }
+
+   public void gatherServices(PackageContext pkgContext) {
+      LOG.debug("Loading services for package: " + pkgContext.name());
+
+      try {
+         for (Service svc : pkgContext.packageBindings().resolveServices()) {
+            serviceManager.register(svc);
+         }
+      } catch (ReferenceInstantiationException bie) {
+         LOG.error("Failed to init services.");
+      }
    }
 
    public void load(BindingEnvironmentFactory bindingContextManagerFactory) throws BindingLoaderException {
@@ -66,9 +83,10 @@ public class DirectoryLoaderManager {
                final DeployedPackage deployedPackage = archiveUnpacker.unpack(archiveUri);
                final PackageContext packageContext = packageLoader.load(deployedPackage);
 
+               gatherServices(packageContext);
                loadedPackages.put(deployedPackage, packageContext);
 
-               LOG.info("Loaded file: " + archive.getAbsolutePath());
+               LOG.info("Loaded URI: " + archive.getAbsolutePath());
             } catch (UnpackerException ue) {
                throw new BindingLoaderException(ue);
             }

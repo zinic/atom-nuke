@@ -26,6 +26,7 @@ import org.slf4j.LoggerFactory;
 public class JavaEnvironment extends ClassLoaderEnvironment {
 
    private static final Logger LOG = LoggerFactory.getLogger(JavaEnvironment.class);
+   
    private final ClassLoaderScanner classLoaderScanner;
 
    public JavaEnvironment(ResourceManager resourceManager, ClassLoader classLoader) {
@@ -35,7 +36,7 @@ public class JavaEnvironment extends ClassLoaderEnvironment {
    }
 
    @Override
-   public List<Service> instantiateServices() throws ReferenceInstantiationException {
+   public List<Service> services() {
       final ServiceContext serviceContext = new ServiceContextImpl(Collections.EMPTY_MAP);
       final List<Class> discoveredServiceClasses = new LinkedList<Class>();
 
@@ -61,7 +62,7 @@ public class JavaEnvironment extends ClassLoaderEnvironment {
             try {
                final ServiceLifeCycle serviceInstance = (ServiceLifeCycle) serviceClass.newInstance();
                serviceInstance.init(serviceContext);
-               
+
                builtServices.add(new ServiceDescriptor(null, new InstanceContextImpl<ServiceLifeCycle>(this, serviceInstance)));
             } catch (Exception ex) {
                LOG.error("Service init failed for service class: " + serviceClass.getName() + " - Reason: " + ex.getMessage(), ex);

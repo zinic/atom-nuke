@@ -4,8 +4,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import org.atomnuke.Nuke;
-import org.atomnuke.bindings.PackageBindings;
-import org.atomnuke.bindings.BindingInstantiationException;
 import org.atomnuke.config.model.Binding;
 import org.atomnuke.plugin.InstanceContext;
 import org.atomnuke.config.model.Eventlet;
@@ -23,6 +21,7 @@ import org.atomnuke.listener.AtomListener;
 import org.atomnuke.listener.eps.EventletRelay;
 import org.atomnuke.listener.eps.eventlet.AtomEventlet;
 import org.atomnuke.plugin.InstanceContextImpl;
+import org.atomnuke.plugin.ReferenceInstantiationException;
 import org.atomnuke.service.ServiceManager;
 import org.atomnuke.source.AtomSource;
 import org.atomnuke.task.Task;
@@ -78,7 +77,7 @@ public class ConfigurationProcessor {
       containerContext.process(cfgHandler.getBindings());
    }
 
-   public InstanceContext<AtomEventlet> constructEventlet(LanguageType langType, String ref) throws BindingInstantiationException {
+   public InstanceContext<AtomEventlet> constructEventlet(LanguageType langType, String ref) throws ReferenceInstantiationException {
       for (PackageContext packageContext : loadedPackages) {
          final InstanceContext<AtomEventlet> eventlet = packageContext.packageBindings().resolveEventlet(langType, ref);
 
@@ -90,7 +89,7 @@ public class ConfigurationProcessor {
       return null;
    }
 
-   public InstanceContext<AtomSource> constructSource(LanguageType langType, String ref) throws BindingInstantiationException {
+   public InstanceContext<AtomSource> constructSource(LanguageType langType, String ref) throws ReferenceInstantiationException {
       for (PackageContext packageContext : loadedPackages) {
          final InstanceContext<AtomSource> source = packageContext.packageBindings().resolveSource(langType, ref);
 
@@ -102,7 +101,7 @@ public class ConfigurationProcessor {
       return null;
    }
 
-   public InstanceContext<AtomListener> constructListener(LanguageType langType, String ref) throws BindingInstantiationException {
+   public InstanceContext<AtomListener> constructListener(LanguageType langType, String ref) throws ReferenceInstantiationException {
       for (PackageContext packageContext : loadedPackages) {
          final InstanceContext<AtomListener> listener = packageContext.packageBindings().resolveListener(langType, ref);
 
@@ -151,7 +150,7 @@ public class ConfigurationProcessor {
 
                final Task newTask = kernelBeingBuilt.follow(sourceContext, TimeValueUtil.fromPollingInterval(source.getPollingInterval()));
                containerContext.registerSource(source.getId(), newTask);
-            } catch (BindingInstantiationException bie) {
+            } catch (ReferenceInstantiationException bie) {
                LOG.error("Could not create source instance " + source.getId() + ". Reason: " + bie.getMessage(), bie);
             } catch (InitializationException ie) {
                LOG.error("Could not initialize source instance " + source.getId() + ". Reason: " + ie.getMessage(), ie);
@@ -187,7 +186,7 @@ public class ConfigurationProcessor {
                }
 
                containerContext.registerSink(sink.getId(), listenerCtx);
-            } catch (BindingInstantiationException bie) {
+            } catch (ReferenceInstantiationException bie) {
                LOG.error("Could not create sink instance " + sink.getId() + ". Reason: " + bie.getMessage(), bie);
                throw new ConfigurationException(bie);
             } catch (InitializationException ie) {
@@ -205,7 +204,7 @@ public class ConfigurationProcessor {
          if (hasListenerBinding(eventletId) && !containerContext.hasEventlet(eventletId)) {
             try {
                containerContext.registerEventlet(eventlet.getId(), constructEventlet(eventlet.getType(), eventlet.getHref()));
-            } catch (BindingInstantiationException bie) {
+            } catch (ReferenceInstantiationException bie) {
                LOG.error("Could not create eventlet instance " + eventlet.getId() + ". Reason: " + bie.getMessage(), bie);
             }
 
@@ -220,7 +219,7 @@ public class ConfigurationProcessor {
                }
 
                containerContext.registerEventlet(eventlet.getId(), eventletCtx);
-            } catch (BindingInstantiationException bie) {
+            } catch (ReferenceInstantiationException bie) {
                LOG.error("Could not create eventlet instance " + eventlet.getId() + ". Reason: " + bie.getMessage(), bie);
                throw new ConfigurationException(bie);
             } catch (InitializationException ie) {

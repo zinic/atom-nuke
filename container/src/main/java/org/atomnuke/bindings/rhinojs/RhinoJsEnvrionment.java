@@ -22,7 +22,7 @@ public class RhinoJsEnvrionment extends ClassLoaderEnvironment {
    }
 
    @Override
-   public List<Service> instantiateServices() throws ReferenceInstantiationException {
+   public List<Service> services() {
       return Collections.EMPTY_LIST;
    }
 

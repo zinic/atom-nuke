@@ -24,12 +24,12 @@ public interface Environment {
    void stepInto();
 
    /**
-    * Builds all discovered services for this environment.
+    * Gets all discovered services for this environment.
     *
     * @return
     * @throws ReferenceInstantiationException
     */
-   List<Service> instantiateServices() throws ReferenceInstantiationException;
+   List<Service> services();
 
    /**
     * Creates a new instance of a reference defined by the reference name string

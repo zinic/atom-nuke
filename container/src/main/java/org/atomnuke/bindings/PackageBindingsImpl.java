@@ -26,35 +26,32 @@ public class PackageBindingsImpl implements PackageBindings {
    }
 
    @Override
-   public List<Service> resolveServices() throws BindingInstantiationException {
+   public List<Service> resolveServices() throws ReferenceInstantiationException {
       final List<Service> services = new LinkedList<Service>();
 
       for (BindingEnvironment bindingEnvironment : availableBindingEnvironments) {
-         try {
-            services.addAll(bindingEnvironment.environment().instantiateServices());
-         } catch (ReferenceInstantiationException rie) {
-         }
+         services.addAll(bindingEnvironment.environment().services());
       }
 
       return services;
    }
 
    @Override
-   public InstanceContext<AtomEventlet> resolveEventlet(LanguageType type, String ref) throws BindingInstantiationException {
+   public InstanceContext<AtomEventlet> resolveEventlet(LanguageType type, String ref) throws ReferenceInstantiationException {
       return resolve(AtomEventlet.class, type, ref);
    }
 
    @Override
-   public InstanceContext<AtomListener> resolveListener(LanguageType type, String ref) throws BindingInstantiationException {
+   public InstanceContext<AtomListener> resolveListener(LanguageType type, String ref) throws ReferenceInstantiationException {
       return resolve(AtomListener.class, type, ref);
    }
 
    @Override
-   public InstanceContext<AtomSource> resolveSource(LanguageType type, String ref) throws BindingInstantiationException {
+   public InstanceContext<AtomSource> resolveSource(LanguageType type, String ref) throws ReferenceInstantiationException {
       return resolve(AtomSource.class, type, ref);
    }
 
-   private <T> InstanceContext<T> resolve(Class<T> type, LanguageType language, String ref) throws BindingInstantiationException {
+   private <T> InstanceContext<T> resolve(Class<T> type, LanguageType language, String ref) throws ReferenceInstantiationException {
       for (BindingEnvironment bindingCtx : availableBindingEnvironments) {
          final Environment env = bindingCtx.environment();
 
@@ -62,7 +59,7 @@ public class PackageBindingsImpl implements PackageBindings {
             try {
                return new InstanceContextImpl<T>(env, env.instantiate(type, ref));
             } catch (ReferenceInstantiationException rie) {
-               throw new BindingInstantiationException(ref, rie);
+               throw new ReferenceInstantiationException(ref, rie);
             }
          }
       }

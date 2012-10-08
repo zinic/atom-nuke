@@ -2,16 +2,13 @@ package org.atomnuke.bindings.jython;
 
 import java.io.InputStream;
 import org.atomnuke.bindings.context.BindingEnvironment;
-import org.atomnuke.bindings.BindingInstantiationException;
 import org.atomnuke.bindings.BindingLoaderException;
-import org.atomnuke.bindings.java.JavaEnvironment;
 import org.atomnuke.bindings.lang.LanguageDescriptor;
 import org.atomnuke.bindings.lang.LanguageDescriptorImpl;
 import org.atomnuke.config.model.LanguageType;
 import org.atomnuke.container.packaging.resource.Resource;
 import org.atomnuke.plugin.Environment;
 import org.python.core.Options;
-import org.python.core.PyObject;
 import org.python.core.PySystemState;
 import org.python.util.PythonInterpreter;
 

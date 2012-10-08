@@ -22,7 +22,7 @@ public class LocalInstanceEnvironment implements Environment {
    }
 
    @Override
-   public List<Service> instantiateServices() throws ReferenceInstantiationException {
+   public List<Service> services() {
       return Collections.EMPTY_LIST;
    }
 
