@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.List;
 import org.atomnuke.Nuke;
 import org.atomnuke.config.model.ServerConfiguration;
-import org.atomnuke.config.server.ServerConfigurationHandler;
+import org.atomnuke.container.config.ServerConfigurationHandler;
 import org.atomnuke.container.ConfigurationProcessor;
 import org.atomnuke.container.packaging.PackageContext;
 import org.atomnuke.service.ServiceManager;

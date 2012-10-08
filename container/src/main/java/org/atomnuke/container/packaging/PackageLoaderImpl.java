@@ -1,10 +1,10 @@
 package org.atomnuke.container.packaging;
 
 import java.util.List;
-import org.atomnuke.bindings.BindingEnvironmentFactory;
-import org.atomnuke.bindings.PackageLoaderException;
-import org.atomnuke.bindings.PackageBindingsImpl;
-import org.atomnuke.bindings.context.BindingEnvironment;
+import org.atomnuke.container.packaging.bindings.BindingEnvironmentFactory;
+import org.atomnuke.container.packaging.bindings.PackageLoaderException;
+import org.atomnuke.container.packaging.bindings.PackageBindingsImpl;
+import org.atomnuke.container.packaging.bindings.environment.BindingEnvironment;
 import org.atomnuke.container.packaging.resource.Resource;
 import org.atomnuke.container.packaging.resource.ResourceManager;
 import org.slf4j.Logger;

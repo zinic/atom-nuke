@@ -4,7 +4,7 @@ import java.io.File;
 import org.atomnuke.cli.command.Root;
 import org.atomnuke.cli.CliConfigurationHandler;
 import org.atomnuke.config.model.ServerConfiguration;
-import org.atomnuke.config.server.ServerConfigurationManager;
+import org.atomnuke.container.config.ServerConfigurationManager;
 import org.atomnuke.util.cli.CommandDriver;
 import org.atomnuke.util.cli.command.Command;
 import org.atomnuke.util.cli.command.result.CommandResult;

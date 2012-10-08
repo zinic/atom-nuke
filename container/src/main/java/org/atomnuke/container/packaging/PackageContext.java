@@ -1,6 +1,6 @@
 package org.atomnuke.container.packaging;
 
-import org.atomnuke.bindings.PackageBindings;
+import org.atomnuke.container.packaging.bindings.PackageBindings;
 
 /**
  *

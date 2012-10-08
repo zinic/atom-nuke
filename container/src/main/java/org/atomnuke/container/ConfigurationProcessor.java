@@ -13,7 +13,7 @@ import org.atomnuke.config.model.Parameters;
 import org.atomnuke.config.model.Relay;
 import org.atomnuke.config.model.Sink;
 import org.atomnuke.config.model.Source;
-import org.atomnuke.config.server.ServerConfigurationHandler;
+import org.atomnuke.container.config.ServerConfigurationHandler;
 import org.atomnuke.container.context.ContainerContext;
 import org.atomnuke.container.packaging.PackageContext;
 import org.atomnuke.plugin.local.LocalInstanceEnvironment;
