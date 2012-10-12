@@ -1,6 +1,6 @@
 package org.atomnuke.container.packaging.bindings.impl.java;
 
-import org.atomnuke.container.packaging.bindings.PackageLoaderException;
+import org.atomnuke.container.packaging.bindings.PackageLoadingException;
 import org.atomnuke.container.packaging.bindings.environment.BindingEnvironment;
 import org.atomnuke.container.packaging.bindings.LanguageDescriptor;
 import org.atomnuke.container.packaging.bindings.LanguageDescriptorImpl;
@@ -36,7 +36,7 @@ public class JavaBindingEnvironment implements BindingEnvironment {
    }
 
    @Override
-   public void load(Resource resource) throws PackageLoaderException {
+   public void load(Resource resource) throws PackageLoadingException {
       if (resource.type() == ResourceType.CLASS) {
          final String classPath = ResourceUtil.instance().relativePathToClassPath(resource.relativePath());
          resourceManager.alias(classPath, resource.location());

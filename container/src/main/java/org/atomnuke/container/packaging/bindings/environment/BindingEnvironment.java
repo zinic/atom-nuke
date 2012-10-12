@@ -1,6 +1,6 @@
 package org.atomnuke.container.packaging.bindings.environment;
 
-import org.atomnuke.container.packaging.bindings.PackageLoaderException;
+import org.atomnuke.container.packaging.bindings.PackageLoadingException;
 import org.atomnuke.container.packaging.bindings.LanguageDescriptor;
 import org.atomnuke.container.packaging.resource.Resource;
 import org.atomnuke.plugin.Environment;
@@ -15,5 +15,5 @@ public interface BindingEnvironment {
 
    Environment environment();
 
-   void load(Resource resource) throws PackageLoaderException;
+   void load(Resource resource) throws PackageLoadingException;
 }

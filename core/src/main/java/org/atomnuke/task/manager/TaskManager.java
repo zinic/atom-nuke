@@ -2,7 +2,6 @@ package org.atomnuke.task.manager;
 
 import java.util.UUID;
 import org.atomnuke.task.Tasker;
-import org.atomnuke.task.lifecycle.InitializationException;
 import org.atomnuke.util.TimeValue;
 
 /**
@@ -18,18 +17,6 @@ import org.atomnuke.util.TimeValue;
 public interface TaskManager extends Tasker {
 
    /**
-    * Initializes the TaskManager. This should only be called once.
-    *
-    * @throws InitializationException
-    */
-   void init();
-
-   /**
-    * Destroys the TaskManager. This should only be called once.
-    */
-   void destroy();
-
-   /**
     * Looks up a ManagedTask by id.
     *
     * @param taskId the task ID to look up.
@@ -43,4 +30,8 @@ public interface TaskManager extends Tasker {
     * @return the suggested time interval for scheduler sleeping.
     */
    TimeValue scheduleTasks();
+
+   void init();
+
+   void destroy();
 }

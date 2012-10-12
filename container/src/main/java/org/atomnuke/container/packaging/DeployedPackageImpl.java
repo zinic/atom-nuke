@@ -26,4 +26,26 @@ public class DeployedPackageImpl implements DeployedPackage {
    public ResourceManager resourceManager() {
       return resourceRegistry;
    }
+
+   @Override
+   public int hashCode() {
+      int hash = 73 + (this.archiveUri != null ? this.archiveUri.hashCode() : 0);
+
+      return hash;
+   }
+
+   @Override
+   public boolean equals(Object obj) {
+      if (obj == null || getClass() != obj.getClass()) {
+         return false;
+      }
+
+      final DeployedPackageImpl other = (DeployedPackageImpl) obj;
+
+      if (this.archiveUri != other.archiveUri && (this.archiveUri == null || !this.archiveUri.equals(other.archiveUri))) {
+         return false;
+      }
+
+      return true;
+   }
 }

@@ -1,31 +1,25 @@
 package org.atomnuke.container;
 
 import java.io.File;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicLong;
 import javax.xml.bind.JAXBException;
+import org.atomnuke.Nuke;
 import org.atomnuke.NukeEnv;
 import org.atomnuke.NukeKernel;
-import org.atomnuke.container.packaging.loader.impl.DirectoryLoaderManager;
-import org.atomnuke.container.packaging.bindings.environment.BindingEnvironmentManagerImpl;
 import org.atomnuke.config.model.ServerConfiguration;
 import org.atomnuke.container.config.ServerConfigurationManager;
 import org.atomnuke.container.context.ContextManager;
+import org.atomnuke.container.packaging.loader.PackageLoader;
+import org.atomnuke.container.service.annotation.NukeBootstrap;
 import org.atomnuke.service.ServiceManager;
 import org.atomnuke.service.ServiceManagerImpl;
-import org.atomnuke.kernel.NukeRejectionHandler;
-import org.atomnuke.kernel.NukeThreadPoolExecutor;
+import org.atomnuke.plugin.InstanceContextImpl;
+import org.atomnuke.plugin.local.LocalInstanceEnvironment;
+import org.atomnuke.service.Service;
+import org.atomnuke.service.context.ServiceContext;
 import org.atomnuke.service.context.ServiceContextImpl;
-import org.atomnuke.task.manager.TaskManager;
-import org.atomnuke.task.manager.TaskManagerImpl;
-import org.atomnuke.task.threading.ExecutionManager;
-import org.atomnuke.task.threading.ExecutionManagerImpl;
 import org.atomnuke.util.config.ConfigurationException;
 import org.atomnuke.util.config.io.ConfigurationManager;
 import org.atomnuke.util.config.update.ConfigurationContext;
@@ -33,6 +27,11 @@ import org.atomnuke.util.config.update.ConfigurationUpdateManager;
 import org.atomnuke.task.context.TaskContextImpl;
 import org.atomnuke.task.lifecycle.InitializationException;
 import org.atomnuke.task.lifecycle.TaskLifeCycle;
+import org.reflections.Reflections;
+import org.reflections.scanners.SubTypesScanner;
+import org.reflections.scanners.TypeAnnotationsScanner;
+import org.reflections.util.ClasspathHelper;
+import org.reflections.util.ConfigurationBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,29 +43,17 @@ public class NukeContainer {
 
    private static final Logger LOG = LoggerFactory.getLogger(NukeContainer.class);
 
-   private static final ThreadFactory DEFAULT_THREAD_FACTORY = new ThreadFactory() {
-      @Override
-      public Thread newThread(Runnable r) {
-         return new Thread(r, "nuke-worker-" + TID.incrementAndGet());
-      }
-   };
-
-   private static final AtomicLong TID = new AtomicLong(0);
-
-   private static final int NUM_PROCESSORS = Runtime.getRuntime().availableProcessors(), MAX_THREADS = NUM_PROCESSORS * 2;
-   private static final int MAX_QUEUE_SIZE = 256000;
-
    private final ServiceManager serviceManager;
+   private final Nuke nukeInstance;
 
-   private TaskManager taskManager;
-   private NukeKernel nukeInstance;
    private ContextManager contextManager;
 
    public NukeContainer() {
       this.serviceManager = new ServiceManagerImpl();
+      this.nukeInstance = new NukeKernel();
    }
 
-   public NukeKernel nukeInstance() {
+   public Nuke nukeInstance() {
       return nukeInstance;
    }
 
@@ -75,55 +62,45 @@ public class NukeContainer {
    }
 
    public void init(TaskLifeCycle tlc, Map<String, String> params) throws InitializationException {
-      tlc.init(new TaskContextImpl(params, serviceManager, taskManager));
+      tlc.init(new TaskContextImpl(params, serviceManager, nukeInstance.tasker()));
+   }
+
+   private static void bootstrap(ServiceManager serviceManager) {
+      final Reflections bootstrapScanner = new Reflections(new ConfigurationBuilder()
+              .setScanners(new SubTypesScanner(), new TypeAnnotationsScanner())
+              .setUrls(ClasspathHelper.forClassLoader(Thread.currentThread().getContextClassLoader())));
+
+      final ServiceContext serviceContext = new ServiceContextImpl(serviceManager, Collections.EMPTY_MAP);
+
+      for (Class bootstrapService : bootstrapScanner.getTypesAnnotatedWith(NukeBootstrap.class)) {
+         if (Service.class.isAssignableFrom(bootstrapService)) {
+            LOG.info("Initializing bootstrap service: " + bootstrapService.getName());
+
+            try {
+               final Service serviceInstance = (Service) bootstrapService.newInstance();
+               serviceManager.register(new InstanceContextImpl<Service>(LocalInstanceEnvironment.getInstance(), serviceInstance));
+
+               serviceInstance.init(serviceContext);
+            } catch (Exception ex) {
+               LOG.error("Failed to load bootstrap service. This may cause unexpected behavior however the container will still attempt normal init.", ex);
+            }
+         }
+      }
    }
 
    public void start() {
       final long initTime = System.currentTimeMillis();
 
-      LOG.info("Starting Nuke container...");
-      LOG.debug("Building loader manager.");
+      LOG.info("Starting the Fallout container.");
 
-      final DirectoryLoaderManager loaderManager = new DirectoryLoaderManager(
-              new BindingEnvironmentManagerImpl(), serviceManager, new File(NukeEnv.NUKE_DEPLOY), new File(NukeEnv.NUKE_LIB));
-
-      LOG.debug("Loader manager starting.");
-
-      loaderManager.init(new ServiceContextImpl(Collections.EMPTY_MAP));
-
-      LOG.debug("Building nuke kernel.");
-
-      final BlockingQueue<Runnable> runQueue = new LinkedBlockingQueue<Runnable>();
-      final ExecutorService execService = new NukeThreadPoolExecutor(NUM_PROCESSORS, MAX_THREADS, 30, TimeUnit.SECONDS, runQueue, DEFAULT_THREAD_FACTORY, new NukeRejectionHandler());
-      final ExecutionManager executionManager = new ExecutionManagerImpl(MAX_QUEUE_SIZE, runQueue, execService);
-
-      taskManager = new TaskManagerImpl(executionManager);
-      nukeInstance = new NukeKernel(executionManager, taskManager);
+      LOG.debug("Bootstrapping the container.");
+      bootstrap(serviceManager);
 
       LOG.debug("Building context manager.");
+      buildContextManager();
 
-      contextManager = new ContextManager(serviceManager, loaderManager.loadedPackageContexts(), nukeInstance, taskManager);
-
-      LOG.debug("Registering configuration listener.");
-
-      try {
-         final ConfigurationUpdateManager cfgUpdateManager = serviceManager.findService(ConfigurationUpdateManager.class);
-
-         if (cfgUpdateManager == null) {
-            LOG.error("No configuration service available. Expected service interface is: " + ConfigurationUpdateManager.class.getName());
-         } else {
-            final ConfigurationManager<ServerConfiguration> cfgManager = new ServerConfigurationManager(new File(NukeEnv.NUKE_HOME, NukeEnv.CONFIG_NAME));
-            final ConfigurationContext<ServerConfiguration> configurationContext = cfgUpdateManager.register("org.atomnuke.container.cfg", cfgManager);
-
-            configurationContext.addListener(contextManager);
-         }
-      } catch (JAXBException jaxbe) {
-         LOG.error(jaxbe.getMessage(), jaxbe);
-         throw new ContainerInitException(jaxbe);
-      } catch (ConfigurationException ce) {
-         LOG.error(ce.getMessage(), ce);
-         throw new ContainerInitException(ce);
-      }
+      LOG.debug("Registering Fallout configuration listener.");
+      registerConfigurationListeners();
 
       LOG.debug("Kernel thread start.");
 
@@ -131,5 +108,60 @@ public class NukeContainer {
       nukeInstance.start();
 
       LOG.info("Nuke container started. Elapsed start-up time: " + (System.currentTimeMillis() - initTime) + "ms.");
+   }
+
+   private void registerNukeCfgListener(ConfigurationUpdateManager cfgUpdateManager) throws ContainerInitException {
+      try {
+         final ConfigurationManager<ServerConfiguration> cfgManager = new ServerConfigurationManager(new File(NukeEnv.NUKE_HOME, NukeEnv.CONFIG_NAME));
+         final ConfigurationContext<ServerConfiguration> configurationContext = cfgUpdateManager.register("org.atomnuke.container.cfg", cfgManager);
+
+         configurationContext.addListener(contextManager);
+      } catch (JAXBException jaxbe) {
+         LOG.error(jaxbe.getMessage(), jaxbe);
+         throw new ContainerInitException(jaxbe);
+      } catch (ConfigurationException ce) {
+         LOG.error(ce.getMessage(), ce);
+         throw new ContainerInitException(ce);
+      }
+   }
+
+   private void buildContextManager() {
+      final Collection<String> packageLoaderServices = serviceManager.listRegisteredServicesFor(PackageLoader.class);
+
+      if (packageLoaderServices.isEmpty()) {
+         LOG.error("No package loader service available. Expected service interface is: " + PackageLoader.class.getName());
+         return;
+      }
+
+      for (String availablePackageLoader : packageLoaderServices) {
+         try {
+            final PackageLoader loader = serviceManager.get(availablePackageLoader, PackageLoader.class);
+            contextManager = new ContextManager(serviceManager, loader.packageContexts(), nukeInstance);
+
+            break;
+         } catch (Exception ex) {
+            LOG.error("Failed using package loader: " + availablePackageLoader + " - Reason: " + ex.getMessage(), ex);
+         }
+      }
+   }
+
+   private void registerConfigurationListeners() {
+      final Collection<String> configurationServices = serviceManager.listRegisteredServicesFor(ConfigurationUpdateManager.class);
+
+      if (configurationServices.isEmpty()) {
+         LOG.error("No configuration service available. Expected service interface is: " + ConfigurationUpdateManager.class.getName());
+         return;
+      }
+
+      for (String availableCfgService : configurationServices) {
+         try {
+            final ConfigurationUpdateManager cfgUpdateManager = serviceManager.get(availableCfgService, ConfigurationUpdateManager.class);
+            registerNukeCfgListener(cfgUpdateManager);
+
+            break;
+         } catch (Exception ex) {
+            LOG.error("Failed using configuration service: " + availableCfgService + " - Reason: " + ex.getMessage(), ex);
+         }
+      }
    }
 }

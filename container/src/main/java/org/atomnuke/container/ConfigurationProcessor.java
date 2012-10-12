@@ -40,15 +40,16 @@ import org.slf4j.LoggerFactory;
 public class ConfigurationProcessor {
 
    private static final Logger LOG = LoggerFactory.getLogger(ConfigurationProcessor.class);
+   
    private final Collection<PackageContext> loadedPackages;
    private final ServerConfigurationHandler cfgHandler;
    private final ContainerContext containerContext;
    private final ServiceManager services;
    private final Tasker tasker;
 
-   public ConfigurationProcessor(ServiceManager services, Tasker tasker, ContainerContext containerContext, ServerConfigurationHandler cfgHandler, Collection<PackageContext> loadedPackages) {
-      this.services = services;
+   public ConfigurationProcessor(Tasker tasker, ServiceManager services, ContainerContext containerContext, ServerConfigurationHandler cfgHandler, Collection<PackageContext> loadedPackages) {
       this.tasker = tasker;
+      this.services = services;
       this.containerContext = containerContext;
       this.cfgHandler = cfgHandler;
       this.loadedPackages = loadedPackages;
@@ -79,7 +80,7 @@ public class ConfigurationProcessor {
 
    public InstanceContext<AtomEventlet> constructEventlet(LanguageType langType, String ref) throws ReferenceInstantiationException {
       for (PackageContext packageContext : loadedPackages) {
-         final InstanceContext<AtomEventlet> eventlet = packageContext.packageBindings().resolveEventlet(langType, ref);
+         final InstanceContext<AtomEventlet> eventlet = packageContext.packageBindings().resolveReference(AtomEventlet.class, langType, ref);
 
          if (eventlet != null) {
             return eventlet;
@@ -91,7 +92,7 @@ public class ConfigurationProcessor {
 
    public InstanceContext<AtomSource> constructSource(LanguageType langType, String ref) throws ReferenceInstantiationException {
       for (PackageContext packageContext : loadedPackages) {
-         final InstanceContext<AtomSource> source = packageContext.packageBindings().resolveSource(langType, ref);
+         final InstanceContext<AtomSource> source = packageContext.packageBindings().resolveReference(AtomSource.class, langType, ref);
 
          if (source != null) {
             return source;
@@ -103,7 +104,7 @@ public class ConfigurationProcessor {
 
    public InstanceContext<AtomListener> constructListener(LanguageType langType, String ref) throws ReferenceInstantiationException {
       for (PackageContext packageContext : loadedPackages) {
-         final InstanceContext<AtomListener> listener = packageContext.packageBindings().resolveListener(langType, ref);
+         final InstanceContext<AtomListener> listener = packageContext.packageBindings().resolveReference(AtomListener.class, langType, ref);
 
          if (listener != null) {
             return listener;

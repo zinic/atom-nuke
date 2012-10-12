@@ -1,15 +1,10 @@
 package org.atomnuke.task.threading;
 
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.UUID;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.atomnuke.service.context.ServiceContext;
 
 /**
  *
@@ -17,23 +12,23 @@ import org.slf4j.LoggerFactory;
  */
 public class ExecutionManagerImpl implements ExecutionManager {
 
-   private static final Logger LOG = LoggerFactory.getLogger(ExecutionManagerImpl.class);
-   
-   private final List<TaskFuture> taskExecutionFutures;
-   private final BlockingQueue<Runnable> runQueue;
-   private final ExecutorService executorService;
-   private final int runQueueCapacity;
+   private final Map<UUID, TaskFuture> taskFutures;
+   private final ExecutionQueue executionQueue;
+   private final StateManager stateManager;
 
-   public ExecutionManagerImpl(int runQueueCapacity, BlockingQueue<Runnable> runQueue, ExecutorService executorService) {
-      this.runQueue = runQueue;
-      this.runQueueCapacity = runQueueCapacity;
-      this.executorService = executorService;
-
-      taskExecutionFutures = new LinkedList<TaskFuture>();
+   public ExecutionManagerImpl() {
+      this(new ExecutionQueueImpl());
    }
 
-   private synchronized List<TaskFuture> copyExecutionStates() {
-      for (Iterator<TaskFuture> itr = taskExecutionFutures.iterator(); itr.hasNext();) {
+   public ExecutionManagerImpl(ExecutionQueue executionQueue) {
+      this.executionQueue = executionQueue;
+
+      stateManager = new StateManager(State.NEW);
+      taskFutures = new TreeMap<UUID, TaskFuture>();
+   }
+
+   private synchronized Map<UUID, TaskFuture> taskFutures() {
+      for (Iterator<TaskFuture> itr = taskFutures.values().iterator(); itr.hasNext();) {
          final TaskFuture nextTask = itr.next();
 
          if (nextTask.done()) {
@@ -41,54 +36,64 @@ public class ExecutionManagerImpl implements ExecutionManager {
          }
       }
 
-      return new LinkedList<TaskFuture>(taskExecutionFutures);
-   }
-
-   private synchronized void track(UUID id, Future future) {
-      taskExecutionFutures.add(new TaskFuture(future, id));
+      return taskFutures;
    }
 
    @Override
-   public boolean draining() {
-      return runQueue.size() > runQueueCapacity;
+   public void init(ServiceContext sc) {
+      stateManager.update(State.STARTING);
+      stateManager.update(State.OK);
    }
 
    @Override
    public void destroy() {
-      // Kill all of the queued tasks
-      LOG.info("Clearing: " + runQueue.size() + " tasks");
-      runQueue.clear();
-      
-      // Shut down the execution pool
-      executorService.shutdown();
+      stateManager.update(State.STOPPING);
 
-      try {
-         // Try to wait for things to settle
-         executorService.awaitTermination(5, TimeUnit.SECONDS);
-      } catch (InterruptedException ie) {
-         LOG.warn("Interrupted while waiting for task delegates to finish. This may introduce bad state.");
-         executorService.shutdownNow();
+      // Shut down the execution queue we're using
+      executionQueue.destroy();
+
+      stateManager.update(State.DESTROYED);
+   }
+
+   @Override
+   public TaskFuture submit(Runnable r) {
+      return submit(UUID.randomUUID(), r);
+   }
+
+   @Override
+   public synchronized TaskFuture submit(UUID id, Runnable r) {
+      final TaskFuture taskFuture = new TaskFuture(executionQueue.submit(r), id);
+      taskFutures.put(id, taskFuture);
+
+      return taskFuture;
+   }
+
+   @Override
+   public State state() {
+      final State state = stateManager.state();
+
+      switch (state) {
+         case STOPPING:
+         case DESTROYED:
+            break;
+
+         case DRAINING:
+            if (!executionQueue.isFull()) {
+               stateManager.update(State.OK);
+            }
+            break;
+
+         default:
+            if (executionQueue.isFull()) {
+               stateManager.update(State.DRAINING);
+            }
       }
-   }
 
-   @Override
-   public void queue(Runnable task) {
-      executorService.submit(task);
-   }
-
-   @Override
-   public void submit(UUID id, Runnable task) {
-      track(id, executorService.submit(task));
+      return stateManager.state();
    }
 
    @Override
    public boolean submitted(UUID id) {
-      for (TaskFuture executingTask : copyExecutionStates()) {
-         if (executingTask.id().equals(id)) {
-            return true;
-         }
-      }
-
-      return false;
+      return taskFutures().containsKey(id);
    }
 }

@@ -133,9 +133,9 @@ public class ManagedTaskImpl implements ManagedTask {
    private void dispatchToListeners(AtomSourceResult pollResult) {
       for (ManagedListener listener : listenerManager.listeners()) {
          if (pollResult.type() == ResultType.FEED) {
-            executorService.queue(new AtomListenerDriver(listener, pollResult.feed()));
+            executorService.submit(new AtomListenerDriver(listener, pollResult.feed()));
          } else {
-            executorService.queue(new AtomListenerDriver(listener, pollResult.entry()));
+            executorService.submit(new AtomListenerDriver(listener, pollResult.entry()));
          }
       }
    }

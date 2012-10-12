@@ -5,7 +5,7 @@
 
    <groupId>org.atomnuke</groupId>
    <artifactId>project</artifactId>
-   <version>0.9.9-SNAPSHOT</version>
+   <version>0.9.9.1-SNAPSHOT</version>
 
    <packaging>pom</packaging>
 
@@ -16,7 +16,7 @@
       <!-- Core -->
       <module>core</module>
 
-      <!--- Flask -->
+      <!--- Fallout -->
       <module>container</module>
       <module>container/cli</module>
 
@@ -92,7 +92,7 @@
 
          <dependency>
             <groupId>org.atomnuke.container</groupId>
-            <artifactId>flask</artifactId>
+            <artifactId>fallout</artifactId>
             <version>${project.version}</version>
          </dependency>
 

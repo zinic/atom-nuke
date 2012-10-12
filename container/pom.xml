@@ -6,15 +6,15 @@
    <parent>
       <groupId>org.atomnuke</groupId>
       <artifactId>project</artifactId>
-      <version>0.9.9-SNAPSHOT</version>
+      <version>0.9.9.1-SNAPSHOT</version>
    </parent>
 
    <groupId>org.atomnuke.container</groupId>
-   <artifactId>flask</artifactId>
+   <artifactId>fallout</artifactId>
 
    <packaging>jar</packaging>
 
-   <name>Atom Nuke - Container (Flask)</name>
+   <name>Atom Nuke - Container (Fallout)</name>
 
    <dependencies>
       <dependency>

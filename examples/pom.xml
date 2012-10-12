@@ -6,7 +6,7 @@
    <parent>
       <groupId>org.atomnuke</groupId>
       <artifactId>project</artifactId>
-      <version>0.9.9-SNAPSHOT</version>
+      <version>0.9.9.1-SNAPSHOT</version>
    </parent>
 
    <groupId>org.atomnuke</groupId>
@@ -36,7 +36,7 @@
 
       <dependency>
          <groupId>org.atomnuke.container</groupId>
-         <artifactId>flask</artifactId>
+         <artifactId>fallout</artifactId>
          <version>${project.version}</version>
       </dependency>
 
@@ -68,11 +68,6 @@
       <dependency>
          <groupId>com.rackspace.papi.commons</groupId>
          <artifactId>utilities</artifactId>
-      </dependency>
-
-      <dependency>
-         <groupId>com.rackspace.papi.commons</groupId>
-         <artifactId>classloader</artifactId>
       </dependency>
 
       <dependency>

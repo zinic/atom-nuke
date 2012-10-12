@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory;
 public class ConfigurationService implements Service {
 
    public static String CFG_POLLER_PROPERTY_KEY = "org.atomnuke.container.service.config.ConfigurationService.poll_interval_ms";
+   public static String CFG_SERVICE_NAME = "org.atomnuke.container.service.config.ConfigurationService";
 
    private static final long DEFAULT_CFG_POLL_TIME_MS = 15000;
    private static final Logger LOG = LoggerFactory.getLogger(ConfigurationService.class);
@@ -37,7 +38,7 @@ public class ConfigurationService implements Service {
 
    @Override
    public String name() {
-      return "Nuke stock configuration service";
+      return CFG_SERVICE_NAME;
    }
 
    @Override
@@ -59,7 +60,7 @@ public class ConfigurationService implements Service {
          }
       }
 
-      LOG.info("Nuke configuration poller starting...");
+      LOG.info("Nuke configuration poller starting.");
 
       cfgPoller = new Poller("Nuke Container - Configuration Poller", new ConfigurationUpdateRunnable(cfgUpdateMangaer), pollerTime);
       cfgPoller.start();
@@ -67,7 +68,7 @@ public class ConfigurationService implements Service {
 
    @Override
    public void destroy() {
-      LOG.info("Nuke configuration poller stopping...");
+      LOG.info("Nuke configuration poller stopping.");
 
       try {
          cfgPoller.haltPolling();

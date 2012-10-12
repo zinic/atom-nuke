@@ -10,5 +10,5 @@ import org.atomnuke.container.packaging.resource.ResourceManager;
  */
 public interface BindingEnvironmentFactory {
 
-   List<BindingEnvironment> newEnviornmentList(ResourceManager resourceManager);
+   List<BindingEnvironment> newEnviornment(ResourceManager resourceManager);
 }

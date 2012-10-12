@@ -4,14 +4,11 @@ import java.util.LinkedList;
 import java.util.List;
 import org.atomnuke.container.packaging.bindings.environment.BindingEnvironment;
 import org.atomnuke.config.model.LanguageType;
-import org.atomnuke.listener.AtomListener;
-import org.atomnuke.listener.eps.eventlet.AtomEventlet;
 import org.atomnuke.plugin.Environment;
 import org.atomnuke.plugin.InstanceContext;
 import org.atomnuke.plugin.InstanceContextImpl;
 import org.atomnuke.plugin.ReferenceInstantiationException;
 import org.atomnuke.service.Service;
-import org.atomnuke.source.AtomSource;
 
 /**
  *
@@ -39,23 +36,9 @@ public class PackageBindingsImpl implements PackageBindings {
 
       return services;
    }
-
+   
    @Override
-   public InstanceContext<AtomEventlet> resolveEventlet(LanguageType type, String ref) throws ReferenceInstantiationException {
-      return resolve(AtomEventlet.class, type, ref);
-   }
-
-   @Override
-   public InstanceContext<AtomListener> resolveListener(LanguageType type, String ref) throws ReferenceInstantiationException {
-      return resolve(AtomListener.class, type, ref);
-   }
-
-   @Override
-   public InstanceContext<AtomSource> resolveSource(LanguageType type, String ref) throws ReferenceInstantiationException {
-      return resolve(AtomSource.class, type, ref);
-   }
-
-   private <T> InstanceContext<T> resolve(Class<T> type, LanguageType language, String ref) throws ReferenceInstantiationException {
+   public <T> InstanceContext<T> resolveReference(Class<T> type, LanguageType language, String ref) throws ReferenceInstantiationException {
       for (BindingEnvironment bindingCtx : availableBindingEnvironments) {
          final Environment env = bindingCtx.environment();
 

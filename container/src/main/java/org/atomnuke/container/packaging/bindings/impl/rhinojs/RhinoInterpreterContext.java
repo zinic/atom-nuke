@@ -5,7 +5,7 @@ import java.io.InputStreamReader;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import org.atomnuke.container.packaging.bindings.environment.BindingEnvironment;
-import org.atomnuke.container.packaging.bindings.PackageLoaderException;
+import org.atomnuke.container.packaging.bindings.PackageLoadingException;
 import org.atomnuke.container.packaging.bindings.LanguageDescriptor;
 import org.atomnuke.container.packaging.bindings.LanguageDescriptorImpl;
 import org.atomnuke.config.model.LanguageType;
@@ -46,14 +46,14 @@ public class RhinoInterpreterContext implements BindingEnvironment {
    }
 
    @Override
-   public void load(Resource resource) throws PackageLoaderException {
+   public void load(Resource resource) throws PackageLoadingException {
       try {
          final InputStream in = resource.location().toURL().openStream();
          jsEngine.eval(new InputStreamReader(in));
 
          in.close();
       } catch (Exception se) {
-         throw new PackageLoaderException("Failed to load Javascript file. Reason: " + se.getMessage(), se);
+         throw new PackageLoadingException("Failed to load Javascript file. Reason: " + se.getMessage(), se);
       }
    }
 }

@@ -1,7 +1,9 @@
 package org.atomnuke.service;
 
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.List;
+import java.util.Map;
 import org.atomnuke.plugin.InstanceContext;
 import org.atomnuke.plugin.proxy.InstanceEnvProxyFactory;
 import org.atomnuke.plugin.proxy.japi.JapiProxyFactory;
@@ -16,7 +18,7 @@ public class ServiceManagerImpl implements ServiceManager {
 
    private static final Logger LOG = LoggerFactory.getLogger(ServiceManagerImpl.class);
 
-   private final List<InstanceContext<Service>> registeredServices;
+   private final Map<String, InstanceContext<Service>> registeredServices;
    private final InstanceEnvProxyFactory proxyFactory;
 
    public ServiceManagerImpl() {
@@ -25,12 +27,26 @@ public class ServiceManagerImpl implements ServiceManager {
 
    public ServiceManagerImpl(InstanceEnvProxyFactory proxyFactory) {
       this.proxyFactory = proxyFactory;
-      registeredServices = new LinkedList<InstanceContext<Service>>();
+
+      registeredServices = new HashMap<String, InstanceContext<Service>>();
+   }
+
+   @Override
+   public synchronized Collection<String> listRegisteredServicesFor(Class serviceInterface) {
+      final Collection<String> servicesMatchingInterface = new LinkedList<String>();
+
+      for (InstanceContext<Service> service : registeredServices.values()) {
+         if (service.instance().provides(serviceInterface)) {
+            servicesMatchingInterface.add(service.instance().name());
+         }
+      }
+
+      return servicesMatchingInterface;
    }
 
    @Override
    public synchronized void destroy() {
-      for (InstanceContext<Service> serviceCtx : registeredServices) {
+      for (InstanceContext<Service> serviceCtx : registeredServices.values()) {
          try {
             serviceCtx.environment().stepInto();
 
@@ -41,21 +57,34 @@ public class ServiceManagerImpl implements ServiceManager {
             serviceCtx.environment().stepOut();
          }
       }
+
+      registeredServices.clear();
    }
 
    @Override
-   public synchronized void register(InstanceContext<Service> service) {
-      registeredServices.add(service);
-   }
+   public synchronized void register(InstanceContext<Service> service) throws ServiceAlreadyRegisteredException {
+      final String serviceName = service.instance().name();
 
-   @Override
-   public synchronized <T> T findService(Class<T> serviceInterface) {
-      for (InstanceContext<Service> service : registeredServices) {
-         if (service.instance().provides(serviceInterface)) {
-            return (T) proxyFactory.newServiceProxy(serviceInterface, service);
-         }
+      if (registeredServices.containsKey(serviceName)) {
+         throw new ServiceAlreadyRegisteredException(serviceName);
       }
 
-      return null;
+      registeredServices.put(serviceName, service);
+   }
+
+   @Override
+   public synchronized boolean isRegistered(String serviceName) {
+      return registeredServices.containsKey(serviceName);
+   }
+
+   @Override
+   public synchronized <T> T get(String name, Class<T> serviceInterface) {
+      final InstanceContext<Service> serviceInstanceContext = registeredServices.get(name);
+
+      if (!serviceInstanceContext.instance().provides(serviceInterface)) {
+         throw new IllegalArgumentException("Service: " + name + " does not provide interface: " + serviceInterface.getName());
+      }
+
+      return serviceInstanceContext != null ? (T) proxyFactory.newServiceProxy(serviceInterface, serviceInstanceContext) : null;
    }
 }

@@ -1,5 +1,6 @@
 package org.atomnuke.service;
 
+import java.util.Collection;
 import org.atomnuke.kernel.resource.Destroyable;
 import org.atomnuke.plugin.InstanceContext;
 
@@ -9,7 +10,11 @@ import org.atomnuke.plugin.InstanceContext;
  */
 public interface ServiceManager extends Destroyable {
 
-   void register(InstanceContext<Service> service);
+   void register(InstanceContext<Service> service) throws ServiceAlreadyRegisteredException;
 
-   <T> T findService(Class<T> serviceInterface);
+   boolean isRegistered(String serviceName);
+
+   Collection<String> listRegisteredServicesFor(Class serviceInterface);
+
+   <T> T get(String serviceName, Class<T> serviceInterface);
 }

@@ -1,7 +1,6 @@
 package org.atomnuke.container.packaging.bindings.impl.java;
 
 import java.lang.annotation.Annotation;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import org.atomnuke.container.packaging.bindings.environment.ClassLoaderEnvironment;
@@ -10,9 +9,6 @@ import org.atomnuke.container.packaging.bindings.impl.java.scanner.ClassVisitor;
 import org.atomnuke.container.packaging.resource.ResourceManager;
 import org.atomnuke.container.service.annotation.NukeService;
 import org.atomnuke.service.Service;
-import org.atomnuke.service.ServiceLifeCycle;
-import org.atomnuke.service.context.ServiceContext;
-import org.atomnuke.service.context.ServiceContextImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,7 +30,6 @@ public class JavaEnvironment extends ClassLoaderEnvironment {
 
    @Override
    public List<Service> services() {
-      final ServiceContext serviceContext = new ServiceContextImpl(Collections.EMPTY_MAP);
       final List<Class> discoveredServiceClasses = new LinkedList<Class>();
 
       LOG.info("Scanning classpath...");
@@ -57,10 +52,7 @@ public class JavaEnvironment extends ClassLoaderEnvironment {
 
          for (Class serviceClass : discoveredServiceClasses) {
             try {
-               final ServiceLifeCycle serviceInstance = (ServiceLifeCycle) serviceClass.newInstance();
-               serviceInstance.init(serviceContext);
-
-               builtServices.add((Service) serviceInstance);
+               builtServices.add((Service) serviceClass.newInstance());
             } catch (Exception ex) {
                LOG.error("Service init failed for service class: " + serviceClass.getName() + " - Reason: " + ex.getMessage(), ex);
             }

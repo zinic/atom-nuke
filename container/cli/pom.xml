@@ -6,13 +6,13 @@
    <parent>
       <groupId>org.atomnuke</groupId>
       <artifactId>project</artifactId>
-      <version>0.9.9-SNAPSHOT</version>
+      <version>0.9.9.1-SNAPSHOT</version>
 
       <relativePath>./../..</relativePath>
    </parent>
 
    <groupId>org.atomnuke.container</groupId>
-   <artifactId>flask-cli</artifactId>
+   <artifactId>fallout-cli</artifactId>
 
    <packaging>jar</packaging>
 
@@ -26,7 +26,7 @@
 
       <dependency>
          <groupId>org.atomnuke.container</groupId>
-         <artifactId>flask</artifactId>
+         <artifactId>fallout</artifactId>
       </dependency>
 
       <dependency>
@@ -135,6 +135,6 @@
    </profiles>
 
    <build>
-      <finalName>flask-cli</finalName>
+      <finalName>fallout-cli</finalName>
    </build>
 </project>

@@ -16,7 +16,7 @@ import org.atomnuke.container.packaging.resource.ResourceManager;
 public class BindingEnvironmentManagerImpl implements BindingEnvironmentFactory {
 
    @Override
-   public List<BindingEnvironment> newEnviornmentList(ResourceManager resourceManager) {
+   public List<BindingEnvironment> newEnviornment(ResourceManager resourceManager) {
       final List<BindingEnvironment> bindingContexts = new LinkedList<BindingEnvironment>();
 
       bindingContexts.add(new JavaBindingEnvironment(resourceManager));
