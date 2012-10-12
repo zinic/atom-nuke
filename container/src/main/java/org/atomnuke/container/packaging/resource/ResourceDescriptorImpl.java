@@ -1,6 +1,7 @@
 package org.atomnuke.container.packaging.resource;
 
 import java.net.URI;
+import java.util.Arrays;
 import org.atomnuke.container.packaging.archive.ResourceType;
 
 public class ResourceDescriptorImpl implements Resource {
@@ -14,7 +15,7 @@ public class ResourceDescriptorImpl implements Resource {
       this.resourceLocation = resourceLocation;
       this.relativePath = relativePath;
       this.resourceType = resourceType;
-      this.digestBytes = digestBytes;
+      this.digestBytes = Arrays.copyOf(digestBytes, digestBytes.length);
    }
 
    @Override
