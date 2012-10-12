@@ -65,6 +65,8 @@ public class DirectoryLoaderService implements Service {
 
    @Override
    public void init(ServiceContext sc) {
+      LOG.info("Directory package loader service starting.");
+
       try {
          loadPackages();
          loadServices(sc.manager());
@@ -147,5 +149,6 @@ public class DirectoryLoaderService implements Service {
 
    @Override
    public void destroy() {
+      LOG.info("Directory package loader service stopping.");
    }
 }
