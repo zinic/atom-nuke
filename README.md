@@ -61,6 +61,9 @@ events. This framework is called the [event processing system or EPS](https://gi
 
 * Extensible elements - Internal elements are currently treated as text content.
 
+##Release Notes##
+* [Release Notes](https://github.com/zinic/atom-nuke/wiki/Release-Notes) can be found in the wiki
+
 ##That Legal Thing...##
 
 This software library is released to you under the [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.html). See [LICENSE](https://github.com/zinic/atom-nuke/blob/master/LICENSE) for more information.
