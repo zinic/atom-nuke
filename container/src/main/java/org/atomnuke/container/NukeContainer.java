@@ -1,7 +1,6 @@
 package org.atomnuke.container;
 
 import java.io.File;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 import javax.xml.bind.JAXBException;
@@ -42,14 +41,14 @@ import org.slf4j.LoggerFactory;
 public class NukeContainer {
 
    private static final Logger LOG = LoggerFactory.getLogger(NukeContainer.class);
-
    private final ServiceManager serviceManager;
+   private final ServiceHandler serviceHelper;
    private final Nuke nukeInstance;
-
    private ContextManager contextManager;
 
    public NukeContainer() {
       this.serviceManager = new ServiceManagerImpl();
+      this.serviceHelper = new ServiceHandler(serviceManager);
       this.nukeInstance = new NukeKernel();
    }
 
@@ -126,42 +125,23 @@ public class NukeContainer {
    }
 
    private void buildContextManager() {
-      final Collection<String> packageLoaderServices = serviceManager.listRegisteredServicesFor(PackageLoader.class);
-
-      if (packageLoaderServices.isEmpty()) {
-         LOG.error("No package loader service available. Expected service interface is: " + PackageLoader.class.getName());
-         return;
-      }
-
-      for (String availablePackageLoader : packageLoaderServices) {
-         try {
-            final PackageLoader loader = serviceManager.get(availablePackageLoader, PackageLoader.class);
-            contextManager = new ContextManager(serviceManager, loader.packageContexts(), nukeInstance);
-
-            break;
-         } catch (Exception ex) {
-            LOG.error("Failed using package loader: " + availablePackageLoader + " - Reason: " + ex.getMessage(), ex);
-         }
+      // First package loader wins
+      try {
+         final PackageLoader firstLoader = serviceHelper.firstAvailable(PackageLoader.class);
+         contextManager = new ContextManager(serviceManager, firstLoader.packageContexts(), nukeInstance);
+      } catch (ServiceUnavailableException sue) {
+         LOG.error(sue.getMessage(), sue);
+      } catch (Exception ex) {
+         LOG.error("Failed building context manager. Reason: " + ex.getMessage(), ex);
       }
    }
 
    private void registerConfigurationListeners() {
-      final Collection<String> configurationServices = serviceManager.listRegisteredServicesFor(ConfigurationUpdateManager.class);
-
-      if (configurationServices.isEmpty()) {
-         LOG.error("No configuration service available. Expected service interface is: " + ConfigurationUpdateManager.class.getName());
-         return;
-      }
-
-      for (String availableCfgService : configurationServices) {
-         try {
-            final ConfigurationUpdateManager cfgUpdateManager = serviceManager.get(availableCfgService, ConfigurationUpdateManager.class);
-            registerNukeCfgListener(cfgUpdateManager);
-
-            break;
-         } catch (Exception ex) {
-            LOG.error("Failed using configuration service: " + availableCfgService + " - Reason: " + ex.getMessage(), ex);
-         }
+      try {
+         final ConfigurationUpdateManager cfgUpdateManager = serviceHelper.firstAvailable(ConfigurationUpdateManager.class);
+         registerNukeCfgListener(cfgUpdateManager);
+      } catch (ServiceUnavailableException sue) {
+         LOG.error(sue.getMessage(), sue);
       }
    }
 }
