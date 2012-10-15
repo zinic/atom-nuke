@@ -47,7 +47,7 @@ public class ContainerBootstrap implements Bootstrap {
 
                serviceInstance.init(serviceContext);
             } catch (Exception ex) {
-               LOG.error("Failed to load bootstrap service. This may cause unexpected behavior however the container may still attempt normal init.", ex);
+               LOG.error("Failed to load bootstrap service: " + bootstrapService.getName() + " - This may cause unexpected behavior however the container may still attempt normal init.", ex);
             }
          }
       }

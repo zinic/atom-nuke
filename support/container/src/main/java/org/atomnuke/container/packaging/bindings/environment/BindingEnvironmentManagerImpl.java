@@ -4,9 +4,9 @@ import org.atomnuke.container.packaging.bindings.BindingEnvironmentFactory;
 import java.util.LinkedList;
 import java.util.List;
 import org.atomnuke.container.packaging.bindings.environment.BindingEnvironment;
-import org.atomnuke.container.packaging.bindings.impl.java.JavaBindingEnvironment;
-import org.atomnuke.container.packaging.bindings.impl.jython.JythonBindingEnvironment;
-import org.atomnuke.container.packaging.bindings.impl.rhinojs.RhinoInterpreterContext;
+import org.atomnuke.container.packaging.bindings.lang.java.JavaBindingEnvironment;
+import org.atomnuke.container.packaging.bindings.lang.jython.JythonBindingEnvironment;
+import org.atomnuke.container.packaging.bindings.lang.rhinojs.RhinoInterpreterContext;
 import org.atomnuke.container.packaging.resource.ResourceManager;
 
 /**

@@ -1,4 +1,4 @@
-package org.atomnuke.container.packaging.bindings.impl.rhinojs;
+package org.atomnuke.container.packaging.bindings.lang.rhinojs;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;

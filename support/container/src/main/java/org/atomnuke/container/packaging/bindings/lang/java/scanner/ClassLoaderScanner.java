@@ -1,4 +1,4 @@
-package org.atomnuke.container.packaging.bindings.impl.java.scanner;
+package org.atomnuke.container.packaging.bindings.lang.java.scanner;
 
 import org.atomnuke.container.packaging.archive.ResourceType;
 import org.atomnuke.container.packaging.resource.Resource;

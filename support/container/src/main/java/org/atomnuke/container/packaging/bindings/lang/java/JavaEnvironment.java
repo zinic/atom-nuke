@@ -1,11 +1,11 @@
-package org.atomnuke.container.packaging.bindings.impl.java;
+package org.atomnuke.container.packaging.bindings.lang.java;
 
 import java.lang.annotation.Annotation;
 import java.util.LinkedList;
 import java.util.List;
 import org.atomnuke.container.packaging.bindings.environment.ClassLoaderEnvironment;
-import org.atomnuke.container.packaging.bindings.impl.java.scanner.ClassLoaderScanner;
-import org.atomnuke.container.packaging.bindings.impl.java.scanner.ClassVisitor;
+import org.atomnuke.container.packaging.bindings.lang.java.scanner.ClassLoaderScanner;
+import org.atomnuke.container.packaging.bindings.lang.java.scanner.ClassVisitor;
 import org.atomnuke.container.packaging.resource.ResourceManager;
 import org.atomnuke.container.service.annotation.NukeService;
 import org.atomnuke.service.Service;

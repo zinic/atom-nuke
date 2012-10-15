@@ -1,4 +1,4 @@
-package org.atomnuke.container.packaging.bindings.impl.jython;
+package org.atomnuke.container.packaging.bindings.lang.jython;
 
 import java.io.InputStream;
 import org.atomnuke.container.packaging.bindings.environment.BindingEnvironment;

@@ -1,4 +1,4 @@
-package org.atomnuke.container.packaging.bindings.impl.java;
+package org.atomnuke.container.packaging.bindings.lang.java;
 
 import org.atomnuke.container.packaging.bindings.PackageLoadingException;
 import org.atomnuke.container.packaging.bindings.environment.BindingEnvironment;
