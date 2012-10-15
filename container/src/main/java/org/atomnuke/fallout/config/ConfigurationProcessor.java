@@ -70,8 +70,6 @@ public class ConfigurationProcessor {
    }
 
    public void merge(Nuke kernelBeingBuilt) throws ConfigurationException {
-      LOG.info("Reading configuration");
-
       processSources(kernelBeingBuilt);
       processRelays();
       processListeners();

@@ -16,7 +16,7 @@
 
    <packaging>jar</packaging>
 
-   <name>Atom Nuke - Container - Command Line Interface</name>
+   <name>Atom Nuke - Fallout - Command Line Interface</name>
 
    <dependencies>
       <dependency>

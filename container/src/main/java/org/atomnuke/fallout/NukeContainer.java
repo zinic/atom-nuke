@@ -10,6 +10,7 @@ import org.atomnuke.Nuke;
 import org.atomnuke.NukeEnv;
 import org.atomnuke.NukeKernel;
 import org.atomnuke.config.model.ServerConfiguration;
+import org.atomnuke.container.boot.ContainerBootstrap;
 import org.atomnuke.fallout.config.server.ServerConfigurationManager;
 import org.atomnuke.fallout.context.ContextManager;
 import org.atomnuke.container.packaging.loader.PackageLoader;
@@ -68,36 +69,13 @@ public class NukeContainer {
       tlc.init(new TaskContextImpl(params, serviceManager, nukeInstance.tasker()));
    }
 
-   private static void bootstrap(ServiceManager serviceManager) {
-      final Reflections bootstrapScanner = new Reflections(new ConfigurationBuilder()
-              .setScanners(new SubTypesScanner(), new TypeAnnotationsScanner())
-              .setUrls(ClasspathHelper.forClassLoader(Thread.currentThread().getContextClassLoader())));
-
-      final ServiceContext serviceContext = new ServiceContextImpl(serviceManager, Collections.EMPTY_MAP);
-
-      for (Class bootstrapService : bootstrapScanner.getTypesAnnotatedWith(NukeBootstrap.class)) {
-         if (Service.class.isAssignableFrom(bootstrapService)) {
-            LOG.info("Initializing bootstrap service: " + bootstrapService.getName());
-
-            try {
-               final Service serviceInstance = (Service) bootstrapService.newInstance();
-               serviceManager.register(new InstanceContextImpl<Service>(LocalInstanceEnvironment.getInstance(), serviceInstance));
-
-               serviceInstance.init(serviceContext);
-            } catch (Exception ex) {
-               LOG.error("Failed to load bootstrap service. This may cause unexpected behavior however the container will still attempt normal init.", ex);
-            }
-         }
-      }
-   }
-
    public void start() {
       final long initTime = System.currentTimeMillis();
 
       LOG.info("Starting the Nuke container, Fallout.");
 
       LOG.debug("Bootstrapping the container.");
-      bootstrap(serviceManager);
+      new ContainerBootstrap(serviceManager).bootstrap();
 
       LOG.debug("Building context manager.");
       buildContextManager();
@@ -113,7 +91,7 @@ public class NukeContainer {
       LOG.info("Nuke container started. Elapsed start-up time: " + (System.currentTimeMillis() - initTime) + "ms.");
    }
 
-   private void registerNukeCfgListener(ConfigurationUpdateManager cfgUpdateManager) throws ContainerInitException {
+   private void registerNukeCfgListener(ConfigurationUpdateManager cfgUpdateManager) throws FalloutInitException {
       try {
          final ConfigurationManager<ServerConfiguration> cfgManager = new ServerConfigurationManager(new File(NukeEnv.NUKE_HOME, NukeEnv.CONFIG_NAME));
          final ConfigurationContext<ServerConfiguration> configurationContext = cfgUpdateManager.register("org.atomnuke.container.cfg", cfgManager);
@@ -121,10 +99,10 @@ public class NukeContainer {
          configurationContext.addListener(contextManager);
       } catch (JAXBException jaxbe) {
          LOG.error(jaxbe.getMessage(), jaxbe);
-         throw new ContainerInitException(jaxbe);
+         throw new FalloutInitException(jaxbe);
       } catch (ConfigurationException ce) {
          LOG.error(ce.getMessage(), ce);
-         throw new ContainerInitException(ce);
+         throw new FalloutInitException(ce);
       }
    }
 
