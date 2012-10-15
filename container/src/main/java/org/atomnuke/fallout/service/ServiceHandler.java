@@ -1,4 +1,4 @@
-package org.atomnuke.container;
+package org.atomnuke.fallout.service;
 
 import java.util.Collection;
 import org.atomnuke.service.ServiceManager;

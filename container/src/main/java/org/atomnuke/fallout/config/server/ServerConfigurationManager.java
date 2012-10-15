@@ -1,4 +1,4 @@
-package org.atomnuke.container.config;
+package org.atomnuke.fallout.config.server;
 
 import java.io.File;
 import javax.xml.bind.JAXBException;

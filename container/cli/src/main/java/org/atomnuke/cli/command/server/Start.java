@@ -2,7 +2,7 @@ package org.atomnuke.cli.command.server;
 
 import org.atomnuke.cli.command.AbstractNukeCommand;
 import org.atomnuke.cli.CliConfigurationHandler;
-import org.atomnuke.container.NukeContainer;
+import org.atomnuke.fallout.NukeContainer;
 import org.atomnuke.util.cli.command.result.CommandResult;
 import org.atomnuke.util.cli.command.result.CommandSuccess;
 

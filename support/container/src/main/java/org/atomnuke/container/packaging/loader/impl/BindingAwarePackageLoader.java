@@ -2,7 +2,6 @@ package org.atomnuke.container.packaging.loader.impl;
 
 import org.atomnuke.container.packaging.loader.PackageLoader;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,13 +13,6 @@ import org.atomnuke.container.packaging.PackageContextImpl;
 import org.atomnuke.container.packaging.bindings.PackageBindingsImpl;
 import org.atomnuke.container.packaging.bindings.environment.BindingEnvironment;
 import org.atomnuke.container.packaging.resource.Resource;
-import org.atomnuke.plugin.InstanceContext;
-import org.atomnuke.plugin.ReferenceInstantiationException;
-import org.atomnuke.service.Service;
-import org.atomnuke.service.ServiceAlreadyRegisteredException;
-import org.atomnuke.service.ServiceManager;
-import org.atomnuke.service.context.ServiceContext;
-import org.atomnuke.service.context.ServiceContextImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

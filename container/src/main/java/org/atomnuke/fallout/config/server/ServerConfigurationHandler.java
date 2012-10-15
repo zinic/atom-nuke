@@ -1,4 +1,4 @@
-package org.atomnuke.container.config;
+package org.atomnuke.fallout.config.server;
 
 import java.util.List;
 import org.atomnuke.config.model.Binding;

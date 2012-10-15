@@ -1,4 +1,4 @@
-package org.atomnuke.config.jee6;
+package org.atomnuke.fallout.jee6;
 
 import com.oracle.javaee6.ApplicationType;
 import com.oracle.javaee6.ObjectFactory;
