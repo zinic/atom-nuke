@@ -41,9 +41,11 @@ import org.slf4j.LoggerFactory;
 public class NukeContainer {
 
    private static final Logger LOG = LoggerFactory.getLogger(NukeContainer.class);
+
    private final ServiceManager serviceManager;
    private final ServiceHandler serviceHelper;
    private final Nuke nukeInstance;
+
    private ContextManager contextManager;
 
    public NukeContainer() {
@@ -90,7 +92,7 @@ public class NukeContainer {
    public void start() {
       final long initTime = System.currentTimeMillis();
 
-      LOG.info("Starting the Fallout container.");
+      LOG.info("Starting the Nuke container, Fallout.");
 
       LOG.debug("Bootstrapping the container.");
       bootstrap(serviceManager);

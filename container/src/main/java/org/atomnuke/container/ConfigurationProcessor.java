@@ -13,9 +13,11 @@ import org.atomnuke.config.model.Parameters;
 import org.atomnuke.config.model.Relay;
 import org.atomnuke.config.model.Sink;
 import org.atomnuke.config.model.Source;
+import org.atomnuke.container.config.LanguageTypeUtil;
 import org.atomnuke.container.config.ServerConfigurationHandler;
 import org.atomnuke.container.context.ContainerContext;
 import org.atomnuke.container.packaging.PackageContext;
+import org.atomnuke.container.packaging.bindings.lang.BindingLanguage;
 import org.atomnuke.plugin.local.LocalInstanceEnvironment;
 import org.atomnuke.listener.AtomListener;
 import org.atomnuke.listener.eps.EventletRelay;
@@ -40,7 +42,7 @@ import org.slf4j.LoggerFactory;
 public class ConfigurationProcessor {
 
    private static final Logger LOG = LoggerFactory.getLogger(ConfigurationProcessor.class);
-   
+
    private final Collection<PackageContext> loadedPackages;
    private final ServerConfigurationHandler cfgHandler;
    private final ContainerContext containerContext;
@@ -79,8 +81,10 @@ public class ConfigurationProcessor {
    }
 
    public InstanceContext<AtomEventlet> constructEventlet(LanguageType langType, String ref) throws ReferenceInstantiationException {
+      final BindingLanguage bindingLanguage = LanguageTypeUtil.asBindingLanguage(langType);
+
       for (PackageContext packageContext : loadedPackages) {
-         final InstanceContext<AtomEventlet> eventlet = packageContext.packageBindings().resolveReference(AtomEventlet.class, langType, ref);
+         final InstanceContext<AtomEventlet> eventlet = packageContext.packageBindings().resolveReference(AtomEventlet.class, bindingLanguage, ref);
 
          if (eventlet != null) {
             return eventlet;
@@ -91,8 +95,10 @@ public class ConfigurationProcessor {
    }
 
    public InstanceContext<AtomSource> constructSource(LanguageType langType, String ref) throws ReferenceInstantiationException {
+      final BindingLanguage bindingLanguage = LanguageTypeUtil.asBindingLanguage(langType);
+
       for (PackageContext packageContext : loadedPackages) {
-         final InstanceContext<AtomSource> source = packageContext.packageBindings().resolveReference(AtomSource.class, langType, ref);
+         final InstanceContext<AtomSource> source = packageContext.packageBindings().resolveReference(AtomSource.class, bindingLanguage, ref);
 
          if (source != null) {
             return source;
@@ -103,8 +109,10 @@ public class ConfigurationProcessor {
    }
 
    public InstanceContext<AtomListener> constructListener(LanguageType langType, String ref) throws ReferenceInstantiationException {
+      final BindingLanguage bindingLanguage = LanguageTypeUtil.asBindingLanguage(langType);
+
       for (PackageContext packageContext : loadedPackages) {
-         final InstanceContext<AtomListener> listener = packageContext.packageBindings().resolveReference(AtomListener.class, langType, ref);
+         final InstanceContext<AtomListener> listener = packageContext.packageBindings().resolveReference(AtomListener.class, bindingLanguage, ref);
 
          if (listener != null) {
             return listener;

@@ -4,19 +4,19 @@
    <modelVersion>4.0.0</modelVersion>
 
    <parent>
-      <groupId>org.atomnuke.components</groupId>
-      <artifactId>components</artifactId>
+      <groupId>org.atomnuke</groupId>
+      <artifactId>project</artifactId>
       <version>0.9.9.1-SNAPSHOT</version>
 
       <relativePath>./../../</relativePath>
    </parent>
 
-   <groupId>org.atomnuke.components.services</groupId>
-   <artifactId>configuration</artifactId>
+   <groupId>org.atomnuke.container</groupId>
+   <artifactId>container-core</artifactId>
 
    <packaging>jar</packaging>
 
-   <name>Atom Nuke - Services - Configuration Management</name>
+   <name>Atom Nuke - Container - Core</name>
 
    <dependencies>
       <dependency>
@@ -25,33 +25,18 @@
       </dependency>
 
       <dependency>
-         <groupId>org.atomnuke.container</groupId>
-         <artifactId>container-core</artifactId>
+         <groupId>org.python</groupId>
+         <artifactId>jython</artifactId>
       </dependency>
 
       <dependency>
-         <groupId>org.atomnuke.support</groupId>
-         <artifactId>configuration-support</artifactId>
+         <groupId>rhino</groupId>
+         <artifactId>js</artifactId>
       </dependency>
 
       <dependency>
          <groupId>com.rackspace.papi.commons</groupId>
          <artifactId>utilities</artifactId>
-      </dependency>
-
-      <dependency>
-         <groupId>com.sun.xml.bind</groupId>
-         <artifactId>jaxb</artifactId>
-      </dependency>
-
-      <dependency>
-         <groupId>com.sun.xml.bind</groupId>
-         <artifactId>jaxb-libs</artifactId>
-      </dependency>
-
-      <dependency>
-         <groupId>com.sun.xml.bind</groupId>
-         <artifactId>jaxb-impl</artifactId>
       </dependency>
 
       <dependency>

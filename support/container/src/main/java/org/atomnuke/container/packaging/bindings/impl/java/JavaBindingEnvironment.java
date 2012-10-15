@@ -2,10 +2,10 @@ package org.atomnuke.container.packaging.bindings.impl.java;
 
 import org.atomnuke.container.packaging.bindings.PackageLoadingException;
 import org.atomnuke.container.packaging.bindings.environment.BindingEnvironment;
-import org.atomnuke.container.packaging.bindings.LanguageDescriptor;
-import org.atomnuke.container.packaging.bindings.LanguageDescriptorImpl;
-import org.atomnuke.config.model.LanguageType;
+import org.atomnuke.container.packaging.bindings.lang.LanguageDescriptor;
+import org.atomnuke.container.packaging.bindings.lang.LanguageDescriptorImpl;
 import org.atomnuke.container.packaging.archive.ResourceType;
+import org.atomnuke.container.packaging.bindings.lang.BindingLanguage;
 import org.atomnuke.container.packaging.classloader.IdentityClassLoader;
 import org.atomnuke.container.packaging.resource.Resource;
 import org.atomnuke.container.packaging.resource.ResourceManager;
@@ -18,7 +18,8 @@ import org.atomnuke.plugin.Environment;
  */
 public class JavaBindingEnvironment implements BindingEnvironment {
 
-   private static final LanguageDescriptor LANGUAGE_DESCRIPTOR = new LanguageDescriptorImpl(LanguageType.JAVA, ".class");
+   private static final LanguageDescriptor LANGUAGE_DESCRIPTOR = new LanguageDescriptorImpl(BindingLanguage.JAVA, ".class");
+
    private final JavaEnvironment environment;
    private final IdentityClassLoader classLoader;
    private final ResourceManager resourceManager;

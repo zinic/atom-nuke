@@ -23,13 +23,18 @@
       </dependency>
 
       <dependency>
+         <groupId>org.atomnuke.container</groupId>
+         <artifactId>container-core</artifactId>
+      </dependency>
+
+      <dependency>
          <groupId>org.atomnuke.support</groupId>
          <artifactId>configuration-support</artifactId>
       </dependency>
 
       <dependency>
-         <groupId>org.javassist</groupId>
-         <artifactId>javassist</artifactId>
+         <groupId>com.rackspace.papi.external</groupId>
+         <artifactId>jee6-schemas</artifactId>
       </dependency>
 
       <dependency>
@@ -38,18 +43,13 @@
       </dependency>
 
       <dependency>
+         <groupId>org.javassist</groupId>
+         <artifactId>javassist</artifactId>
+      </dependency>
+
+      <dependency>
          <groupId>xerces</groupId>
          <artifactId>xercesImpl</artifactId>
-      </dependency>
-
-      <dependency>
-         <groupId>org.python</groupId>
-         <artifactId>jython</artifactId>
-      </dependency>
-
-      <dependency>
-         <groupId>rhino</groupId>
-         <artifactId>js</artifactId>
       </dependency>
 
       <dependency>
@@ -70,11 +70,6 @@
       <dependency>
          <groupId>com.rackspace.papi.commons</groupId>
          <artifactId>utilities</artifactId>
-      </dependency>
-
-      <dependency>
-         <groupId>com.rackspace.papi.external</groupId>
-         <artifactId>jee6-schemas</artifactId>
       </dependency>
 
       <dependency>

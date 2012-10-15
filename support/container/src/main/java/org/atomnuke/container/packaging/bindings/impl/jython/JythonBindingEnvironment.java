@@ -3,9 +3,9 @@ package org.atomnuke.container.packaging.bindings.impl.jython;
 import java.io.InputStream;
 import org.atomnuke.container.packaging.bindings.environment.BindingEnvironment;
 import org.atomnuke.container.packaging.bindings.PackageLoadingException;
-import org.atomnuke.container.packaging.bindings.LanguageDescriptor;
-import org.atomnuke.container.packaging.bindings.LanguageDescriptorImpl;
-import org.atomnuke.config.model.LanguageType;
+import org.atomnuke.container.packaging.bindings.lang.LanguageDescriptor;
+import org.atomnuke.container.packaging.bindings.lang.LanguageDescriptorImpl;
+import org.atomnuke.container.packaging.bindings.lang.BindingLanguage;
 import org.atomnuke.container.packaging.resource.Resource;
 import org.atomnuke.plugin.Environment;
 import org.python.core.Options;
@@ -18,7 +18,7 @@ import org.python.util.PythonInterpreter;
  */
 public class JythonBindingEnvironment implements BindingEnvironment {
 
-   private static final LanguageDescriptor LANGUAGE_DESCRIPTOR = new LanguageDescriptorImpl(LanguageType.PYTHON, ".py");
+   private static final LanguageDescriptor LANGUAGE_DESCRIPTOR = new LanguageDescriptorImpl(BindingLanguage.PYTHON, ".py");
 
    private final PythonInterpreter pythonInterpreter;
    private final JythonEnvironment jythonEnvironment;

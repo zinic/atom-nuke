@@ -3,7 +3,7 @@ package org.atomnuke.container.packaging.bindings;
 import java.util.LinkedList;
 import java.util.List;
 import org.atomnuke.container.packaging.bindings.environment.BindingEnvironment;
-import org.atomnuke.config.model.LanguageType;
+import org.atomnuke.container.packaging.bindings.lang.BindingLanguage;
 import org.atomnuke.plugin.Environment;
 import org.atomnuke.plugin.InstanceContext;
 import org.atomnuke.plugin.InstanceContextImpl;
@@ -36,13 +36,13 @@ public class PackageBindingsImpl implements PackageBindings {
 
       return services;
    }
-   
+
    @Override
-   public <T> InstanceContext<T> resolveReference(Class<T> type, LanguageType language, String ref) throws ReferenceInstantiationException {
+   public <T> InstanceContext<T> resolveReference(Class<T> type, BindingLanguage language, String ref) throws ReferenceInstantiationException {
       for (BindingEnvironment bindingCtx : availableBindingEnvironments) {
          final Environment env = bindingCtx.environment();
 
-         if (bindingCtx.language().languageType() == language && env.hasReference(ref)) {
+         if (bindingCtx.language().language() == language && env.hasReference(ref)) {
             try {
                return new InstanceContextImpl<T>(env, env.instantiate(type, ref));
             } catch (ReferenceInstantiationException rie) {
