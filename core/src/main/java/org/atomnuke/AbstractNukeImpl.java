@@ -65,7 +65,8 @@ public abstract class AbstractNukeImpl implements Nuke {
          @Override
          public void destroy() {
             kernelDelegate.cancellationRemote().cancel();
-
+            kernelDelegate.taskManager().destroy();
+            
             try {
                controlThread.join(MAX_WAIT_TIME_FOR_SHUTDOWN);
             } catch (InterruptedException ie) {

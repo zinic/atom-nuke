@@ -210,12 +210,6 @@ public class ConfigurationProcessor {
 
          if (hasListenerBinding(eventletId) && !containerContext.hasEventlet(eventletId)) {
             try {
-               containerContext.registerEventlet(eventlet.getId(), constructEventlet(eventlet.getType(), eventlet.getHref()));
-            } catch (ReferenceInstantiationException bie) {
-               LOG.error("Could not create eventlet instance " + eventlet.getId() + ". Reason: " + bie.getMessage(), bie);
-            }
-
-            try {
                final InstanceContext<AtomEventlet> eventletCtx = constructEventlet(eventlet.getType(), eventlet.getHref());
                eventletCtx.environment().stepInto();
 
