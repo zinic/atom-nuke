@@ -1,4 +1,4 @@
-package org.atomnuke.fallout.config;
+package org.atomnuke.fallout.config;s
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -150,7 +150,7 @@ public class ConfigurationProcessor {
                sourceContext.environment().stepInto();
 
                try {
-                  sourceContext.instance().init(new TaskContextImpl(parametersToMap(source.getParameters()), services, tasker));
+                  sourceContext.instance().init(new TaskContextImpl(LoggerFactory.getLogger(sourceId), parametersToMap(source.getParameters()), services, tasker));
                } finally {
                   sourceContext.environment().stepOut();
                }
@@ -187,7 +187,7 @@ public class ConfigurationProcessor {
                listenerCtx.environment().stepInto();
 
                try {
-                  listenerCtx.instance().init(new TaskContextImpl(parametersToMap(sink.getParameters()), services, tasker));
+                  listenerCtx.instance().init(new TaskContextImpl(LoggerFactory.getLogger(sinkId), parametersToMap(sink.getParameters()), services, tasker));
                } finally {
                   listenerCtx.environment().stepOut();
                }
@@ -214,7 +214,7 @@ public class ConfigurationProcessor {
                eventletCtx.environment().stepInto();
 
                try {
-                  eventletCtx.instance().init(new TaskContextImpl(parametersToMap(eventlet.getParameters()), services, tasker));
+                  eventletCtx.instance().init(new TaskContextImpl(LoggerFactory.getLogger(eventletId), parametersToMap(eventlet.getParameters()), services, tasker));
                } finally {
                   eventletCtx.environment().stepOut();
                }

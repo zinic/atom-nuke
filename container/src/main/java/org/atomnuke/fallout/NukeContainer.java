@@ -50,14 +50,6 @@ public class NukeContainer {
       return nukeInstance;
    }
 
-   public void init(TaskLifeCycle tlc) throws InitializationException {
-      init(tlc, Collections.EMPTY_MAP);
-   }
-
-   public void init(TaskLifeCycle tlc, Map<String, String> params) throws InitializationException {
-      tlc.init(new TaskContextImpl(params, serviceManager, nukeInstance.tasker()));
-   }
-
    public void start() {
       final long initTime = System.currentTimeMillis();
 

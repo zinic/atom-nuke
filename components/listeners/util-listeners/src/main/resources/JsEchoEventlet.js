@@ -1,20 +1,21 @@
-importPackage(java.lang);
-importPackage(org.atomnuke.listener.eps.eventlet);
+function JsIdEchoEventlet() {
+   var taskContext;
+}
 
-var eventlet = function() {
-   return new org.atomnuke.listener.eps.eventlet.AtomEventlet() {
-      init : function (taskContext) {
-            System.out.println("Javascript entry ID echo eventlet initialized.");
-      },
+JsIdEchoEventlet.prototype.init = function (ctx) {
+   taskContext = ctx;
 
-      destroy : function () {
-            System.out.println("Javascript entry ID echo eventlet destroyed.");
-      },
+   taskContext.log().info("JS entry ID echo eventlet initialized.");
+};
 
-      entry : function (entry) {
-         if (entry) {
-            System.out.println(entry.id());
-         }
-      }
-   }
+JsIdEchoEventlet.prototype.destroy = function () {
+   taskContext.log().info("JS entry ID echo eventlet destroyed.");
+};
+
+JsIdEchoEventlet.prototype.entry = function (entry) {
+    taskContext.log().info(entry.id());
+};
+
+var jsEchoEventletFactory = function () {
+   return new JsIdEchoEventlet();
 };
