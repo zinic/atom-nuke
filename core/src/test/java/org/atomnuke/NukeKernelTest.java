@@ -18,7 +18,6 @@ import org.atomnuke.source.result.AtomSourceResult;
 import org.atomnuke.source.result.AtomSourceResultImpl;
 import org.atomnuke.task.AtomTask;
 import org.atomnuke.task.context.AtomTaskContext;
-import org.atomnuke.task.lifecycle.DestructionException;
 import org.atomnuke.task.lifecycle.InitializationException;
 import org.atomnuke.util.TimeValue;
 import org.junit.Test;
@@ -74,7 +73,7 @@ public class NukeKernelTest {
       };
 
       for (int taskId = 1; taskId <= 30; taskId++) {
-         final AtomTask task = nukeKernel.follow(source, new TimeValue(10 * taskId, TimeUnit.NANOSECONDS));
+         final AtomTask task = nukeKernel.follow(source, new TimeValue(10 * taskId, TimeUnit.MICROSECONDS));
          task.addListener(new InstanceContextImpl<AtomListener>(LocalInstanceEnvironment.getInstance(), listener));
       }
 

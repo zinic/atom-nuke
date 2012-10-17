@@ -14,14 +14,14 @@ import org.atomnuke.util.remote.CancellationRemote;
  *
  * @author zinic
  */
-public class TaskImpl implements AtomTask {
+public class AtomTaskImpl implements AtomTask {
 
    private final CancellationRemote cancelationRemote;
    private final ListenerManager listenerManager;
    private final TimeValue interval;
    private final UUID taskId;
 
-   public TaskImpl(UUID taskId, ListenerManager listenerManager, TimeValue interval) {
+   public AtomTaskImpl(UUID taskId, ListenerManager listenerManager, TimeValue interval) {
       this.listenerManager = listenerManager;
       this.interval = interval;
       this.taskId = taskId;

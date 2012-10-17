@@ -1,6 +1,7 @@
 package org.atomnuke.task.manager;
 
 import java.util.UUID;
+import org.atomnuke.listener.AtomListener;
 import org.atomnuke.plugin.InstanceContext;
 import org.atomnuke.listener.manager.ManagedListener;
 import org.atomnuke.listener.driver.AtomListenerDriver;
@@ -12,6 +13,7 @@ import org.atomnuke.source.AtomSourceException;
 import org.atomnuke.source.result.AtomSourceResult;
 import org.atomnuke.source.result.ResultType;
 import org.atomnuke.task.AtomTask;
+import org.atomnuke.task.operation.TaskLifeCycleDestroyOperation;
 import org.atomnuke.task.threading.ExecutionManager;
 import org.atomnuke.util.TimeValue;
 import org.atomnuke.util.remote.CancellationRemote;
@@ -76,6 +78,13 @@ public class ManagedTaskImpl implements ManagedTask {
    @Override
    public TimeValue nextPollTime() {
       return timestamp.add(task.interval());
+   }
+
+   @Override
+   public void destroy() {
+      for (ManagedListener listener : listenerManager.listeners()) {
+         listener.listenerContext().perform(TaskLifeCycleDestroyOperation.<AtomListener>instance());
+      }
    }
 
    @Override

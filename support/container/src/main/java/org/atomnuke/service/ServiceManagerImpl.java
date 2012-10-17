@@ -8,8 +8,6 @@ import org.atomnuke.plugin.InstanceContext;
 import org.atomnuke.plugin.proxy.InstanceEnvProxyFactory;
 import org.atomnuke.plugin.proxy.japi.JapiProxyFactory;
 import org.atomnuke.service.operation.ServiceDestroyOperation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  *

@@ -16,6 +16,7 @@ import org.atomnuke.util.TimeValue;
  */
 public interface ManagedTask extends TaskHandle, Runnable {
 
+   void destroy();
 
    /**
     * Returns the next polling interval desired by the task.
