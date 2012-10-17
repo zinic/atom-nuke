@@ -17,13 +17,13 @@ import org.atomnuke.atom.io.reader.sax.SaxAtomReaderFactory;
 import org.atomnuke.atom.model.builder.EntryBuilder;
 import org.atomnuke.atom.model.builder.IdBuilder;
 import org.atomnuke.atom.model.builder.UpdatedBuilder;
-import org.atomnuke.source.AtomSource;
 import org.atomnuke.source.QueueSource;
 import org.atomnuke.task.lifecycle.InitializationException;
 import org.atomnuke.util.io.LimitedReadInputStream;
 import org.atomnuke.util.io.ReadLimitException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.eclipse.jetty.http.HttpStatus;
 
 /**
  *
@@ -54,7 +54,7 @@ public class AtomSinkServlet extends HttpServlet {
    }
 
    private static void notAllowed(HttpServletResponse resp) {
-      resp.setStatus(405);
+      resp.setStatus(HttpStatus.METHOD_NOT_ALLOWED_405);
       resp.addHeader("ALLOW", "POST");
    }
 
@@ -62,7 +62,7 @@ public class AtomSinkServlet extends HttpServlet {
       final String contentType = req.getHeader("Content-Type");
 
       if (contentType == null || !contentType.equalsIgnoreCase("application/atom+xml")) {
-         resp.setStatus(415);
+         resp.setStatus(HttpStatus.UNSUPPORTED_MEDIA_TYPE_415);
       } else {
          try {
             final ReaderResult readerResult = atomReaderFactory.getInstance().read(new LimitedReadInputStream(req.getInputStream(), 5242880));
@@ -75,9 +75,9 @@ public class AtomSinkServlet extends HttpServlet {
                newEntry.setUpdated(new UpdatedBuilder().setValue(cal.toXMLFormat()).build());
 
                queueSource.put(newEntry.build());
-               resp.setStatus(202);
+               resp.setStatus(HttpStatus.ACCEPTED_202);
             } else {
-               resp.setStatus(400);
+               resp.setStatus(HttpStatus.BAD_REQUEST_400);
                resp.getWriter().append("Request entity must be an Entry.");
             }
          } catch (AtomReadException ape) {
@@ -86,13 +86,13 @@ public class AtomSinkServlet extends HttpServlet {
             final Throwable cause = ape.getCause();
 
             if (cause instanceof ReadLimitException) {
-               resp.setStatus(413);
+               resp.setStatus(HttpStatus.REQUEST_ENTITY_TOO_LARGE_413);
                resp.getWriter().append("Request entity too large. The limit is 5MB.");
             } else if (cause instanceof IOException) {
-               resp.setStatus(500);
+               resp.setStatus(HttpStatus.INTERNAL_SERVER_ERROR_500);
                resp.getWriter().append("Unable to read request entity. Reason: " + cause.getMessage());
             } else {
-               resp.setStatus(400);
+               resp.setStatus(HttpStatus.BAD_REQUEST_400);
                resp.getWriter().append("Request entity not well formed. Reason: " + ape.getMessage());
             }
          }
