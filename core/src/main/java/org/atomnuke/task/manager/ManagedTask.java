@@ -1,6 +1,6 @@
 package org.atomnuke.task.manager;
 
-import java.util.UUID;
+import org.atomnuke.task.TaskHandle;
 import org.atomnuke.task.lifecycle.TaskLifeCycle;
 import org.atomnuke.util.TimeValue;
 
@@ -14,27 +14,8 @@ import org.atomnuke.util.TimeValue;
  *
  * @author zinic
  */
-public interface ManagedTask extends TaskLifeCycle, Runnable {
+public interface ManagedTask extends TaskHandle, Runnable {
 
-   /**
-    * All tasks registered with the Nuke scheduler are required to have a unique
-    * ID in the form of a UUID.
-    *
-    * @return the tasks ID UUID.
-    */
-   UUID id();
-
-   /**
-    * Returns whether or not the task has been canceled.
-    *
-    * @return true if the task has been canceled, false otherwise.
-    */
-   boolean canceled();
-
-   /**
-    * Cancels the task.
-    */
-   void cancel();
 
    /**
     * Returns the next polling interval desired by the task.

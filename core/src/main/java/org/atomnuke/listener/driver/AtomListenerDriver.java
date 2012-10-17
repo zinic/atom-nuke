@@ -2,11 +2,12 @@ package org.atomnuke.listener.driver;
 
 import org.atomnuke.atom.model.Entry;
 import org.atomnuke.atom.model.Feed;
-import org.atomnuke.plugin.InstanceContext;
 import org.atomnuke.listener.AtomListener;
+import org.atomnuke.listener.AtomListenerException;
 import org.atomnuke.listener.AtomListenerResult;
-import org.atomnuke.listener.ListenerResult;
 import org.atomnuke.listener.manager.ManagedListener;
+import org.atomnuke.plugin.operation.ComplexOperation;
+import org.atomnuke.plugin.operation.OperationFailureException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,11 +17,25 @@ import org.slf4j.LoggerFactory;
  */
 public class AtomListenerDriver implements RegisteredListenerDriver {
 
-   private static final Logger LOG = LoggerFactory.getLogger(AtomListenerDriver.class);
+   private static final ComplexOperation<AtomListener, DriverArgument> DRIVER_OPERATION = new ComplexOperation<AtomListener, DriverArgument>() {
+      @Override
+      public void perform(AtomListener instance, DriverArgument argument) throws OperationFailureException {
+         try {
+            if (argument.feed() != null) {
+               argument.setCapturedResult(instance.feedPage(argument.feed()));
+            } else if (argument.entry() != null) {
+               argument.setCapturedResult(instance.entry(argument.entry()));
+            } else {
+               argument.setCapturedResult(AtomListenerResult.halt("Feed document was null."));
+            }
+         } catch (AtomListenerException ale) {
+            throw new OperationFailureException(ale);
+         }
+      }
+   };
 
    private final ManagedListener registeredListener;
-   private final Feed feed;
-   private final Entry entry;
+   private final DriverArgument driverArgument;
 
    public AtomListenerDriver(ManagedListener registeredListener, Entry entry) {
       this(registeredListener, null, entry);
@@ -32,40 +47,19 @@ public class AtomListenerDriver implements RegisteredListenerDriver {
 
    private AtomListenerDriver(ManagedListener registeredListener, Feed feed, Entry entry) {
       this.registeredListener = registeredListener;
-      this.feed = feed;
-      this.entry = entry;
+      this.driverArgument = new DriverArgument(feed, entry);
    }
 
    @Override
    public void run() {
-      final ListenerResult result = drive(registeredListener.listenerContext());
+      registeredListener.listenerContext().perform(DRIVER_OPERATION, driverArgument);
 
-      switch (result.getAction()) {
+      switch (driverArgument.result().action()) {
          case HALT:
-            registeredListener.cancel();
+            registeredListener.cancellationRemote().cancel();
             break;
 
          default:
       }
-   }
-
-   private ListenerResult drive(InstanceContext<? extends AtomListener> listenerContext) {
-      try {
-         listenerContext.environment().stepInto();
-         
-         if (feed != null) {
-            return listenerContext.instance().feedPage(feed);
-         } else if (entry != null) {
-            return listenerContext.instance().entry(entry);
-         }
-      } catch (Exception ex) {
-         LOG.error(ex.getMessage(), ex);
-
-         return AtomListenerResult.halt(ex.getMessage());
-      } finally {
-         listenerContext.environment().stepOut();
-      }
-
-      return AtomListenerResult.halt("Feed document was null.");
    }
 }

@@ -6,15 +6,18 @@ import org.atomnuke.source.AtomSourceException;
 import org.atomnuke.source.result.AtomSourceResult;
 import org.atomnuke.source.QueueSource;
 import org.atomnuke.source.QueueSourceImpl;
-import org.atomnuke.task.context.TaskContext;
-import org.atomnuke.task.lifecycle.DestructionException;
+import org.atomnuke.task.context.AtomTaskContext;
 import org.atomnuke.task.lifecycle.InitializationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author zinic
  */
 public class HttpSource implements AtomSource {
+
+   private static final Logger LOG = LoggerFactory.getLogger(HttpSource.class);
 
    private final QueueSource queueSource;
    private final JettyServer jettyServer;
@@ -30,7 +33,7 @@ public class HttpSource implements AtomSource {
    }
 
    @Override
-   public void init(TaskContext tc) throws InitializationException {
+   public void init(AtomTaskContext tc) throws InitializationException {
       try {
          jettyServer.start();
 
@@ -43,7 +46,7 @@ public class HttpSource implements AtomSource {
    }
 
    @Override
-   public void destroy() throws DestructionException {
+   public void destroy() {
       try {
          jettyServer.stop();
 
@@ -51,7 +54,7 @@ public class HttpSource implements AtomSource {
             Thread.sleep(100);
          }
       } catch (Exception ex) {
-         throw new DestructionException(ex.getMessage(), ex.getCause());
+         LOG.error("Failed to destroy HTTPSource. Reason: " + ex.getMessage(), ex);
       }
    }
 }

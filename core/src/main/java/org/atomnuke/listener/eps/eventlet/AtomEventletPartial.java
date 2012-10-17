@@ -1,6 +1,6 @@
 package org.atomnuke.listener.eps.eventlet;
 
-import org.atomnuke.task.context.TaskContext;
+import org.atomnuke.task.context.AtomTaskContext;
 import org.atomnuke.task.lifecycle.DestructionException;
 import org.atomnuke.task.lifecycle.InitializationException;
 
@@ -14,10 +14,10 @@ import org.atomnuke.task.lifecycle.InitializationException;
 public abstract class AtomEventletPartial implements AtomEventlet {
 
    @Override
-   public void init(TaskContext tc) throws InitializationException {
+   public void init(AtomTaskContext tc) throws InitializationException {
    }
 
    @Override
-   public void destroy() throws DestructionException {
+   public void destroy() {
    }
 }

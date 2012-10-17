@@ -1,5 +1,8 @@
 package org.atomnuke.plugin;
 
+import org.atomnuke.plugin.operation.ComplexOperation;
+import org.atomnuke.plugin.operation.SimpleOperation;
+
 /**
  * An instance context represents a context sandbox that surrounds a loaded
  * instance of type T.
@@ -8,12 +11,9 @@ package org.atomnuke.plugin;
  */
 public interface InstanceContext<T> {
 
-   /**
-    * Retrieves the instance this context surrounds.
-    *
-    * @return the instance the context surrounds.
-    */
    T instance();
 
-   Environment environment();
+   void perform(SimpleOperation<T> requestedOperation);
+
+   <A> void perform(ComplexOperation<T, A> requestedOperation, A argument);
 }

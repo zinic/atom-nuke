@@ -23,5 +23,5 @@ public interface Tasker {
     * @param pollingInterval the polling interval of this source.
     * @return a new polling task instance.
     */
-   Task follow(InstanceContext<AtomSource> source, TimeValue pollingInterval);
+   AtomTask follow(InstanceContext<AtomSource> source, TimeValue pollingInterval);
 }

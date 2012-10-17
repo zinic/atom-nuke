@@ -4,7 +4,7 @@ import java.io.PrintStream;
 import java.util.concurrent.atomic.AtomicLong;
 import org.atomnuke.atom.model.Entry;
 import org.atomnuke.listener.eps.eventlet.AtomEventletException;
-import org.atomnuke.task.context.TaskContext;
+import org.atomnuke.task.context.AtomTaskContext;
 import org.atomnuke.task.lifecycle.DestructionException;
 import org.atomnuke.task.lifecycle.InitializationException;
 
@@ -27,12 +27,12 @@ public class PrintStreamEventlet extends CounterEventlet {
    }
 
    @Override
-   public void init(TaskContext tc) throws InitializationException {
+   public void init(AtomTaskContext tc) throws InitializationException {
       out.println("PrintStreamOutputListener(" + toString() + ") initalized.");
    }
 
    @Override
-   public void destroy() throws DestructionException {
+   public void destroy() {
       out.println("PrintStreamOutputListener(" + toString() + ") destroyed.");
    }
 

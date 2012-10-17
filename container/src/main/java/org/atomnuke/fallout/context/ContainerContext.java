@@ -11,7 +11,8 @@ import org.atomnuke.plugin.InstanceContext;
 import org.atomnuke.listener.AtomListener;
 import org.atomnuke.listener.eps.EventletRelay;
 import org.atomnuke.listener.eps.eventlet.AtomEventlet;
-import org.atomnuke.task.Task;
+import org.atomnuke.plugin.operation.ComplexOperation;
+import org.atomnuke.task.AtomTask;
 import org.atomnuke.util.config.ConfigurationException;
 import org.atomnuke.util.remote.CancellationRemote;
 import org.slf4j.Logger;
@@ -29,7 +30,7 @@ public class ContainerContext {
    private final Map<String, InstanceContext<AtomEventlet>> eventlets;
    private final Map<String, InstanceContext<EventletRelay>> relays;
    private final Map<String, CancellationRemote> cancellationRemotes;
-   private final Map<String, Task> tasks;
+   private final Map<String, AtomTask> tasks;
    private final Map<String, Binding> bindings;
 
    public ContainerContext() {
@@ -38,7 +39,7 @@ public class ContainerContext {
       relays = new HashMap<String, InstanceContext<EventletRelay>>();
 
       cancellationRemotes = new HashMap<String, CancellationRemote>();
-      tasks = new HashMap<String, Task>();
+      tasks = new HashMap<String, AtomTask>();
       bindings = new HashMap<String, Binding>();
    }
 
@@ -76,7 +77,7 @@ public class ContainerContext {
       eventlets.put(name, instanceCtx);
    }
 
-   public void registerSource(String name, Task task) {
+   public void registerSource(String name, AtomTask task) {
       LOG.info("Registering source: " + name);
 
       tasks.put(name, task);
@@ -176,7 +177,7 @@ public class ContainerContext {
    private void bind(Binding binding) throws ConfigurationException {
       LOG.info("Binding " + binding.getReceiver() + " to source " + binding.getTarget());
 
-      final Task source = tasks.get(binding.getTarget());
+      final AtomTask source = tasks.get(binding.getTarget());
 
       if (source != null) {
          bind(source, binding);
@@ -196,7 +197,7 @@ public class ContainerContext {
       return listenerContext != null ? listenerContext : relays.get(id);
    }
 
-   private void bind(Task source, Binding binding) throws ConfigurationException {
+   private void bind(AtomTask source, Binding binding) throws ConfigurationException {
       final InstanceContext<? extends AtomListener> listenerCtx = findAtomListener(binding.getReceiver());
 
       if (listenerCtx == null) {
@@ -214,7 +215,7 @@ public class ContainerContext {
          throw new ConfigurationException("Unable to locate eventlet, " + binding.getReceiver() + ".");
       }
 
-      cancellationRemotes.put(binding.getReceiver(), source.enlistHandlerContext(eventletCtx.environment(), eventletCtx.instance()));
+      cancellationRemotes.put(binding.getReceiver(), source.enlistHandler(eventletCtx));
       bindings.put(binding.getId(), binding);
    }
 }

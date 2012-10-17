@@ -14,7 +14,7 @@ import org.atomnuke.task.lifecycle.InitializationException;
 import org.atomnuke.source.AtomSource;
 import org.atomnuke.source.AtomSourceException;
 import org.atomnuke.source.result.AtomSourceResult;
-import org.atomnuke.task.context.TaskContext;
+import org.atomnuke.task.context.AtomTaskContext;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -48,12 +48,12 @@ public class FeedCrawlerSource implements AtomSource {
    }
 
    @Override
-   public void init(TaskContext tc) throws InitializationException {
+   public void init(AtomTaskContext tc) throws InitializationException {
       loadState();
    }
 
    @Override
-   public void destroy() throws DestructionException {
+   public void destroy() {
       writeState();
    }
 

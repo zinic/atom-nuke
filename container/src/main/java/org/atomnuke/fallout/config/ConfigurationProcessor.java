@@ -1,4 +1,4 @@
-package org.atomnuke.fallout.config;s
+package org.atomnuke.fallout.config;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -24,12 +24,13 @@ import org.atomnuke.listener.eps.EventletRelay;
 import org.atomnuke.listener.eps.eventlet.AtomEventlet;
 import org.atomnuke.plugin.InstanceContextImpl;
 import org.atomnuke.plugin.ReferenceInstantiationException;
+import org.atomnuke.task.operation.TaskLifeCycleInitOperation;
 import org.atomnuke.service.ServiceManager;
 import org.atomnuke.source.AtomSource;
-import org.atomnuke.task.Task;
+import org.atomnuke.task.AtomTask;
 import org.atomnuke.task.Tasker;
+import org.atomnuke.task.context.AtomTaskContext;
 import org.atomnuke.task.context.TaskContextImpl;
-import org.atomnuke.task.lifecycle.InitializationException;
 import org.atomnuke.util.TimeValueUtil;
 import org.atomnuke.util.config.ConfigurationException;
 import org.slf4j.Logger;
@@ -147,21 +148,16 @@ public class ConfigurationProcessor {
          if (hasSourceBinding(sourceId) && !containerContext.hasTask(sourceId)) {
             try {
                final InstanceContext<AtomSource> sourceContext = constructSource(source.getType(), source.getHref());
-               sourceContext.environment().stepInto();
+               sourceContext.perform(TaskLifeCycleInitOperation.<AtomSource>instance(), new TaskContextImpl(LoggerFactory.getLogger(sourceId), parametersToMap(source.getParameters()), services, tasker));
 
-               try {
-                  sourceContext.instance().init(new TaskContextImpl(LoggerFactory.getLogger(sourceId), parametersToMap(source.getParameters()), services, tasker));
-               } finally {
-                  sourceContext.environment().stepOut();
-               }
-
-               final Task newTask = kernelBeingBuilt.follow(sourceContext, TimeValueUtil.fromPollingInterval(source.getPollingInterval()));
+               final AtomTask newTask = kernelBeingBuilt.tasker().follow(sourceContext, TimeValueUtil.fromPollingInterval(source.getPollingInterval()));
                containerContext.registerSource(source.getId(), newTask);
             } catch (ReferenceInstantiationException bie) {
                LOG.error("Could not create source instance " + source.getId() + ". Reason: " + bie.getMessage(), bie);
-            } catch (InitializationException ie) {
-               LOG.error("Could not initialize source instance " + source.getId() + ". Reason: " + ie.getMessage(), ie);
             }
+//            catch (InitializationException ie) {
+//               LOG.error("Could not initialize source instance " + source.getId() + ". Reason: " + ie.getMessage(), ie);
+//            }
          }
       }
    }
@@ -184,22 +180,18 @@ public class ConfigurationProcessor {
          if (hasListenerBinding(sinkId) && !containerContext.hasSink(sinkId)) {
             try {
                final InstanceContext<AtomListener> listenerCtx = constructListener(sink.getType(), sink.getHref());
-               listenerCtx.environment().stepInto();
 
-               try {
-                  listenerCtx.instance().init(new TaskContextImpl(LoggerFactory.getLogger(sinkId), parametersToMap(sink.getParameters()), services, tasker));
-               } finally {
-                  listenerCtx.environment().stepOut();
-               }
+               listenerCtx.perform(TaskLifeCycleInitOperation.<AtomListener>instance(), new TaskContextImpl(LoggerFactory.getLogger(sinkId), parametersToMap(sink.getParameters()), services, tasker));
 
                containerContext.registerSink(sink.getId(), listenerCtx);
             } catch (ReferenceInstantiationException bie) {
                LOG.error("Could not create sink instance " + sink.getId() + ". Reason: " + bie.getMessage(), bie);
                throw new ConfigurationException(bie);
-            } catch (InitializationException ie) {
-               LOG.error("Could not initialize sink instance " + sink.getId() + ". Reason: " + ie.getMessage(), ie);
-               throw new ConfigurationException(ie);
             }
+//            catch (InitializationException ie) {
+//               LOG.error("Could not initialize sink instance " + sink.getId() + ". Reason: " + ie.getMessage(), ie);
+//               throw new ConfigurationException(ie);
+//            }
          }
       }
    }
@@ -211,22 +203,19 @@ public class ConfigurationProcessor {
          if (hasListenerBinding(eventletId) && !containerContext.hasEventlet(eventletId)) {
             try {
                final InstanceContext<AtomEventlet> eventletCtx = constructEventlet(eventlet.getType(), eventlet.getHref());
-               eventletCtx.environment().stepInto();
+               final AtomTaskContext taskContext = new TaskContextImpl(LoggerFactory.getLogger(eventletId), parametersToMap(eventlet.getParameters()), services, tasker);
 
-               try {
-                  eventletCtx.instance().init(new TaskContextImpl(LoggerFactory.getLogger(eventletId), parametersToMap(eventlet.getParameters()), services, tasker));
-               } finally {
-                  eventletCtx.environment().stepOut();
-               }
+               eventletCtx.perform(TaskLifeCycleInitOperation.<AtomEventlet>instance(), taskContext);
 
                containerContext.registerEventlet(eventlet.getId(), eventletCtx);
             } catch (ReferenceInstantiationException bie) {
                LOG.error("Could not create eventlet instance " + eventlet.getId() + ". Reason: " + bie.getMessage(), bie);
                throw new ConfigurationException(bie);
-            } catch (InitializationException ie) {
-               LOG.error("Could not initialize eventlet instance " + eventlet.getId() + ". Reason: " + ie.getMessage(), ie);
-               throw new ConfigurationException(ie);
             }
+//            catch (InitializationException ie) {
+//               LOG.error("Could not initialize eventlet instance " + eventlet.getId() + ". Reason: " + ie.getMessage(), ie);
+//               throw new ConfigurationException(ie);
+//            }
          }
       }
    }

@@ -5,17 +5,16 @@ import org.atomnuke.plugin.InstanceContext;
 import org.atomnuke.listener.manager.ManagedListener;
 import org.atomnuke.listener.driver.AtomListenerDriver;
 import org.atomnuke.listener.manager.ListenerManager;
+import org.atomnuke.plugin.operation.OperationFailureException;
+import org.atomnuke.plugin.operation.SimpleOperation;
 import org.atomnuke.source.AtomSource;
+import org.atomnuke.source.AtomSourceException;
 import org.atomnuke.source.result.AtomSourceResult;
 import org.atomnuke.source.result.ResultType;
-import org.atomnuke.task.Task;
-import org.atomnuke.task.context.TaskContext;
-import org.atomnuke.task.lifecycle.DestructionException;
-import org.atomnuke.task.lifecycle.InitializationException;
+import org.atomnuke.task.AtomTask;
 import org.atomnuke.task.threading.ExecutionManager;
 import org.atomnuke.util.TimeValue;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.atomnuke.util.remote.CancellationRemote;
 
 /**
  *
@@ -23,31 +22,41 @@ import org.slf4j.LoggerFactory;
  */
 public class ManagedTaskImpl implements ManagedTask {
 
-   private static final Logger LOG = LoggerFactory.getLogger(ManagedTaskImpl.class);
    private final InstanceContext<AtomSource> atomSourceContext;
+   private final SimpleOperation<AtomSource> pollingOperation;
    private final ExecutionManager executorService;
    private final ListenerManager listenerManager;
-   private final Task task;
+   private final AtomTask task;
    private TimeValue timestamp;
 
-   public ManagedTaskImpl(Task task, ListenerManager listenerManager, TimeValue interval, ExecutionManager executorService, InstanceContext<AtomSource> atomSourceContext) {
+   public ManagedTaskImpl(AtomTask task, ListenerManager listenerManager, TimeValue interval, ExecutionManager executorService, InstanceContext<AtomSource> atomSourceContext) {
       this.task = task;
 
       this.listenerManager = listenerManager;
       this.executorService = executorService;
       this.atomSourceContext = atomSourceContext;
 
+      pollingOperation = new SimpleOperation<AtomSource>() {
+         @Override
+         public void perform(AtomSource instance) throws OperationFailureException {
+            try {
+               final AtomSourceResult pollResult = instance.poll();
+
+               if (pollResult.type() != ResultType.EMPTY) {
+                  dispatchToListeners(pollResult);
+               }
+            } catch (AtomSourceException ase) {
+               throw new OperationFailureException(ase);
+            }
+         }
+      };
+
       timestamp = TimeValue.now();
    }
 
    @Override
-   public boolean canceled() {
-      return task.cancellationRemote().canceled();
-   }
-
-   @Override
-   public void cancel() {
-      task.cancellationRemote().cancel();
+   public CancellationRemote cancellationRemote() {
+      return task.cancellationRemote();
    }
 
    public boolean isReentrant() {
@@ -70,63 +79,10 @@ public class ManagedTaskImpl implements ManagedTask {
    }
 
    @Override
-   public void init(TaskContext taskContext) throws InitializationException {
-      LOG.debug("Initializing task: " + task);
-
-      try {
-         atomSourceContext.environment().stepInto();
-         atomSourceContext.instance().init(taskContext);
-      } finally {
-         atomSourceContext.environment().stepOut();
-      }
-
-      for (ManagedListener registeredListener : listenerManager.listeners()) {
-         registeredListener.init(taskContext);
-      }
-   }
-
-   @Override
-   public void destroy() {
-      LOG.debug("Destroying task: " + task);
-
-      for (ManagedListener registeredListener : listenerManager.listeners()) {
-         try {
-            registeredListener.listenerContext().environment().stepInto();
-            registeredListener.listenerContext().instance().destroy();
-         } catch (DestructionException sde) {
-            LOG.error(sde.getMessage(), sde);
-         } finally {
-            registeredListener.listenerContext().environment().stepOut();
-         }
-      }
-
-      try {
-         atomSourceContext.environment().stepInto();
-         atomSourceContext.instance().destroy();
-      } catch (DestructionException de) {
-         LOG.error("Failed to destroy task " + task + " reason: " + de.getMessage(), de);
-      } finally {
-         atomSourceContext.environment().stepOut();
-      }
-   }
-
-   @Override
    public void run() {
       // Only poll if we have listeners
       if (listenerManager.hasListeners()) {
-         try {
-            atomSourceContext.environment().stepInto();
-
-            final AtomSourceResult pollResult = atomSourceContext.instance().poll();
-
-            if (pollResult.type() != ResultType.EMPTY) {
-               dispatchToListeners(pollResult);
-            }
-         } catch (Exception ex) {
-            LOG.error(ex.getMessage(), ex);
-         } finally {
-            atomSourceContext.environment().stepOut();
-         }
+         atomSourceContext.perform(pollingOperation);
       }
    }
 

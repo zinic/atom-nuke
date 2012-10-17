@@ -7,7 +7,7 @@ import org.atomnuke.source.AtomSource;
 import org.atomnuke.source.AtomSourceException;
 import org.atomnuke.source.result.AtomSourceResult;
 import org.atomnuke.source.result.AtomSourceResultImpl;
-import org.atomnuke.task.context.TaskContext;
+import org.atomnuke.task.context.AtomTaskContext;
 import org.atomnuke.task.lifecycle.DestructionException;
 import org.atomnuke.task.lifecycle.InitializationException;
 
@@ -42,10 +42,10 @@ public class ClasspathSource implements AtomSource {
    }
 
    @Override
-   public void init(TaskContext tc) throws InitializationException {
+   public void init(AtomTaskContext tc) throws InitializationException {
    }
 
    @Override
-   public void destroy() throws DestructionException {
+   public void destroy() {
    }
 }

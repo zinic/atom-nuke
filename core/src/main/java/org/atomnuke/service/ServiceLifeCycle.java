@@ -8,7 +8,7 @@ import org.atomnuke.service.context.ServiceContext;
  */
 public interface ServiceLifeCycle {
 
-   void init(ServiceContext sc);
+   void init(ServiceContext sc) throws ServiceInitializationException;
 
    void destroy();
 }

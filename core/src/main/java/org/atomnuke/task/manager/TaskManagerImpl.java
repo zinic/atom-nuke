@@ -9,7 +9,7 @@ import org.atomnuke.plugin.InstanceContext;
 import org.atomnuke.listener.manager.ListenerManager;
 import org.atomnuke.listener.manager.ListenerManagerImpl;
 import org.atomnuke.source.AtomSource;
-import org.atomnuke.task.Task;
+import org.atomnuke.task.AtomTask;
 import org.atomnuke.task.TaskImpl;
 import org.atomnuke.task.threading.ExecutionManager;
 import org.atomnuke.util.TimeValue;
@@ -49,17 +49,17 @@ public class TaskManagerImpl implements TaskManager {
 
       // Cancel all of the executing tasks
       for (ManagedTask managedTask : pollingTasks) {
-         managedTask.cancel();
+         managedTask.cancellationRemote().cancel();
       }
 
-      // Destroy the tasks
-      for (ManagedTask managedTask : pollingTasks) {
-         try {
-            managedTask.destroy();
-         } catch (Exception ex) {
-            LOG.error("Failed to destroy task: " + managedTask.id().toString() + ". Reason: " + ex.getMessage(), ex);
-         }
-      }
+      // TODO: Fix this
+//      for (ManagedTask managedTask : destroyableTasks) {
+//         try {
+//            managedTask.destroy();
+//         } catch (Exception ex) {
+//            LOG.error("Failed to destroy task: " + managedTask.id().toString() + ". Reason: " + ex.getMessage(), ex);
+//         }
+//      }
    }
 
    private synchronized void addTask(ManagedTask state) {
@@ -80,7 +80,7 @@ public class TaskManagerImpl implements TaskManager {
          final ManagedTask managedTask = managedTaskIter.next();
 
          // Cancellation of a task may occur at anytime
-         if (!managedTask.canceled()) {
+         if (!managedTask.cancellationRemote().canceled()) {
             activeTasks.add(managedTask);
          } else {
             // If the task has been canceled, schedule it for destruction
@@ -89,13 +89,14 @@ public class TaskManagerImpl implements TaskManager {
          }
       }
 
-      for (ManagedTask managedTask : destroyableTasks) {
-         try {
-            managedTask.destroy();
-         } catch (Exception ex) {
-            LOG.error("Failed to destroy task: " + managedTask.id().toString() + ". Reason: " + ex.getMessage(), ex);
-         }
-      }
+// TODO: Fix this
+//      for (ManagedTask managedTask : destroyableTasks) {
+//         try {
+//            managedTask.destroy();
+//         } catch (Exception ex) {
+//            LOG.error("Failed to destroy task: " + managedTask.id().toString() + ". Reason: " + ex.getMessage(), ex);
+//         }
+//      }
 
       return activeTasks;
    }
@@ -138,11 +139,11 @@ public class TaskManagerImpl implements TaskManager {
    }
 
    @Override
-   public Task follow(InstanceContext<AtomSource> source, TimeValue pollingInterval) {
+   public AtomTask follow(InstanceContext<AtomSource> source, TimeValue pollingInterval) {
       final ListenerManager listenerManager = new ListenerManagerImpl();
 
       final UUID taskId = UUID.randomUUID();
-      final Task task = new TaskImpl(taskId, listenerManager, pollingInterval);
+      final AtomTask task = new TaskImpl(taskId, listenerManager, pollingInterval);
 
       final ManagedTaskImpl managedTask = new ManagedTaskImpl(task, listenerManager, pollingInterval, executionManager, source);
       addTask(managedTask);

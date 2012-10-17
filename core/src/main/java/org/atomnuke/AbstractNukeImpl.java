@@ -8,7 +8,7 @@ import org.atomnuke.plugin.InstanceContext;
 import org.atomnuke.plugin.InstanceContextImpl;
 import org.atomnuke.plugin.local.LocalInstanceEnvironment;
 import org.atomnuke.source.AtomSource;
-import org.atomnuke.task.Task;
+import org.atomnuke.task.AtomTask;
 import org.atomnuke.task.Tasker;
 import org.atomnuke.util.TimeValue;
 import org.slf4j.Logger;
@@ -46,12 +46,12 @@ public abstract class AbstractNukeImpl implements Nuke {
    }
 
    @Override
-   public Task follow(AtomSource source, TimeValue pollingInterval) {
+   public AtomTask follow(AtomSource source, TimeValue pollingInterval) {
       return follow(new InstanceContextImpl<AtomSource>(LocalInstanceEnvironment.getInstance(), source), pollingInterval);
    }
 
    @Override
-   public Task follow(InstanceContext<AtomSource> source, TimeValue pollingInterval) {
+   public AtomTask follow(InstanceContext<AtomSource> source, TimeValue pollingInterval) {
       return tasker().follow(source, pollingInterval);
    }
 
@@ -66,7 +66,7 @@ public abstract class AbstractNukeImpl implements Nuke {
          public void destroy() {
             kernelDelegate.cancellationRemote().cancel();
             kernelDelegate.taskManager().destroy();
-            
+
             try {
                controlThread.join(MAX_WAIT_TIME_FOR_SHUTDOWN);
             } catch (InterruptedException ie) {

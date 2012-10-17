@@ -22,6 +22,7 @@ import org.atomnuke.service.ServiceAlreadyRegisteredException;
 import org.atomnuke.service.ServiceManager;
 import org.atomnuke.service.context.ServiceContext;
 import org.atomnuke.service.context.ServiceContextImpl;
+import org.atomnuke.service.operation.ServiceInitOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -93,20 +94,11 @@ public class DirectoryLoaderService implements Service {
       for (InstanceContext<Service> svc : pkgContext.packageBindings().resolveServices()) {
          try {
             serviceManager.register(svc);
-            initService(svc, serviceContext);
+            svc.perform(ServiceInitOperation.<Service>instance(), serviceContext);
          } catch (ServiceAlreadyRegisteredException sare) {
             LOG.debug("Duplicate service for name: " + svc.instance().name() + ", found in package: "
-                    + pkgContext.name() + ". This version of the service will not be loaded.");
+                    + pkgContext.name() + ". This version of the service will not be loaded.", sare);
          }
-      }
-   }
-
-   private void initService(InstanceContext<Service> svc, ServiceContext serviceContext) {
-      try {
-         svc.environment().stepInto();
-         svc.instance().init(serviceContext);
-      } finally {
-         svc.environment().stepOut();
       }
    }
 

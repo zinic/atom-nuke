@@ -4,13 +4,12 @@ import java.util.Map;
 import org.atomnuke.service.ServiceManager;
 import org.atomnuke.task.Tasker;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author zinic
  */
-public class TaskContextImpl implements TaskContext {
+public class TaskContextImpl implements AtomTaskContext {
 
    private final Map<String, String> parameters;
    private final ServiceManager services;
@@ -40,7 +39,7 @@ public class TaskContextImpl implements TaskContext {
    }
 
    @Override
-   public Tasker tasker() {
+   public Tasker atomTasker() {
       return submitter;
    }
 }

@@ -55,7 +55,7 @@ public class ListenerManagerImpl implements ListenerManager {
       }
 
       final CancellationRemote cancellationRemote = new AtomicCancellationRemote();
-      listeners.add(new ManagedListener(cancellationRemote, atomListenerContext));
+      listeners.add(new ManagedListener(cancellationRemote, (InstanceContext<AtomListener>) atomListenerContext));
 
       return cancellationRemote;
    }

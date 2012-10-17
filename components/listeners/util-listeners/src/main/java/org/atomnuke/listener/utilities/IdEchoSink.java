@@ -7,7 +7,7 @@ import org.atomnuke.listener.AtomListener;
 import org.atomnuke.listener.AtomListenerException;
 import org.atomnuke.listener.AtomListenerResult;
 import org.atomnuke.listener.ListenerResult;
-import org.atomnuke.task.context.TaskContext;
+import org.atomnuke.task.context.AtomTaskContext;
 import org.atomnuke.task.lifecycle.DestructionException;
 import org.atomnuke.task.lifecycle.InitializationException;
 import org.slf4j.Logger;
@@ -40,14 +40,14 @@ public class IdEchoSink implements AtomListener {
    }
 
    @Override
-   public void init(TaskContext tc) throws InitializationException {
+   public void init(AtomTaskContext tc) throws InitializationException {
       for (Map.Entry<String, String> param : tc.parameters().entrySet()) {
          LOG.info("Sink init for: " + toString() + ". Parameter, \"" + param.getKey() + "\" has value: " + param.getValue());
       }
    }
 
    @Override
-   public void destroy() throws DestructionException {
+   public void destroy() {
       LOG.info("Echo sink destroyed.");
    }
 }

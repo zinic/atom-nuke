@@ -1,6 +1,5 @@
 package org.atomnuke.task;
 
-import java.util.UUID;
 import org.atomnuke.listener.AtomListener;
 import org.atomnuke.plugin.InstanceContext;
 import org.atomnuke.util.TimeValue;
@@ -13,21 +12,7 @@ import org.atomnuke.util.remote.CancellationRemote;
  *
  * @author zinic
  */
-public interface Task {
-
-   /**
-    * Gets the task ID as a UUID instance.
-    *
-    * @return the task ID UUID;
-    */
-   UUID id();
-
-   /**
-    * Gets the task's cancellation remote.
-    *
-    * @return
-    */
-   CancellationRemote cancellationRemote();
+public interface AtomTask extends TaskHandle {
 
    /**
     * Returns the polling interval of this task.

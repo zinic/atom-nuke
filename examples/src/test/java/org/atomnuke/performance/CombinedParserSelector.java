@@ -11,7 +11,7 @@ import org.atomnuke.examples.listener.ClasspathSource;
 import org.atomnuke.examples.listener.eventlet.CounterEventlet;
 import org.atomnuke.listener.eps.EventletRelay;
 import org.atomnuke.listener.eps.selectors.CategorySelector;
-import org.atomnuke.task.Task;
+import org.atomnuke.task.AtomTask;
 import org.atomnuke.util.TimeValue;
 
 /**
@@ -29,7 +29,7 @@ public class CombinedParserSelector {
 
       final Nuke nukeKernel = new NukeKernel();
 
-      final Task task = nukeKernel.follow(new ClasspathSource(new SaxAtomReaderFactory(), "/META-INF/examples/atom/PerformanceTestContents.xml"), new TimeValue(1, TimeUnit.MICROSECONDS));
+      final AtomTask task = nukeKernel.follow(new ClasspathSource(new SaxAtomReaderFactory(), "/META-INF/examples/atom/PerformanceTestContents.xml"), new TimeValue(1, TimeUnit.MICROSECONDS));
       task.addListener(relay);
 
       nukeKernel.start();

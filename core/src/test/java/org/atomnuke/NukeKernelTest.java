@@ -16,8 +16,8 @@ import org.atomnuke.source.AtomSource;
 import org.atomnuke.source.AtomSourceException;
 import org.atomnuke.source.result.AtomSourceResult;
 import org.atomnuke.source.result.AtomSourceResultImpl;
-import org.atomnuke.task.Task;
-import org.atomnuke.task.context.TaskContext;
+import org.atomnuke.task.AtomTask;
+import org.atomnuke.task.context.AtomTaskContext;
 import org.atomnuke.task.lifecycle.DestructionException;
 import org.atomnuke.task.lifecycle.InitializationException;
 import org.atomnuke.util.TimeValue;
@@ -41,11 +41,11 @@ public class NukeKernelTest {
          }
 
          @Override
-         public void init(TaskContext tc) throws InitializationException {
+         public void init(AtomTaskContext tc) throws InitializationException {
          }
 
          @Override
-         public void destroy() throws DestructionException {
+         public void destroy() {
          }
       };
 
@@ -65,16 +65,16 @@ public class NukeKernelTest {
          }
 
          @Override
-         public void init(TaskContext tc) throws InitializationException {
+         public void init(AtomTaskContext tc) throws InitializationException {
          }
 
          @Override
-         public void destroy() throws DestructionException {
+         public void destroy() {
          }
       };
 
       for (int taskId = 1; taskId <= 30; taskId++) {
-         final Task task = nukeKernel.follow(source, new TimeValue(10 * taskId, TimeUnit.NANOSECONDS));
+         final AtomTask task = nukeKernel.follow(source, new TimeValue(10 * taskId, TimeUnit.NANOSECONDS));
          task.addListener(new InstanceContextImpl<AtomListener>(LocalInstanceEnvironment.getInstance(), listener));
       }
 

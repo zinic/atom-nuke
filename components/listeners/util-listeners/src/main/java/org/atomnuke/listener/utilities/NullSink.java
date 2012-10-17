@@ -6,7 +6,7 @@ import org.atomnuke.listener.AtomListener;
 import org.atomnuke.listener.AtomListenerException;
 import org.atomnuke.listener.AtomListenerResult;
 import org.atomnuke.listener.ListenerResult;
-import org.atomnuke.task.context.TaskContext;
+import org.atomnuke.task.context.AtomTaskContext;
 import org.atomnuke.task.lifecycle.DestructionException;
 import org.atomnuke.task.lifecycle.InitializationException;
 
@@ -27,10 +27,10 @@ public class NullSink implements AtomListener {
    }
 
    @Override
-   public void init(TaskContext tc) throws InitializationException {
+   public void init(AtomTaskContext tc) throws InitializationException {
    }
 
    @Override
-   public void destroy() throws DestructionException {
+   public void destroy() {
    }
 }

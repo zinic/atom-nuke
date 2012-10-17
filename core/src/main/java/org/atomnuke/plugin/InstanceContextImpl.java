@@ -1,7 +1,10 @@
 package org.atomnuke.plugin;
 
-import org.atomnuke.plugin.Environment;
-import org.atomnuke.plugin.InstanceContext;
+import org.atomnuke.plugin.operation.ComplexOperation;
+import org.atomnuke.plugin.operation.OperationFailureException;
+import org.atomnuke.plugin.operation.SimpleOperation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -9,6 +12,7 @@ import org.atomnuke.plugin.InstanceContext;
  */
 public class InstanceContextImpl<T> implements InstanceContext<T> {
 
+   private static final Logger LOG = LoggerFactory.getLogger(Logger.class);
    private final Environment environment;
    private final T instance;
 
@@ -23,7 +27,26 @@ public class InstanceContextImpl<T> implements InstanceContext<T> {
    }
 
    @Override
-   public Environment environment() {
-      return environment;
+   public void perform(SimpleOperation<T> requestedOperation) {
+      try {
+         environment.stepInto();
+         requestedOperation.perform(instance());
+      } catch (OperationFailureException ofe) {
+         LOG.error("Failed to perform requested operation within an instance context. Failure: " + ofe.getMessage(), ofe);
+      } finally {
+         environment.stepOut();
+      }
+   }
+
+   @Override
+   public <A> void perform(ComplexOperation<T, A> requestedOperation, A argument) {
+      try {
+         environment.stepInto();
+         requestedOperation.perform(instance(), argument);
+      } catch (OperationFailureException ofe) {
+         LOG.error("Failed to perform requested operation within an instance context. Failure: " + ofe.getMessage(), ofe);
+      } finally {
+         environment.stepOut();
+      }
    }
 }

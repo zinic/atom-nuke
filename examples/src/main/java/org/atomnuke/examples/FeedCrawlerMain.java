@@ -10,8 +10,8 @@ import org.atomnuke.listener.eps.eventlet.AtomEventletException;
 import org.atomnuke.listener.eps.eventlet.AtomEventletPartial;
 import org.atomnuke.listener.eps.selectors.CategorySelector;
 import org.atomnuke.source.crawler.FeedCrawlerSourceFactory;
-import org.atomnuke.task.Task;
-import org.atomnuke.task.context.TaskContext;
+import org.atomnuke.task.AtomTask;
+import org.atomnuke.task.context.AtomTaskContext;
 import org.atomnuke.task.lifecycle.DestructionException;
 import org.atomnuke.task.lifecycle.InitializationException;
 import org.atomnuke.util.TimeValue;
@@ -48,7 +48,7 @@ public class FeedCrawlerMain {
        *
        * The polling intervale supports NANOSECOND to DAY grainularity.
        */
-      final Task crawlerTask = nuke.follow(feedCrawlerFactory.newCrawlerSource("crawler-name", "http://feed.domain/feed/"), new TimeValue(1, TimeUnit.MINUTES));
+      final AtomTask crawlerTask = nuke.follow(feedCrawlerFactory.newCrawlerSource("crawler-name", "http://feed.domain/feed/"), new TimeValue(1, TimeUnit.MINUTES));
 
       /*
        * Nuke has a smart way of turning feed pages into individual events
@@ -73,12 +73,12 @@ public class FeedCrawlerMain {
          }
 
          @Override
-         public void init(TaskContext tc) throws InitializationException {
+         public void init(AtomTaskContext tc) throws InitializationException {
             System.out.println("Example eventlet initialized.");
          }
 
          @Override
-         public void destroy() throws DestructionException {
+         public void destroy() {
             System.out.println("Example eventlet destroyed.");
          }
       });

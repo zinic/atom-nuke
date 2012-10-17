@@ -8,13 +8,9 @@ import org.slf4j.Logger;
  *
  * @author zinic
  */
-public interface TaskContext extends Context {
+public interface AtomTaskContext extends Context {
+
+   Tasker atomTasker();
 
    Logger log();
-
-   /**
-    *
-    * @return
-    */
-   Tasker tasker();
 }

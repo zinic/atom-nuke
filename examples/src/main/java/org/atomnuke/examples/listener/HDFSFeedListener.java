@@ -11,7 +11,7 @@ import java.io.OutputStreamWriter;
 import org.atomnuke.atom.model.Entry;
 import org.atomnuke.atom.model.Feed;
 import org.atomnuke.listener.AtomListenerException;
-import org.atomnuke.task.context.TaskContext;
+import org.atomnuke.task.context.AtomTaskContext;
 import org.atomnuke.task.lifecycle.DestructionException;
 import org.atomnuke.task.lifecycle.InitializationException;
 import org.apache.hadoop.conf.Configuration;
@@ -49,7 +49,7 @@ public class HDFSFeedListener implements AtomListener {
    }
 
    @Override
-   public void init(TaskContext tc) throws InitializationException {
+   public void init(AtomTaskContext tc) throws InitializationException {
       try {
          hdfs = FileSystem.get(configuration);
 
@@ -61,7 +61,7 @@ public class HDFSFeedListener implements AtomListener {
    }
 
    @Override
-   public void destroy() throws DestructionException {
+   public void destroy() {
       try {
          fileWriter.close();
          hdfs.close();

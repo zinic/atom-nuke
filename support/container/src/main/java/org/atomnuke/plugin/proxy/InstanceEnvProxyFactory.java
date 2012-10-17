@@ -9,7 +9,7 @@ import org.atomnuke.service.Service;
  */
 public interface InstanceEnvProxyFactory {
 
-   <T> T newInstanceContextProxy(Class<T> masqueradeClass, InstanceContext<T> env);
+   <T> T newProxy(Class<T> masqueradeClass, InstanceContext instanceContext);
 
-   <T> T newServiceProxy(Class<T> masqueradeClass, InstanceContext<Service> svc);
+   <T> T newServiceProxy(Class<T> masqueradeClass, InstanceContext<Service> serviceContext);
 }

@@ -4,7 +4,7 @@ import java.util.concurrent.TimeUnit;
 import org.atomnuke.Nuke;
 import org.atomnuke.NukeKernel;
 import org.atomnuke.atom.io.writer.stax.StaxAtomWriterFactory;
-import org.atomnuke.task.Task;
+import org.atomnuke.task.AtomTask;
 import org.atomnuke.examples.listener.HDFSFeedListener;
 import org.atomnuke.source.crawler.FeedCrawlerSourceFactory;
 import org.atomnuke.util.TimeValue;
@@ -38,16 +38,16 @@ public class HDFSMain {
       final FeedCrawlerSourceFactory crawlerFactory = new FeedCrawlerSourceFactory();
 
       // Polls once per minute
-      final Task task1 = nuke.follow(crawlerFactory.newCrawlerSource("feed-1", "http://feed.com/feed1"), new TimeValue(1, TimeUnit.MINUTES));
+      final AtomTask task1 = nuke.follow(crawlerFactory.newCrawlerSource("feed-1", "http://feed.com/feed1"), new TimeValue(1, TimeUnit.MINUTES));
       task1.addListener(listener2);
 
       // Sets the polling interval to five minutes
-      final Task task2 = nuke.follow(crawlerFactory.newCrawlerSource("feed-2", "http://feed.com/feed2"), new TimeValue(5, TimeUnit.MINUTES));
+      final AtomTask task2 = nuke.follow(crawlerFactory.newCrawlerSource("feed-2", "http://feed.com/feed2"), new TimeValue(5, TimeUnit.MINUTES));
       task2.addListener(listener);
       task2.addListener(listener2);
 
       // Sets the polling interval to one hour
-      final Task task3 = nuke.follow(crawlerFactory.newCrawlerSource("feed-3", "http://feed.com/feed3"), new TimeValue(1, TimeUnit.HOURS));
+      final AtomTask task3 = nuke.follow(crawlerFactory.newCrawlerSource("feed-3", "http://feed.com/feed3"), new TimeValue(1, TimeUnit.HOURS));
       task3.addListener(listener);
    }
 }

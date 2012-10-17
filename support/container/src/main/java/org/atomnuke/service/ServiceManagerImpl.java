@@ -7,6 +7,7 @@ import java.util.Map;
 import org.atomnuke.plugin.InstanceContext;
 import org.atomnuke.plugin.proxy.InstanceEnvProxyFactory;
 import org.atomnuke.plugin.proxy.japi.JapiProxyFactory;
+import org.atomnuke.service.operation.ServiceDestroyOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,7 +18,6 @@ import org.slf4j.LoggerFactory;
 public class ServiceManagerImpl implements ServiceManager {
 
    private static final Logger LOG = LoggerFactory.getLogger(ServiceManagerImpl.class);
-
    private final Map<String, InstanceContext<Service>> registeredServices;
    private final InstanceEnvProxyFactory proxyFactory;
 
@@ -47,15 +47,7 @@ public class ServiceManagerImpl implements ServiceManager {
    @Override
    public synchronized void destroy() {
       for (InstanceContext<Service> serviceCtx : registeredServices.values()) {
-         try {
-            serviceCtx.environment().stepInto();
-
-            serviceCtx.instance().destroy();
-         } catch (Exception ex) {
-            LOG.error("Failure in destroying container service, \"" + serviceCtx.instance().name() + "\" - Reason: " + ex.getMessage(), ex);
-         } finally {
-            serviceCtx.environment().stepOut();
-         }
+         serviceCtx.perform(ServiceDestroyOperation.<Service>instance());
       }
 
       registeredServices.clear();
@@ -85,6 +77,6 @@ public class ServiceManagerImpl implements ServiceManager {
          throw new IllegalArgumentException("Service: " + name + " does not provide interface: " + serviceInterface.getName());
       }
 
-      return serviceInstanceContext != null ? (T) proxyFactory.newServiceProxy(serviceInterface, serviceInstanceContext) : null;
+      return serviceInstanceContext != null ? proxyFactory.newServiceProxy(serviceInterface, serviceInstanceContext) : null;
    }
 }

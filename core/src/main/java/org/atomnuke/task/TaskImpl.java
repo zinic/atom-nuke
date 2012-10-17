@@ -14,7 +14,7 @@ import org.atomnuke.util.remote.CancellationRemote;
  *
  * @author zinic
  */
-public class TaskImpl implements Task {
+public class TaskImpl implements AtomTask {
 
    private final CancellationRemote cancelationRemote;
    private final ListenerManager listenerManager;

@@ -7,41 +7,42 @@ import org.atomnuke.plugin.InstanceContext;
 import org.atomnuke.listener.eps.eventlet.AtomEventlet;
 import org.atomnuke.listener.eps.selector.Selector;
 import org.atomnuke.listener.eps.selector.SelectorResult;
-import org.atomnuke.plugin.Environment;
-import org.atomnuke.task.lifecycle.DestructionException;
+import org.atomnuke.plugin.operation.ComplexOperation;
+import org.atomnuke.plugin.operation.OperationFailureException;
+import org.atomnuke.task.operation.TaskLifeCycleDestroyOperation;
 import org.atomnuke.util.remote.AtomicCancellationRemote;
 import org.atomnuke.util.remote.CancellationRemote;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author zinic
  */
-public class HandlerConduit {
+public class EventletConduit {
 
-   private static final Logger LOG = LoggerFactory.getLogger(HandlerConduit.class);
+   private static final ComplexOperation<AtomEventlet, Entry> ENTRY_OPERATION = new ComplexOperation<AtomEventlet, Entry>() {
+      @Override
+      public void perform(AtomEventlet instance, Entry argument) throws OperationFailureException {
+         try {
+            instance.entry(argument);
+         } catch (AtomEventletException aee) {
+            throw new OperationFailureException(aee);
+         }
+      }
+   };
 
+   private final InstanceContext<AtomEventlet> eventletContext;
    private final CancellationRemote cancellationRemote;
-   private final Environment environment;
-   private final AtomEventlet eventlet;
    private final Selector selector;
 
-   public HandlerConduit(Environment environment, AtomEventlet eventlet, Selector selector) {
-      this.environment = environment;
-      this.eventlet = eventlet;
+   public EventletConduit(InstanceContext<AtomEventlet> eventletContext, Selector selector) {
+      this.eventletContext = eventletContext;
       this.selector = selector;
 
       cancellationRemote = new AtomicCancellationRemote();
    }
 
-   public void destroy() throws DestructionException {
-      try {
-         environment.stepInto();
-         eventlet.destroy();
-      } finally {
-         environment.stepOut();
-      }
+   public void destroy() {
+      eventletContext.perform(TaskLifeCycleDestroyOperation.<AtomEventlet>instance());
    }
 
    public CancellationRemote cancellationRemote() {
@@ -64,14 +65,7 @@ public class HandlerConduit {
       final SelectorResult result = selector.select(entry);
 
       if (result == SelectorResult.PROCESS) {
-         try {
-            environment.stepInto();
-            eventlet.entry(entry);
-         } catch (AtomEventletException epe) {
-            LOG.error(epe.getMessage(), epe);
-         } finally {
-            environment.stepOut();
-         }
+         eventletContext.perform(ENTRY_OPERATION, entry);
       }
 
       return result;

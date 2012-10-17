@@ -18,14 +18,14 @@ public class JapiProxyFactory implements InstanceEnvProxyFactory {
    }
 
    @Override
-   public <T> T newInstanceContextProxy(Class<T> masqueradeClass, InstanceContext<T> env) {
+   public <T> T newProxy(Class<T> masqueradeClass, InstanceContext instanceContext) {
       return (T) Proxy.newProxyInstance(
-              Thread.currentThread().getContextClassLoader(), new Class[]{masqueradeClass}, new InstanceEnvironmentProxy(env));
+              Thread.currentThread().getContextClassLoader(), new Class[]{masqueradeClass}, new InstanceContextInvocationHandler(instanceContext));
    }
 
    @Override
-   public <T> T newServiceProxy(Class<T> masqueradeClass, InstanceContext<Service> svc) {
+   public <T> T newServiceProxy(Class<T> masqueradeClass, InstanceContext<Service> instanceContext) {
       return (T) Proxy.newProxyInstance(
-              Thread.currentThread().getContextClassLoader(), new Class[]{masqueradeClass}, new ServiceProxy(svc));
+              Thread.currentThread().getContextClassLoader(), new Class[]{masqueradeClass}, new ServiceInvocationHandler(instanceContext));
    }
 }

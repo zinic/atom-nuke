@@ -10,7 +10,7 @@ import org.atomnuke.atom.io.writer.stax.StaxAtomWriterFactory;
 import org.atomnuke.atom.model.Entry;
 import org.atomnuke.listener.eps.eventlet.AtomEventletException;
 import org.atomnuke.listener.eps.eventlet.AtomEventlet;
-import org.atomnuke.task.context.TaskContext;
+import org.atomnuke.task.context.AtomTaskContext;
 import org.atomnuke.task.lifecycle.DestructionException;
 import org.atomnuke.task.lifecycle.InitializationException;
 
@@ -40,7 +40,7 @@ public class FeedFileWriterHandler implements AtomEventlet {
    }
 
    @Override
-   public void init(TaskContext tc) throws InitializationException {
+   public void init(AtomTaskContext tc) throws InitializationException {
       try {
          fileOutput = new FileOutputStream(feedFile);
       } catch (IOException ioe) {
@@ -49,7 +49,7 @@ public class FeedFileWriterHandler implements AtomEventlet {
    }
 
    @Override
-   public void destroy() throws DestructionException {
+   public void destroy() {
       try {
          fileOutput.flush();
          fileOutput.close();

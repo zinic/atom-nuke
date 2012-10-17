@@ -4,7 +4,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import org.atomnuke.atom.model.Entry;
 import org.atomnuke.listener.eps.eventlet.AtomEventlet;
 import org.atomnuke.listener.eps.eventlet.AtomEventletException;
-import org.atomnuke.task.context.TaskContext;
+import org.atomnuke.task.context.AtomTaskContext;
 import org.atomnuke.task.lifecycle.DestructionException;
 import org.atomnuke.task.lifecycle.InitializationException;
 import org.slf4j.Logger;
@@ -31,11 +31,11 @@ public class CounterEventlet implements AtomEventlet {
    }
 
    @Override
-   public void init(TaskContext tc) throws InitializationException {
+   public void init(AtomTaskContext tc) throws InitializationException {
    }
 
    @Override
-   public void destroy() throws DestructionException {
+   public void destroy() {
       if (log) {
          LOG.info("Processed " + entryEvents.toString() + " events.");
       }

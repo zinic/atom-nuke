@@ -1,16 +1,12 @@
 package org.atomnuke.listener;
 
-import org.atomnuke.atom.model.Link;
-
 /**
  *
  * @author zinic
  */
 public interface ListenerResult {
 
-    ListenerAction getAction();
+    ListenerAction action();
 
-    Link getLink();
-
-    String getMessage();
+    String message();
 }

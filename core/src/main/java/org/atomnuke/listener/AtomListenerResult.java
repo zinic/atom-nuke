@@ -1,7 +1,5 @@
 package org.atomnuke.listener;
 
-import org.atomnuke.atom.model.Link;
-
 /**
  *
  * @author zinic
@@ -9,35 +7,28 @@ import org.atomnuke.atom.model.Link;
 public final class AtomListenerResult implements ListenerResult {
 
    public static AtomListenerResult halt(String message) {
-      return new AtomListenerResult(message, ListenerAction.HALT, null);
+      return new AtomListenerResult(message, ListenerAction.HALT);
    }
 
    public static AtomListenerResult ok() {
-      return new AtomListenerResult("No action.", ListenerAction.NO_ACTION, null);
+      return new AtomListenerResult("No action.", ListenerAction.NO_ACTION);
    }
-   
+
    private final ListenerAction action;
    private final String message;
-   private final Link followLink;
 
-   private AtomListenerResult(String message, ListenerAction action, Link linkToFollow) {
+   private AtomListenerResult(String message, ListenerAction action) {
       this.message = message;
       this.action = action;
-      this.followLink = linkToFollow;
    }
 
     @Override
-   public ListenerAction getAction() {
+   public ListenerAction action() {
       return action;
    }
 
     @Override
-   public Link getLink() {
-      return followLink;
-   }
-
-    @Override
-   public String getMessage() {
+   public String message() {
       return message;
    }
 }

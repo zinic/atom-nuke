@@ -1,6 +1,6 @@
 package org.atomnuke.task.lifecycle;
 
-import org.atomnuke.task.context.TaskContext;
+import org.atomnuke.task.context.AtomTaskContext;
 
 /**
  * The task life-cycle defines two methods that will be called once during the
@@ -24,7 +24,7 @@ public interface TaskLifeCycle {
     * @param tc task context
     * @throws InitializationException
     */
-   void init(TaskContext tc) throws InitializationException;
+   void init(AtomTaskContext tc) throws InitializationException;
 
-   void destroy() throws DestructionException;
+   void destroy();
 }
