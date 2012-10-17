@@ -17,7 +17,6 @@ import org.slf4j.LoggerFactory;
  */
 public class ServiceManagerImpl implements ServiceManager {
 
-   private static final Logger LOG = LoggerFactory.getLogger(ServiceManagerImpl.class);
    private final Map<String, InstanceContext<Service>> registeredServices;
    private final InstanceEnvProxyFactory proxyFactory;
 
