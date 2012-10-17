@@ -1,4 +1,4 @@
-package org.atomnuke.fallout.config;s
+package org.atomnuke.fallout.config;
 
 import java.util.Collection;
 import java.util.HashMap;
