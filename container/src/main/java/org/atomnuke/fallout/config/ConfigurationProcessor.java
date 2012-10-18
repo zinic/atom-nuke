@@ -90,7 +90,7 @@ public class ConfigurationProcessor {
          }
       }
 
-      return null;
+      throw new ReferenceInstantiationException("Unable to locate reference: " + ref);
    }
 
    public InstanceContext<AtomSource> constructSource(LanguageType langType, String ref) throws ReferenceInstantiationException {
@@ -104,7 +104,7 @@ public class ConfigurationProcessor {
          }
       }
 
-      return null;
+      throw new ReferenceInstantiationException("Unable to locate reference: " + ref);
    }
 
    public InstanceContext<AtomListener> constructListener(LanguageType langType, String ref) throws ReferenceInstantiationException {
@@ -118,7 +118,7 @@ public class ConfigurationProcessor {
          }
       }
 
-      return null;
+      throw new ReferenceInstantiationException("Unable to locate reference: " + ref);
    }
 
    public boolean hasSourceBinding(String name) throws ConfigurationException {
@@ -212,10 +212,6 @@ public class ConfigurationProcessor {
                LOG.error("Could not create eventlet instance " + eventlet.getId() + ". Reason: " + bie.getMessage(), bie);
                throw new ConfigurationException(bie);
             }
-//            catch (InitializationException ie) {
-//               LOG.error("Could not initialize eventlet instance " + eventlet.getId() + ". Reason: " + ie.getMessage(), ie);
-//               throw new ConfigurationException(ie);
-//            }
          }
       }
    }

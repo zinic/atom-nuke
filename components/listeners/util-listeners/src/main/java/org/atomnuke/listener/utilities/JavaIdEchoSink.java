@@ -8,7 +8,6 @@ import org.atomnuke.listener.AtomListenerException;
 import org.atomnuke.listener.AtomListenerResult;
 import org.atomnuke.listener.ListenerResult;
 import org.atomnuke.task.context.AtomTaskContext;
-import org.atomnuke.task.lifecycle.DestructionException;
 import org.atomnuke.task.lifecycle.InitializationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,14 +16,14 @@ import org.slf4j.LoggerFactory;
  *
  * @author zinic
  */
-public class IdEchoSink implements AtomListener {
+public class JavaIdEchoSink implements AtomListener {
 
-   private static final Logger LOG = LoggerFactory.getLogger(IdEchoSink.class);
+   private static final Logger LOG = LoggerFactory.getLogger(JavaIdEchoSink.class);
 
    @Override
    public ListenerResult entry(Entry entry) throws AtomListenerException {
       if (entry.id() != null) {
-         LOG.info(entry.id().toString());
+         LOG.info("From Java: " + entry.id().toString());
       }
 
       return AtomListenerResult.ok();
@@ -41,6 +40,8 @@ public class IdEchoSink implements AtomListener {
 
    @Override
    public void init(AtomTaskContext tc) throws InitializationException {
+      LOG.info("Java ID echo sink initialized.");
+
       for (Map.Entry<String, String> param : tc.parameters().entrySet()) {
          LOG.info("Sink init for: " + toString() + ". Parameter, \"" + param.getKey() + "\" has value: " + param.getValue());
       }
@@ -48,6 +49,6 @@ public class IdEchoSink implements AtomListener {
 
    @Override
    public void destroy() {
-      LOG.info("Echo sink destroyed.");
+      LOG.info("Java ID echo sink destroyed.");
    }
 }

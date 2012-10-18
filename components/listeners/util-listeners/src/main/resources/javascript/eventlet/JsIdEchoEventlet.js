@@ -13,9 +13,9 @@ JsIdEchoEventlet.prototype.destroy = function () {
 };
 
 JsIdEchoEventlet.prototype.entry = function (entry) {
-    taskContext.log().info(entry.id());
+    taskContext.log().info("From JavaScript: " + entry.id());
 };
 
-var jsEchoEventletFactory = function () {
+var JsEchoEventletFactory = function () {
    return new JsIdEchoEventlet();
 };
