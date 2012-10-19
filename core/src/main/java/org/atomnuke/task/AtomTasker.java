@@ -12,7 +12,7 @@ import org.atomnuke.util.TimeValue;
  *
  * @author zinic
  */
-public interface Tasker {
+public interface AtomTasker {
 
    /**
     * Follows an AtomSource at a defined polling rate. The tasker requires that

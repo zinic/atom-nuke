@@ -28,7 +28,7 @@ import org.atomnuke.task.operation.TaskLifeCycleInitOperation;
 import org.atomnuke.service.ServiceManager;
 import org.atomnuke.source.AtomSource;
 import org.atomnuke.task.AtomTask;
-import org.atomnuke.task.Tasker;
+import org.atomnuke.task.AtomTasker;
 import org.atomnuke.task.context.AtomTaskContext;
 import org.atomnuke.task.context.TaskContextImpl;
 import org.atomnuke.util.TimeValueUtil;
@@ -48,9 +48,9 @@ public class ConfigurationProcessor {
    private final ServerConfigurationHandler cfgHandler;
    private final ContainerContext containerContext;
    private final ServiceManager services;
-   private final Tasker tasker;
+   private final AtomTasker tasker;
 
-   public ConfigurationProcessor(Tasker tasker, ServiceManager services, ContainerContext containerContext, ServerConfigurationHandler cfgHandler, Collection<PackageContext> loadedPackages) {
+   public ConfigurationProcessor(AtomTasker tasker, ServiceManager services, ContainerContext containerContext, ServerConfigurationHandler cfgHandler, Collection<PackageContext> loadedPackages) {
       this.tasker = tasker;
       this.services = services;
       this.containerContext = containerContext;

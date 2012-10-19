@@ -4,7 +4,7 @@ import org.atomnuke.plugin.InstanceContext;
 import org.atomnuke.kernel.shutdown.ShutdownHook;
 import org.atomnuke.source.AtomSource;
 import org.atomnuke.task.AtomTask;
-import org.atomnuke.task.Tasker;
+import org.atomnuke.task.AtomTasker;
 import org.atomnuke.task.lifecycle.InitializationException;
 import org.atomnuke.util.TimeValue;
 
@@ -45,7 +45,7 @@ public interface Nuke {
     */
    AtomTask follow(InstanceContext<AtomSource> source, TimeValue pollingInterval);
 
-   Tasker tasker();
+   AtomTasker tasker();
 
    ShutdownHook shutdownHook();
 

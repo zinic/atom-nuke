@@ -13,9 +13,9 @@ import org.atomnuke.source.AtomSourceException;
 import org.atomnuke.source.result.AtomSourceResult;
 import org.atomnuke.source.result.ResultType;
 import org.atomnuke.task.AtomTask;
-import org.atomnuke.task.operation.TaskLifeCycleDestroyOperation;
 import org.atomnuke.task.threading.ExecutionManager;
 import org.atomnuke.util.TimeValue;
+import org.atomnuke.util.lifecycle.operation.ReclaimOperation;
 import org.atomnuke.util.remote.CancellationRemote;
 
 /**
@@ -83,7 +83,7 @@ public class ManagedTaskImpl implements ManagedTask {
    @Override
    public void destroy() {
       for (ManagedListener listener : listenerManager.listeners()) {
-         listener.listenerContext().perform(TaskLifeCycleDestroyOperation.<AtomListener>instance());
+         listener.listenerContext().perform(ReclaimOperation.<AtomListener>instance());
       }
    }
 

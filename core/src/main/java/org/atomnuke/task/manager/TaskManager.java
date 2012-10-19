@@ -1,7 +1,7 @@
 package org.atomnuke.task.manager;
 
 import java.util.UUID;
-import org.atomnuke.task.Tasker;
+import org.atomnuke.task.AtomTasker;
 import org.atomnuke.util.TimeValue;
 
 /**
@@ -14,7 +14,7 @@ import org.atomnuke.util.TimeValue;
  *
  * @author zinic
  */
-public interface TaskManager extends Tasker {
+public interface TaskManager {
 
    /**
     * Looks up a ManagedTask by id.

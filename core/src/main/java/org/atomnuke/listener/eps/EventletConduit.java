@@ -9,7 +9,7 @@ import org.atomnuke.listener.eps.selector.Selector;
 import org.atomnuke.listener.eps.selector.SelectorResult;
 import org.atomnuke.plugin.operation.ComplexOperation;
 import org.atomnuke.plugin.operation.OperationFailureException;
-import org.atomnuke.task.operation.TaskLifeCycleDestroyOperation;
+import org.atomnuke.util.lifecycle.operation.ReclaimOperation;
 import org.atomnuke.util.remote.AtomicCancellationRemote;
 import org.atomnuke.util.remote.CancellationRemote;
 
@@ -42,7 +42,7 @@ public class EventletConduit {
    }
 
    public void destroy() {
-      eventletContext.perform(TaskLifeCycleDestroyOperation.<AtomEventlet>instance());
+      eventletContext.perform(ReclaimOperation.<AtomEventlet>instance());
    }
 
    public CancellationRemote cancellationRemote() {

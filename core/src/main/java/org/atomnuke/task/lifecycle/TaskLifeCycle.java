@@ -1,6 +1,7 @@
 package org.atomnuke.task.lifecycle;
 
 import org.atomnuke.task.context.AtomTaskContext;
+import org.atomnuke.util.lifecycle.Reclaimable;
 
 /**
  * The task life-cycle defines two methods that will be called once during the
@@ -16,7 +17,7 @@ import org.atomnuke.task.context.AtomTaskContext;
  *
  * @author zinic
  */
-public interface TaskLifeCycle {
+public interface TaskLifeCycle extends Reclaimable {
 
    /**
     * Initializes this task.
@@ -25,6 +26,4 @@ public interface TaskLifeCycle {
     * @throws InitializationException
     */
    void init(AtomTaskContext tc) throws InitializationException;
-
-   void destroy();
 }

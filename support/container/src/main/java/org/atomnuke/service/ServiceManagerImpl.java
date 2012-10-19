@@ -7,7 +7,7 @@ import java.util.Map;
 import org.atomnuke.plugin.InstanceContext;
 import org.atomnuke.plugin.proxy.InstanceEnvProxyFactory;
 import org.atomnuke.plugin.proxy.japi.JapiProxyFactory;
-import org.atomnuke.service.operation.ServiceDestroyOperation;
+import org.atomnuke.util.lifecycle.operation.ReclaimOperation;
 
 /**
  *
@@ -44,7 +44,7 @@ public class ServiceManagerImpl implements ServiceManager {
    @Override
    public synchronized void destroy() {
       for (InstanceContext<Service> serviceCtx : registeredServices.values()) {
-         serviceCtx.perform(ServiceDestroyOperation.<Service>instance());
+         serviceCtx.perform(ReclaimOperation.<Service>instance());
       }
 
       registeredServices.clear();

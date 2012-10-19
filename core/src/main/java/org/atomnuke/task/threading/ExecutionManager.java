@@ -1,7 +1,7 @@
 package org.atomnuke.task.threading;
 
 import java.util.UUID;
-import org.atomnuke.service.ServiceLifeCycle;
+import org.atomnuke.service.lifecycle.ServiceLifeCycle;
 
 /**
  *

@@ -2,6 +2,7 @@ package org.atomnuke.kernel;
 
 import java.util.concurrent.TimeUnit;
 import org.atomnuke.task.manager.TaskManager;
+import org.atomnuke.task.manager.TaskManagerImpl;
 import org.atomnuke.task.threading.ExecutionManager;
 import org.atomnuke.util.TimeValue;
 import org.atomnuke.util.remote.AtomicCancellationRemote;
@@ -13,19 +14,19 @@ import org.slf4j.LoggerFactory;
  *
  * @author zinic
  */
-public class KernelDelegate implements Runnable {
+public class AtomSpecificKernelDelegate implements Runnable {
 
-   private static final Logger LOG = LoggerFactory.getLogger(KernelDelegate.class);
+   private static final Logger LOG = LoggerFactory.getLogger(AtomSpecificKernelDelegate.class);
 
    private static long ONE_MILLISECOND_IN_NANOS = 1000000;
 
    private final CancellationRemote crawlerCancellationRemote;
    private final ExecutionManager executionManager;
-   private final TaskManager taskManager;
+   private final TaskManagerImpl taskManager;
 
    private int drainMagnitude;
 
-   public KernelDelegate(TaskManager taskManager, ExecutionManager executionManager) {
+   public AtomSpecificKernelDelegate(TaskManagerImpl taskManager, ExecutionManager executionManager) {
       this.crawlerCancellationRemote = new AtomicCancellationRemote();
       this.executionManager = executionManager;
       this.taskManager = taskManager;
@@ -33,7 +34,7 @@ public class KernelDelegate implements Runnable {
       drainMagnitude = 1;
    }
 
-   public TaskManager taskManager() {
+   public TaskManagerImpl taskManager() {
       return taskManager;
    }
 

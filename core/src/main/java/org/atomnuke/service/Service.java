@@ -1,5 +1,7 @@
 package org.atomnuke.service;
 
+import org.atomnuke.service.lifecycle.ServiceLifeCycle;
+
 /**
  *
  * @author zinic

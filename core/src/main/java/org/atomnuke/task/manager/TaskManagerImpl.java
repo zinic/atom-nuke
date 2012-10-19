@@ -11,6 +11,7 @@ import org.atomnuke.listener.manager.ListenerManagerImpl;
 import org.atomnuke.source.AtomSource;
 import org.atomnuke.task.AtomTask;
 import org.atomnuke.task.AtomTaskImpl;
+import org.atomnuke.task.AtomTasker;
 import org.atomnuke.task.threading.ExecutionManager;
 import org.atomnuke.util.TimeValue;
 import org.slf4j.Logger;
@@ -20,7 +21,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author zinic
  */
-public class TaskManagerImpl implements TaskManager {
+public class TaskManagerImpl implements TaskManager, AtomTasker {
 
    private static final Logger LOG = LoggerFactory.getLogger(TaskManagerImpl.class);
 

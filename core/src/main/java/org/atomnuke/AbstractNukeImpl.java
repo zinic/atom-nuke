@@ -1,7 +1,7 @@
 package org.atomnuke;
 
 import java.util.UUID;
-import org.atomnuke.kernel.KernelDelegate;
+import org.atomnuke.kernel.AtomSpecificKernelDelegate;
 import org.atomnuke.kernel.resource.Destroyable;
 import org.atomnuke.kernel.shutdown.ShutdownHook;
 import org.atomnuke.plugin.InstanceContext;
@@ -9,7 +9,7 @@ import org.atomnuke.plugin.InstanceContextImpl;
 import org.atomnuke.plugin.local.LocalInstanceEnvironment;
 import org.atomnuke.source.AtomSource;
 import org.atomnuke.task.AtomTask;
-import org.atomnuke.task.Tasker;
+import org.atomnuke.task.AtomTasker;
 import org.atomnuke.util.TimeValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,10 +25,10 @@ public abstract class AbstractNukeImpl implements Nuke {
    protected static final long MAX_WAIT_TIME_FOR_SHUTDOWN = 15000;
 
    private final ShutdownHook kernelShutdownHook;
-   private final KernelDelegate kernelDelegate;
+   private final AtomSpecificKernelDelegate kernelDelegate;
    private final Thread controlThread;
 
-   public AbstractNukeImpl(ShutdownHook kernelShutdownHook, KernelDelegate kernelDelegate) {
+   public AbstractNukeImpl(ShutdownHook kernelShutdownHook, AtomSpecificKernelDelegate kernelDelegate) {
       this.kernelShutdownHook = kernelShutdownHook;
       this.kernelDelegate = kernelDelegate;
 
@@ -36,7 +36,7 @@ public abstract class AbstractNukeImpl implements Nuke {
    }
 
    @Override
-   public Tasker tasker() {
+   public AtomTasker tasker() {
       return kernelDelegate.taskManager();
    }
 
