@@ -3,7 +3,7 @@ package org.atomnuke;
 import org.atomnuke.kernel.AtomSpecificKernelDelegate;
 import org.atomnuke.kernel.shutdown.KernelShutdownHook;
 import org.atomnuke.task.threading.ExecutionManagerImpl;
-import org.atomnuke.task.manager.TaskManagerImpl;
+import org.atomnuke.task.manager.impl.atom.AtomSpecificTaskManager;
 import org.atomnuke.task.threading.ExecutionManager;
 import org.atomnuke.task.threading.ExecutionQueueImpl;
 
@@ -47,6 +47,6 @@ public class NukeKernel extends AbstractNukeImpl {
     * @param manager
     */
    public NukeKernel(ExecutionManager manager) {
-      super(new KernelShutdownHook(), new AtomSpecificKernelDelegate(new TaskManagerImpl(manager), manager));
+      super(new KernelShutdownHook(), new AtomSpecificKernelDelegate(new AtomSpecificTaskManager(manager), manager));
    }
 }

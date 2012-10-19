@@ -1,4 +1,4 @@
-package org.atomnuke.task.manager;
+package org.atomnuke.task.manager.impl.atom;
 
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -12,6 +12,9 @@ import org.atomnuke.source.AtomSource;
 import org.atomnuke.task.AtomTask;
 import org.atomnuke.task.AtomTaskImpl;
 import org.atomnuke.task.AtomTasker;
+import org.atomnuke.task.manager.ManagedTask;
+import org.atomnuke.task.manager.impl.ManagedTaskImpl;
+import org.atomnuke.task.manager.TaskManager;
 import org.atomnuke.task.threading.ExecutionManager;
 import org.atomnuke.util.TimeValue;
 import org.slf4j.Logger;
@@ -21,9 +24,9 @@ import org.slf4j.LoggerFactory;
  *
  * @author zinic
  */
-public class TaskManagerImpl implements TaskManager, AtomTasker {
+public class AtomSpecificTaskManager implements TaskManager, AtomTasker {
 
-   private static final Logger LOG = LoggerFactory.getLogger(TaskManagerImpl.class);
+   private static final Logger LOG = LoggerFactory.getLogger(AtomSpecificTaskManager.class);
 
    private static final TimeValue THREE_MILLISECONDS = new TimeValue(3, TimeUnit.MILLISECONDS);
 
@@ -32,7 +35,7 @@ public class TaskManagerImpl implements TaskManager, AtomTasker {
 
    private boolean allowSubmission;
 
-   public TaskManagerImpl(ExecutionManager executionManager) {
+   public AtomSpecificTaskManager(ExecutionManager executionManager) {
       this.executionManager = executionManager;
 
       pollingTasks = new LinkedList<ManagedTask>();

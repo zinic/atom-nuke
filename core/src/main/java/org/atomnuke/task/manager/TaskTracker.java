@@ -1,4 +1,4 @@
-package org.atomnuke.task.manager.impl;
+package org.atomnuke.task.manager;
 
 import java.util.List;
 import org.atomnuke.task.manager.ManagedTask;

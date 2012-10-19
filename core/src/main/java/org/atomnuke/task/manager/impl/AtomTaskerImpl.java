@@ -1,5 +1,6 @@
 package org.atomnuke.task.manager.impl;
 
+import org.atomnuke.task.manager.TaskTracker;
 import java.util.UUID;
 import org.atomnuke.listener.manager.ListenerManager;
 import org.atomnuke.listener.manager.ListenerManagerImpl;
@@ -8,7 +9,6 @@ import org.atomnuke.source.AtomSource;
 import org.atomnuke.task.AtomTask;
 import org.atomnuke.task.AtomTaskImpl;
 import org.atomnuke.task.AtomTasker;
-import org.atomnuke.task.manager.ManagedTaskImpl;
 import org.atomnuke.task.threading.ExecutionManager;
 import org.atomnuke.util.TimeValue;
 

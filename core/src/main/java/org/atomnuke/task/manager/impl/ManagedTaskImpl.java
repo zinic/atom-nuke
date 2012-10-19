@@ -1,4 +1,4 @@
-package org.atomnuke.task.manager;
+package org.atomnuke.task.manager.impl;
 
 import java.util.UUID;
 import org.atomnuke.listener.AtomListener;
@@ -13,6 +13,7 @@ import org.atomnuke.source.AtomSourceException;
 import org.atomnuke.source.result.AtomSourceResult;
 import org.atomnuke.source.result.ResultType;
 import org.atomnuke.task.AtomTask;
+import org.atomnuke.task.manager.ManagedTask;
 import org.atomnuke.task.threading.ExecutionManager;
 import org.atomnuke.util.TimeValue;
 import org.atomnuke.util.lifecycle.operation.ReclaimOperation;

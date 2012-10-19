@@ -2,7 +2,7 @@ package org.atomnuke.kernel;
 
 import java.util.concurrent.TimeUnit;
 import org.atomnuke.task.manager.TaskManager;
-import org.atomnuke.task.manager.TaskManagerImpl;
+import org.atomnuke.task.manager.impl.atom.AtomSpecificTaskManager;
 import org.atomnuke.task.threading.ExecutionManager;
 import org.atomnuke.util.TimeValue;
 import org.atomnuke.util.remote.AtomicCancellationRemote;
@@ -22,11 +22,11 @@ public class AtomSpecificKernelDelegate implements Runnable {
 
    private final CancellationRemote crawlerCancellationRemote;
    private final ExecutionManager executionManager;
-   private final TaskManagerImpl taskManager;
+   private final AtomSpecificTaskManager taskManager;
 
    private int drainMagnitude;
 
-   public AtomSpecificKernelDelegate(TaskManagerImpl taskManager, ExecutionManager executionManager) {
+   public AtomSpecificKernelDelegate(AtomSpecificTaskManager taskManager, ExecutionManager executionManager) {
       this.crawlerCancellationRemote = new AtomicCancellationRemote();
       this.executionManager = executionManager;
       this.taskManager = taskManager;
@@ -34,7 +34,7 @@ public class AtomSpecificKernelDelegate implements Runnable {
       drainMagnitude = 1;
    }
 
-   public TaskManagerImpl taskManager() {
+   public AtomSpecificTaskManager taskManager() {
       return taskManager;
    }
 
