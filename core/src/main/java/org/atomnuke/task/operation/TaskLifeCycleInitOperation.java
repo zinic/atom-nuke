@@ -3,23 +3,23 @@ package org.atomnuke.task.operation;
 import org.atomnuke.plugin.operation.ComplexOperation;
 import org.atomnuke.plugin.operation.OperationFailureException;
 import org.atomnuke.task.context.AtomTaskContext;
-import org.atomnuke.task.lifecycle.InitializationException;
-import org.atomnuke.task.lifecycle.TaskLifeCycle;
+import org.atomnuke.util.lifecycle.InitializationException;
+import org.atomnuke.util.lifecycle.ResourceLifeCycle;
 
 /**
  *
  * @author zinic
  */
-public class TaskLifeCycleInitOperation implements ComplexOperation<TaskLifeCycle, AtomTaskContext> {
+public class TaskLifeCycleInitOperation implements ComplexOperation<ResourceLifeCycle, AtomTaskContext> {
 
-   private static final ComplexOperation<TaskLifeCycle, AtomTaskContext> INSTANCE = new TaskLifeCycleInitOperation();
+   private static final ComplexOperation<ResourceLifeCycle, AtomTaskContext> INSTANCE = new TaskLifeCycleInitOperation();
 
-   public static <T extends TaskLifeCycle> ComplexOperation<T, AtomTaskContext> instance() {
+   public static <T extends ResourceLifeCycle> ComplexOperation<T, AtomTaskContext> instance() {
       return (ComplexOperation<T, AtomTaskContext>) INSTANCE;
    }
 
    @Override
-   public void perform(TaskLifeCycle instance, AtomTaskContext argument) throws OperationFailureException {
+   public void perform(ResourceLifeCycle instance, AtomTaskContext argument) throws OperationFailureException {
       try {
          instance.init(argument);
       } catch (InitializationException ie) {

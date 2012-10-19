@@ -18,7 +18,7 @@ import org.atomnuke.source.result.AtomSourceResult;
 import org.atomnuke.source.result.AtomSourceResultImpl;
 import org.atomnuke.task.AtomTask;
 import org.atomnuke.task.context.AtomTaskContext;
-import org.atomnuke.task.lifecycle.InitializationException;
+import org.atomnuke.util.lifecycle.InitializationException;
 import org.atomnuke.util.TimeValue;
 import org.junit.Test;
 

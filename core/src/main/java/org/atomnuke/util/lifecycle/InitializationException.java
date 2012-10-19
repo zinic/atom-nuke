@@ -1,4 +1,4 @@
-package org.atomnuke.task.lifecycle;
+package org.atomnuke.util.lifecycle;
 
 /**
  *

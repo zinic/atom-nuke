@@ -1,13 +1,14 @@
 package org.atomnuke.task.threading;
 
-import org.atomnuke.service.lifecycle.ServiceLifeCycle;
+import org.atomnuke.service.context.ServiceContext;
 import org.atomnuke.task.TaskHandle;
+import org.atomnuke.util.lifecycle.ResourceLifeCycle;
 
 /**
  *
  * @author zinic
  */
-public interface ExecutionManager extends ServiceLifeCycle {
+public interface ExecutionManager extends ResourceLifeCycle<ServiceContext> {
 
    public enum State {
 

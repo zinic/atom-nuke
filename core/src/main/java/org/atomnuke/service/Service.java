@@ -1,12 +1,13 @@
 package org.atomnuke.service;
 
-import org.atomnuke.service.lifecycle.ServiceLifeCycle;
+import org.atomnuke.service.context.ServiceContext;
+import org.atomnuke.util.lifecycle.ResourceLifeCycle;
 
 /**
  *
  * @author zinic
  */
-public interface Service extends ServiceLifeCycle {
+public interface Service extends ResourceLifeCycle<ServiceContext> {
 
    String name();
 

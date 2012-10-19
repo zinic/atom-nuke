@@ -5,7 +5,7 @@ import org.atomnuke.kernel.shutdown.ShutdownHook;
 import org.atomnuke.source.AtomSource;
 import org.atomnuke.task.AtomTask;
 import org.atomnuke.task.manager.AtomTasker;
-import org.atomnuke.task.lifecycle.InitializationException;
+import org.atomnuke.util.lifecycle.InitializationException;
 import org.atomnuke.util.TimeValue;
 
 /**

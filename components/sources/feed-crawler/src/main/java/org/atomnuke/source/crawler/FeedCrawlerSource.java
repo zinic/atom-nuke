@@ -9,8 +9,8 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.atomnuke.atom.model.Link;
-import org.atomnuke.task.lifecycle.DestructionException;
-import org.atomnuke.task.lifecycle.InitializationException;
+import org.atomnuke.util.lifecycle.DestructionException;
+import org.atomnuke.util.lifecycle.InitializationException;
 import org.atomnuke.source.AtomSource;
 import org.atomnuke.source.AtomSourceException;
 import org.atomnuke.source.result.AtomSourceResult;

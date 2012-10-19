@@ -1,11 +1,10 @@
-package org.atomnuke.task.lifecycle;
+package org.atomnuke.util.lifecycle;
 
-import org.atomnuke.task.context.AtomTaskContext;
 import org.atomnuke.util.lifecycle.Reclaimable;
 
 /**
- * The task life-cycle defines two methods that will be called once during the
- * lifetime of the object bound to the life-cycle.
+ * The resource life-cycle defines two methods that will be called once during
+ * the lifetime of the object bound to the life-cycle.
  *
  * The init method will always be called before the destroy method and ideally
  * will be called when the object is being prepared for use. The init method
@@ -17,13 +16,13 @@ import org.atomnuke.util.lifecycle.Reclaimable;
  *
  * @author zinic
  */
-public interface TaskLifeCycle extends Reclaimable {
+public interface ResourceLifeCycle<T> extends Reclaimable {
 
    /**
     * Initializes this task.
     *
-    * @param tc task context
+    * @param contextObject
     * @throws InitializationException
     */
-   void init(AtomTaskContext tc) throws InitializationException;
+   void init(T contextObject) throws InitializationException;
 }

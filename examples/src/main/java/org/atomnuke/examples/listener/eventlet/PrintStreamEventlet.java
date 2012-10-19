@@ -5,8 +5,8 @@ import java.util.concurrent.atomic.AtomicLong;
 import org.atomnuke.atom.model.Entry;
 import org.atomnuke.listener.eps.eventlet.AtomEventletException;
 import org.atomnuke.task.context.AtomTaskContext;
-import org.atomnuke.task.lifecycle.DestructionException;
-import org.atomnuke.task.lifecycle.InitializationException;
+import org.atomnuke.util.lifecycle.DestructionException;
+import org.atomnuke.util.lifecycle.InitializationException;
 
 /**
  *

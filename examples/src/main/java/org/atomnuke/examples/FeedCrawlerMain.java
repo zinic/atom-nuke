@@ -12,8 +12,8 @@ import org.atomnuke.listener.eps.selectors.CategorySelector;
 import org.atomnuke.source.crawler.FeedCrawlerSourceFactory;
 import org.atomnuke.task.AtomTask;
 import org.atomnuke.task.context.AtomTaskContext;
-import org.atomnuke.task.lifecycle.DestructionException;
-import org.atomnuke.task.lifecycle.InitializationException;
+import org.atomnuke.util.lifecycle.DestructionException;
+import org.atomnuke.util.lifecycle.InitializationException;
 import org.atomnuke.util.TimeValue;
 
 /**

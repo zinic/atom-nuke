@@ -2,27 +2,27 @@ package org.atomnuke.service.operation;
 
 import org.atomnuke.plugin.operation.ComplexOperation;
 import org.atomnuke.plugin.operation.OperationFailureException;
-import org.atomnuke.service.ServiceInitializationException;
-import org.atomnuke.service.lifecycle.ServiceLifeCycle;
 import org.atomnuke.service.context.ServiceContext;
+import org.atomnuke.util.lifecycle.InitializationException;
+import org.atomnuke.util.lifecycle.ResourceLifeCycle;
 
 /**
  *
  * @author zinic
  */
-public class ServiceInitOperation implements ComplexOperation<ServiceLifeCycle, ServiceContext> {
+public class ServiceInitOperation implements ComplexOperation<ResourceLifeCycle<ServiceContext>, ServiceContext> {
 
-   private static final ComplexOperation<ServiceLifeCycle, ServiceContext> INSTANCE = new ServiceInitOperation();
+   private static final ComplexOperation<ResourceLifeCycle<ServiceContext>, ServiceContext> INSTANCE = new ServiceInitOperation();
 
-   public static <T extends ServiceLifeCycle> ComplexOperation<T, ServiceContext> instance() {
+   public static <T extends ResourceLifeCycle<ServiceContext>> ComplexOperation<T, ServiceContext> instance() {
       return (ComplexOperation<T, ServiceContext>) INSTANCE;
    }
 
    @Override
-   public void perform(ServiceLifeCycle instance, ServiceContext argument) throws OperationFailureException {
+   public void perform(ResourceLifeCycle<ServiceContext> instance, ServiceContext argument) throws OperationFailureException {
       try {
          instance.init(argument);
-      } catch (ServiceInitializationException ie) {
+      } catch (InitializationException ie) {
          throw new OperationFailureException(ie);
       }
    }

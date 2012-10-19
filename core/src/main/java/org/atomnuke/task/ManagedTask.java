@@ -1,6 +1,6 @@
 package org.atomnuke.task;
 
-import org.atomnuke.task.lifecycle.TaskLifeCycle;
+import org.atomnuke.util.lifecycle.ResourceLifeCycle;
 import org.atomnuke.util.TimeValue;
 
 /**

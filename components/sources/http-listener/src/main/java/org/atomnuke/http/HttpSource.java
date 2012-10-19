@@ -7,7 +7,7 @@ import org.atomnuke.source.result.AtomSourceResult;
 import org.atomnuke.source.QueueSource;
 import org.atomnuke.source.QueueSourceImpl;
 import org.atomnuke.task.context.AtomTaskContext;
-import org.atomnuke.task.lifecycle.InitializationException;
+import org.atomnuke.util.lifecycle.InitializationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

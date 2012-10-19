@@ -21,8 +21,8 @@ import org.atomnuke.util.config.io.ConfigurationManager;
 import org.atomnuke.util.config.update.ConfigurationContext;
 import org.atomnuke.util.config.update.ConfigurationUpdateManager;
 import org.atomnuke.task.context.TaskContextImpl;
-import org.atomnuke.task.lifecycle.InitializationException;
-import org.atomnuke.task.lifecycle.TaskLifeCycle;
+import org.atomnuke.util.lifecycle.InitializationException;
+import org.atomnuke.util.lifecycle.ResourceLifeCycle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
