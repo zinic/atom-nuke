@@ -17,7 +17,7 @@ public class NukeKernelTest {
 
    @Test
    public void nukeShakedownTest() throws Exception {
-      final Nuke nukeKernel = new NukeKernel();
+      final NukeKernel nukeKernel = new NukeKernel();
       final AtomicLong eventsProcessed = new AtomicLong(0);
 
       for (int taskId = 1; taskId <= 30; taskId++) {

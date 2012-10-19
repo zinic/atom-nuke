@@ -37,7 +37,7 @@ public class AtomTaskerImpl implements AtomTasker {
 
       // Register and track it.
       final ManagedAtomTask managedAtomTask = new ManagedAtomTask(newTaskHandle, source, executionManager, listenerManager);
-      taskTracker.addTask(managedAtomTask);
+      taskTracker.registerTask(managedAtomTask);
 
       return new AtomTaskImpl(listenerManager, newTaskHandle);
    }

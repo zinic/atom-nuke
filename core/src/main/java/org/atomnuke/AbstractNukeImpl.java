@@ -20,8 +20,7 @@ import org.slf4j.LoggerFactory;
 public abstract class AbstractNukeImpl implements Nuke {
 
    private static final Logger LOG = LoggerFactory.getLogger(AbstractNukeImpl.class);
-
-   protected static final long MAX_WAIT_TIME_FOR_SHUTDOWN = 15000;
+   private static final long MAX_WAIT_TIME_FOR_SHUTDOWN = 15000;
 
    private final GenericKernelDelegate kernelDelegate;
    private final ShutdownHook kernelShutdownHook;
@@ -39,12 +38,34 @@ public abstract class AbstractNukeImpl implements Nuke {
       return kernelShutdownHook;
    }
 
-   @Override
+   /**
+    * Helper method for following a given source at a defined polling interval.
+    * This has the same effect as calling follow on the Tasker interface.This
+    * calls the follow method by wrapping the given AtomSource in a
+    * SimpleInstanceContext.
+    *
+    * @param source the AtomSource to be scheduled.
+    * @param pollingInterval the desired polling interval for the source.
+    * @return a new task instance for further interaction with the newly
+    * scheduled source.
+    * @throws InitializationException thrown when initializing the source fails
+    * wit the current task context.
+    */
    public AtomTask follow(AtomSource source, TimeValue pollingInterval) {
       return follow(new InstanceContextImpl<AtomSource>(LocalInstanceEnvironment.getInstance(), source), pollingInterval);
    }
 
-   @Override
+   /**
+    * Helper method for following a given source at a defined polling interval.
+    * This has the same effect as calling follow on the Tasker interface.
+    *
+    * @param source the instance context of the AtomSource to be scheduled.
+    * @param pollingInterval the desired polling interval for the source.
+    * @return a new task instance for further interaction with the newly
+    * scheduled source.
+    * @throws InitializationException thrown when initializing the source fails
+    * wit the current task context.
+    */
    public AtomTask follow(InstanceContext<AtomSource> source, TimeValue pollingInterval) {
       return tasker().follow(source, pollingInterval);
    }

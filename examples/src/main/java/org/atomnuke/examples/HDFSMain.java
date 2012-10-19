@@ -1,7 +1,6 @@
 package org.atomnuke.examples;
 
 import java.util.concurrent.TimeUnit;
-import org.atomnuke.Nuke;
 import org.atomnuke.NukeKernel;
 import org.atomnuke.atom.io.writer.stax.StaxAtomWriterFactory;
 import org.atomnuke.task.AtomTask;
@@ -29,7 +28,7 @@ public class HDFSMain {
        */
 
       // Create the nuke kernel
-      final Nuke nuke = new NukeKernel();
+      final NukeKernel nuke = new NukeKernel();
 
       // Start nuke up
       nuke.start();

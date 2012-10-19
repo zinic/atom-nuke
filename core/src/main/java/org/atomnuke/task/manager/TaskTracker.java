@@ -20,5 +20,5 @@ public interface TaskTracker {
 
    List<ManagedTask> activeTasks();
 
-   void addTask(ManagedTask managedTask);
+   void registerTask(ManagedTask managedTask);
 }

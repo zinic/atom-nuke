@@ -22,7 +22,6 @@ import org.slf4j.LoggerFactory;
 public class ContainerBootstrap implements Bootstrap {
 
    private static final Logger LOG = LoggerFactory.getLogger(ContainerBootstrap.class);
-
    private final ServiceManager serviceManager;
 
    public ContainerBootstrap(ServiceManager serviceManager) {
@@ -33,7 +32,16 @@ public class ContainerBootstrap implements Bootstrap {
    public void bootstrap() {
       final Reflections bootstrapScanner = new Reflections(new ConfigurationBuilder()
               .setScanners(new TypeAnnotationsScanner())
-              .setUrls(ClasspathHelper.forClassLoader(Thread.currentThread().getContextClassLoader())));
+              .setUrls(ClasspathHelper.forClassLoader(Thread.currentThread().getContextClassLoader(), ClassLoader.getSystemClassLoader())));
+
+      try {
+         LOG.error("System Classloader: " + ClassLoader.getSystemClassLoader());
+         final Class clazz = Class.forName("org.atomnuke.container.service.gc.DefaultReclaimationService");
+
+         LOG.error("Class for reclaimation: " + clazz.getName() + " - From Classloadedr: " + clazz.getClassLoader());
+      } catch (ClassNotFoundException cnfe) {
+         LOG.error("Lewz");
+      }
 
       final ServiceContext serviceContext = new ServiceContextImpl(serviceManager, Collections.EMPTY_MAP);
 

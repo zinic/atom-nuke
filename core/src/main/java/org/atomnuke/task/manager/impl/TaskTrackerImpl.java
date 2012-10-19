@@ -53,7 +53,7 @@ public class TaskTrackerImpl implements TaskTracker {
    }
 
    @Override
-   public synchronized void addTask(ManagedTask managedTask) {
+   public synchronized void registerTask(ManagedTask managedTask) {
       if (cancellationRemote.canceled()) {
          // TODO:Implement - Consider returning a boolean value to communicate shutdown?
          LOG.warn("This object has been destroyed and can no longer enlist tasks.");
