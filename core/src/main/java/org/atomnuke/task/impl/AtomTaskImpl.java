@@ -1,13 +1,12 @@
-package org.atomnuke.task;
+package org.atomnuke.task.impl;
 
-import java.util.UUID;
 import org.atomnuke.plugin.InstanceContext;
 import org.atomnuke.plugin.local.LocalInstanceEnvironment;
 import org.atomnuke.listener.AtomListener;
 import org.atomnuke.listener.manager.ListenerManager;
 import org.atomnuke.plugin.InstanceContextImpl;
-import org.atomnuke.util.TimeValue;
-import org.atomnuke.util.remote.AtomicCancellationRemote;
+import org.atomnuke.task.AtomTask;
+import org.atomnuke.task.TaskHandle;
 import org.atomnuke.util.remote.CancellationRemote;
 
 /**
@@ -16,32 +15,17 @@ import org.atomnuke.util.remote.CancellationRemote;
  */
 public class AtomTaskImpl implements AtomTask {
 
-   private final CancellationRemote cancelationRemote;
    private final ListenerManager listenerManager;
-   private final TimeValue interval;
-   private final UUID taskId;
+   private final TaskHandle taskHandle;
 
-   public AtomTaskImpl(UUID taskId, ListenerManager listenerManager, TimeValue interval) {
+   public AtomTaskImpl(ListenerManager listenerManager, TaskHandle taskHandle) {
       this.listenerManager = listenerManager;
-      this.interval = interval;
-      this.taskId = taskId;
-
-      this.cancelationRemote = new AtomicCancellationRemote();
+      this.taskHandle = taskHandle;
    }
 
    @Override
-   public UUID id() {
-      return taskId;
-   }
-
-   @Override
-   public CancellationRemote cancellationRemote() {
-      return cancelationRemote;
-   }
-
-   @Override
-   public TimeValue interval() {
-      return interval;
+   public TaskHandle handle() {
+      return taskHandle;
    }
 
    @Override

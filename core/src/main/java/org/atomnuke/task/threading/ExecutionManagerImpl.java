@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.UUID;
 import org.atomnuke.service.context.ServiceContext;
+import org.atomnuke.task.TaskHandle;
 
 /**
  *
@@ -42,7 +43,7 @@ public class ExecutionManagerImpl implements ExecutionManager {
    @Override
    public void init(ServiceContext sc) {
       stateManager.update(State.STARTING);
-      stateManager.update(State.OK);
+      stateManager.update(State.READY);
    }
 
    @Override
@@ -56,14 +57,9 @@ public class ExecutionManagerImpl implements ExecutionManager {
    }
 
    @Override
-   public TaskFuture submit(Runnable r) {
-      return submit(UUID.randomUUID(), r);
-   }
-
-   @Override
-   public synchronized TaskFuture submit(UUID id, Runnable r) {
-      final TaskFuture taskFuture = new TaskFuture(executionQueue.submit(r), id);
-      taskFutures.put(id, taskFuture);
+   public synchronized TaskFuture submit(TaskHandle handle, Runnable r) {
+      final TaskFuture taskFuture = new TaskFuture(handle, executionQueue.submit(r));
+      taskFutures.put(handle.id(), taskFuture);
 
       return taskFuture;
    }
@@ -79,7 +75,7 @@ public class ExecutionManagerImpl implements ExecutionManager {
 
          case DRAINING:
             if (!executionQueue.isFull()) {
-               stateManager.update(State.OK);
+               stateManager.update(State.READY);
             }
             break;
 
@@ -93,7 +89,7 @@ public class ExecutionManagerImpl implements ExecutionManager {
    }
 
    @Override
-   public boolean submitted(UUID id) {
-      return taskFutures().containsKey(id);
+   public boolean submitted(TaskHandle taskHandle) {
+      return taskFutures().containsKey(taskHandle.id());
    }
 }

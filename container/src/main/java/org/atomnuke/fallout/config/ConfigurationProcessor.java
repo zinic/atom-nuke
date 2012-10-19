@@ -28,7 +28,7 @@ import org.atomnuke.task.operation.TaskLifeCycleInitOperation;
 import org.atomnuke.service.ServiceManager;
 import org.atomnuke.source.AtomSource;
 import org.atomnuke.task.AtomTask;
-import org.atomnuke.task.AtomTasker;
+import org.atomnuke.task.manager.AtomTasker;
 import org.atomnuke.task.context.AtomTaskContext;
 import org.atomnuke.task.context.TaskContextImpl;
 import org.atomnuke.util.TimeValueUtil;

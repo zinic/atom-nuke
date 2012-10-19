@@ -1,5 +1,6 @@
 package org.atomnuke.task.manager.impl;
 
+import org.atomnuke.task.impl.ManagedAtomTask;
 import org.atomnuke.task.manager.TaskTracker;
 import java.util.UUID;
 import org.atomnuke.listener.manager.ListenerManager;
@@ -7,8 +8,10 @@ import org.atomnuke.listener.manager.ListenerManagerImpl;
 import org.atomnuke.plugin.InstanceContext;
 import org.atomnuke.source.AtomSource;
 import org.atomnuke.task.AtomTask;
-import org.atomnuke.task.AtomTaskImpl;
-import org.atomnuke.task.AtomTasker;
+import org.atomnuke.task.TaskHandle;
+import org.atomnuke.task.impl.AtomTaskImpl;
+import org.atomnuke.task.impl.TaskHandleImpl;
+import org.atomnuke.task.manager.AtomTasker;
 import org.atomnuke.task.threading.ExecutionManager;
 import org.atomnuke.util.TimeValue;
 
@@ -28,14 +31,14 @@ public class AtomTaskerImpl implements AtomTasker {
 
    @Override
    public AtomTask follow(InstanceContext<AtomSource> source, TimeValue pollingInterval) {
-      final ListenerManager listenerManager = new ListenerManagerImpl();
+      // Generate a new UUID for the polling task we're about to register
+      final TaskHandle newTaskHandle = new TaskHandleImpl(UUID.randomUUID(), pollingInterval);
+      final ListenerManager listenerManager = new ListenerManagerImpl(newTaskHandle);
 
-      final UUID taskId = UUID.randomUUID();
-      final AtomTask task = new AtomTaskImpl(taskId, listenerManager, pollingInterval);
+      // Register and track it.
+      final ManagedAtomTask managedAtomTask = new ManagedAtomTask(newTaskHandle, source, executionManager, listenerManager);
+      taskTracker.addTask(managedAtomTask);
 
-      final ManagedTaskImpl managedTask = new ManagedTaskImpl(task, listenerManager, pollingInterval, executionManager, source);
-      taskTracker.addTask(managedTask);
-
-      return task;
+      return new AtomTaskImpl(listenerManager, newTaskHandle);
    }
 }

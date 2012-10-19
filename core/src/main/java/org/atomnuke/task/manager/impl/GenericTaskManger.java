@@ -1,12 +1,12 @@
 package org.atomnuke.task.manager.impl;
 
 import org.atomnuke.task.manager.TaskTracker;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
-import org.atomnuke.task.manager.ManagedTask;
+import org.atomnuke.task.ManagedTask;
 import org.atomnuke.task.manager.TaskManager;
 import org.atomnuke.task.threading.ExecutionManager;
 import org.atomnuke.util.TimeValue;
+import org.atomnuke.util.remote.AtomicCancellationRemote;
 import org.atomnuke.util.remote.CancellationRemote;
 
 /**
@@ -21,14 +21,11 @@ public class GenericTaskManger implements TaskManager {
    private final ExecutionManager executionManager;
    private final TaskTracker taskTracker;
 
-   public GenericTaskManger(CancellationRemote cancellationRemote, ExecutionManager executionManager, TaskTracker taskTracker) {
-      this.cancellationRemote = cancellationRemote;
+   public GenericTaskManger(ExecutionManager executionManager) {
+      this.cancellationRemote = new AtomicCancellationRemote();
       this.executionManager = executionManager;
-      this.taskTracker = taskTracker;
-   }
 
-   @Override
-   public void init() {
+      this.taskTracker = new TaskTrackerImpl(cancellationRemote);
    }
 
    @Override
@@ -38,19 +35,13 @@ public class GenericTaskManger implements TaskManager {
 
       // Cancel all of the executing tasks
       for (ManagedTask managedTask : taskTracker.activeTasks()) {
-         managedTask.cancellationRemote().cancel();
+         managedTask.handle().cancellationRemote().cancel();
       }
    }
 
    @Override
-   public ManagedTask findTask(UUID taskId) {
-      for (ManagedTask managedTask : taskTracker.activeTasks()) {
-         if (managedTask.id().equals(taskId)) {
-            return managedTask;
-         }
-      }
-
-      return null;
+   public TaskTracker tracker() {
+      return taskTracker;
    }
 
    @Override
@@ -62,9 +53,9 @@ public class GenericTaskManger implements TaskManager {
          TimeValue nextPollTime = managedTask.nextPollTime();
 
          // Sould this task be scheduled? If so, is the task already in the execution queue?
-         if (now.isGreaterThan(nextPollTime) && !executionManager.submitted(managedTask.id())) {
-            executionManager.submit(managedTask.id(), managedTask);
-            managedTask.scheduled();
+         if (now.isGreaterThan(nextPollTime) && !executionManager.submitted(managedTask.handle())) {
+            executionManager.submit(managedTask.handle(), managedTask);
+            managedTask.scheduleNext();
 
             nextPollTime = managedTask.nextPollTime();
          }

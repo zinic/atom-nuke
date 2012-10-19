@@ -32,7 +32,7 @@ public class OtherNukeKernelTest {
 
       Thread.sleep(10000);
 
-      task.cancellationRemote().cancel();
+      task.handle().cancellationRemote().cancel();
 
       Thread.sleep(10000);
 

@@ -4,7 +4,8 @@ import org.atomnuke.task.manager.TaskTracker;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import org.atomnuke.task.manager.ManagedTask;
+import java.util.UUID;
+import org.atomnuke.task.ManagedTask;
 import org.atomnuke.util.remote.CancellationRemote;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,20 +29,27 @@ public class TaskTrackerImpl implements TaskTracker {
 
    @Override
    public synchronized List<ManagedTask> activeTasks() {
-      final List<ManagedTask> activeTasks = new LinkedList<ManagedTask>();
-
       for (Iterator<ManagedTask> managedTaskIter = pollingTasks.iterator(); managedTaskIter.hasNext();) {
          final ManagedTask managedTask = managedTaskIter.next();
 
-         // Cancellation of a task may occur at anytime
-         if (!managedTask.cancellationRemote().canceled()) {
-            activeTasks.add(managedTask);
-         } else {
+         // Cancellation of a task may occur at anytime - if it was canceled, remove it
+         if (managedTask.handle().cancellationRemote().canceled()) {
             managedTaskIter.remove();
          }
       }
 
-      return activeTasks;
+      return new LinkedList<ManagedTask>(pollingTasks);
+   }
+
+   @Override
+   public ManagedTask findTask(UUID taskId) {
+      for (ManagedTask managedTask : activeTasks()) {
+         if (managedTask.handle().id().equals(taskId)) {
+            return managedTask;
+         }
+      }
+
+      return null;
    }
 
    @Override
@@ -51,5 +59,7 @@ public class TaskTrackerImpl implements TaskTracker {
          LOG.warn("This object has been destroyed and can no longer enlist tasks.");
          return;
       }
+
+      pollingTasks.add(managedTask);
    }
 }

@@ -4,11 +4,9 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 import org.atomnuke.plugin.InstanceContext;
 import org.atomnuke.listener.AtomListener;
-import org.atomnuke.listener.ReentrantAtomListener;
-import org.atomnuke.util.remote.AtomicCancellationRemote;
+import org.atomnuke.task.TaskHandle;
 import org.atomnuke.util.remote.CancellationRemote;
 
 /**
@@ -18,11 +16,12 @@ import org.atomnuke.util.remote.CancellationRemote;
 public class ListenerManagerImpl implements ListenerManager {
 
    private final List<ManagedListener> listeners;
-   private final AtomicBoolean reentrant;
+   private final TaskHandle parentHandle;
 
-   public ListenerManagerImpl() {
+   public ListenerManagerImpl(TaskHandle parentHandle) {
+      this.parentHandle = parentHandle;
+
       listeners = new LinkedList<ManagedListener>();
-      reentrant = new AtomicBoolean(true);
    }
 
    @Override
@@ -44,19 +43,10 @@ public class ListenerManagerImpl implements ListenerManager {
    }
 
    @Override
-   public boolean isReentrant() {
-      return reentrant.get();
-   }
-
-   @Override
    public synchronized CancellationRemote addListener(InstanceContext<? extends AtomListener> atomListenerContext) {
-      if (!(atomListenerContext.instance() instanceof ReentrantAtomListener)) {
-         reentrant.set(false);
-      }
+      final ManagedListener newListener = new ManagedListener((InstanceContext<AtomListener>) atomListenerContext, parentHandle);
+      listeners.add(newListener);
 
-      final CancellationRemote cancellationRemote = new AtomicCancellationRemote();
-      listeners.add(new ManagedListener(cancellationRemote, (InstanceContext<AtomListener>) atomListenerContext));
-
-      return cancellationRemote;
+      return newListener.cancellationRemote();
    }
 }

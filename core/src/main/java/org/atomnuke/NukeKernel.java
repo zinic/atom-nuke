@@ -1,9 +1,12 @@
 package org.atomnuke;
 
-import org.atomnuke.kernel.AtomSpecificKernelDelegate;
+import org.atomnuke.kernel.GenericKernelDelegate;
 import org.atomnuke.kernel.shutdown.KernelShutdownHook;
+import org.atomnuke.task.manager.AtomTasker;
+import org.atomnuke.task.manager.TaskManager;
+import org.atomnuke.task.manager.impl.AtomTaskerImpl;
+import org.atomnuke.task.manager.impl.GenericTaskManger;
 import org.atomnuke.task.threading.ExecutionManagerImpl;
-import org.atomnuke.task.manager.impl.atom.AtomSpecificTaskManager;
 import org.atomnuke.task.threading.ExecutionManager;
 import org.atomnuke.task.threading.ExecutionQueueImpl;
 
@@ -16,6 +19,8 @@ import org.atomnuke.task.threading.ExecutionQueueImpl;
  * @author zinic
  */
 public class NukeKernel extends AbstractNukeImpl {
+
+   private final AtomTasker atomTasker;
 
    /**
     * Initializes a new Nuke kernel.
@@ -47,6 +52,22 @@ public class NukeKernel extends AbstractNukeImpl {
     * @param manager
     */
    public NukeKernel(ExecutionManager manager) {
-      super(new KernelShutdownHook(), new AtomSpecificKernelDelegate(new AtomSpecificTaskManager(manager), manager));
+      this(manager, new GenericTaskManger(manager));
+   }
+
+   /**
+    * Initialized a new Nuke kernel driven by the passed execution manager.
+    *
+    * @param executionManager
+    */
+   public NukeKernel(ExecutionManager executionManager, TaskManager taskManager) {
+      super(new KernelShutdownHook(), new GenericKernelDelegate(taskManager, executionManager));
+
+      atomTasker = new AtomTaskerImpl(executionManager, taskManager.tracker());
+   }
+
+   @Override
+   public AtomTasker tasker() {
+      return atomTasker;
    }
 }

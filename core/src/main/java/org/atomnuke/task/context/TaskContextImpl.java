@@ -2,7 +2,7 @@ package org.atomnuke.task.context;
 
 import java.util.Map;
 import org.atomnuke.service.ServiceManager;
-import org.atomnuke.task.AtomTasker;
+import org.atomnuke.task.manager.AtomTasker;
 import org.slf4j.Logger;
 
 /**

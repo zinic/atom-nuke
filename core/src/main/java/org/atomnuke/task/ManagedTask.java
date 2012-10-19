@@ -1,9 +1,7 @@
-package org.atomnuke.task.manager;
+package org.atomnuke.task;
 
-import org.atomnuke.task.TaskHandle;
 import org.atomnuke.task.lifecycle.TaskLifeCycle;
 import org.atomnuke.util.TimeValue;
-import org.atomnuke.util.lifecycle.Reclaimable;
 
 /**
  * A managed task represents a runnable scheduled delegate. This is the primary
@@ -15,12 +13,19 @@ import org.atomnuke.util.lifecycle.Reclaimable;
  *
  * @author zinic
  */
-public interface ManagedTask extends TaskHandle, Reclaimable, Runnable {
+public interface ManagedTask extends Runnable {
+
+   /**
+    * Returns the task handle that this managed task manages.
+    *
+    * @return the handle of the task that this managed task manages.
+    */
+   TaskHandle handle();
 
    /**
     * Returns the next polling interval desired by the task.
     *
-    * @return the time value of the next desired polling interval
+    * @return the time value of the next desired polling interval.
     */
    TimeValue nextPollTime();
 
@@ -28,5 +33,5 @@ public interface ManagedTask extends TaskHandle, Reclaimable, Runnable {
     * Notifies the task that it has been scheduled and to set its internal state
     * for the next polling interval.
     */
-   void scheduled();
+   void scheduleNext();
 }

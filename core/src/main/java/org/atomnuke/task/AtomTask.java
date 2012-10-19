@@ -2,7 +2,6 @@ package org.atomnuke.task;
 
 import org.atomnuke.listener.AtomListener;
 import org.atomnuke.plugin.InstanceContext;
-import org.atomnuke.util.TimeValue;
 import org.atomnuke.util.remote.CancellationRemote;
 
 /**
@@ -12,15 +11,14 @@ import org.atomnuke.util.remote.CancellationRemote;
  *
  * @author zinic
  */
-public interface AtomTask extends TaskHandle {
+public interface AtomTask {
 
    /**
-    * Returns the polling interval of this task.
+    * Returns the task handle.
     *
-    * @return the time interval representing the desired polling interval of
-    * this task.
+    * @return the handle of the task that this atom task represents.
     */
-   TimeValue interval();
+   TaskHandle handle();
 
    /**
     * Adds an AtomListener to this task. This method wraps the listener and

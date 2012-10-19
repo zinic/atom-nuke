@@ -1,7 +1,7 @@
 package org.atomnuke.task.threading;
 
-import java.util.UUID;
 import org.atomnuke.service.lifecycle.ServiceLifeCycle;
+import org.atomnuke.task.TaskHandle;
 
 /**
  *
@@ -13,17 +13,15 @@ public interface ExecutionManager extends ServiceLifeCycle {
 
       NEW,
       STARTING,
-      OK,
+      READY,
       DRAINING,
       STOPPING,
       DESTROYED
    }
 
-   TaskFuture submit(Runnable r);
+   TaskFuture submit(TaskHandle handle, Runnable r);
 
-   TaskFuture submit(UUID id, Runnable r);
-
-   boolean submitted(UUID id);
+   boolean submitted(TaskHandle handle);
 
    State state();
 }
