@@ -1,7 +1,7 @@
 package org.atomnuke.kernel.shutdown;
 
 import java.util.Stack;
-import org.atomnuke.kernel.resource.Destroyable;
+import org.atomnuke.util.lifecycle.Reclaimable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,11 +13,11 @@ public class KernelShutdownHook implements Runnable, ShutdownHook {
 
    private static final Logger LOG = LoggerFactory.getLogger(KernelShutdownHook.class);
 
-   private final Stack<Destroyable> childHooks;
+   private final Stack<Reclaimable> childHooks;
    private boolean shutdown;
 
    public KernelShutdownHook() {
-      childHooks = new Stack<Destroyable>();
+      childHooks = new Stack<Reclaimable>();
       shutdown = false;
 
       registerWithRuntime();
@@ -28,7 +28,7 @@ public class KernelShutdownHook implements Runnable, ShutdownHook {
    }
 
    @Override
-   public synchronized void enlist(Destroyable destroyable) {
+   public synchronized void enlist(Reclaimable destroyable) {
       if (!shutdown) {
          childHooks.push(destroyable);
       }
@@ -51,7 +51,7 @@ public class KernelShutdownHook implements Runnable, ShutdownHook {
 
    private void callHooks() {
       while (!childHooks.isEmpty()) {
-         final Destroyable shutdownHook = childHooks.pop();
+         final Reclaimable shutdownHook = childHooks.pop();
 
          try {
             LOG.info("Running destroy hook, " + shutdownHook + ".");

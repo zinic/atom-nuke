@@ -12,7 +12,7 @@ import org.atomnuke.task.manager.AtomTasker;
  */
 public interface Nuke {
 
-   AtomTasker tasker();
+   AtomTasker atomTasker();
 
    ShutdownHook shutdownHook();
 

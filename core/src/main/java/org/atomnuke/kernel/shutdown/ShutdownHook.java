@@ -1,6 +1,6 @@
 package org.atomnuke.kernel.shutdown;
 
-import org.atomnuke.kernel.resource.Destroyable;
+import org.atomnuke.util.lifecycle.Reclaimable;
 
 /**
  *
@@ -8,7 +8,7 @@ import org.atomnuke.kernel.resource.Destroyable;
  */
 public interface ShutdownHook {
 
-   void enlist(Destroyable destroyable);
+   void enlist(Reclaimable destroyable);
 
    void shutdown();
 }

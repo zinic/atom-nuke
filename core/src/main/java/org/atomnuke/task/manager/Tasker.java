@@ -2,13 +2,16 @@ package org.atomnuke.task.manager;
 
 import java.util.List;
 import java.util.UUID;
+import org.atomnuke.service.Service;
 import org.atomnuke.task.ManagedTask;
+import org.atomnuke.task.TaskHandle;
+import org.atomnuke.util.TimeValue;
 
 /**
  *
  * @author zinic
  */
-public interface TaskTracker {
+public interface Tasker {
 
    /**
     * Looks up a ManagedTask by id.
@@ -20,5 +23,7 @@ public interface TaskTracker {
 
    List<ManagedTask> activeTasks();
 
-   void registerTask(ManagedTask managedTask);
+   TaskHandle task(Runnable runnable, TimeValue taskInterval);
+
+   void task(ManagedTask managedTask);
 }

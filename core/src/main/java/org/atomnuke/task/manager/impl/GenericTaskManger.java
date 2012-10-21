@@ -1,13 +1,11 @@
 package org.atomnuke.task.manager.impl;
 
-import org.atomnuke.task.manager.TaskTracker;
+import org.atomnuke.task.manager.Tasker;
 import java.util.concurrent.TimeUnit;
 import org.atomnuke.task.ManagedTask;
 import org.atomnuke.task.manager.TaskManager;
 import org.atomnuke.task.threading.ExecutionManager;
 import org.atomnuke.util.TimeValue;
-import org.atomnuke.util.remote.AtomicCancellationRemote;
-import org.atomnuke.util.remote.CancellationRemote;
 
 /**
  *
@@ -17,20 +15,16 @@ public class GenericTaskManger implements TaskManager {
 
    private static final TimeValue THREE_MILLISECONDS = new TimeValue(3, TimeUnit.MILLISECONDS);
 
-   private final CancellationRemote cancellationRemote;
    private final ExecutionManager executionManager;
-   private final TaskTracker taskTracker;
+   private final Tasker taskTracker;
 
-   public GenericTaskManger(ExecutionManager executionManager) {
-      this.cancellationRemote = new AtomicCancellationRemote();
+   public GenericTaskManger(ExecutionManager executionManager, Tasker taskTracker) {
       this.executionManager = executionManager;
-
-      this.taskTracker = new TaskTrackerImpl(cancellationRemote);
+      this.taskTracker = taskTracker;
    }
 
    @Override
    public synchronized void destroy() {
-      cancellationRemote.cancel();
       executionManager.destroy();
 
       // Cancel all of the executing tasks
@@ -40,7 +34,7 @@ public class GenericTaskManger implements TaskManager {
    }
 
    @Override
-   public TaskTracker tracker() {
+   public Tasker tasker() {
       return taskTracker;
    }
 

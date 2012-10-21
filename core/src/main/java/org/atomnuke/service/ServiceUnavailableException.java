@@ -1,4 +1,4 @@
-package org.atomnuke.fallout.service;
+package org.atomnuke.service;
 
 /**
  *

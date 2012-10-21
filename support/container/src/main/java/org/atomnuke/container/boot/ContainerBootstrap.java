@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 public class ContainerBootstrap implements Bootstrap {
 
    private static final Logger LOG = LoggerFactory.getLogger(ContainerBootstrap.class);
+
    private final ServiceManager serviceManager;
 
    public ContainerBootstrap(ServiceManager serviceManager) {
@@ -34,17 +35,6 @@ public class ContainerBootstrap implements Bootstrap {
               .setScanners(new TypeAnnotationsScanner())
               .setUrls(ClasspathHelper.forClassLoader(Thread.currentThread().getContextClassLoader(), ClassLoader.getSystemClassLoader())));
 
-      try {
-         LOG.error("System Classloader: " + ClassLoader.getSystemClassLoader());
-         final Class clazz = Class.forName("org.atomnuke.container.service.gc.DefaultReclaimationService");
-
-         LOG.error("Class for reclaimation: " + clazz.getName() + " - From Classloadedr: " + clazz.getClassLoader());
-      } catch (ClassNotFoundException cnfe) {
-         LOG.error("Lewz");
-      }
-
-      final ServiceContext serviceContext = new ServiceContextImpl(serviceManager, Collections.EMPTY_MAP);
-
       for (Class bootstrapService : bootstrapScanner.getTypesAnnotatedWith(NukeBootstrap.class)) {
          if (Service.class.isAssignableFrom(bootstrapService)) {
             LOG.info("Initializing bootstrap service: " + bootstrapService.getName());
@@ -52,8 +42,6 @@ public class ContainerBootstrap implements Bootstrap {
             try {
                final Service serviceInstance = (Service) bootstrapService.newInstance();
                serviceManager.register(new InstanceContextImpl<Service>(LocalInstanceEnvironment.getInstance(), serviceInstance));
-
-               serviceInstance.init(serviceContext);
             } catch (Exception ex) {
                LOG.error("Failed to load bootstrap service: " + bootstrapService.getName() + " - This may cause unexpected behavior however the container may still attempt normal init.", ex);
             }

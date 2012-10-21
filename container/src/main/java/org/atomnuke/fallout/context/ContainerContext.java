@@ -65,7 +65,7 @@ public class ContainerContext {
    }
 
    public void registerSink(String name, InstanceContext<AtomListener> instanceCtx) {
-      LOG.info("Registering listeners: " + name);
+      LOG.info("Registering listener: " + name);
 
       listeners.put(name, instanceCtx);
    }

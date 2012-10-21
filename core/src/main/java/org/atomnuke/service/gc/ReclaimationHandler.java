@@ -1,4 +1,4 @@
-package org.atomnuke.container.service.gc;
+package org.atomnuke.service.gc;
 
 import org.atomnuke.plugin.InstanceContext;
 import org.atomnuke.util.lifecycle.Reclaimable;
@@ -12,5 +12,5 @@ public interface ReclaimationHandler extends Reclaimable {
 
    void garbageCollect();
 
-   CancellationRemote watch(InstanceContext<Reclaimable> reclaimableInstance);
+   CancellationRemote watch(InstanceContext<? extends Reclaimable> reclaimableInstance);
 }

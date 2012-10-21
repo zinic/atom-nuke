@@ -1,4 +1,4 @@
-package org.atomnuke.container.service.gc.impl;
+package org.atomnuke.service.gc.impl;
 
 import org.atomnuke.plugin.InstanceContext;
 import org.atomnuke.util.lifecycle.Reclaimable;

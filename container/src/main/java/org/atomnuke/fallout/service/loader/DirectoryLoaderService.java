@@ -1,9 +1,8 @@
-package org.atomnuke.fallout.packaging.loader.fs;
+package org.atomnuke.fallout.service.loader;
 
 import org.atomnuke.container.packaging.loader.PackageLoader;
 import java.io.File;
 import java.net.URI;
-import java.util.Collections;
 import org.atomnuke.NukeEnv;
 import org.atomnuke.container.packaging.bindings.BindingEnvironmentFactory;
 import org.atomnuke.container.packaging.bindings.PackageLoadingException;
@@ -17,12 +16,15 @@ import org.atomnuke.container.packaging.loader.impl.BindingAwarePackageLoader;
 import org.atomnuke.container.service.annotation.NukeBootstrap;
 import org.atomnuke.plugin.InstanceContext;
 import org.atomnuke.plugin.ReferenceInstantiationException;
+import org.atomnuke.service.ResolutionAction;
 import org.atomnuke.service.Service;
 import org.atomnuke.service.ServiceAlreadyRegisteredException;
 import org.atomnuke.service.ServiceManager;
+import org.atomnuke.service.ServiceUnavailableException;
 import org.atomnuke.service.context.ServiceContext;
-import org.atomnuke.service.context.ServiceContextImpl;
-import org.atomnuke.service.operation.ServiceInitOperation;
+import org.atomnuke.service.gc.ReclaimationHandler;
+import org.atomnuke.util.lifecycle.InitializationException;
+import org.atomnuke.util.service.ServiceHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,17 +39,24 @@ public class DirectoryLoaderService implements Service {
    private static final Logger LOG = LoggerFactory.getLogger(DirectoryLoaderService.class);
 
    private final BindingEnvironmentFactory bindingEnvFactory;
-   private final PackageLoader packageLoader;
+   private final File deploymentDirectory, libraryDirectory;
 
-   private File deploymentDirectory, libraryDirectory;
+   private PackageLoader packageLoader;
 
    public DirectoryLoaderService() {
       this.deploymentDirectory = new File(NukeEnv.NUKE_DEPLOY);
       this.libraryDirectory = new File(NukeEnv.NUKE_LIB);
 
       bindingEnvFactory = new BindingEnvironmentManagerImpl();
+   }
 
-      packageLoader = new BindingAwarePackageLoader(bindingEnvFactory);
+   @Override
+   public ResolutionAction resolve(ServiceManager serviceManager) {
+      if (serviceManager.listRegisteredServicesFor(ReclaimationHandler.class).isEmpty()) {
+         return ResolutionAction.DEFER;
+      }
+
+      return ResolutionAction.INIT;
    }
 
    @Override
@@ -66,7 +75,14 @@ public class DirectoryLoaderService implements Service {
    }
 
    @Override
-   public void init(ServiceContext sc) {
+   public void init(ServiceContext sc) throws InitializationException {
+      try {
+         final ReclaimationHandler reclaimationHandler = new ServiceHandler(sc.manager()).firstAvailable(ReclaimationHandler.class);
+         packageLoader = new BindingAwarePackageLoader(reclaimationHandler, bindingEnvFactory);
+      } catch (ServiceUnavailableException sue) {
+         throw new InitializationException(sue);
+      }
+
       LOG.info("Directory package loader service starting.");
 
       try {
@@ -79,8 +95,8 @@ public class DirectoryLoaderService implements Service {
 
    private void loadServices(ServiceManager serviceManager) {
       for (PackageContext loadedPackage : packageLoader.packageContexts()) {
-         // Gather services from the package
          try {
+            // Gather services from the package
             gatherServices(serviceManager, loadedPackage);
          } catch (ReferenceInstantiationException bie) {
             LOG.error("Failed to init services.");
@@ -89,12 +105,9 @@ public class DirectoryLoaderService implements Service {
    }
 
    private void gatherServices(ServiceManager serviceManager, PackageContext pkgContext) throws ReferenceInstantiationException {
-      final ServiceContext serviceContext = new ServiceContextImpl(serviceManager, Collections.EMPTY_MAP);
-
       for (InstanceContext<Service> svc : pkgContext.packageBindings().resolveServices()) {
          try {
             serviceManager.register(svc);
-            svc.perform(ServiceInitOperation.<Service>instance(), serviceContext);
          } catch (ServiceAlreadyRegisteredException sare) {
             LOG.debug("Duplicate service for name: " + svc.instance().name() + ", found in package: "
                     + pkgContext.name() + ". This version of the service will not be loaded.", sare);

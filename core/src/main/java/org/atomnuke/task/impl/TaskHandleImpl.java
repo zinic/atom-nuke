@@ -3,7 +3,6 @@ package org.atomnuke.task.impl;
 import java.util.UUID;
 import org.atomnuke.task.TaskHandle;
 import org.atomnuke.util.TimeValue;
-import org.atomnuke.util.remote.AtomicCancellationRemote;
 import org.atomnuke.util.remote.CancellationRemote;
 
 /**
@@ -16,11 +15,10 @@ public class TaskHandleImpl implements TaskHandle {
    private final TimeValue interval;
    private final UUID taskId;
 
-   public TaskHandleImpl(UUID taskId, TimeValue interval) {
+   public TaskHandleImpl(CancellationRemote cancelationRemote, TimeValue interval, UUID taskId) {
+      this.cancelationRemote = cancelationRemote;
       this.interval = interval;
       this.taskId = taskId;
-
-      this.cancelationRemote = new AtomicCancellationRemote();
    }
 
    @Override

@@ -1,7 +1,5 @@
 package org.atomnuke.task.manager;
 
-import org.atomnuke.task.ManagedTask;
-import java.util.UUID;
 import org.atomnuke.util.TimeValue;
 import org.atomnuke.util.lifecycle.Reclaimable;
 
@@ -21,7 +19,7 @@ public interface TaskManager extends Reclaimable {
     *
     * @return
     */
-   TaskTracker tracker();
+   Tasker tasker();
 
    /**
     * Advances the scheduler and dispatches tasks to the execution queue.

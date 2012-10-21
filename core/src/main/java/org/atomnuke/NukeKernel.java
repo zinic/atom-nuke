@@ -2,13 +2,18 @@ package org.atomnuke;
 
 import org.atomnuke.kernel.GenericKernelDelegate;
 import org.atomnuke.kernel.shutdown.KernelShutdownHook;
+import org.atomnuke.service.gc.ReclaimationHandler;
+import org.atomnuke.service.gc.impl.NukeReclaimationHandler;
 import org.atomnuke.task.manager.AtomTasker;
 import org.atomnuke.task.manager.TaskManager;
+import org.atomnuke.task.manager.Tasker;
 import org.atomnuke.task.manager.impl.AtomTaskerImpl;
 import org.atomnuke.task.manager.impl.GenericTaskManger;
+import org.atomnuke.task.manager.impl.TaskerImpl;
 import org.atomnuke.task.threading.ExecutionManagerImpl;
 import org.atomnuke.task.threading.ExecutionManager;
 import org.atomnuke.task.threading.ExecutionQueueImpl;
+import org.atomnuke.util.remote.AtomicCancellationRemote;
 
 /**
  * The Nuke kernel contains the references to a TaskManager, a cancellation
@@ -21,6 +26,7 @@ import org.atomnuke.task.threading.ExecutionQueueImpl;
 public class NukeKernel extends AbstractNukeImpl {
 
    private final AtomTasker atomTasker;
+   private final Tasker tasker;
 
    /**
     * Initializes a new Nuke kernel.
@@ -31,7 +37,7 @@ public class NukeKernel extends AbstractNukeImpl {
     * multiplied by two.
     */
    public NukeKernel() {
-      this(new ExecutionManagerImpl());
+      this(new ExecutionManagerImpl(), new NukeReclaimationHandler(), new TaskerImpl(new AtomicCancellationRemote()));
    }
 
    /**
@@ -43,7 +49,7 @@ public class NukeKernel extends AbstractNukeImpl {
     * pool may spawn.
     */
    public NukeKernel(int corePoolSize, int maxPoolsize) {
-      this(new ExecutionManagerImpl(new ExecutionQueueImpl(corePoolSize, maxPoolsize)));
+      this(new ExecutionManagerImpl(new ExecutionQueueImpl(corePoolSize, maxPoolsize)), new NukeReclaimationHandler(), new TaskerImpl(new AtomicCancellationRemote()));
    }
 
    /**
@@ -51,8 +57,8 @@ public class NukeKernel extends AbstractNukeImpl {
     *
     * @param manager
     */
-   public NukeKernel(ExecutionManager manager) {
-      this(manager, new GenericTaskManger(manager));
+   public NukeKernel(ExecutionManager manager, ReclaimationHandler reclaimationHandler, Tasker tasker) {
+      this(manager, reclaimationHandler, new GenericTaskManger(manager, tasker));
    }
 
    /**
@@ -60,14 +66,15 @@ public class NukeKernel extends AbstractNukeImpl {
     *
     * @param executionManager
     */
-   public NukeKernel(ExecutionManager executionManager, TaskManager taskManager) {
+   public NukeKernel(ExecutionManager executionManager, ReclaimationHandler reclaimationHandler, TaskManager taskManager) {
       super(new KernelShutdownHook(), new GenericKernelDelegate(taskManager, executionManager));
 
-      atomTasker = new AtomTaskerImpl(executionManager, taskManager.tracker());
+      tasker = taskManager.tasker();
+      atomTasker = new AtomTaskerImpl(reclaimationHandler, executionManager, tasker);
    }
 
    @Override
-   public AtomTasker tasker() {
+   public AtomTasker atomTasker() {
       return atomTasker;
    }
 }

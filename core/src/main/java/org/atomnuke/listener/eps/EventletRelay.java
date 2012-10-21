@@ -14,9 +14,12 @@ import org.atomnuke.listener.eps.selector.Selector;
 import org.atomnuke.plugin.InstanceContext;
 import org.atomnuke.plugin.InstanceContextImpl;
 import org.atomnuke.plugin.local.LocalInstanceEnvironment;
+import org.atomnuke.service.ServiceUnavailableException;
+import org.atomnuke.service.gc.ReclaimationHandler;
 import org.atomnuke.task.context.AtomTaskContext;
 import org.atomnuke.util.lifecycle.InitializationException;
 import org.atomnuke.util.remote.CancellationRemote;
+import org.atomnuke.util.service.ServiceHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,6 +38,7 @@ public class EventletRelay implements AtomListener, AtomEventHandlerRelay {
    private static final Logger LOG = LoggerFactory.getLogger(EventletRelay.class);
 
    private final List<EventletConduit> epsConduits;
+   private ReclaimationHandler reclaimationHandler;
 
    public EventletRelay() {
       epsConduits = new LinkedList<EventletConduit>();
@@ -75,7 +79,9 @@ public class EventletRelay implements AtomListener, AtomEventHandlerRelay {
 
    @Override
    public synchronized CancellationRemote enlistHandler(InstanceContext<? extends AtomEventlet> handler, Selector selector) {
-      final EventletConduit newConduit = new EventletConduit((InstanceContext<AtomEventlet>) handler, selector);
+      final CancellationRemote cancellationRemote = reclaimationHandler.watch(handler);
+
+      final EventletConduit newConduit = new EventletConduit((InstanceContext<AtomEventlet>) handler, cancellationRemote, selector);
       epsConduits.add(newConduit);
 
       return newConduit.cancellationRemote();
@@ -83,6 +89,11 @@ public class EventletRelay implements AtomListener, AtomEventHandlerRelay {
 
    @Override
    public void init(AtomTaskContext tc) throws InitializationException {
+      try {
+         reclaimationHandler = new ServiceHandler(tc.services()).firstAvailable(ReclaimationHandler.class);
+      } catch (ServiceUnavailableException sue) {
+         throw new InitializationException(sue);
+      }
    }
 
    @Override

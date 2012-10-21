@@ -3,6 +3,7 @@ package org.atomnuke.task.impl;
 import org.atomnuke.plugin.InstanceContext;
 import org.atomnuke.listener.manager.ManagedListener;
 import org.atomnuke.listener.driver.AtomListenerDriver;
+import org.atomnuke.listener.driver.DriverArgument;
 import org.atomnuke.listener.manager.ListenerManager;
 import org.atomnuke.plugin.operation.ComplexOperation;
 import org.atomnuke.plugin.operation.OperationFailureException;
@@ -37,14 +38,14 @@ public class ManagedAtomTask extends AbstractManagedTask {
    };
 
    private final InstanceContext<AtomSource> atomSourceContext;
-   private final ExecutionManager executorService;
+   private final ExecutionManager executionManager;
    private final ListenerManager listenerManager;
 
-   public ManagedAtomTask(TaskHandle taskHandle, InstanceContext<AtomSource> atomSourceContext, ExecutionManager executorService, ListenerManager listenerManager) {
+   public ManagedAtomTask(InstanceContext<AtomSource> atomSourceContext, ExecutionManager executionManager, ListenerManager listenerManager, TaskHandle taskHandle) {
       super(taskHandle);
 
       this.atomSourceContext = atomSourceContext;
-      this.executorService = executorService;
+      this.executionManager = executionManager;
       this.listenerManager = listenerManager;
    }
 
@@ -62,12 +63,10 @@ public class ManagedAtomTask extends AbstractManagedTask {
    }
 
    private void dispatchToListeners(AtomSourceResult pollResult) {
+      final DriverArgument driverArgument = new DriverArgument(pollResult.feed(), pollResult.entry());
+
       for (ManagedListener listener : listenerManager.listeners()) {
-         if (pollResult.type() == ResultType.FEED) {
-            executorService.submit(listener.parentHandle(), new AtomListenerDriver(listener, pollResult.feed()));
-         } else {
-            executorService.submit(listener.parentHandle(), new AtomListenerDriver(listener, pollResult.entry()));
-         }
+         executionManager.submit(listener.parentHandle(), new AtomListenerDriver(listener, driverArgument));
       }
    }
 }

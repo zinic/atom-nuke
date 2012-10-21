@@ -10,7 +10,6 @@ import org.atomnuke.listener.eps.selector.SelectorResult;
 import org.atomnuke.plugin.operation.ComplexOperation;
 import org.atomnuke.plugin.operation.OperationFailureException;
 import org.atomnuke.util.lifecycle.operation.ReclaimOperation;
-import org.atomnuke.util.remote.AtomicCancellationRemote;
 import org.atomnuke.util.remote.CancellationRemote;
 
 /**
@@ -34,11 +33,10 @@ public class EventletConduit {
    private final CancellationRemote cancellationRemote;
    private final Selector selector;
 
-   public EventletConduit(InstanceContext<AtomEventlet> eventletContext, Selector selector) {
+   public EventletConduit(InstanceContext<AtomEventlet> eventletContext, CancellationRemote cancellationRemote, Selector selector) {
       this.eventletContext = eventletContext;
+      this.cancellationRemote = cancellationRemote;
       this.selector = selector;
-
-      cancellationRemote = new AtomicCancellationRemote();
    }
 
    public void destroy() {

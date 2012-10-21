@@ -2,6 +2,7 @@ package org.atomnuke.service.context;
 
 import java.util.Map;
 import org.atomnuke.service.ServiceManager;
+import org.atomnuke.task.manager.Tasker;
 
 /**
  *
@@ -12,9 +13,9 @@ public class ServiceContextImpl implements ServiceContext {
    private final Map<String, String> parameters;
    private final ServiceManager manager;
 
-   public ServiceContextImpl(ServiceManager manager, Map<String, String> parameters) {
-      this.manager = manager;
+   public ServiceContextImpl(Map<String, String> parameters, ServiceManager manager) {
       this.parameters = parameters;
+      this.manager = manager;
    }
 
    @Override

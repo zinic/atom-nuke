@@ -1,7 +1,5 @@
 package org.atomnuke.util.lifecycle;
 
-import org.atomnuke.util.lifecycle.Reclaimable;
-
 /**
  * The resource life-cycle defines two methods that will be called once during
  * the lifetime of the object bound to the life-cycle.

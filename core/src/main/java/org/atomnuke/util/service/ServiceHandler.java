@@ -1,7 +1,8 @@
-package org.atomnuke.fallout.service;
+package org.atomnuke.util.service;
 
 import java.util.Collection;
 import org.atomnuke.service.ServiceManager;
+import org.atomnuke.service.ServiceUnavailableException;
 
 /**
  *

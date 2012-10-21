@@ -8,7 +8,10 @@ import org.atomnuke.plugin.Environment;
 import org.atomnuke.plugin.InstanceContext;
 import org.atomnuke.plugin.InstanceContextImpl;
 import org.atomnuke.plugin.ReferenceInstantiationException;
+import org.atomnuke.plugin.WeakReferenceContext;
 import org.atomnuke.service.Service;
+import org.atomnuke.service.gc.ReclaimationHandler;
+import org.atomnuke.util.lifecycle.Reclaimable;
 
 /**
  *
@@ -17,9 +20,11 @@ import org.atomnuke.service.Service;
 public class PackageBindingsImpl implements PackageBindings {
 
    private final List<BindingEnvironment> availableBindingEnvironments;
+   private final ReclaimationHandler reclaimationHandler;
 
-   public PackageBindingsImpl(List<BindingEnvironment> availableContexts) {
+   public PackageBindingsImpl(ReclaimationHandler reclaimationHandler, List<BindingEnvironment> availableContexts) {
       this.availableBindingEnvironments = new LinkedList<BindingEnvironment>(availableContexts);
+      this.reclaimationHandler = reclaimationHandler;
    }
 
    @Override
@@ -30,7 +35,9 @@ public class PackageBindingsImpl implements PackageBindings {
          final Environment env = bindingEnvironment.environment();
 
          for (Service discoveredService : env.services()) {
-            services.add(new InstanceContextImpl<Service>(env, discoveredService));
+            reclaimationHandler.watch(new InstanceContextImpl<Reclaimable>(env, discoveredService));
+            
+            services.add(new WeakReferenceContext<Service>(env, discoveredService));
          }
       }
 
@@ -44,7 +51,7 @@ public class PackageBindingsImpl implements PackageBindings {
 
          if (bindingCtx.language().language() == language && env.hasReference(ref)) {
             try {
-               return new InstanceContextImpl<T>(env, env.instantiate(type, ref));
+               return new WeakReferenceContext<T>(env, env.instantiate(type, ref));
             } catch (ReferenceInstantiationException rie) {
                throw new ReferenceInstantiationException(ref, rie);
             }

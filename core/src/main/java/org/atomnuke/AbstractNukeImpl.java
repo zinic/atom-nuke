@@ -2,7 +2,6 @@ package org.atomnuke;
 
 import java.util.UUID;
 import org.atomnuke.kernel.GenericKernelDelegate;
-import org.atomnuke.kernel.resource.Destroyable;
 import org.atomnuke.kernel.shutdown.ShutdownHook;
 import org.atomnuke.plugin.InstanceContext;
 import org.atomnuke.plugin.InstanceContextImpl;
@@ -10,6 +9,8 @@ import org.atomnuke.plugin.local.LocalInstanceEnvironment;
 import org.atomnuke.source.AtomSource;
 import org.atomnuke.task.AtomTask;
 import org.atomnuke.util.TimeValue;
+import org.atomnuke.util.lifecycle.InitializationException;
+import org.atomnuke.util.lifecycle.Reclaimable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -67,7 +68,7 @@ public abstract class AbstractNukeImpl implements Nuke {
     * wit the current task context.
     */
    public AtomTask follow(InstanceContext<AtomSource> source, TimeValue pollingInterval) {
-      return tasker().follow(source, pollingInterval);
+      return atomTasker().follow(source, pollingInterval);
    }
 
    @Override
@@ -76,7 +77,7 @@ public abstract class AbstractNukeImpl implements Nuke {
          throw new IllegalStateException("Crawler already started or destroyed.");
       }
 
-      kernelShutdownHook.enlist(new Destroyable() {
+      kernelShutdownHook.enlist(new Reclaimable() {
          @Override
          public void destroy() {
             kernelDelegate.cancellationRemote().cancel();

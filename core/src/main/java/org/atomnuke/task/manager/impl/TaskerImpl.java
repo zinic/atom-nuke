@@ -1,27 +1,27 @@
 package org.atomnuke.task.manager.impl;
 
-import org.atomnuke.task.manager.TaskTracker;
+import org.atomnuke.task.manager.Tasker;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 import org.atomnuke.task.ManagedTask;
+import org.atomnuke.task.TaskHandle;
+import org.atomnuke.task.impl.ManagedRunTask;
+import org.atomnuke.task.impl.TaskHandleImpl;
+import org.atomnuke.util.TimeValue;
 import org.atomnuke.util.remote.CancellationRemote;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author zinic
  */
-public class TaskTrackerImpl implements TaskTracker {
-
-   private static final Logger LOG = LoggerFactory.getLogger(TaskTrackerImpl.class);
+public class TaskerImpl implements Tasker {
 
    private final CancellationRemote cancellationRemote;
    private final List<ManagedTask> pollingTasks;
 
-   public TaskTrackerImpl(CancellationRemote cancellationRemote) {
+   public TaskerImpl(CancellationRemote cancellationRemote) {
       this.cancellationRemote = cancellationRemote;
 
       pollingTasks = new LinkedList<ManagedTask>();
@@ -52,13 +52,23 @@ public class TaskTrackerImpl implements TaskTracker {
       return null;
    }
 
-   @Override
-   public synchronized void registerTask(ManagedTask managedTask) {
+   public void checkState() {
       if (cancellationRemote.canceled()) {
-         // TODO:Implement - Consider returning a boolean value to communicate shutdown?
-         LOG.warn("This object has been destroyed and can no longer enlist tasks.");
-         return;
+         throw new IllegalStateException("This object has been destroyed and can no longer enlist tasks.");
       }
+   }
+
+   @Override
+   public TaskHandle task(Runnable runnable, TimeValue taskInterval) {
+      final TaskHandle taskHandle = new TaskHandleImpl(cancellationRemote, taskInterval, UUID.randomUUID());
+      task(new ManagedRunTask(runnable, taskHandle));
+
+      return taskHandle;
+   }
+
+   @Override
+   public synchronized void task(ManagedTask managedTask) {
+      checkState();
 
       pollingTasks.add(managedTask);
    }

@@ -1,21 +1,17 @@
 package org.atomnuke.listener.driver;
 
-import org.atomnuke.atom.model.Entry;
-import org.atomnuke.atom.model.Feed;
 import org.atomnuke.listener.AtomListener;
 import org.atomnuke.listener.AtomListenerException;
 import org.atomnuke.listener.AtomListenerResult;
 import org.atomnuke.listener.manager.ManagedListener;
 import org.atomnuke.plugin.operation.ComplexOperation;
 import org.atomnuke.plugin.operation.OperationFailureException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author zinic
  */
-public class AtomListenerDriver implements RegisteredListenerDriver {
+public class AtomListenerDriver implements Runnable {
 
    private static final ComplexOperation<AtomListener, DriverArgument> DRIVER_OPERATION = new ComplexOperation<AtomListener, DriverArgument>() {
       @Override
@@ -37,17 +33,9 @@ public class AtomListenerDriver implements RegisteredListenerDriver {
    private final ManagedListener registeredListener;
    private final DriverArgument driverArgument;
 
-   public AtomListenerDriver(ManagedListener registeredListener, Entry entry) {
-      this(registeredListener, null, entry);
-   }
-
-   public AtomListenerDriver(ManagedListener registeredListener, Feed feed) {
-      this(registeredListener, feed, null);
-   }
-
-   private AtomListenerDriver(ManagedListener registeredListener, Feed feed, Entry entry) {
+   public AtomListenerDriver(ManagedListener registeredListener, DriverArgument driverArgument) {
       this.registeredListener = registeredListener;
-      this.driverArgument = new DriverArgument(feed, entry);
+      this.driverArgument = driverArgument;
    }
 
    @Override
