@@ -6,7 +6,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import org.atomnuke.service.gc.ReclaimationHandler;
+import org.atomnuke.service.gc.ReclamationHandler;
 import org.atomnuke.util.config.ConfigurationException;
 import org.atomnuke.util.remote.CancellationRemote;
 import org.slf4j.Logger;
@@ -22,12 +22,12 @@ public class ConfigurationUpdateManagerImpl implements ConfigurationUpdateManage
    private static final Logger LOG = LoggerFactory.getLogger(ConfigurationUpdateManagerImpl.class);
 
    private final Map<String, UpdateContext> updateContexts;
-   private final ReclaimationHandler reclaimationHandler;
+   private final ReclamationHandler reclamationHandler;
 
-   public ConfigurationUpdateManagerImpl(ReclaimationHandler reclaimationHandler) {
+   public ConfigurationUpdateManagerImpl(ReclamationHandler reclamationHandler) {
       updateContexts = new HashMap<String, UpdateContext>();
 
-      this.reclaimationHandler = reclaimationHandler;
+      this.reclamationHandler = reclamationHandler;
    }
 
    @Override
@@ -81,9 +81,9 @@ public class ConfigurationUpdateManagerImpl implements ConfigurationUpdateManage
          return context;
       }
 
-      final CancellationRemote cancellationRemote = reclaimationHandler.watch(configurationManager);
+      final CancellationRemote cancellationRemote = reclamationHandler.watch(configurationManager);
       final UpdateContext<T> newContext = new UpdateContext<T>(configurationManager, cancellationRemote);
-      
+
       updateContexts.put(name, newContext);
 
       return newContext;

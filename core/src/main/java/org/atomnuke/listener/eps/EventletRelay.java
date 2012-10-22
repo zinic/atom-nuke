@@ -15,7 +15,7 @@ import org.atomnuke.plugin.InstanceContext;
 import org.atomnuke.plugin.InstanceContextImpl;
 import org.atomnuke.plugin.env.NopInstanceEnvironment;
 import org.atomnuke.service.ServiceUnavailableException;
-import org.atomnuke.service.gc.ReclaimationHandler;
+import org.atomnuke.service.gc.ReclamationHandler;
 import org.atomnuke.task.context.AtomTaskContext;
 import org.atomnuke.util.lifecycle.InitializationException;
 import org.atomnuke.util.remote.CancellationRemote;
@@ -38,7 +38,7 @@ public class EventletRelay implements AtomListener, AtomEventletHandler {
    private static final Logger LOG = LoggerFactory.getLogger(EventletRelay.class);
 
    private final List<EventletConduit> epsConduits;
-   private ReclaimationHandler reclaimationHandler;
+   private ReclamationHandler reclamationHandler;
 
    public EventletRelay() {
       epsConduits = new LinkedList<EventletConduit>();
@@ -79,7 +79,7 @@ public class EventletRelay implements AtomListener, AtomEventletHandler {
 
    @Override
    public synchronized CancellationRemote enlistHandler(InstanceContext<? extends AtomEventlet> handler, Selector selector) {
-      final CancellationRemote cancellationRemote = reclaimationHandler.watch(handler);
+      final CancellationRemote cancellationRemote = reclamationHandler.watch(handler);
 
       final EventletConduit newConduit = new EventletConduit((InstanceContext<AtomEventlet>) handler, cancellationRemote, selector);
       epsConduits.add(newConduit);
@@ -90,7 +90,7 @@ public class EventletRelay implements AtomListener, AtomEventletHandler {
    @Override
    public void init(AtomTaskContext tc) throws InitializationException {
       try {
-         reclaimationHandler = ServiceHandler.instance().firstAvailable(tc.services(), ReclaimationHandler.class);
+         reclamationHandler = ServiceHandler.instance().firstAvailable(tc.services(), ReclamationHandler.class);
       } catch (ServiceUnavailableException sue) {
          throw new InitializationException(sue);
       }

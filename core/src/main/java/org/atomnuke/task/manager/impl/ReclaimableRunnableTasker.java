@@ -5,7 +5,7 @@ import java.util.UUID;
 import org.atomnuke.plugin.InstanceContext;
 import org.atomnuke.plugin.InstanceContextImpl;
 import org.atomnuke.plugin.env.NopInstanceEnvironment;
-import org.atomnuke.service.gc.ReclaimationHandler;
+import org.atomnuke.service.gc.ReclamationHandler;
 import org.atomnuke.task.ReclaimableRunnable;
 import org.atomnuke.task.TaskHandle;
 import org.atomnuke.task.impl.EnvAwareManagedRunTask;
@@ -20,12 +20,12 @@ import org.atomnuke.util.remote.CancellationRemote;
  */
 public class ReclaimableRunnableTasker implements Tasker {
 
-   private final ReclaimationHandler reclaimationHandler;
+   private final ReclamationHandler reclamationHandler;
    private final TaskTracker taskTracker;
 
-   public ReclaimableRunnableTasker(TaskTracker taskTracker, ReclaimationHandler reclaimationHandler) {
+   public ReclaimableRunnableTasker(TaskTracker taskTracker, ReclamationHandler reclamationHandler) {
       this.taskTracker = taskTracker;
-      this.reclaimationHandler = reclaimationHandler;
+      this.reclamationHandler = reclamationHandler;
    }
 
    @Override
@@ -35,7 +35,7 @@ public class ReclaimableRunnableTasker implements Tasker {
 
    @Override
    public TaskHandle task(InstanceContext<? extends ReclaimableRunnable> instanceContext, TimeValue pollingInterval) {
-      final CancellationRemote cancellationRemote = reclaimationHandler.watch(instanceContext);
+      final CancellationRemote cancellationRemote = reclamationHandler.watch(instanceContext);
       final TaskHandle taskHandle = new TaskHandleImpl(cancellationRemote, pollingInterval, UUID.randomUUID());
 
       taskTracker.add(new EnvAwareManagedRunTask(instanceContext, taskHandle));

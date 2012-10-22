@@ -5,7 +5,7 @@ import org.atomnuke.task.manager.Tasker;
 import org.atomnuke.listener.manager.ListenerManager;
 import org.atomnuke.listener.manager.ListenerManagerImpl;
 import org.atomnuke.plugin.InstanceContext;
-import org.atomnuke.service.gc.ReclaimationHandler;
+import org.atomnuke.service.gc.ReclamationHandler;
 import org.atomnuke.source.AtomSource;
 import org.atomnuke.task.AtomTask;
 import org.atomnuke.task.TaskHandle;
@@ -20,12 +20,12 @@ import org.atomnuke.util.TimeValue;
  */
 public class AtomTaskerImpl implements AtomTasker {
 
-   private final ReclaimationHandler reclaimationHandler;
+   private final ReclamationHandler reclamationHandler;
    private final ExecutionManager executionManager;
    private final Tasker tasker;
 
-   public AtomTaskerImpl(ReclaimationHandler reclaimationHandler, ExecutionManager executionManager, Tasker tasker) {
-      this.reclaimationHandler = reclaimationHandler;
+   public AtomTaskerImpl(ReclamationHandler reclamationHandler, ExecutionManager executionManager, Tasker tasker) {
+      this.reclamationHandler = reclamationHandler;
       this.executionManager = executionManager;
       this.tasker = tasker;
    }
@@ -33,7 +33,7 @@ public class AtomTaskerImpl implements AtomTasker {
    @Override
    public AtomTask follow(InstanceContext<AtomSource> source, TimeValue pollingInterval) {
       // New listener manager
-      final ListenerManager listenerManager = new ListenerManagerImpl(reclaimationHandler);
+      final ListenerManager listenerManager = new ListenerManagerImpl(reclamationHandler);
 
       // Register and track the new source
       final ManagedAtomTask managedAtomTask = new ManagedAtomTask(source, executionManager, listenerManager);

@@ -11,7 +11,7 @@ import org.atomnuke.plugin.InstanceContext;
 import org.atomnuke.plugin.operation.ComplexOperation;
 import org.atomnuke.plugin.operation.OperationFailureException;
 import org.atomnuke.plugin.proxy.InstanceEnvProxyFactory;
-import org.atomnuke.service.gc.ReclaimationHandler;
+import org.atomnuke.service.gc.ReclamationHandler;
 import org.atomnuke.util.lifecycle.operation.ReclaimOperation;
 
 /**
@@ -102,7 +102,7 @@ public abstract class AbstractServiceManager implements ServiceManager {
 
    @Override
    public synchronized void destroy() {
-      final ProvidesOperationArgument argument = new ProvidesOperationArgument(ReclaimationHandler.class);
+      final ProvidesOperationArgument argument = new ProvidesOperationArgument(ReclamationHandler.class);
 
       for (Iterator<ManagedService> managedServiceItr = registeredServices.iterator(); managedServiceItr.hasNext();) {
          final ManagedService potentialReclaimer = managedServiceItr.next();

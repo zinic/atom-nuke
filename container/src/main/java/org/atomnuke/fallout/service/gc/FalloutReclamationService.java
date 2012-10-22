@@ -2,8 +2,8 @@ package org.atomnuke.fallout.service.gc;
 
 import org.atomnuke.container.service.annotation.NukeBootstrap;
 import org.atomnuke.service.ResolutionAction;
-import org.atomnuke.service.gc.ReclaimationHandler;
-import org.atomnuke.service.gc.impl.NukeReclaimationHandler;
+import org.atomnuke.service.gc.ReclamationHandler;
+import org.atomnuke.service.gc.impl.NukeReclamationHandler;
 import org.atomnuke.service.Service;
 import org.atomnuke.service.ServiceManager;
 import org.atomnuke.service.context.ServiceContext;
@@ -16,15 +16,15 @@ import org.slf4j.LoggerFactory;
  * @author zinic
  */
 @NukeBootstrap
-public class FalloutReclaimationService implements Service {
+public class FalloutReclamationService implements Service {
 
-   private static final String SERVICE_NAME = "org.atomnuke.container.service.gc.ReclaimationService";
-   private static final Logger LOG = LoggerFactory.getLogger(FalloutReclaimationService.class);
+   private static final String SERVICE_NAME = "org.atomnuke.fallout.service.gc.FalloutReclamationService";
+   private static final Logger LOG = LoggerFactory.getLogger(FalloutReclamationService.class);
 
-   private final ReclaimationHandler reclaimationHandler;
+   private final ReclamationHandler reclamationHandler;
 
-   public FalloutReclaimationService() {
-      reclaimationHandler = new NukeReclaimationHandler();
+   public FalloutReclamationService() {
+      reclamationHandler = new NukeReclamationHandler();
    }
 
    @Override
@@ -39,24 +39,24 @@ public class FalloutReclaimationService implements Service {
 
    @Override
    public boolean provides(Class serviceInterface) {
-      return serviceInterface.isAssignableFrom(ReclaimationHandler.class);
+      return serviceInterface.isAssignableFrom(ReclamationHandler.class);
    }
 
    @Override
    public Object instance() {
-      return reclaimationHandler;
+      return reclamationHandler;
    }
 
    @Override
    public void init(ServiceContext contextObject) throws InitializationException {
-      LOG.info("Fallout reclaimation serivce initialized.");
+      LOG.info("Fallout reclamation serivce initialized.");
    }
 
    @Override
    public void destroy() {
-      LOG.info("Reclaiming all registered reclaimation handles.");
-      reclaimationHandler.destroy();
+      LOG.info("Reclaiming all registered reclamation handles.");
+      reclamationHandler.destroy();
 
-      LOG.info("Fallout reclaimation serivce destroyed.");
+      LOG.info("Fallout reclamation serivce destroyed.");
    }
 }

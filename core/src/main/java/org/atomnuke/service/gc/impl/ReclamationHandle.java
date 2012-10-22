@@ -9,12 +9,12 @@ import org.atomnuke.util.remote.CancellationRemote;
  *
  * @author zinic
  */
-public class ReclaimationHandle {
+public class ReclamationHandle {
 
    private final InstanceContext<Reclaimable> reclaimableContext;
    private final CancellationRemote cancellationRemote;
 
-   public ReclaimationHandle(InstanceContext<Reclaimable> reclaimableContext, CancellationRemote cancellationRemote) {
+   public ReclamationHandle(InstanceContext<Reclaimable> reclaimableContext, CancellationRemote cancellationRemote) {
       this.reclaimableContext = reclaimableContext;
       this.cancellationRemote = cancellationRemote;
    }

@@ -13,7 +13,7 @@ import org.atomnuke.container.packaging.PackageContextImpl;
 import org.atomnuke.container.packaging.bindings.PackageBindingsImpl;
 import org.atomnuke.container.packaging.bindings.environment.BindingEnvironment;
 import org.atomnuke.container.packaging.resource.Resource;
-import org.atomnuke.service.gc.ReclaimationHandler;
+import org.atomnuke.service.gc.ReclamationHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,11 +27,11 @@ public class BindingAwarePackageLoader implements PackageLoader {
 
    private final Map<DeployedPackage, PackageContext> loadedPackages;
    private final BindingEnvironmentFactory bindingEnvFactory;
-   private final ReclaimationHandler reclaimationHandler;
+   private final ReclamationHandler reclamationHandler;
 
-   public BindingAwarePackageLoader(ReclaimationHandler reclaimationHandler, BindingEnvironmentFactory bindingEnvFactory) {
+   public BindingAwarePackageLoader(ReclamationHandler reclamationHandler, BindingEnvironmentFactory bindingEnvFactory) {
       this.bindingEnvFactory = bindingEnvFactory;
-      this.reclaimationHandler = reclaimationHandler;
+      this.reclamationHandler = reclamationHandler;
 
       loadedPackages = new HashMap<DeployedPackage, PackageContext>();
    }
@@ -39,7 +39,7 @@ public class BindingAwarePackageLoader implements PackageLoader {
    @Override
    public synchronized void load(DeployedPackage deployedPackage) throws PackageLoadingException {
       final List<BindingEnvironment> bindingEnvironments = bindingEnvFactory.newEnviornment(deployedPackage.resourceManager());
-      final PackageContext newPackageContext = new PackageContextImpl(deployedPackage.archiveUri().toString(), new PackageBindingsImpl(reclaimationHandler, bindingEnvironments));
+      final PackageContext newPackageContext = new PackageContextImpl(deployedPackage.archiveUri().toString(), new PackageBindingsImpl(reclamationHandler, bindingEnvironments));
 
       // Read through all of the resources
       for (Resource resource : deployedPackage.resourceManager().resources()) {

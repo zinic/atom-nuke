@@ -4,7 +4,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 import org.atomnuke.examples.listener.eventlet.CounterEventlet;
 import org.atomnuke.examples.source.EventGenerator;
-import org.atomnuke.fallout.service.gc.FalloutReclaimationService;
+import org.atomnuke.fallout.service.gc.FalloutReclamationService;
 import org.atomnuke.listener.eps.EventletRelay;
 import org.atomnuke.plugin.InstanceContextImpl;
 import org.atomnuke.plugin.env.NopInstanceEnvironment;
@@ -34,7 +34,7 @@ public class NukeKernelTest {
          final EventletRelay relay = new EventletRelay();
 
          final ServiceManager svcManager = new RuntimeServiceManager(new JapiProxyFactory());
-         svcManager.register(new InstanceContextImpl<Service>(NopInstanceEnvironment.getInstance(), new FalloutReclaimationService()));
+         svcManager.register(new InstanceContextImpl<Service>(NopInstanceEnvironment.getInstance(), new FalloutReclamationService()));
 
          relay.init(new TaskContextImpl(null, null, svcManager, null));
 

@@ -3,7 +3,7 @@ package org.atomnuke.service.gc.impl;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import org.atomnuke.service.gc.ReclaimationHandler;
+import org.atomnuke.service.gc.ReclamationHandler;
 import org.atomnuke.plugin.InstanceContext;
 import org.atomnuke.plugin.InstanceContextImpl;
 import org.atomnuke.plugin.env.NopInstanceEnvironment;
@@ -17,31 +17,31 @@ import org.slf4j.LoggerFactory;
  *
  * @author zinic
  */
-public class NukeReclaimationHandler implements ReclaimationHandler {
+public class NukeReclamationHandler implements ReclamationHandler {
 
-   private static final Logger LOG = LoggerFactory.getLogger(NukeReclaimationHandler.class);
+   private static final Logger LOG = LoggerFactory.getLogger(NukeReclamationHandler.class);
 
-   private final List<ReclaimationHandle> reclaimationList;
+   private final List<ReclamationHandle> reclamationList;
 
-   public NukeReclaimationHandler() {
-      reclaimationList = new LinkedList<ReclaimationHandle>();
+   public NukeReclamationHandler() {
+      reclamationList = new LinkedList<ReclamationHandle>();
    }
 
    @Override
    public void destroy() {
-      LOG.info("Removing " + reclaimationList.size() + " objets marked for reclaimation.");
+      LOG.info("Removing " + reclamationList.size() + " objets marked for reclamation.");
 
-      for (ReclaimationHandle reclaimationHandle : reclaimationList) {
-         reclaimationHandle.reclaim();
+      for (ReclamationHandle reclamationHandle : reclamationList) {
+         reclamationHandle.reclaim();
       }
 
-      reclaimationList.clear();
+      reclamationList.clear();
    }
 
    @Override
    public synchronized void garbageCollect() {
-      for (Iterator<ReclaimationHandle> handleItr = reclaimationList.iterator(); handleItr.hasNext();) {
-         final ReclaimationHandle handle = handleItr.next();
+      for (Iterator<ReclamationHandle> handleItr = reclamationList.iterator(); handleItr.hasNext();) {
+         final ReclamationHandle handle = handleItr.next();
 
          if (handle.shouldReclaim()) {
             handle.reclaim();
@@ -59,7 +59,7 @@ public class NukeReclaimationHandler implements ReclaimationHandler {
    public synchronized CancellationRemote watch(InstanceContext<? extends Reclaimable> reclaimableInstance) {
       final CancellationRemote cancellationRemote = new AtomicCancellationRemote();
 
-      reclaimationList.add(new ReclaimationHandle((InstanceContext<Reclaimable>) reclaimableInstance, cancellationRemote));
+      reclamationList.add(new ReclamationHandle((InstanceContext<Reclaimable>) reclaimableInstance, cancellationRemote));
 
       return cancellationRemote;
    }

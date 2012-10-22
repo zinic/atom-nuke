@@ -9,7 +9,7 @@ import org.atomnuke.service.Service;
 import org.atomnuke.service.ServiceManager;
 import org.atomnuke.service.ServiceUnavailableException;
 import org.atomnuke.service.context.ServiceContext;
-import org.atomnuke.service.gc.ReclaimationHandler;
+import org.atomnuke.service.gc.ReclamationHandler;
 import org.atomnuke.task.ReclaimableRunnable;
 import org.atomnuke.task.TaskHandle;
 import org.atomnuke.task.manager.TaskTracker;
@@ -59,16 +59,16 @@ public class FalloutTaskingModuleService implements Service {
 
    @Override
    public ResolutionAction resolve(ServiceManager serviceManager) {
-      return serviceManager.serviceRegistered(ReclaimationHandler.class) ? ResolutionAction.INIT : ResolutionAction.DEFER;
+      return serviceManager.serviceRegistered(ReclamationHandler.class) ? ResolutionAction.INIT : ResolutionAction.DEFER;
    }
 
    @Override
    public void init(ServiceContext contextObject) throws InitializationException {
       try {
-         final ReclaimationHandler reclaimationHandler = ServiceHandler.instance().firstAvailable(contextObject.manager(), ReclaimationHandler.class);
+         final ReclamationHandler reclamationHandler = ServiceHandler.instance().firstAvailable(contextObject.manager(), ReclamationHandler.class);
 
          final TaskTracker taskTracker = new ThreadSafeTaskTracker(taskTrackerCancelRemote);
-         final Tasker tasker = new ReclaimableRunnableTasker(taskTracker, reclaimationHandler);
+         final Tasker tasker = new ReclaimableRunnableTasker(taskTracker, reclamationHandler);
 
          // As the tasking service, it's our job to spin up essential polling services
 
@@ -76,7 +76,7 @@ public class FalloutTaskingModuleService implements Service {
          explicitlyManagedTasks.add(tasker.task(new ReclaimableRunnable() {
             @Override
             public void run() {
-               reclaimationHandler.garbageCollect();
+               reclamationHandler.garbageCollect();
             }
 
             @Override

@@ -22,7 +22,7 @@ import org.atomnuke.service.ServiceAlreadyRegisteredException;
 import org.atomnuke.service.ServiceManager;
 import org.atomnuke.service.ServiceUnavailableException;
 import org.atomnuke.service.context.ServiceContext;
-import org.atomnuke.service.gc.ReclaimationHandler;
+import org.atomnuke.service.gc.ReclamationHandler;
 import org.atomnuke.util.lifecycle.InitializationException;
 import org.atomnuke.util.service.ServiceHandler;
 import org.slf4j.Logger;
@@ -52,7 +52,7 @@ public class DirectoryLoaderService implements Service {
 
    @Override
    public ResolutionAction resolve(ServiceManager serviceManager) {
-      return serviceManager.serviceRegistered(ReclaimationHandler.class) ? ResolutionAction.INIT : ResolutionAction.DEFER;
+      return serviceManager.serviceRegistered(ReclamationHandler.class) ? ResolutionAction.INIT : ResolutionAction.DEFER;
    }
 
    @Override
@@ -73,8 +73,8 @@ public class DirectoryLoaderService implements Service {
    @Override
    public void init(ServiceContext sc) throws InitializationException {
       try {
-         final ReclaimationHandler reclaimationHandler = ServiceHandler.instance().firstAvailable(sc.manager(), ReclaimationHandler.class);
-         packageLoader = new BindingAwarePackageLoader(reclaimationHandler, bindingEnvFactory);
+         final ReclamationHandler reclamationHandler = ServiceHandler.instance().firstAvailable(sc.manager(), ReclamationHandler.class);
+         packageLoader = new BindingAwarePackageLoader(reclamationHandler, bindingEnvFactory);
       } catch (ServiceUnavailableException sue) {
          throw new InitializationException(sue);
       }

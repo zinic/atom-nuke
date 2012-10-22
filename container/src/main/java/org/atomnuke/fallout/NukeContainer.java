@@ -15,7 +15,7 @@ import org.atomnuke.container.packaging.loader.PackageLoader;
 import org.atomnuke.plugin.proxy.japi.JapiProxyFactory;
 import org.atomnuke.service.ServiceManager;
 import org.atomnuke.service.RuntimeServiceManager;
-import org.atomnuke.service.gc.ReclaimationHandler;
+import org.atomnuke.service.gc.ReclamationHandler;
 import org.atomnuke.task.manager.impl.GenericTaskManger;
 import org.atomnuke.task.manager.service.TaskingModule;
 import org.atomnuke.task.threading.ExecutionManager;
@@ -68,12 +68,12 @@ public class NukeContainer {
 
    private void initNuke() {
       try {
-         final ReclaimationHandler reclaimationHandler = ServiceHandler.instance().firstAvailable(serviceManager, ReclaimationHandler.class);
+         final ReclamationHandler reclamationHandler = ServiceHandler.instance().firstAvailable(serviceManager, ReclamationHandler.class);
          final TaskingModule taskingService = ServiceHandler.instance().firstAvailable(serviceManager, TaskingModule.class);
 
          final ExecutionManager executionManager = new ExecutionManagerImpl(new ExecutionQueueImpl());
 
-         nukeInstance = new NukeKernel(executionManager, reclaimationHandler, new GenericTaskManger(executionManager, taskingService.taskTracker()), taskingService.tasker());
+         nukeInstance = new NukeKernel(executionManager, reclamationHandler, new GenericTaskManger(executionManager, taskingService.taskTracker()), taskingService.tasker());
       } catch (ServiceUnavailableException sue) {
          throw new FalloutInitException(sue);
       }

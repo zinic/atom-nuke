@@ -8,7 +8,7 @@ import org.atomnuke.util.remote.CancellationRemote;
  *
  * @author zinic
  */
-public interface ReclaimationHandler extends Reclaimable {
+public interface ReclamationHandler extends Reclaimable {
 
    void garbageCollect();
 

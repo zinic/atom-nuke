@@ -8,7 +8,7 @@ import org.atomnuke.service.Service;
 import org.atomnuke.service.ServiceManager;
 import org.atomnuke.service.ServiceUnavailableException;
 import org.atomnuke.service.context.ServiceContext;
-import org.atomnuke.service.gc.ReclaimationHandler;
+import org.atomnuke.service.gc.ReclamationHandler;
 import org.atomnuke.task.TaskHandle;
 import org.atomnuke.task.manager.service.TaskingModule;
 import org.atomnuke.util.TimeValue;
@@ -38,10 +38,10 @@ public class ConfigurationService implements Service {
 
    @Override
    public ResolutionAction resolve(ServiceManager serviceManager) {
-      final boolean hasReclaimationHandler = serviceManager.serviceRegistered(ReclaimationHandler.class);
+      final boolean hasReclamationHandler = serviceManager.serviceRegistered(ReclamationHandler.class);
       final boolean hasTaskingModule = serviceManager.serviceRegistered(TaskingModule.class);
 
-      return hasTaskingModule && hasReclaimationHandler ? ResolutionAction.INIT : ResolutionAction.DEFER;
+      return hasTaskingModule && hasReclamationHandler ? ResolutionAction.INIT : ResolutionAction.DEFER;
    }
 
    @Override
@@ -82,10 +82,10 @@ public class ConfigurationService implements Service {
       final TimeValue pollerTime = pollerTime(sc.parameters());
 
       try {
-         final ReclaimationHandler reclaimationHandler = ServiceHandler.instance().firstAvailable(sc.manager(), ReclaimationHandler.class);
+         final ReclamationHandler reclamationHandler = ServiceHandler.instance().firstAvailable(sc.manager(), ReclamationHandler.class);
          final TaskingModule taskingModule = ServiceHandler.instance().firstAvailable(sc.manager(), TaskingModule.class);
 
-         cfgUpdateMangaer = new ConfigurationUpdateManagerImpl(reclaimationHandler);
+         cfgUpdateMangaer = new ConfigurationUpdateManagerImpl(reclamationHandler);
          cfgPollerHandle = taskingModule.tasker().task(new ConfigurationUpdateRunnable(cfgUpdateMangaer), pollerTime);
       } catch (ServiceUnavailableException sue) {
          throw new InitializationException(sue);
