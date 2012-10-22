@@ -23,7 +23,6 @@ public class ReclaimationHandle {
       return cancellationRemote.canceled();
    }
 
-   // TODO: Validate whether or not explicit calling of cancel is a good idea
    public void reclaim() {
       cancellationRemote.cancel();
       reclaimableContext.perform(ReclaimOperation.instance());

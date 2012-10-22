@@ -1,8 +1,8 @@
 package org.atomnuke.listener.manager;
 
+import java.util.UUID;
 import org.atomnuke.plugin.InstanceContext;
 import org.atomnuke.listener.AtomListener;
-import org.atomnuke.task.TaskHandle;
 import org.atomnuke.util.remote.CancellationRemote;
 
 /**
@@ -13,21 +13,20 @@ public class ManagedListener {
 
    private final InstanceContext<AtomListener> listenerContext;
    private final CancellationRemote cancellationRemote;
-   private final TaskHandle parentHandle;
+   private final UUID taskId;
 
-   public ManagedListener(CancellationRemote cancellationRemote, InstanceContext<AtomListener> listenerContext, TaskHandle parentHandle) {
-      this.listenerContext = listenerContext;
-      this.parentHandle = parentHandle;
-
+   public ManagedListener(InstanceContext<? extends AtomListener> listenerContext, CancellationRemote cancellationRemote, UUID taskId) {
+      this.listenerContext = (InstanceContext<AtomListener>) listenerContext;
       this.cancellationRemote = cancellationRemote;
+      this.taskId = taskId;
    }
 
    public CancellationRemote cancellationRemote() {
       return cancellationRemote;
    }
 
-   public TaskHandle parentHandle() {
-      return parentHandle;
+   public UUID taskId() {
+      return taskId;
    }
 
    public InstanceContext<AtomListener> listenerContext() {

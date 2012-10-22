@@ -2,7 +2,7 @@ package org.atomnuke.container.packaging.bindings.lang.jython;
 
 import java.util.Collections;
 import java.util.List;
-import org.atomnuke.container.packaging.bindings.environment.ClassLoaderEnvironment;
+import org.atomnuke.plugin.env.ClassLoaderEnvironment;
 import org.atomnuke.plugin.ReferenceInstantiationException;
 import org.atomnuke.service.Service;
 import org.python.core.PyObject;

@@ -1,4 +1,4 @@
-package org.atomnuke.container.packaging.bindings.environment;
+package org.atomnuke.plugin.env;
 
 import org.atomnuke.plugin.Environment;
 import org.atomnuke.plugin.ReferenceInstantiationException;

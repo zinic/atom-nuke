@@ -20,6 +20,10 @@ public class ConfigurationManagerImpl<T> implements ConfigurationManager<T> {
    }
 
    @Override
+   public void destroy() {
+   }
+
+   @Override
    public void write(T value) throws ConfigurationException {
       writer.write(value, marshaller);
    }

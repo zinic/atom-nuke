@@ -1,13 +1,10 @@
 package org.atomnuke.container.boot;
 
-import java.util.Collections;
 import org.atomnuke.container.service.annotation.NukeBootstrap;
 import org.atomnuke.plugin.InstanceContextImpl;
-import org.atomnuke.plugin.local.LocalInstanceEnvironment;
+import org.atomnuke.plugin.env.NopInstanceEnvironment;
 import org.atomnuke.service.Service;
 import org.atomnuke.service.ServiceManager;
-import org.atomnuke.service.context.ServiceContext;
-import org.atomnuke.service.context.ServiceContextImpl;
 import org.reflections.Reflections;
 import org.reflections.scanners.TypeAnnotationsScanner;
 import org.reflections.util.ClasspathHelper;
@@ -41,7 +38,7 @@ public class ContainerBootstrap implements Bootstrap {
 
             try {
                final Service serviceInstance = (Service) bootstrapService.newInstance();
-               serviceManager.register(new InstanceContextImpl<Service>(LocalInstanceEnvironment.getInstance(), serviceInstance));
+               serviceManager.register(new InstanceContextImpl<Service>(NopInstanceEnvironment.getInstance(), serviceInstance));
             } catch (Exception ex) {
                LOG.error("Failed to load bootstrap service: " + bootstrapService.getName() + " - This may cause unexpected behavior however the container may still attempt normal init.", ex);
             }

@@ -8,7 +8,6 @@ import org.atomnuke.plugin.Environment;
 import org.atomnuke.plugin.InstanceContext;
 import org.atomnuke.plugin.InstanceContextImpl;
 import org.atomnuke.plugin.ReferenceInstantiationException;
-import org.atomnuke.plugin.WeakReferenceContext;
 import org.atomnuke.service.Service;
 import org.atomnuke.service.gc.ReclaimationHandler;
 import org.atomnuke.util.lifecycle.Reclaimable;
@@ -36,8 +35,8 @@ public class PackageBindingsImpl implements PackageBindings {
 
          for (Service discoveredService : env.services()) {
             reclaimationHandler.watch(new InstanceContextImpl<Reclaimable>(env, discoveredService));
-            
-            services.add(new WeakReferenceContext<Service>(env, discoveredService));
+
+            services.add(new InstanceContextImpl<Service>(env, discoveredService));
          }
       }
 
@@ -51,7 +50,7 @@ public class PackageBindingsImpl implements PackageBindings {
 
          if (bindingCtx.language().language() == language && env.hasReference(ref)) {
             try {
-               return new WeakReferenceContext<T>(env, env.instantiate(type, ref));
+               return new InstanceContextImpl<T>(env, env.instantiate(type, ref));
             } catch (ReferenceInstantiationException rie) {
                throw new ReferenceInstantiationException(ref, rie);
             }

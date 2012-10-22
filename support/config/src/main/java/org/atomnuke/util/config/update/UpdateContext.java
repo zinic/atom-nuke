@@ -20,15 +20,17 @@ import org.slf4j.LoggerFactory;
 public class UpdateContext<T> implements ConfigurationContext<T> {
 
    private static final Logger LOG = LoggerFactory.getLogger(UpdateContext.class);
+
    private final List<ListenerContext<T>> listenerContexts;
    private final CancellationRemote cancellationRemote;
    private final ConfigurationManager<T> manager;
+
    private UpdateTag lastUpdateTag;
 
-   public UpdateContext(ConfigurationManager<T> manager) {
+   public UpdateContext(ConfigurationManager<T> manager, CancellationRemote cancellationRemote) {
       this.manager = manager;
+      this.cancellationRemote = cancellationRemote;
 
-      cancellationRemote = new AtomicCancellationRemote();
       listenerContexts = new LinkedList<ListenerContext<T>>();
    }
 

@@ -9,7 +9,7 @@ import org.atomnuke.util.remote.CancellationRemote;
  *
  * @author zinic
  */
-public interface AtomEventHandlerRelay {
+public interface AtomEventletHandler {
 
    CancellationRemote enlistHandler(AtomEventlet handler);
 

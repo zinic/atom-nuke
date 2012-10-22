@@ -6,7 +6,7 @@ import org.atomnuke.atom.model.Entry;
 import org.atomnuke.atom.model.Feed;
 import org.atomnuke.atom.model.builder.FeedBuilder;
 import org.atomnuke.listener.AtomListener;
-import org.atomnuke.plugin.local.LocalInstanceEnvironment;
+import org.atomnuke.plugin.env.NopInstanceEnvironment;
 import org.atomnuke.listener.AtomListenerException;
 import org.atomnuke.listener.AtomListenerResult;
 import org.atomnuke.listener.ListenerResult;
@@ -74,7 +74,7 @@ public class NukeKernelTest {
 
       for (int taskId = 1; taskId <= 30; taskId++) {
          final AtomTask task = nukeKernel.follow(source, new TimeValue(10 * taskId, TimeUnit.MICROSECONDS));
-         task.addListener(new InstanceContextImpl<AtomListener>(LocalInstanceEnvironment.getInstance(), listener));
+         task.addListener(new InstanceContextImpl<AtomListener>(NopInstanceEnvironment.getInstance(), listener));
       }
 
       nukeKernel.start();

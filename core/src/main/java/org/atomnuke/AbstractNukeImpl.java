@@ -5,7 +5,7 @@ import org.atomnuke.kernel.GenericKernelDelegate;
 import org.atomnuke.kernel.shutdown.ShutdownHook;
 import org.atomnuke.plugin.InstanceContext;
 import org.atomnuke.plugin.InstanceContextImpl;
-import org.atomnuke.plugin.local.LocalInstanceEnvironment;
+import org.atomnuke.plugin.env.NopInstanceEnvironment;
 import org.atomnuke.source.AtomSource;
 import org.atomnuke.task.AtomTask;
 import org.atomnuke.util.TimeValue;
@@ -53,7 +53,7 @@ public abstract class AbstractNukeImpl implements Nuke {
     * wit the current task context.
     */
    public AtomTask follow(AtomSource source, TimeValue pollingInterval) {
-      return follow(new InstanceContextImpl<AtomSource>(LocalInstanceEnvironment.getInstance(), source), pollingInterval);
+      return follow(new InstanceContextImpl<AtomSource>(NopInstanceEnvironment.getInstance(), source), pollingInterval);
    }
 
    /**

@@ -2,12 +2,16 @@ package org.atomnuke.service;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 import java.util.Stack;
 import org.atomnuke.plugin.InstanceContext;
+import org.atomnuke.plugin.operation.ComplexOperation;
+import org.atomnuke.plugin.operation.OperationFailureException;
 import org.atomnuke.plugin.proxy.InstanceEnvProxyFactory;
+import org.atomnuke.service.gc.ReclaimationHandler;
 import org.atomnuke.util.lifecycle.operation.ReclaimOperation;
 
 /**
@@ -16,8 +20,17 @@ import org.atomnuke.util.lifecycle.operation.ReclaimOperation;
  */
 public abstract class AbstractServiceManager implements ServiceManager {
 
+   private static final ComplexOperation<Service, ProvidesOperationArgument> PROVIDES_OPERATION = new ComplexOperation<Service, ProvidesOperationArgument>() {
+      @Override
+      public void perform(Service instance, ProvidesOperationArgument argument) throws OperationFailureException {
+         if (instance.provides(argument.getServiceInterface())) {
+            argument.setProvides(true);
+         }
+      }
+   };
+
    private final Map<String, ManagedService> registeredServicesByName;
-   private final List<InstanceContext<Service>> pendingServices;
+   private final Queue<InstanceContext<Service>> pendingServices;
    private final Stack<ManagedService> registeredServices;
    private final InstanceEnvProxyFactory proxyFactory;
 
@@ -29,11 +42,19 @@ public abstract class AbstractServiceManager implements ServiceManager {
       registeredServices = new Stack<ManagedService>();
    }
 
-   protected Collection<InstanceContext<Service>> pendingServices() {
-      return pendingServices;
+   protected synchronized int servicesPending() {
+      return pendingServices.size();
    }
 
-   protected Collection<ManagedService> registeredServices() {
+   protected synchronized InstanceContext<Service> nextPendingService() {
+      return !pendingServices.isEmpty() ? pendingServices.poll() : null;
+   }
+
+   protected synchronized void queuePendingService(InstanceContext<Service> service) {
+      pendingServices.add(service);
+   }
+
+   protected Stack<ManagedService> registeredServices() {
       return registeredServices;
    }
 
@@ -45,7 +66,22 @@ public abstract class AbstractServiceManager implements ServiceManager {
    }
 
    @Override
-   public synchronized boolean isRegistered(String serviceName) {
+   public synchronized boolean serviceRegistered(Class serviceInterface) {
+      final ProvidesOperationArgument argument = new ProvidesOperationArgument(serviceInterface);
+
+      for (ManagedService managedService : registeredServices) {
+         managedService.serviceContext().perform(PROVIDES_OPERATION, argument);
+
+         if (argument.provides()) {
+            return true;
+         }
+      }
+
+      return false;
+   }
+
+   @Override
+   public synchronized boolean nameRegistered(String serviceName) {
       return registeredServicesByName.containsKey(serviceName);
    }
 
@@ -66,6 +102,20 @@ public abstract class AbstractServiceManager implements ServiceManager {
 
    @Override
    public synchronized void destroy() {
+      final ProvidesOperationArgument argument = new ProvidesOperationArgument(ReclaimationHandler.class);
+
+      for (Iterator<ManagedService> managedServiceItr = registeredServices.iterator(); managedServiceItr.hasNext();) {
+         final ManagedService potentialReclaimer = managedServiceItr.next();
+
+         argument.reset();
+         potentialReclaimer.serviceContext().perform(PROVIDES_OPERATION, argument);
+
+         if (argument.provides()) {
+            managedServiceItr.remove();
+            potentialReclaimer.serviceContext().perform(ReclaimOperation.<Service>instance());
+         }
+      }
+
       while (!registeredServices.empty()) {
          final ManagedService managedService = registeredServices.pop();
          managedService.serviceContext().perform(ReclaimOperation.<Service>instance());
@@ -88,12 +138,15 @@ public abstract class AbstractServiceManager implements ServiceManager {
    @Override
    public synchronized Collection<String> listRegisteredServicesFor(Class serviceInterface) {
       final Collection<String> servicesMatchingInterface = new LinkedList<String>();
+      final ProvidesOperationArgument argument = new ProvidesOperationArgument(serviceInterface);
 
       for (ManagedService managedService : registeredServices) {
-         final InstanceContext<Service> serviceContext = managedService.serviceContext();
+         argument.reset();
 
-         // TODO: Fix this interaction to take environment stepping into account
-         if (serviceContext.instance().provides(serviceInterface)) {
+         final InstanceContext<Service> serviceContext = managedService.serviceContext();
+         serviceContext.perform(PROVIDES_OPERATION, argument);
+
+         if (argument.provides()) {
             servicesMatchingInterface.add(serviceContext.instance().name());
          }
       }

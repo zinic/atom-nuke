@@ -4,7 +4,7 @@ import java.util.Collections;
 import java.util.List;
 import javax.script.Invocable;
 import javax.script.ScriptEngine;
-import org.atomnuke.container.packaging.bindings.environment.ClassLoaderEnvironment;
+import org.atomnuke.plugin.env.ClassLoaderEnvironment;
 import org.atomnuke.plugin.ReferenceInstantiationException;
 import org.atomnuke.service.Service;
 

@@ -20,14 +20,12 @@ public class GenericKernelDelegate implements Runnable {
    private static long ONE_MILLISECOND_IN_NANOS = 1000000;
 
    private final CancellationRemote crawlerCancellationRemote;
-   private final ExecutionManager executionManager;
    private final TaskManager taskManager;
 
    private int drainMagnitude;
 
-   public GenericKernelDelegate(TaskManager taskManager, ExecutionManager executionManager) {
+   public GenericKernelDelegate(TaskManager taskManager) {
       this.crawlerCancellationRemote = new AtomicCancellationRemote();
-      this.executionManager = executionManager;
       this.taskManager = taskManager;
 
       drainMagnitude = 1;
@@ -42,10 +40,10 @@ public class GenericKernelDelegate implements Runnable {
    }
 
    private boolean shouldContinue() {
-      final boolean executionManagerStopped = executionManager.state() == ExecutionManager.State.STOPPING || executionManager.state() == ExecutionManager.State.DESTROYED;
+      final boolean taskManagerStopped = taskManager.state() == TaskManager.State.DESTROYED;
       final boolean canceled = crawlerCancellationRemote.canceled();
 
-      return !canceled && !executionManagerStopped;
+      return !canceled && !taskManagerStopped;
    }
 
    @Override
@@ -92,7 +90,7 @@ public class GenericKernelDelegate implements Runnable {
 
    private TimeValue tick() {
       // Sleep till the next polling time or for a couple of milliseconds
-      if (executionManager.state() == ExecutionManager.State.DRAINING) {
+      if (taskManager.state() == TaskManager.State.DRAINING) {
          drainMagnitude += drainMagnitude == 1000 ? 0 : 1;
 
          // Compute the time we'll be yielding

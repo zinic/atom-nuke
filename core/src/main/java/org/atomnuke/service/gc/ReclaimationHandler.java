@@ -12,5 +12,7 @@ public interface ReclaimationHandler extends Reclaimable {
 
    void garbageCollect();
 
+   CancellationRemote watch(Reclaimable reclaimableInstance);
+
    CancellationRemote watch(InstanceContext<? extends Reclaimable> reclaimableInstance);
 }

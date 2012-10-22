@@ -19,7 +19,7 @@ import org.atomnuke.fallout.config.server.ServerConfigurationHandler;
 import org.atomnuke.fallout.context.ContainerContext;
 import org.atomnuke.container.packaging.PackageContext;
 import org.atomnuke.container.packaging.bindings.lang.BindingLanguage;
-import org.atomnuke.plugin.local.LocalInstanceEnvironment;
+import org.atomnuke.plugin.env.NopInstanceEnvironment;
 import org.atomnuke.listener.AtomListener;
 import org.atomnuke.listener.eps.EventletRelay;
 import org.atomnuke.listener.eps.eventlet.AtomEventlet;
@@ -170,7 +170,7 @@ public class ConfigurationProcessor {
 
             try {
                newRelay.init(new TaskContextImpl(LoggerFactory.getLogger(EventletRelay.class), Collections.EMPTY_MAP, services, tasker));
-               containerContext.registerRelay(relay.getId(), new InstanceContextImpl<EventletRelay>(LocalInstanceEnvironment.getInstance(), newRelay));
+               containerContext.registerRelay(relay.getId(), new InstanceContextImpl<EventletRelay>(NopInstanceEnvironment.getInstance(), newRelay));
             } catch (InitializationException ie) {
                LOG.error("Failed to create relay instance " + relay.getId() + ". Reason: " + ie.getMessage(), ie);
             }

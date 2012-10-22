@@ -55,7 +55,6 @@ public class FalloutReclaimationService implements Service {
    @Override
    public void destroy() {
       LOG.info("Reclaiming all registered reclaimation handles.");
-
       reclaimationHandler.destroy();
 
       LOG.info("Fallout reclaimation serivce destroyed.");

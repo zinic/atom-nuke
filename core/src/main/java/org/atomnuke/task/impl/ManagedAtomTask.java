@@ -11,8 +11,9 @@ import org.atomnuke.source.AtomSource;
 import org.atomnuke.source.AtomSourceException;
 import org.atomnuke.source.result.AtomSourceResult;
 import org.atomnuke.source.result.ResultType;
-import org.atomnuke.task.TaskHandle;
+import org.atomnuke.task.ReclaimableRunnable;
 import org.atomnuke.task.threading.ExecutionManager;
+import org.atomnuke.util.lifecycle.operation.ReclaimOperation;
 import org.atomnuke.util.result.ResultCatch;
 import org.atomnuke.util.result.ResultCatchImpl;
 
@@ -20,7 +21,7 @@ import org.atomnuke.util.result.ResultCatchImpl;
  *
  * @author zinic
  */
-public class ManagedAtomTask extends AbstractManagedTask {
+public class ManagedAtomTask implements ReclaimableRunnable {
 
    private static final ComplexOperation<AtomSource, ResultCatch<AtomSourceResult>> POLLING_OPERATION = new ComplexOperation<AtomSource, ResultCatch<AtomSourceResult>>() {
       @Override
@@ -41,9 +42,7 @@ public class ManagedAtomTask extends AbstractManagedTask {
    private final ExecutionManager executionManager;
    private final ListenerManager listenerManager;
 
-   public ManagedAtomTask(InstanceContext<AtomSource> atomSourceContext, ExecutionManager executionManager, ListenerManager listenerManager, TaskHandle taskHandle) {
-      super(taskHandle);
-
+   public ManagedAtomTask(InstanceContext<AtomSource> atomSourceContext, ExecutionManager executionManager, ListenerManager listenerManager) {
       this.atomSourceContext = atomSourceContext;
       this.executionManager = executionManager;
       this.listenerManager = listenerManager;
@@ -62,11 +61,16 @@ public class ManagedAtomTask extends AbstractManagedTask {
       }
    }
 
+   @Override
+   public void destroy() {
+      atomSourceContext.perform(ReclaimOperation.<AtomSource>instance());
+   }
+
    private void dispatchToListeners(AtomSourceResult pollResult) {
       final DriverArgument driverArgument = new DriverArgument(pollResult.feed(), pollResult.entry());
 
       for (ManagedListener listener : listenerManager.listeners()) {
-         executionManager.submit(listener.parentHandle(), new AtomListenerDriver(listener, driverArgument));
+         executionManager.submit(listener.taskId(), new AtomListenerDriver(listener, driverArgument));
       }
    }
 }

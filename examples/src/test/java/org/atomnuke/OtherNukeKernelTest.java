@@ -18,7 +18,7 @@ public class OtherNukeKernelTest {
 
    @Test @Ignore
    public void nukeShakedownTest() throws Exception {
-      final NukeKernel nukeKernel = new NukeKernel(1, 1);
+      final NukeKernel nukeKernel = new NukeKernel();
       final AtomicLong eventsProcessed = new AtomicLong(0);
 
       final AtomTask task = nukeKernel.follow(new EventGenerator("Task 1", true), new TimeValue(1, TimeUnit.SECONDS));

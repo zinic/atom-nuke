@@ -1,7 +1,7 @@
 package org.atomnuke.task.impl;
 
 import org.atomnuke.plugin.InstanceContext;
-import org.atomnuke.plugin.local.LocalInstanceEnvironment;
+import org.atomnuke.plugin.env.NopInstanceEnvironment;
 import org.atomnuke.listener.AtomListener;
 import org.atomnuke.listener.manager.ListenerManager;
 import org.atomnuke.plugin.InstanceContextImpl;
@@ -30,7 +30,7 @@ public class AtomTaskImpl implements AtomTask {
 
    @Override
    public CancellationRemote addListener(AtomListener listener) {
-      return addListener(new InstanceContextImpl<AtomListener>(LocalInstanceEnvironment.getInstance(), listener));
+      return addListener(new InstanceContextImpl<AtomListener>(NopInstanceEnvironment.getInstance(), listener));
    }
 
    @Override

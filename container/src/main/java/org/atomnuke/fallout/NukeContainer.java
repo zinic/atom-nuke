@@ -16,7 +16,9 @@ import org.atomnuke.plugin.proxy.japi.JapiProxyFactory;
 import org.atomnuke.service.ServiceManager;
 import org.atomnuke.service.RuntimeServiceManager;
 import org.atomnuke.service.gc.ReclaimationHandler;
-import org.atomnuke.task.manager.Tasker;
+import org.atomnuke.task.manager.impl.GenericTaskManger;
+import org.atomnuke.task.manager.service.TaskingModule;
+import org.atomnuke.task.threading.ExecutionManager;
 import org.atomnuke.task.threading.ExecutionManagerImpl;
 import org.atomnuke.task.threading.ExecutionQueueImpl;
 import org.atomnuke.util.config.ConfigurationException;
@@ -33,6 +35,7 @@ import org.slf4j.LoggerFactory;
 public class NukeContainer {
 
    private static final Logger LOG = LoggerFactory.getLogger(NukeContainer.class);
+
    private ServiceManager serviceManager;
    private ContextManager contextManager;
    private Nuke nukeInstance;
@@ -51,26 +54,26 @@ public class NukeContainer {
 
       new ContainerBootstrap(serviceManager).bootstrap();
 
-      final ServiceHandler serviceHandler = new ServiceHandler(serviceManager);
-
       LOG.debug("Kernel thread start.");
-      initNuke(serviceHandler);
+      initNuke();
 
       LOG.debug("Building context manager.");
-      buildContextManager(serviceHandler);
+      buildContextManager();
 
       LOG.debug("Registering Fallout configuration listener.");
-      registerConfigurationListeners(serviceHandler);
+      registerConfigurationListeners();
 
       LOG.info("Nuke container started. Elapsed start-up time: " + (System.currentTimeMillis() - initTime) + "ms.");
    }
 
-   private void initNuke(ServiceHandler serviceHandler) {
+   private void initNuke() {
       try {
-         final ReclaimationHandler reclaimationHandler = serviceHandler.firstAvailable(ReclaimationHandler.class);
-         final Tasker tasker = serviceHandler.firstAvailable(Tasker.class);
+         final ReclaimationHandler reclaimationHandler = ServiceHandler.instance().firstAvailable(serviceManager, ReclaimationHandler.class);
+         final TaskingModule taskingService = ServiceHandler.instance().firstAvailable(serviceManager, TaskingModule.class);
 
-         nukeInstance = new NukeKernel(new ExecutionManagerImpl(new ExecutionQueueImpl()), reclaimationHandler, tasker);
+         final ExecutionManager executionManager = new ExecutionManagerImpl(new ExecutionQueueImpl());
+
+         nukeInstance = new NukeKernel(executionManager, reclaimationHandler, new GenericTaskManger(executionManager, taskingService.taskTracker()), taskingService.tasker());
       } catch (ServiceUnavailableException sue) {
          throw new FalloutInitException(sue);
       }
@@ -94,10 +97,10 @@ public class NukeContainer {
       }
    }
 
-   private void buildContextManager(ServiceHandler serviceHandler) {
+   private void buildContextManager() {
       // First package loader wins
       try {
-         final PackageLoader firstLoader = serviceHandler.firstAvailable(PackageLoader.class);
+         final PackageLoader firstLoader = ServiceHandler.instance().firstAvailable(serviceManager, PackageLoader.class);
          contextManager = new ContextManager(serviceManager, firstLoader.packageContexts(), nukeInstance);
       } catch (ServiceUnavailableException sue) {
          LOG.error(sue.getMessage(), sue);
@@ -106,9 +109,9 @@ public class NukeContainer {
       }
    }
 
-   private void registerConfigurationListeners(ServiceHandler serviceHandler) {
+   private void registerConfigurationListeners() {
       try {
-         final ConfigurationUpdateManager cfgUpdateManager = serviceHandler.firstAvailable(ConfigurationUpdateManager.class);
+         final ConfigurationUpdateManager cfgUpdateManager = ServiceHandler.instance().firstAvailable(serviceManager, ConfigurationUpdateManager.class);
          registerNukeCfgListener(cfgUpdateManager);
       } catch (ServiceUnavailableException sue) {
          LOG.error(sue.getMessage(), sue);

@@ -52,11 +52,7 @@ public class DirectoryLoaderService implements Service {
 
    @Override
    public ResolutionAction resolve(ServiceManager serviceManager) {
-      if (serviceManager.listRegisteredServicesFor(ReclaimationHandler.class).isEmpty()) {
-         return ResolutionAction.DEFER;
-      }
-
-      return ResolutionAction.INIT;
+      return serviceManager.serviceRegistered(ReclaimationHandler.class) ? ResolutionAction.INIT : ResolutionAction.DEFER;
    }
 
    @Override
@@ -77,7 +73,7 @@ public class DirectoryLoaderService implements Service {
    @Override
    public void init(ServiceContext sc) throws InitializationException {
       try {
-         final ReclaimationHandler reclaimationHandler = new ServiceHandler(sc.manager()).firstAvailable(ReclaimationHandler.class);
+         final ReclaimationHandler reclaimationHandler = ServiceHandler.instance().firstAvailable(sc.manager(), ReclaimationHandler.class);
          packageLoader = new BindingAwarePackageLoader(reclaimationHandler, bindingEnvFactory);
       } catch (ServiceUnavailableException sue) {
          throw new InitializationException(sue);

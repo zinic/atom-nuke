@@ -5,7 +5,6 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.UUID;
 import org.atomnuke.service.context.ServiceContext;
-import org.atomnuke.task.TaskHandle;
 
 /**
  *
@@ -13,7 +12,7 @@ import org.atomnuke.task.TaskHandle;
  */
 public class ExecutionManagerImpl implements ExecutionManager {
 
-   private final Map<UUID, TaskFuture> taskFutures;
+   private final Map<UUID, ExecutionFuture> taskFutures;
    private final ExecutionQueue executionQueue;
    private final StateManager stateManager;
 
@@ -25,12 +24,12 @@ public class ExecutionManagerImpl implements ExecutionManager {
       this.executionQueue = executionQueue;
 
       stateManager = new StateManager(State.NEW);
-      taskFutures = new TreeMap<UUID, TaskFuture>();
+      taskFutures = new TreeMap<UUID, ExecutionFuture>();
    }
 
-   private synchronized Map<UUID, TaskFuture> taskFutures() {
-      for (Iterator<TaskFuture> itr = taskFutures.values().iterator(); itr.hasNext();) {
-         final TaskFuture nextTask = itr.next();
+   private synchronized Map<UUID, ExecutionFuture> taskFutures() {
+      for (Iterator<ExecutionFuture> itr = taskFutures.values().iterator(); itr.hasNext();) {
+         final ExecutionFuture nextTask = itr.next();
 
          if (nextTask.done()) {
             itr.remove();
@@ -57,9 +56,9 @@ public class ExecutionManagerImpl implements ExecutionManager {
    }
 
    @Override
-   public synchronized TaskFuture submit(TaskHandle handle, Runnable r) {
-      final TaskFuture taskFuture = new TaskFuture(handle, executionQueue.submit(r));
-      taskFutures.put(handle.id(), taskFuture);
+   public synchronized ExecutionFuture submit(UUID taskId, Runnable r) {
+      final ExecutionFuture taskFuture = new ExecutionFuture(executionQueue.submit(r), taskId);
+      taskFutures.put(taskId, taskFuture);
 
       return taskFuture;
    }
@@ -89,7 +88,7 @@ public class ExecutionManagerImpl implements ExecutionManager {
    }
 
    @Override
-   public boolean submitted(TaskHandle taskHandle) {
-      return taskFutures().containsKey(taskHandle.id());
+   public boolean submitted(UUID taskId) {
+      return taskFutures().containsKey(taskId);
    }
 }

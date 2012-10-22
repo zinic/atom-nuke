@@ -2,7 +2,6 @@ package org.atomnuke.service.context;
 
 import java.util.Map;
 import org.atomnuke.service.ServiceManager;
-import org.atomnuke.task.manager.Tasker;
 
 /**
  *

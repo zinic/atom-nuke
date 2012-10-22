@@ -12,7 +12,9 @@ public interface ServiceManager extends Reclaimable {
 
    void register(InstanceContext<Service> service) throws ServiceAlreadyRegisteredException;
 
-   boolean isRegistered(String serviceName);
+   boolean nameRegistered(String serviceName);
+
+   boolean serviceRegistered(Class serviceInterface);
 
    Collection<String> listRegisteredServicesFor(Class serviceInterface);
 

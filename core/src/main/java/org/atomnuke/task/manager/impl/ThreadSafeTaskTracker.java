@@ -1,30 +1,30 @@
 package org.atomnuke.task.manager.impl;
 
-import org.atomnuke.task.manager.Tasker;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.UUID;
 import org.atomnuke.task.ManagedTask;
-import org.atomnuke.task.TaskHandle;
-import org.atomnuke.task.impl.ManagedRunTask;
-import org.atomnuke.task.impl.TaskHandleImpl;
-import org.atomnuke.util.TimeValue;
+import org.atomnuke.task.manager.TaskTracker;
 import org.atomnuke.util.remote.CancellationRemote;
 
 /**
  *
  * @author zinic
  */
-public class TaskerImpl implements Tasker {
+public class ThreadSafeTaskTracker implements TaskTracker {
 
    private final CancellationRemote cancellationRemote;
    private final List<ManagedTask> pollingTasks;
 
-   public TaskerImpl(CancellationRemote cancellationRemote) {
+   public ThreadSafeTaskTracker(CancellationRemote cancellationRemote) {
       this.cancellationRemote = cancellationRemote;
 
       pollingTasks = new LinkedList<ManagedTask>();
+   }
+
+   @Override
+   public boolean active() {
+      return !cancellationRemote.canceled();
    }
 
    @Override
@@ -42,34 +42,11 @@ public class TaskerImpl implements Tasker {
    }
 
    @Override
-   public ManagedTask findTask(UUID taskId) {
-      for (ManagedTask managedTask : activeTasks()) {
-         if (managedTask.handle().id().equals(taskId)) {
-            return managedTask;
-         }
-      }
-
-      return null;
-   }
-
-   public void checkState() {
-      if (cancellationRemote.canceled()) {
+   public synchronized void add(ManagedTask task) {
+      if (active()) {
+         pollingTasks.add(task);
+      } else {
          throw new IllegalStateException("This object has been destroyed and can no longer enlist tasks.");
       }
-   }
-
-   @Override
-   public TaskHandle task(Runnable runnable, TimeValue taskInterval) {
-      final TaskHandle taskHandle = new TaskHandleImpl(cancellationRemote, taskInterval, UUID.randomUUID());
-      task(new ManagedRunTask(runnable, taskHandle));
-
-      return taskHandle;
-   }
-
-   @Override
-   public synchronized void task(ManagedTask managedTask) {
-      checkState();
-
-      pollingTasks.add(managedTask);
    }
 }

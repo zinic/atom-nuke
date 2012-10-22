@@ -1,7 +1,7 @@
 package org.atomnuke.task.threading;
 
+import java.util.UUID;
 import org.atomnuke.service.context.ServiceContext;
-import org.atomnuke.task.TaskHandle;
 import org.atomnuke.util.lifecycle.ResourceLifeCycle;
 
 /**
@@ -20,9 +20,9 @@ public interface ExecutionManager extends ResourceLifeCycle<ServiceContext> {
       DESTROYED
    }
 
-   TaskFuture submit(TaskHandle handle, Runnable r);
+   ExecutionFuture submit(UUID handle, Runnable r);
 
-   boolean submitted(TaskHandle handle);
+   boolean submitted(UUID taskId);
 
    State state();
 }

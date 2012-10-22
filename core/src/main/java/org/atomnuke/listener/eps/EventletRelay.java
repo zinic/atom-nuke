@@ -13,7 +13,7 @@ import org.atomnuke.listener.eps.selector.DefaultSelector;
 import org.atomnuke.listener.eps.selector.Selector;
 import org.atomnuke.plugin.InstanceContext;
 import org.atomnuke.plugin.InstanceContextImpl;
-import org.atomnuke.plugin.local.LocalInstanceEnvironment;
+import org.atomnuke.plugin.env.NopInstanceEnvironment;
 import org.atomnuke.service.ServiceUnavailableException;
 import org.atomnuke.service.gc.ReclaimationHandler;
 import org.atomnuke.task.context.AtomTaskContext;
@@ -33,7 +33,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author zinic
  */
-public class EventletRelay implements AtomListener, AtomEventHandlerRelay {
+public class EventletRelay implements AtomListener, AtomEventletHandler {
 
    private static final Logger LOG = LoggerFactory.getLogger(EventletRelay.class);
 
@@ -64,12 +64,12 @@ public class EventletRelay implements AtomListener, AtomEventHandlerRelay {
 
    @Override
    public CancellationRemote enlistHandler(AtomEventlet handler) {
-      return enlistHandler(new InstanceContextImpl<AtomEventlet>(LocalInstanceEnvironment.getInstance(), handler));
+      return enlistHandler(new InstanceContextImpl<AtomEventlet>(NopInstanceEnvironment.getInstance(), handler));
    }
 
    @Override
    public CancellationRemote enlistHandler(AtomEventlet handler, Selector selector) {
-      return enlistHandler(new InstanceContextImpl<AtomEventlet>(LocalInstanceEnvironment.getInstance(), handler), selector);
+      return enlistHandler(new InstanceContextImpl<AtomEventlet>(NopInstanceEnvironment.getInstance(), handler), selector);
    }
 
    @Override
@@ -90,7 +90,7 @@ public class EventletRelay implements AtomListener, AtomEventHandlerRelay {
    @Override
    public void init(AtomTaskContext tc) throws InitializationException {
       try {
-         reclaimationHandler = new ServiceHandler(tc.services()).firstAvailable(ReclaimationHandler.class);
+         reclaimationHandler = ServiceHandler.instance().firstAvailable(tc.services(), ReclaimationHandler.class);
       } catch (ServiceUnavailableException sue) {
          throw new InitializationException(sue);
       }

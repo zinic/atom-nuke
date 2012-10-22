@@ -1,4 +1,4 @@
-package org.atomnuke.plugin.local;
+package org.atomnuke.plugin.env;
 
 import java.util.Collections;
 import java.util.List;
@@ -10,15 +10,15 @@ import org.atomnuke.service.Service;
  *
  * @author zinic
  */
-public class LocalInstanceEnvironment implements Environment {
+public class NopInstanceEnvironment implements Environment {
 
-   private static final Environment DEFAULT_LOCAL_ENV = new LocalInstanceEnvironment();
+   private static final Environment DEFAULT_LOCAL_ENV = new NopInstanceEnvironment();
 
    public static Environment getInstance() {
       return DEFAULT_LOCAL_ENV;
    }
 
-   private LocalInstanceEnvironment() {
+   private NopInstanceEnvironment() {
    }
 
    @Override

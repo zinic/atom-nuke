@@ -8,15 +8,18 @@ import org.atomnuke.service.ServiceUnavailableException;
  *
  * @author zinic
  */
-public class ServiceHandler {
+public final class ServiceHandler {
 
-   private final ServiceManager manager;
+   private static final ServiceHandler INSTANCE = new ServiceHandler();
 
-   public ServiceHandler(ServiceManager manager) {
-      this.manager = manager;
+   public static ServiceHandler instance() {
+      return INSTANCE;
    }
 
-   public <T> T firstAvailable(Class<T> serviceClass) throws ServiceUnavailableException {
+   private ServiceHandler() {
+   }
+
+   public <T> T firstAvailable(ServiceManager manager, Class<T> serviceClass) throws ServiceUnavailableException {
       final Collection<String> registeredServiceNames = manager.listRegisteredServicesFor(serviceClass);
 
       if (registeredServiceNames.isEmpty()) {
