@@ -1,6 +1,6 @@
 #!/bin/sh
 
-JAR_LOCATION=./cli/target/fallout-full.jar
+JAR_LOCATION=./dist/target/fallout-full.jar
 
 if [ ! -e "${JAR_LOCATION}" ]; then
    pushd .. >> /dev/null 2>&1;
