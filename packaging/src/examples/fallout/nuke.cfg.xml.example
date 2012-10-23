@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<nuke xmlns="http://atomnuke.org/configuration">
+   <sinks>
+   </sinks>
+
+   <sources>
+   </sources>
+
+   <eps>
+      <relays>
+      </relays>
+
+      <eventlets>
+      </eventlets>
+   </eps>
+
+   <bindings>
+   </bindings>
+</nuke>

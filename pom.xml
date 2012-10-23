@@ -18,10 +18,13 @@
 
       <!--- Fallout -->
       <module>container</module>
-      <module>container/cli</module>
+      <module>container/dist</module>
 
       <!-- Components -->
       <module>components</module>
+
+      <!-- Packaging -->
+      <module>packaging</module>
 
       <!-- Support -->
       <module>support/config</module>

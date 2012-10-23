@@ -12,11 +12,11 @@
    </parent>
 
    <groupId>org.atomnuke.container</groupId>
-   <artifactId>fallout-cli</artifactId>
+   <artifactId>fallout-dist</artifactId>
 
    <packaging>jar</packaging>
 
-   <name>Atom Nuke - Fallout - Command Line Interface</name>
+   <name>Atom Nuke - Fallout - Full Distribution</name>
 
    <dependencies>
       <dependency>
@@ -135,6 +135,6 @@
    </profiles>
 
    <build>
-      <finalName>fallout-cli</finalName>
+      <finalName>fallout-full</finalName>
    </build>
 </project>
