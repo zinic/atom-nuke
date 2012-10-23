@@ -3,7 +3,6 @@ package org.atomnuke.container.packaging.bindings.environment;
 import org.atomnuke.container.packaging.bindings.BindingEnvironmentFactory;
 import java.util.LinkedList;
 import java.util.List;
-import org.atomnuke.container.packaging.bindings.environment.BindingEnvironment;
 import org.atomnuke.container.packaging.bindings.lang.java.JavaBindingEnvironment;
 import org.atomnuke.container.packaging.bindings.lang.jython.JythonBindingEnvironment;
 import org.atomnuke.container.packaging.bindings.lang.rhinojs.RhinoInterpreterContext;

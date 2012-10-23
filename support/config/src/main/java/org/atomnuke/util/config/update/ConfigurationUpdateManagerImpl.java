@@ -6,7 +6,9 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import org.atomnuke.service.gc.ReclamationHandler;
 import org.atomnuke.util.config.ConfigurationException;
+import org.atomnuke.util.remote.CancellationRemote;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,9 +22,17 @@ public class ConfigurationUpdateManagerImpl implements ConfigurationUpdateManage
    private static final Logger LOG = LoggerFactory.getLogger(ConfigurationUpdateManagerImpl.class);
 
    private final Map<String, UpdateContext> updateContexts;
+   private final ReclamationHandler reclamationHandler;
 
-   public ConfigurationUpdateManagerImpl() {
+   public ConfigurationUpdateManagerImpl(ReclamationHandler reclamationHandler) {
       updateContexts = new HashMap<String, UpdateContext>();
+
+      this.reclamationHandler = reclamationHandler;
+   }
+
+   @Override
+   public void destroy() {
+      updateContexts.clear();
    }
 
    @Override
@@ -71,7 +81,9 @@ public class ConfigurationUpdateManagerImpl implements ConfigurationUpdateManage
          return context;
       }
 
-      final UpdateContext<T> newContext = new UpdateContext<T>(configurationManager);
+      final CancellationRemote cancellationRemote = reclamationHandler.watch(configurationManager);
+      final UpdateContext<T> newContext = new UpdateContext<T>(configurationManager, cancellationRemote);
+
       updateContexts.put(name, newContext);
 
       return newContext;
@@ -80,10 +92,5 @@ public class ConfigurationUpdateManagerImpl implements ConfigurationUpdateManage
    @Override
    public synchronized UpdateContext get(String name) {
       return updateContexts.get(name);
-   }
-
-   @Override
-   public synchronized boolean unregister(String name) {
-      return updateContexts.remove(name) != null;
    }
 }

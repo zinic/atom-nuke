@@ -1,11 +1,20 @@
 package org.atomnuke;
 
-import org.atomnuke.kernel.KernelDelegate;
+import org.atomnuke.kernel.GenericKernelDelegate;
 import org.atomnuke.kernel.shutdown.KernelShutdownHook;
-import org.atomnuke.task.threading.ExecutionManagerImpl;
-import org.atomnuke.task.manager.TaskManagerImpl;
+import org.atomnuke.service.gc.ReclamationHandler;
+import org.atomnuke.service.gc.impl.NukeReclamationHandler;
+import org.atomnuke.task.manager.AtomTasker;
+import org.atomnuke.task.manager.TaskManager;
+import org.atomnuke.task.manager.TaskTracker;
+import org.atomnuke.task.manager.Tasker;
+import org.atomnuke.task.manager.impl.AtomTaskerImpl;
+import org.atomnuke.task.manager.impl.GenericTaskManger;
+import org.atomnuke.task.manager.impl.ReclaimableRunnableTasker;
+import org.atomnuke.task.manager.impl.ThreadSafeTaskTracker;
 import org.atomnuke.task.threading.ExecutionManager;
-import org.atomnuke.task.threading.ExecutionQueueImpl;
+import org.atomnuke.task.threading.ExecutionManagerImpl;
+import org.atomnuke.util.remote.AtomicCancellationRemote;
 
 /**
  * The Nuke kernel contains the references to a TaskManager, a cancellation
@@ -17,36 +26,30 @@ import org.atomnuke.task.threading.ExecutionQueueImpl;
  */
 public class NukeKernel extends AbstractNukeImpl {
 
-   /**
-    * Initializes a new Nuke kernel.
-    *
-    * This kernel will retain a core execution pool size equal to the number of
-    * the processors available on the system. The max size for the execution
-    * pool will be equal to the number of processors available to the system
-    * multiplied by two.
-    */
+   private final AtomTasker atomTasker;
+
+
    public NukeKernel() {
-      this(new ExecutionManagerImpl());
+      this(new ExecutionManagerImpl(), new NukeReclamationHandler(), new ThreadSafeTaskTracker(new AtomicCancellationRemote()));
    }
 
-   /**
-    * Initializes a new Nuke kernel.
-    *
-    * @param corePoolSize sets the number of threads that the execution pool
-    * will retain during normal operation.
-    * @param maxPoolsize sets the maximum number of threads that the execution
-    * pool may spawn.
-    */
-   public NukeKernel(int corePoolSize, int maxPoolsize) {
-      this(new ExecutionManagerImpl(new ExecutionQueueImpl(corePoolSize, maxPoolsize)));
+   public NukeKernel(ExecutionManager executionManager, ReclamationHandler reclamationHandler, TaskTracker taskTracker) {
+      this(executionManager, reclamationHandler, new GenericTaskManger(executionManager, taskTracker), new ReclaimableRunnableTasker(taskTracker, reclamationHandler));
    }
 
    /**
     * Initialized a new Nuke kernel driven by the passed execution manager.
     *
-    * @param manager
+    * @param executionManager
     */
-   public NukeKernel(ExecutionManager manager) {
-      super(new KernelShutdownHook(), new KernelDelegate(new TaskManagerImpl(manager), manager));
+   public NukeKernel(ExecutionManager executionManager, ReclamationHandler reclamationHandler, TaskManager taskManager, Tasker tasker) {
+      super(new KernelShutdownHook(), new GenericKernelDelegate(taskManager));
+
+      atomTasker = new AtomTaskerImpl(reclamationHandler, executionManager, tasker);
+   }
+
+   @Override
+   public AtomTasker atomTasker() {
+      return atomTasker;
    }
 }

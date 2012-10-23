@@ -4,11 +4,10 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.UUID;
 import org.atomnuke.plugin.InstanceContext;
 import org.atomnuke.listener.AtomListener;
-import org.atomnuke.listener.ReentrantAtomListener;
-import org.atomnuke.util.remote.AtomicCancellationRemote;
+import org.atomnuke.service.gc.ReclamationHandler;
 import org.atomnuke.util.remote.CancellationRemote;
 
 /**
@@ -17,12 +16,13 @@ import org.atomnuke.util.remote.CancellationRemote;
  */
 public class ListenerManagerImpl implements ListenerManager {
 
+   private final ReclamationHandler reclamationHandler;
    private final List<ManagedListener> listeners;
-   private final AtomicBoolean reentrant;
 
-   public ListenerManagerImpl() {
+   public ListenerManagerImpl(ReclamationHandler reclamationHandler) {
+      this.reclamationHandler = reclamationHandler;
+
       listeners = new LinkedList<ManagedListener>();
-      reentrant = new AtomicBoolean(true);
    }
 
    @Override
@@ -44,18 +44,12 @@ public class ListenerManagerImpl implements ListenerManager {
    }
 
    @Override
-   public boolean isReentrant() {
-      return reentrant.get();
-   }
-
-   @Override
    public synchronized CancellationRemote addListener(InstanceContext<? extends AtomListener> atomListenerContext) {
-      if (!(atomListenerContext.instance() instanceof ReentrantAtomListener)) {
-         reentrant.set(false);
-      }
+      final CancellationRemote cancellationRemote = reclamationHandler.watch(atomListenerContext);
+      final UUID taskId = UUID.randomUUID();
 
-      final CancellationRemote cancellationRemote = new AtomicCancellationRemote();
-      listeners.add(new ManagedListener(cancellationRemote, (InstanceContext<AtomListener>) atomListenerContext));
+      final ManagedListener newListener = new ManagedListener(atomListenerContext, cancellationRemote, taskId);
+      listeners.add(newListener);
 
       return cancellationRemote;
    }

@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 public class InstanceContextImpl<T> implements InstanceContext<T> {
 
    private static final Logger LOG = LoggerFactory.getLogger(Logger.class);
+   
    private final Environment environment;
    private final T instance;
 

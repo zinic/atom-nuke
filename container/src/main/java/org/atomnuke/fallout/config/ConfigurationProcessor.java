@@ -1,6 +1,7 @@
 package org.atomnuke.fallout.config;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import org.atomnuke.Nuke;
@@ -18,7 +19,7 @@ import org.atomnuke.fallout.config.server.ServerConfigurationHandler;
 import org.atomnuke.fallout.context.ContainerContext;
 import org.atomnuke.container.packaging.PackageContext;
 import org.atomnuke.container.packaging.bindings.lang.BindingLanguage;
-import org.atomnuke.plugin.local.LocalInstanceEnvironment;
+import org.atomnuke.plugin.env.NopInstanceEnvironment;
 import org.atomnuke.listener.AtomListener;
 import org.atomnuke.listener.eps.EventletRelay;
 import org.atomnuke.listener.eps.eventlet.AtomEventlet;
@@ -28,11 +29,12 @@ import org.atomnuke.task.operation.TaskLifeCycleInitOperation;
 import org.atomnuke.service.ServiceManager;
 import org.atomnuke.source.AtomSource;
 import org.atomnuke.task.AtomTask;
-import org.atomnuke.task.Tasker;
+import org.atomnuke.task.manager.AtomTasker;
 import org.atomnuke.task.context.AtomTaskContext;
 import org.atomnuke.task.context.TaskContextImpl;
 import org.atomnuke.util.TimeValueUtil;
 import org.atomnuke.util.config.ConfigurationException;
+import org.atomnuke.util.lifecycle.InitializationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,9 +50,9 @@ public class ConfigurationProcessor {
    private final ServerConfigurationHandler cfgHandler;
    private final ContainerContext containerContext;
    private final ServiceManager services;
-   private final Tasker tasker;
+   private final AtomTasker tasker;
 
-   public ConfigurationProcessor(Tasker tasker, ServiceManager services, ContainerContext containerContext, ServerConfigurationHandler cfgHandler, Collection<PackageContext> loadedPackages) {
+   public ConfigurationProcessor(AtomTasker tasker, ServiceManager services, ContainerContext containerContext, ServerConfigurationHandler cfgHandler, Collection<PackageContext> loadedPackages) {
       this.tasker = tasker;
       this.services = services;
       this.containerContext = containerContext;
@@ -150,14 +152,11 @@ public class ConfigurationProcessor {
                final InstanceContext<AtomSource> sourceContext = constructSource(source.getType(), source.getHref());
                sourceContext.perform(TaskLifeCycleInitOperation.<AtomSource>instance(), new TaskContextImpl(LoggerFactory.getLogger(sourceId), parametersToMap(source.getParameters()), services, tasker));
 
-               final AtomTask newTask = kernelBeingBuilt.tasker().follow(sourceContext, TimeValueUtil.fromPollingInterval(source.getPollingInterval()));
+               final AtomTask newTask = kernelBeingBuilt.atomTasker().follow(sourceContext, TimeValueUtil.fromPollingInterval(source.getPollingInterval()));
                containerContext.registerSource(source.getId(), newTask);
             } catch (ReferenceInstantiationException bie) {
                LOG.error("Could not create source instance " + source.getId() + ". Reason: " + bie.getMessage(), bie);
             }
-//            catch (InitializationException ie) {
-//               LOG.error("Could not initialize source instance " + source.getId() + ". Reason: " + ie.getMessage(), ie);
-//            }
          }
       }
    }
@@ -166,9 +165,15 @@ public class ConfigurationProcessor {
       for (Relay relay : cfgHandler.getRelays()) {
          final String relayId = relay.getId();
 
-
          if (hasListenerBinding(relayId) && !containerContext.hasRelay(relayId)) {
-            containerContext.registerRelay(relay.getId(), new InstanceContextImpl<EventletRelay>(LocalInstanceEnvironment.getInstance(), new EventletRelay()));
+            final EventletRelay newRelay = new EventletRelay();
+
+            try {
+               newRelay.init(new TaskContextImpl(LoggerFactory.getLogger(EventletRelay.class), Collections.EMPTY_MAP, services, tasker));
+               containerContext.registerRelay(relay.getId(), new InstanceContextImpl<EventletRelay>(NopInstanceEnvironment.getInstance(), newRelay));
+            } catch (InitializationException ie) {
+               LOG.error("Failed to create relay instance " + relay.getId() + ". Reason: " + ie.getMessage(), ie);
+            }
          }
       }
    }
@@ -188,10 +193,6 @@ public class ConfigurationProcessor {
                LOG.error("Could not create sink instance " + sink.getId() + ". Reason: " + bie.getMessage(), bie);
                throw new ConfigurationException(bie);
             }
-//            catch (InitializationException ie) {
-//               LOG.error("Could not initialize sink instance " + sink.getId() + ". Reason: " + ie.getMessage(), ie);
-//               throw new ConfigurationException(ie);
-//            }
          }
       }
    }

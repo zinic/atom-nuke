@@ -27,7 +27,7 @@ public class CombinedParserSelector {
       relay.enlistHandler(new FeedFileWriterHandler(new File("/tmp/test.feed")), new CategorySelector(new String[]{"test"}, new String[]{"test"}));
       relay.enlistHandler(new CounterEventlet(events, false));
 
-      final Nuke nukeKernel = new NukeKernel();
+      final NukeKernel nukeKernel = new NukeKernel();
 
       final AtomTask task = nukeKernel.follow(new ClasspathSource(new SaxAtomReaderFactory(), "/META-INF/examples/atom/PerformanceTestContents.xml"), new TimeValue(1, TimeUnit.MICROSECONDS));
       task.addListener(relay);

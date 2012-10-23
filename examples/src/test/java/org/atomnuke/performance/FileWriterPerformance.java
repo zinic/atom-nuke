@@ -26,7 +26,7 @@ public class FileWriterPerformance {
       relay.enlistHandler(new FeedFileWriterHandler(new File("/tmp/test.feed")), new CategorySelector(new String[]{"test"}, new String[]{"test"}));
       relay.enlistHandler(new CounterEventlet(events, false));
 
-      final Nuke nukeKernel = new NukeKernel();
+      final NukeKernel nukeKernel = new NukeKernel();
 
       final AtomTask task = nukeKernel.follow(new EventGenerator("Task 1", true), new TimeValue(1, TimeUnit.NANOSECONDS));
       task.addListener(relay);

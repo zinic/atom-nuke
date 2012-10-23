@@ -1,12 +1,21 @@
 package org.atomnuke.container.service.config;
 
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import org.atomnuke.container.service.annotation.NukeService;
+import org.atomnuke.service.ResolutionAction;
 import org.atomnuke.service.Service;
+import org.atomnuke.service.ServiceManager;
+import org.atomnuke.service.ServiceUnavailableException;
 import org.atomnuke.service.context.ServiceContext;
+import org.atomnuke.service.gc.ReclamationHandler;
+import org.atomnuke.task.TaskHandle;
+import org.atomnuke.task.manager.service.TaskingModule;
+import org.atomnuke.util.TimeValue;
 import org.atomnuke.util.config.update.ConfigurationUpdateManager;
 import org.atomnuke.util.config.update.ConfigurationUpdateManagerImpl;
-import org.atomnuke.util.config.update.ConfigurationUpdateRunnable;
-import org.atomnuke.util.thread.Poller;
+import org.atomnuke.util.lifecycle.InitializationException;
+import org.atomnuke.util.service.ServiceHandler;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,14 +30,18 @@ public class ConfigurationService implements Service {
    public static String CFG_POLLER_PROPERTY_KEY = "org.atomnuke.container.service.config.ConfigurationService.poll_interval_ms";
    public static String CFG_SERVICE_NAME = "org.atomnuke.container.service.config.ConfigurationService";
 
-   private static final long DEFAULT_CFG_POLL_TIME_MS = 15000;
+   private static final TimeValue DEFAULT_POLL_INTERVAL = new TimeValue(15, TimeUnit.SECONDS);
    private static final Logger LOG = LoggerFactory.getLogger(ConfigurationService.class);
 
-   private final ConfigurationUpdateManager cfgUpdateMangaer;
-   private Poller cfgPoller;
+   private ConfigurationUpdateManager cfgUpdateMangaer;
+   private TaskHandle cfgPollerHandle;
 
-   public ConfigurationService() {
-      cfgUpdateMangaer = new ConfigurationUpdateManagerImpl();
+   @Override
+   public ResolutionAction resolve(ServiceManager serviceManager) {
+      final boolean hasReclamationHandler = serviceManager.serviceRegistered(ReclamationHandler.class);
+      final boolean hasTaskingModule = serviceManager.serviceRegistered(TaskingModule.class);
+
+      return hasTaskingModule && hasReclamationHandler ? ResolutionAction.INIT : ResolutionAction.DEFER;
    }
 
    @Override
@@ -46,37 +59,43 @@ public class ConfigurationService implements Service {
       return serviceInterface.isAssignableFrom(cfgUpdateMangaer.getClass());
    }
 
-   @Override
-   public void init(ServiceContext sc) {
-      long pollerTime = DEFAULT_CFG_POLL_TIME_MS;
+   private static TimeValue pollerTime(Map<String, String> parameters) {
+      TimeValue pollerTime = DEFAULT_POLL_INTERVAL;
 
-      if (sc.parameters().containsKey(CFG_POLLER_PROPERTY_KEY)) {
-         final String configuredPollTime = sc.parameters().get(CFG_POLLER_PROPERTY_KEY);
+      if (parameters.containsKey(CFG_POLLER_PROPERTY_KEY)) {
+         final String configuredPollTime = parameters.get(CFG_POLLER_PROPERTY_KEY);
 
          try {
-            pollerTime = Long.parseLong(configuredPollTime);
+            pollerTime = new TimeValue(Long.parseLong(configuredPollTime), TimeUnit.MILLISECONDS);
          } catch (NumberFormatException nfe) {
             LOG.error("Value: " + configuredPollTime + " is not a valid number. The configuration poller accepts time periods in ms.", nfe);
          }
       }
 
+      return pollerTime;
+   }
+
+   @Override
+   public void init(ServiceContext sc) throws InitializationException {
       LOG.info("Nuke configuration poller starting.");
 
-      cfgPoller = new Poller("Nuke Container - Configuration Poller", new ConfigurationUpdateRunnable(cfgUpdateMangaer), pollerTime);
-      cfgPoller.start();
+      final TimeValue pollerTime = pollerTime(sc.parameters());
+
+      try {
+         final ReclamationHandler reclamationHandler = ServiceHandler.instance().firstAvailable(sc.manager(), ReclamationHandler.class);
+         final TaskingModule taskingModule = ServiceHandler.instance().firstAvailable(sc.manager(), TaskingModule.class);
+
+         cfgUpdateMangaer = new ConfigurationUpdateManagerImpl(reclamationHandler);
+         cfgPollerHandle = taskingModule.tasker().task(new ConfigurationUpdateRunnable(cfgUpdateMangaer), pollerTime);
+      } catch (ServiceUnavailableException sue) {
+         throw new InitializationException(sue);
+      }
    }
 
    @Override
    public void destroy() {
       LOG.info("Nuke configuration poller stopping.");
 
-      try {
-         cfgPoller.haltPolling();
-         cfgPoller.join();
-      } catch (InterruptedException ie) {
-         LOG.error("Interrupted while waiting for the cfg poller thread to exit. Attempting to kill thread and exit.", ie);
-
-         cfgPoller.interrupt();
-      }
+      cfgPollerHandle.cancellationRemote().cancel();
    }
 }

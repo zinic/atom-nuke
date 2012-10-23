@@ -1,14 +1,13 @@
 package org.atomnuke.service;
 
 import org.atomnuke.service.context.ServiceContext;
+import org.atomnuke.util.lifecycle.ResourceLifeCycle;
 
 /**
  *
  * @author zinic
  */
-public interface ServiceLifeCycle {
+public interface ServiceLifeCycle extends ResourceLifeCycle<ServiceContext> {
 
-   void init(ServiceContext sc) throws ServiceInitializationException;
-
-   void destroy();
+   ResolutionAction resolve(ServiceManager serviceManager);
 }

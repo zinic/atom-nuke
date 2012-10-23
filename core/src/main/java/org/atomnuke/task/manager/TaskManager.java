@@ -1,20 +1,35 @@
 package org.atomnuke.task.manager;
 
 import java.util.UUID;
-import org.atomnuke.task.Tasker;
+import org.atomnuke.task.ManagedTask;
 import org.atomnuke.util.TimeValue;
+import org.atomnuke.util.lifecycle.Reclaimable;
 
 /**
  * The TaskManager interface abstracts the complexity of of adding tasks to the
- * Nuke scheduler. It follows its own life-cycle, having init and destroy
- * methods.
+ * Nuke scheduler.
  *
  * The task manager is responsible for scheduling tasks into the execution queue
  * and recommend to the scheduler the next wake time for efficient polling.
  *
  * @author zinic
  */
-public interface TaskManager extends Tasker {
+public interface TaskManager extends Reclaimable {
+
+   public enum State {
+
+      NEW,
+      READY,
+      DRAINING,
+      DESTROYED
+   }
+
+   /**
+    * Gets the state of the task manager.
+    *
+    * @return
+    */
+   State state();
 
    /**
     * Looks up a ManagedTask by id.
@@ -30,8 +45,4 @@ public interface TaskManager extends Tasker {
     * @return the suggested time interval for scheduler sleeping.
     */
    TimeValue scheduleTasks();
-
-   void init();
-
-   void destroy();
 }

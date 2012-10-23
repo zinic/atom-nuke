@@ -1,7 +1,6 @@
 package org.atomnuke.examples;
 
 import java.util.concurrent.TimeUnit;
-import org.atomnuke.Nuke;
 import org.atomnuke.NukeKernel;
 import org.atomnuke.atom.model.Entry;
 import org.atomnuke.listener.eps.EventletRelay;
@@ -12,8 +11,7 @@ import org.atomnuke.listener.eps.selectors.CategorySelector;
 import org.atomnuke.source.crawler.FeedCrawlerSourceFactory;
 import org.atomnuke.task.AtomTask;
 import org.atomnuke.task.context.AtomTaskContext;
-import org.atomnuke.task.lifecycle.DestructionException;
-import org.atomnuke.task.lifecycle.InitializationException;
+import org.atomnuke.util.lifecycle.InitializationException;
 import org.atomnuke.util.TimeValue;
 
 /**
@@ -27,7 +25,7 @@ public class FeedCrawlerMain {
       /*
        * Create a new instance of the Nuke kernel. The kernel is not started by default.
        */
-      final Nuke nuke = new NukeKernel();
+      final NukeKernel nuke = new NukeKernel();
 
       /*
        * Using a feed crawler factory simplifies creating feed crawlers

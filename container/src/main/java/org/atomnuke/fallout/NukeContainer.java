@@ -1,10 +1,8 @@
 package org.atomnuke.fallout;
 
-import org.atomnuke.fallout.service.ServiceUnavailableException;
-import org.atomnuke.fallout.service.ServiceHandler;
+import org.atomnuke.service.ServiceUnavailableException;
+import org.atomnuke.util.service.ServiceHandler;
 import java.io.File;
-import java.util.Collections;
-import java.util.Map;
 import javax.xml.bind.JAXBException;
 import org.atomnuke.Nuke;
 import org.atomnuke.NukeEnv;
@@ -14,15 +12,19 @@ import org.atomnuke.container.boot.ContainerBootstrap;
 import org.atomnuke.fallout.config.server.ServerConfigurationManager;
 import org.atomnuke.fallout.context.ContextManager;
 import org.atomnuke.container.packaging.loader.PackageLoader;
+import org.atomnuke.plugin.proxy.japi.JapiProxyFactory;
 import org.atomnuke.service.ServiceManager;
-import org.atomnuke.service.ServiceManagerImpl;
+import org.atomnuke.service.RuntimeServiceManager;
+import org.atomnuke.service.gc.ReclamationHandler;
+import org.atomnuke.task.manager.impl.GenericTaskManger;
+import org.atomnuke.task.manager.service.TaskingModule;
+import org.atomnuke.task.threading.ExecutionManager;
+import org.atomnuke.task.threading.ExecutionManagerImpl;
+import org.atomnuke.task.threading.ExecutionQueueImpl;
 import org.atomnuke.util.config.ConfigurationException;
 import org.atomnuke.util.config.io.ConfigurationManager;
 import org.atomnuke.util.config.update.ConfigurationContext;
 import org.atomnuke.util.config.update.ConfigurationUpdateManager;
-import org.atomnuke.task.context.TaskContextImpl;
-import org.atomnuke.task.lifecycle.InitializationException;
-import org.atomnuke.task.lifecycle.TaskLifeCycle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,17 +36,9 @@ public class NukeContainer {
 
    private static final Logger LOG = LoggerFactory.getLogger(NukeContainer.class);
 
-   private final ServiceManager serviceManager;
-   private final ServiceHandler serviceHelper;
-   private final Nuke nukeInstance;
-
+   private ServiceManager serviceManager;
    private ContextManager contextManager;
-
-   public NukeContainer() {
-      this.serviceManager = new ServiceManagerImpl();
-      this.serviceHelper = new ServiceHandler(serviceManager);
-      this.nukeInstance = new NukeKernel();
-   }
+   private Nuke nukeInstance;
 
    public Nuke nukeInstance() {
       return nukeInstance;
@@ -56,7 +50,12 @@ public class NukeContainer {
       LOG.info("Starting the Nuke container, Fallout.");
 
       LOG.debug("Bootstrapping the container.");
+      serviceManager = new RuntimeServiceManager(new JapiProxyFactory());
+
       new ContainerBootstrap(serviceManager).bootstrap();
+
+      LOG.debug("Kernel thread start.");
+      initNuke();
 
       LOG.debug("Building context manager.");
       buildContextManager();
@@ -64,12 +63,23 @@ public class NukeContainer {
       LOG.debug("Registering Fallout configuration listener.");
       registerConfigurationListeners();
 
-      LOG.debug("Kernel thread start.");
+      LOG.info("Nuke container started. Elapsed start-up time: " + (System.currentTimeMillis() - initTime) + "ms.");
+   }
+
+   private void initNuke() {
+      try {
+         final ReclamationHandler reclamationHandler = ServiceHandler.instance().firstAvailable(serviceManager, ReclamationHandler.class);
+         final TaskingModule taskingService = ServiceHandler.instance().firstAvailable(serviceManager, TaskingModule.class);
+
+         final ExecutionManager executionManager = new ExecutionManagerImpl(new ExecutionQueueImpl());
+
+         nukeInstance = new NukeKernel(executionManager, reclamationHandler, new GenericTaskManger(executionManager, taskingService.taskTracker()), taskingService.tasker());
+      } catch (ServiceUnavailableException sue) {
+         throw new FalloutInitException(sue);
+      }
 
       nukeInstance.shutdownHook().enlist(serviceManager);
       nukeInstance.start();
-
-      LOG.info("Nuke container started. Elapsed start-up time: " + (System.currentTimeMillis() - initTime) + "ms.");
    }
 
    private void registerNukeCfgListener(ConfigurationUpdateManager cfgUpdateManager) throws FalloutInitException {
@@ -90,7 +100,7 @@ public class NukeContainer {
    private void buildContextManager() {
       // First package loader wins
       try {
-         final PackageLoader firstLoader = serviceHelper.firstAvailable(PackageLoader.class);
+         final PackageLoader firstLoader = ServiceHandler.instance().firstAvailable(serviceManager, PackageLoader.class);
          contextManager = new ContextManager(serviceManager, firstLoader.packageContexts(), nukeInstance);
       } catch (ServiceUnavailableException sue) {
          LOG.error(sue.getMessage(), sue);
@@ -101,7 +111,7 @@ public class NukeContainer {
 
    private void registerConfigurationListeners() {
       try {
-         final ConfigurationUpdateManager cfgUpdateManager = serviceHelper.firstAvailable(ConfigurationUpdateManager.class);
+         final ConfigurationUpdateManager cfgUpdateManager = ServiceHandler.instance().firstAvailable(serviceManager, ConfigurationUpdateManager.class);
          registerNukeCfgListener(cfgUpdateManager);
       } catch (ServiceUnavailableException sue) {
          LOG.error(sue.getMessage(), sue);

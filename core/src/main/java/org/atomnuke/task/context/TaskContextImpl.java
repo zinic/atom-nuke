@@ -2,7 +2,7 @@ package org.atomnuke.task.context;
 
 import java.util.Map;
 import org.atomnuke.service.ServiceManager;
-import org.atomnuke.task.Tasker;
+import org.atomnuke.task.manager.AtomTasker;
 import org.slf4j.Logger;
 
 /**
@@ -13,10 +13,10 @@ public class TaskContextImpl implements AtomTaskContext {
 
    private final Map<String, String> parameters;
    private final ServiceManager services;
-   private final Tasker submitter;
+   private final AtomTasker submitter;
    private final Logger log;
 
-   public TaskContextImpl(Logger log, Map<String, String> parameters, ServiceManager services, Tasker submitter) {
+   public TaskContextImpl(Logger log, Map<String, String> parameters, ServiceManager services, AtomTasker submitter) {
       this.parameters = parameters;
       this.services = services;
       this.submitter = submitter;
@@ -39,7 +39,7 @@ public class TaskContextImpl implements AtomTaskContext {
    }
 
    @Override
-   public Tasker atomTasker() {
+   public AtomTasker atomTasker() {
       return submitter;
    }
 }

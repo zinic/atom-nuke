@@ -57,7 +57,7 @@ public class EPSMain {
 
 
       // Set up Nuke
-      final Nuke nukeKernel = new NukeKernel();
+      final NukeKernel nukeKernel = new NukeKernel();
 
       final AtomTask task1 = nukeKernel.follow(new EventGenerator("Task 1", true), new TimeValue(500, TimeUnit.MILLISECONDS));
       task1.addListener(relay1);

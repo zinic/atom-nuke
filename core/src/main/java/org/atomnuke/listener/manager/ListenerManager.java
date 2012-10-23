@@ -15,7 +15,5 @@ public interface ListenerManager {
 
    boolean hasListeners();
 
-   boolean isReentrant();
-
    List<ManagedListener> listeners();
 }

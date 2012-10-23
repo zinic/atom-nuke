@@ -1,7 +1,7 @@
 package org.atomnuke.task.context;
 
 import org.atomnuke.context.Context;
-import org.atomnuke.task.Tasker;
+import org.atomnuke.task.manager.AtomTasker;
 import org.slf4j.Logger;
 
 /**
@@ -10,7 +10,7 @@ import org.slf4j.Logger;
  */
 public interface AtomTaskContext extends Context {
 
-   Tasker atomTasker();
+   AtomTasker atomTasker();
 
    Logger log();
 }

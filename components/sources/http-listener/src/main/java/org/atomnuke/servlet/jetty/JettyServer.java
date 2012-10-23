@@ -3,7 +3,7 @@ package org.atomnuke.servlet.jetty;
 import org.atomnuke.listener.AtomListener;
 import org.atomnuke.servlet.AtomSinkServlet;
 import org.atomnuke.source.QueueSource;
-import org.atomnuke.task.lifecycle.InitializationException;
+import org.atomnuke.util.lifecycle.InitializationException;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;

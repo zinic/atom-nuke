@@ -1,16 +1,16 @@
 package org.atomnuke;
 
 import java.util.UUID;
-import org.atomnuke.kernel.KernelDelegate;
-import org.atomnuke.kernel.resource.Destroyable;
+import org.atomnuke.kernel.GenericKernelDelegate;
 import org.atomnuke.kernel.shutdown.ShutdownHook;
 import org.atomnuke.plugin.InstanceContext;
 import org.atomnuke.plugin.InstanceContextImpl;
-import org.atomnuke.plugin.local.LocalInstanceEnvironment;
+import org.atomnuke.plugin.env.NopInstanceEnvironment;
 import org.atomnuke.source.AtomSource;
 import org.atomnuke.task.AtomTask;
-import org.atomnuke.task.Tasker;
 import org.atomnuke.util.TimeValue;
+import org.atomnuke.util.lifecycle.InitializationException;
+import org.atomnuke.util.lifecycle.Reclaimable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,14 +21,13 @@ import org.slf4j.LoggerFactory;
 public abstract class AbstractNukeImpl implements Nuke {
 
    private static final Logger LOG = LoggerFactory.getLogger(AbstractNukeImpl.class);
+   private static final long MAX_WAIT_TIME_FOR_SHUTDOWN = 15000;
 
-   protected static final long MAX_WAIT_TIME_FOR_SHUTDOWN = 15000;
-
+   private final GenericKernelDelegate kernelDelegate;
    private final ShutdownHook kernelShutdownHook;
-   private final KernelDelegate kernelDelegate;
    private final Thread controlThread;
 
-   public AbstractNukeImpl(ShutdownHook kernelShutdownHook, KernelDelegate kernelDelegate) {
+   public AbstractNukeImpl(ShutdownHook kernelShutdownHook, GenericKernelDelegate kernelDelegate) {
       this.kernelShutdownHook = kernelShutdownHook;
       this.kernelDelegate = kernelDelegate;
 
@@ -36,23 +35,40 @@ public abstract class AbstractNukeImpl implements Nuke {
    }
 
    @Override
-   public Tasker tasker() {
-      return kernelDelegate.taskManager();
-   }
-
-   @Override
    public ShutdownHook shutdownHook() {
       return kernelShutdownHook;
    }
 
-   @Override
+   /**
+    * Helper method for following a given source at a defined polling interval.
+    * This has the same effect as calling follow on the Tasker interface.This
+    * calls the follow method by wrapping the given AtomSource in a
+    * SimpleInstanceContext.
+    *
+    * @param source the AtomSource to be scheduled.
+    * @param pollingInterval the desired polling interval for the source.
+    * @return a new task instance for further interaction with the newly
+    * scheduled source.
+    * @throws InitializationException thrown when initializing the source fails
+    * wit the current task context.
+    */
    public AtomTask follow(AtomSource source, TimeValue pollingInterval) {
-      return follow(new InstanceContextImpl<AtomSource>(LocalInstanceEnvironment.getInstance(), source), pollingInterval);
+      return follow(new InstanceContextImpl<AtomSource>(NopInstanceEnvironment.getInstance(), source), pollingInterval);
    }
 
-   @Override
+   /**
+    * Helper method for following a given source at a defined polling interval.
+    * This has the same effect as calling follow on the Tasker interface.
+    *
+    * @param source the instance context of the AtomSource to be scheduled.
+    * @param pollingInterval the desired polling interval for the source.
+    * @return a new task instance for further interaction with the newly
+    * scheduled source.
+    * @throws InitializationException thrown when initializing the source fails
+    * wit the current task context.
+    */
    public AtomTask follow(InstanceContext<AtomSource> source, TimeValue pollingInterval) {
-      return tasker().follow(source, pollingInterval);
+      return atomTasker().follow(source, pollingInterval);
    }
 
    @Override
@@ -61,7 +77,7 @@ public abstract class AbstractNukeImpl implements Nuke {
          throw new IllegalStateException("Crawler already started or destroyed.");
       }
 
-      kernelShutdownHook.enlist(new Destroyable() {
+      kernelShutdownHook.enlist(new Reclaimable() {
          @Override
          public void destroy() {
             kernelDelegate.cancellationRemote().cancel();

@@ -1,14 +1,15 @@
 package org.atomnuke.source;
 
 import org.atomnuke.source.result.AtomSourceResult;
-import org.atomnuke.task.lifecycle.TaskLifeCycle;
+import org.atomnuke.task.context.AtomTaskContext;
+import org.atomnuke.util.lifecycle.ResourceLifeCycle;
 
 /**
  * An AtomSource represents an object that may be polled for ATOM data.
  *
  * @author zinic
  */
-public interface AtomSource extends TaskLifeCycle {
+public interface AtomSource extends ResourceLifeCycle<AtomTaskContext> {
 
    /**
     * Polls the source for ATOM data. This data may be an Entry object or a Feed

@@ -11,7 +11,6 @@ import org.atomnuke.plugin.InstanceContext;
 import org.atomnuke.listener.AtomListener;
 import org.atomnuke.listener.eps.EventletRelay;
 import org.atomnuke.listener.eps.eventlet.AtomEventlet;
-import org.atomnuke.plugin.operation.ComplexOperation;
 import org.atomnuke.task.AtomTask;
 import org.atomnuke.util.config.ConfigurationException;
 import org.atomnuke.util.remote.CancellationRemote;
@@ -66,7 +65,7 @@ public class ContainerContext {
    }
 
    public void registerSink(String name, InstanceContext<AtomListener> instanceCtx) {
-      LOG.info("Registering listeners: " + name);
+      LOG.info("Registering listener: " + name);
 
       listeners.put(name, instanceCtx);
    }
@@ -81,7 +80,7 @@ public class ContainerContext {
       LOG.info("Registering source: " + name);
 
       tasks.put(name, task);
-      cancellationRemotes.put(name, task.cancellationRemote());
+      cancellationRemotes.put(name, task.handle().cancellationRemote());
    }
 
    public void process(List<Binding> bindingsToMerge) throws ConfigurationException {

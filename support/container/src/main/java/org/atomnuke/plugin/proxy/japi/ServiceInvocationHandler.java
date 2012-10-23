@@ -5,7 +5,7 @@ import java.lang.reflect.Method;
 import org.atomnuke.plugin.InstanceContext;
 import org.atomnuke.plugin.operation.ComplexOperation;
 import org.atomnuke.plugin.operation.OperationFailureException;
-import org.atomnuke.plugin.proxy.ResultCatch;
+import org.atomnuke.util.result.ResultCatchImpl;
 import org.atomnuke.service.Service;
 
 /**
@@ -22,11 +22,11 @@ public class ServiceInvocationHandler implements InvocationHandler {
 
    @Override
    public Object invoke(Object proxy, final Method method, final Object[] args) throws Throwable {
-      final ResultCatch resultCatch = new ResultCatch();
+      final ResultCatchImpl resultCatch = new ResultCatchImpl();
 
-      context.perform(new ComplexOperation<Service, ResultCatch>() {
+      context.perform(new ComplexOperation<Service, ResultCatchImpl>() {
          @Override
-         public void perform(Service service, ResultCatch argument) throws OperationFailureException {
+         public void perform(Service service, ResultCatchImpl argument) throws OperationFailureException {
             try {
                argument.setResult(method.invoke(service.instance(), args));
             } catch (Exception ex) {
