@@ -25,6 +25,8 @@
             <extensions>true</extensions>
 
             <configuration>
+               <name>nuke-fallout</name>
+
                <copyright>Apache License, Version 2.0</copyright>
                <group>Applications/Communications</group>
 
@@ -182,7 +184,7 @@
                </postremoveScriptlet>
 
                <requires>
-                  <require>jdk</require>
+                  <require>java</require>
                </requires>
             </configuration>
          </plugin>
