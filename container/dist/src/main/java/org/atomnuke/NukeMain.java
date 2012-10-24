@@ -20,7 +20,7 @@ public final class NukeMain {
    }
 
    public static void main(String[] args) throws Exception {
-      final ConfigurationManager<ServerConfiguration> cfgManager = new ServerConfigurationManager(new File(NukeEnv.NUKE_HOME, NukeEnv.CONFIG_NAME));
+      final ConfigurationManager<ServerConfiguration> cfgManager = new ServerConfigurationManager(new File(NukeEnv.CONFIG_LOCATION));
       final ServerConfiguration previousCfg = cfgManager.read();
 
       final CliConfigurationHandler handler = new CliConfigurationHandler(cfgManager, previousCfg != null ? previousCfg : new ServerConfiguration());

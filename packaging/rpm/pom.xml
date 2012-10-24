@@ -34,15 +34,59 @@
                <description>ATOM Nuke - The Java ATOM Event Bus</description>
 
                <mappings>
+                  <!-- Directories -->
+
                   <mapping>
                      <directory>/etc/atomnuke</directory>
 
                      <username>atomnuke</username>
                      <groupname>atomnuke</groupname>
+                     <filemode>755</filemode>
+                  </mapping>
 
+                  <mapping>
+                     <directory>/var/lib/atomnuke</directory>
+
+                     <username>atomnuke</username>
+                     <groupname>atomnuke</groupname>
+                     <filemode>755</filemode>
+                  </mapping>
+
+                  <mapping>
+                     <directory>/var/lib/atomnuke/deployable</directory>
+
+                     <username>atomnuke</username>
+                     <groupname>atomnuke</groupname>
+                     <filemode>755</filemode>
+                  </mapping>
+
+                  <mapping>
+                     <directory>/var/lib/atomnuke/deployed</directory>
+
+                     <username>atomnuke</username>
+                     <groupname>atomnuke</groupname>
+                     <filemode>755</filemode>
+                  </mapping>
+
+
+                  <mapping>
+                     <directory>/var/log/atomnuke</directory>
+
+                     <username>atomnuke</username>
+                     <groupname>atomnuke</groupname>
+                     <filemode>755</filemode>
+                  </mapping>
+
+                  <!-- Files -->
+
+                  <mapping>
+                     <directory>/etc/atomnuke</directory>
+
+                     <username>atomnuke</username>
+                     <groupname>atomnuke</groupname>
                      <filemode>644</filemode>
+
                      <configuration>noreplace</configuration>
-                     <directoryIncluded>true</directoryIncluded>
 
                      <sources>
                         <source>
@@ -52,77 +96,15 @@
                   </mapping>
 
                   <mapping>
-                     <directory>/var/lib/atomnuke/deployable</directory>
-
-                     <username>atomnuke</username>
-                     <groupname>atomnuke</groupname>
-
-                     <!-- Modify file permissions as needed -->
-                     <filemode>755</filemode>
-                     <configuration>false</configuration>
-                     <directoryIncluded>true</directoryIncluded>
-
-                     <sources>
-                        <source>
-                           <location>../src/readme/DEPLOYABLE_README</location>
-                           <destination>.README</destination>
-                        </source>
-                     </sources>
-                  </mapping>
-
-                  <mapping>
-                     <directory>/var/lib/atomnuke/deployed</directory>
-
-                     <username>atomnuke</username>
-                     <groupname>atomnuke</groupname>
-
-                     <!-- Modify file permissions as needed -->
-                     <filemode>755</filemode>
-                     <configuration>false</configuration>
-                     <directoryIncluded>true</directoryIncluded>
-
-                     <sources>
-                        <source>
-                           <location>../src/readme/DEPLOYED_README</location>
-                           <destination>.README</destination>
-                        </source>
-                     </sources>
-                  </mapping>
-
-                  <mapping>
-                     <directory>/var/log/atomnuke</directory>
-
-                     <username>atomnuke</username>
-                     <groupname>atomnuke</groupname>
-
-                     <!-- Modify file permissions as needed -->
-                     <filemode>755</filemode>
-                     <configuration>false</configuration>
-                     <directoryIncluded>true</directoryIncluded>
-
-                     <sources>
-                        <source>
-                           <location>../src/readme/LOG_README</location>
-                           <destination>.README</destination>
-                        </source>
-                     </sources>
-                  </mapping>
-
-                  <mapping>
                      <directory>/usr/lib/atomnuke/</directory>
 
                      <username>atomnuke</username>
                      <groupname>atomnuke</groupname>
-
-                     <!-- Modify file permissions as needed -->
                      <filemode>644</filemode>
-                     <configuration>false</configuration>
-                     <directoryIncluded>true</directoryIncluded>
 
                      <sources>
                         <source>
                            <location>../../container/dist/target/fallout-full.jar</location>
-                           <destination>fallout-full.jar</destination>
                         </source>
                      </sources>
                   </mapping>
@@ -132,11 +114,7 @@
 
                      <username>atomnuke</username>
                      <groupname>atomnuke</groupname>
-
-                     <!-- Modify file permissions as needed -->
                      <filemode>755</filemode>
-                     <configuration>false</configuration>
-                     <directoryIncluded>false</directoryIncluded>
 
                      <sources>
                         <source>
@@ -151,16 +129,12 @@
 
                      <username>atomnuke</username>
                      <groupname>atomnuke</groupname>
-
-                     <!-- Modify file permissions as needed -->
-                     <filemode>644</filemode>
-                     <configuration>false</configuration>
-                     <directoryIncluded>false</directoryIncluded>
+                     <filemode>444</filemode>
 
                      <sources>
                         <source>
-                           <location>../../components/stock-bundle/target/stock-sources-${project.version}.ear</location>
-                           <destination>stock-sources.ear</destination>
+                           <location>../../components/stock-bundle/target/stock-bundle-${project.version}.ear</location>
+                           <destination>stock-lib.ear</destination>
                         </source>
                      </sources>
                   </mapping>
@@ -171,7 +145,7 @@
                      id -u atomnuke >> /dev/null 2>&amp;1;
 
                      if [ $? -eq 1 ]; then
-                        useradd -M -d /var/lib/atomnuke -s /bin/false atomnuke
+                     useradd -M -d /var/lib/atomnuke -s /bin/false atomnuke
                      fi
                   </script>
                </preinstallScriptlet>

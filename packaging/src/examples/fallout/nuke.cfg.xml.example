@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 
+<!-- This is a configuration skeleton with nothing set. -->
+
 <nuke xmlns="http://atomnuke.org/configuration">
    <sinks>
    </sinks>

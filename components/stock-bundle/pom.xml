@@ -10,7 +10,7 @@
    </parent>
 
    <groupId>org.atomnuke.components</groupId>
-   <artifactId>stock-sources</artifactId>
+   <artifactId>stock-bundle</artifactId>
 
    <packaging>ear</packaging>
 
