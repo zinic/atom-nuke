@@ -12,7 +12,7 @@
    <groupId>org.atomnuke.packaging</groupId>
    <artifactId>nuke-rpm</artifactId>
 
-   <packaging>rpm</packaging>
+   <packaging>pom</packaging>
 
    <name>Atom Nuke - Packaging - RPM</name>
 
