@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  *
+ * PUTVAL\s([^/]+)/([^/]+)/([^\s]+)\sinterval=([\d]+)\s([\d.]+):([\d.]+)
  * @author zinic
  */
 public class CollectdSinkServlet extends HttpServlet {
