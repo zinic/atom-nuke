@@ -84,7 +84,7 @@ public class NukeContainer {
 
    private void registerNukeCfgListener(ConfigurationUpdateManager cfgUpdateManager) throws FalloutInitException {
       try {
-         final ConfigurationManager<ServerConfiguration> cfgManager = new ServerConfigurationManager(new File(NukeEnv.NUKE_HOME, NukeEnv.CONFIG_LOCATION));
+         final ConfigurationManager<ServerConfiguration> cfgManager = new ServerConfigurationManager(new File(NukeEnv.CONFIG_LOCATION));
          final ConfigurationContext<ServerConfiguration> configurationContext = cfgUpdateManager.register("org.atomnuke.container.cfg", cfgManager);
 
          configurationContext.addListener(contextManager);

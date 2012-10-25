@@ -20,6 +20,7 @@
       <!-- Sources -->
       <module>sources/feed-crawler</module>
       <module>sources/http-listener</module>
+      <module>sources/collectd-http</module>
       <module>sources/util-sources</module>
 
       <!-- Listeners -->
@@ -43,6 +44,12 @@
          <dependency>
             <groupId>org.atomnuke.components.source</groupId>
             <artifactId>http-listener</artifactId>
+            <version>${project.version}</version>
+         </dependency>
+
+         <dependency>
+            <groupId>org.atomnuke.components.source</groupId>
+            <artifactId>collectd-http</artifactId>
             <version>${project.version}</version>
          </dependency>
 
