@@ -8,13 +8,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.atomnuke.atom.model.Link;
-import org.atomnuke.util.lifecycle.DestructionException;
-import org.atomnuke.util.lifecycle.InitializationException;
-import org.atomnuke.source.AtomSource;
-import org.atomnuke.source.AtomSourceException;
-import org.atomnuke.source.result.AtomSourceResult;
-import org.atomnuke.task.context.AtomTaskContext;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -22,8 +15,14 @@ import org.apache.http.client.methods.HttpGet;
 import org.atomnuke.atom.io.AtomReadException;
 import org.atomnuke.atom.io.AtomReaderFactory;
 import org.atomnuke.atom.io.ReaderResult;
+import org.atomnuke.atom.model.Link;
+import org.atomnuke.source.AtomSource;
+import org.atomnuke.source.AtomSourceException;
+import org.atomnuke.source.result.AtomSourceResult;
 import org.atomnuke.source.result.AtomSourceResultImpl;
 import org.atomnuke.source.result.ResultType;
+import org.atomnuke.task.context.AtomTaskContext;
+import org.atomnuke.util.lifecycle.InitializationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

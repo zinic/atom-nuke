@@ -7,7 +7,6 @@ import org.atomnuke.listener.AtomListenerException;
 import org.atomnuke.listener.AtomListenerResult;
 import org.atomnuke.listener.ListenerResult;
 import org.atomnuke.task.context.AtomTaskContext;
-import org.atomnuke.util.lifecycle.DestructionException;
 import org.atomnuke.util.lifecycle.InitializationException;
 
 /**

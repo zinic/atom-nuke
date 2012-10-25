@@ -1,9 +1,7 @@
 package org.atomnuke.cli.command.eps.relay;
 
-import org.atomnuke.cli.command.AbstractNukeCommand;
 import org.atomnuke.cli.CliConfigurationHandler;
-import org.atomnuke.util.config.io.ConfigurationReader;
-import org.atomnuke.config.model.LanguageType;
+import org.atomnuke.cli.command.AbstractNukeCommand;
 import org.atomnuke.config.model.Relay;
 import org.atomnuke.util.cli.command.result.CommandFailure;
 import org.atomnuke.util.cli.command.result.CommandResult;

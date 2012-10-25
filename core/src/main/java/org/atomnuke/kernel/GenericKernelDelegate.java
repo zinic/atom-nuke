@@ -2,7 +2,6 @@ package org.atomnuke.kernel;
 
 import java.util.concurrent.TimeUnit;
 import org.atomnuke.task.manager.TaskManager;
-import org.atomnuke.task.threading.ExecutionManager;
 import org.atomnuke.util.TimeValue;
 import org.atomnuke.util.remote.AtomicCancellationRemote;
 import org.atomnuke.util.remote.CancellationRemote;
