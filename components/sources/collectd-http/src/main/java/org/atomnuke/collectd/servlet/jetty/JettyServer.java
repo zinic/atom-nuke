@@ -1,9 +1,7 @@
 package org.atomnuke.collectd.servlet.jetty;
 
-import org.atomnuke.listener.AtomListener;
 import org.atomnuke.collectd.servlet.CollectdSinkServlet;
 import org.atomnuke.collectd.source.QueueSource;
-import org.atomnuke.util.lifecycle.InitializationException;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
