@@ -11,13 +11,13 @@ import org.atomnuke.task.TaskHandle;
  */
 public class EnvAwareManagedRunTask extends AbstractManagedTask {
 
-   private final SimpleOperation<Runnable> RUN_OPERATION = new SimpleOperation<Runnable>() {
+   private static final SimpleOperation<Runnable> RUN_OPERATION = new SimpleOperation<Runnable>() {
       @Override
       public void perform(Runnable instance) throws OperationFailureException {
          instance.run();
       }
    };
-   
+
    private final InstanceContext<Runnable> runnable;
 
    public EnvAwareManagedRunTask(InstanceContext<? extends Runnable> runnable, TaskHandle taskHandle) {

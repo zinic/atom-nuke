@@ -21,14 +21,12 @@ public class JavaBindingEnvironment implements BindingEnvironment {
    private static final LanguageDescriptor LANGUAGE_DESCRIPTOR = new LanguageDescriptorImpl(BindingLanguage.JAVA, ".class");
 
    private final JavaEnvironment environment;
-   private final IdentityClassLoader classLoader;
    private final ResourceManager resourceManager;
 
    public JavaBindingEnvironment(ResourceManager resourceManager) {
       this.resourceManager = resourceManager;
 
-      classLoader = new IdentityClassLoader(resourceManager);
-      environment = new JavaEnvironment(resourceManager, classLoader);
+      environment = new JavaEnvironment(resourceManager, new IdentityClassLoader(resourceManager));
    }
 
    @Override

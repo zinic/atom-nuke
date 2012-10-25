@@ -12,7 +12,8 @@ import org.atomnuke.util.lifecycle.InitializationException;
  */
 public class ExecutionManagerService implements Service {
 
-   private final String SERIVCE_NAME = "org.atomnuke.task.threading.ExecutionService";
+   private static final String SERIVCE_NAME = "org.atomnuke.task.threading.ExecutionService";
+   private static final String NOT_SUPPORTED_YET = "Not supported yet.";
 
    @Override
    public String name() {
@@ -26,21 +27,21 @@ public class ExecutionManagerService implements Service {
 
    @Override
    public Object instance() {
-      throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+      throw new UnsupportedOperationException(NOT_SUPPORTED_YET);
    }
 
    @Override
    public ResolutionAction resolve(ServiceManager serviceManager) {
-      throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+      throw new UnsupportedOperationException(NOT_SUPPORTED_YET);
    }
 
    @Override
    public void init(ServiceContext contextObject) throws InitializationException {
-      throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+      throw new UnsupportedOperationException(NOT_SUPPORTED_YET);
    }
 
    @Override
    public void destroy() {
-      throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+      throw new UnsupportedOperationException(NOT_SUPPORTED_YET);
    }
 }
