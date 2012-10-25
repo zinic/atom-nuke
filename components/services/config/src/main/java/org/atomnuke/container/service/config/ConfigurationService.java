@@ -27,8 +27,8 @@ import org.slf4j.LoggerFactory;
 @NukeService
 public class ConfigurationService implements Service {
 
-   public static String CFG_POLLER_PROPERTY_KEY = "org.atomnuke.container.service.config.ConfigurationService.poll_interval_ms";
-   public static String CFG_SERVICE_NAME = "org.atomnuke.container.service.config.ConfigurationService";
+   public static final String CFG_POLLER_PROPERTY_KEY = "org.atomnuke.container.service.config.ConfigurationService.poll_interval_ms";
+   public static final String CFG_SERVICE_NAME = "org.atomnuke.container.service.config.ConfigurationService";
 
    private static final TimeValue DEFAULT_POLL_INTERVAL = new TimeValue(15, TimeUnit.SECONDS);
    private static final Logger LOG = LoggerFactory.getLogger(ConfigurationService.class);

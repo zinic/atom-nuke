@@ -10,15 +10,12 @@ import org.atomnuke.service.Service;
  *
  * @author zinic
  */
-public class NopInstanceEnvironment implements Environment {
+public final class NopInstanceEnvironment implements Environment {
 
    private static final Environment DEFAULT_LOCAL_ENV = new NopInstanceEnvironment();
 
    public static Environment getInstance() {
       return DEFAULT_LOCAL_ENV;
-   }
-
-   private NopInstanceEnvironment() {
    }
 
    @Override
