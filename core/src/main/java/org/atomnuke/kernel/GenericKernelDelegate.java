@@ -16,7 +16,7 @@ public class GenericKernelDelegate implements Runnable {
 
    private static final Logger LOG = LoggerFactory.getLogger(GenericKernelDelegate.class);
 
-   private static long ONE_MILLISECOND_IN_NANOS = 1000000;
+   private static final long ONE_MILLISECOND_IN_NANOS = 1000000;
 
    private final CancellationRemote crawlerCancellationRemote;
    private final TaskManager taskManager;

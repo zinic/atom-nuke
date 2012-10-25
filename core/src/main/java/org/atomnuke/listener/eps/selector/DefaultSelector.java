@@ -8,15 +8,12 @@ import org.atomnuke.atom.model.Feed;
  *
  * @author zinic
  */
-public class DefaultSelector implements Selector {
+public final class DefaultSelector implements Selector {
 
    private static final Selector INSTANCE = new DefaultSelector();
 
    public static Selector instance() {
       return INSTANCE;
-   }
-
-   private DefaultSelector() {
    }
 
    @Override
