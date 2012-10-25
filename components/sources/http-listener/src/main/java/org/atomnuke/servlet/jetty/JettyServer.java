@@ -1,6 +1,5 @@
 package org.atomnuke.servlet.jetty;
 
-import org.atomnuke.listener.AtomListener;
 import org.atomnuke.servlet.AtomSinkServlet;
 import org.atomnuke.source.QueueSource;
 import org.atomnuke.util.lifecycle.InitializationException;

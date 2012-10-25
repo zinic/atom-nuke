@@ -1,8 +1,7 @@
 package org.atomnuke.cli.command.source;
 
-import org.atomnuke.cli.command.AbstractNukeCommand;
 import org.atomnuke.cli.CliConfigurationHandler;
-import org.atomnuke.util.config.io.ConfigurationReader;
+import org.atomnuke.cli.command.AbstractNukeCommand;
 import org.atomnuke.config.model.LanguageType;
 import org.atomnuke.config.model.PollingInterval;
 import org.atomnuke.config.model.Source;
