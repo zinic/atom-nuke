@@ -1,8 +1,7 @@
 package org.atomnuke.cli.command.eps.eventlet;
 
-import org.atomnuke.cli.command.AbstractNukeCommand;
 import org.atomnuke.cli.CliConfigurationHandler;
-import org.atomnuke.util.config.io.ConfigurationReader;
+import org.atomnuke.cli.command.AbstractNukeCommand;
 import org.atomnuke.config.model.Eventlet;
 import org.atomnuke.config.model.LanguageType;
 import org.atomnuke.util.cli.command.result.CommandFailure;
@@ -16,6 +15,7 @@ import org.atomnuke.util.cli.command.result.CommandSuccess;
 public class AddEventlet extends AbstractNukeCommand {
 
    private static final int EVENTLET_ID = 0, EVENTLET_LANG = 1, EVENTLET_REFERENCE = 2;
+   private static final int EVENTLET_ARG_LENGTH = 3;
 
    public AddEventlet(CliConfigurationHandler configurationHandler) {
       super(configurationHandler);
@@ -33,7 +33,7 @@ public class AddEventlet extends AbstractNukeCommand {
 
    @Override
    public CommandResult perform(String[] arguments) throws Exception {
-      if (arguments.length != 3) {
+      if (arguments.length != EVENTLET_ARG_LENGTH) {
          return new CommandFailure("Adding an eventlet requires three arguments: <eventlet-id> <language> <ref>");
       }
 

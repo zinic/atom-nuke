@@ -1,6 +1,5 @@
 package org.atomnuke.fallout.context;
 
-import org.atomnuke.plugin.InstanceContext;
 import org.atomnuke.util.remote.CancellationRemote;
 
 /**

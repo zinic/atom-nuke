@@ -1,8 +1,7 @@
 package org.atomnuke.cli.command.sink;
 
-import org.atomnuke.cli.command.AbstractNukeCommand;
 import org.atomnuke.cli.CliConfigurationHandler;
-import org.atomnuke.util.config.io.ConfigurationReader;
+import org.atomnuke.cli.command.AbstractNukeCommand;
 import org.atomnuke.config.model.LanguageType;
 import org.atomnuke.config.model.Sink;
 import org.atomnuke.util.cli.command.result.CommandFailure;

@@ -1,9 +1,8 @@
 package org.atomnuke.cli.command.eps.eventlet;
 
 import java.util.Iterator;
-import org.atomnuke.cli.command.AbstractNukeCommand;
 import org.atomnuke.cli.CliConfigurationHandler;
-import org.atomnuke.util.config.io.ConfigurationReader;
+import org.atomnuke.cli.command.AbstractNukeCommand;
 import org.atomnuke.config.model.Eventlet;
 import org.atomnuke.util.cli.command.result.CommandFailure;
 import org.atomnuke.util.cli.command.result.CommandResult;
