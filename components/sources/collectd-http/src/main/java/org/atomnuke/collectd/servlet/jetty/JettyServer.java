@@ -28,7 +28,7 @@ public class JettyServer {
 
    private void init(QueueSource queueSource) {
 //      try {
-         rootContext.addServlet(new ServletHolder(new CollectdSinkServlet()), "/*");
+         rootContext.addServlet(new ServletHolder(new CollectdSinkServlet(queueSource)), "/*");
 //      } catch (InitializationException ie) {
 //         throw new RuntimeException("Failed to start. Reason: " + ie.getMessage());
 //      }

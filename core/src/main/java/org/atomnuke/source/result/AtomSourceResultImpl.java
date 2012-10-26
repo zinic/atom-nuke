@@ -57,16 +57,6 @@ public class AtomSourceResultImpl implements AtomSourceResult {
    }
 
    @Override
-   public boolean isEmpty() {
-      return type() == ResultType.EMPTY;
-   }
-
-   @Override
-   public boolean isFeedPage() {
-      return type() == ResultType.FEED;
-   }
-
-   @Override
    public Feed feed() {
       return feed;
    }
