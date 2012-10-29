@@ -21,6 +21,7 @@
       <module>sources/feed-crawler</module>
       <module>sources/http-listener</module>
       <module>sources/collectd-http</module>
+      <module>sources/syslog</module>
       <module>sources/util-sources</module>
 
       <!-- Listeners -->

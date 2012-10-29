@@ -29,25 +29,36 @@
       <dependency>
          <groupId>org.eclipse.jetty</groupId>
          <artifactId>jetty-webapp</artifactId>
-         <version>8.1.4.v20120524</version>
       </dependency>
 
       <dependency>
          <groupId>org.eclipse.jetty</groupId>
          <artifactId>jetty-server</artifactId>
-         <version>8.1.4.v20120524</version>
       </dependency>
 
       <dependency>
          <groupId>org.eclipse.jetty</groupId>
          <artifactId>jetty-servlet</artifactId>
-         <version>8.1.4.v20120524</version>
+      </dependency>
+
+      <dependency>
+         <groupId>com.sun.jersey</groupId>
+         <artifactId>jersey-servlet</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>com.sun.jersey</groupId>
+         <artifactId>jersey-json</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>javax.ws.rs</groupId>
+         <artifactId>jsr311-api</artifactId>
       </dependency>
 
       <dependency>
          <groupId>org.atomnuke.container</groupId>
          <artifactId>fallout</artifactId>
-         <version>${project.version}</version>
       </dependency>
 
       <dependency>
