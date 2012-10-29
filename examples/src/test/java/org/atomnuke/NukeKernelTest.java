@@ -34,7 +34,9 @@ public class NukeKernelTest {
          final EventletRelay relay = new EventletRelay();
 
          final ServiceManager svcManager = new RuntimeServiceManager(new JapiProxyFactory());
-         svcManager.register(new InstanceContextImpl<Service>(NopInstanceEnvironment.getInstance(), new FalloutReclamationService()));
+
+         svcManager.submit(new InstanceContextImpl<Service>(NopInstanceEnvironment.getInstance(), new FalloutReclamationService()));
+         svcManager.resolve();
 
          relay.init(new TaskContextImpl(null, null, svcManager, null));
 

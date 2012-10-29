@@ -58,9 +58,7 @@ public abstract class AbstractServiceManager implements ServiceManager {
       return registeredServices;
    }
 
-   protected abstract void resolve();
-
-   protected void register(String serviceName, ManagedService service) {
+   protected synchronized void register(String serviceName, ManagedService service) {
       registeredServicesByName.put(serviceName, service);
       registeredServices.push(service);
    }
@@ -123,7 +121,7 @@ public abstract class AbstractServiceManager implements ServiceManager {
    }
 
    @Override
-   public synchronized void register(InstanceContext<Service> service) throws ServiceAlreadyRegisteredException {
+   public synchronized void submit(InstanceContext<Service> service) throws ServiceAlreadyRegisteredException {
       final String serviceName = service.instance().name();
 
       if (registeredServicesByName.containsKey(serviceName)) {
@@ -131,8 +129,6 @@ public abstract class AbstractServiceManager implements ServiceManager {
       }
 
       pendingServices.add(service);
-
-      resolve();
    }
 
    @Override

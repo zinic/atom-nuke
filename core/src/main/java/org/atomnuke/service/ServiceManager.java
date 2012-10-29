@@ -10,7 +10,9 @@ import org.atomnuke.util.lifecycle.Reclaimable;
  */
 public interface ServiceManager extends Reclaimable {
 
-   void register(InstanceContext<Service> service) throws ServiceAlreadyRegisteredException;
+   void submit(InstanceContext<Service> service) throws ServiceAlreadyRegisteredException;
+
+   void resolve();
 
    boolean nameRegistered(String serviceName);
 

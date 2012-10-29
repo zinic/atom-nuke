@@ -9,8 +9,6 @@ import org.atomnuke.plugin.InstanceContext;
 import org.atomnuke.plugin.InstanceContextImpl;
 import org.atomnuke.plugin.ReferenceInstantiationException;
 import org.atomnuke.service.Service;
-import org.atomnuke.service.gc.ReclamationHandler;
-import org.atomnuke.util.lifecycle.Reclaimable;
 
 /**
  *
@@ -19,11 +17,9 @@ import org.atomnuke.util.lifecycle.Reclaimable;
 public class PackageBindingsImpl implements PackageBindings {
 
    private final List<BindingEnvironment> availableBindingEnvironments;
-   private final ReclamationHandler reclamationHandler;
 
-   public PackageBindingsImpl(ReclamationHandler reclamationHandler, List<BindingEnvironment> availableContexts) {
+   public PackageBindingsImpl(List<BindingEnvironment> availableContexts) {
       this.availableBindingEnvironments = new LinkedList<BindingEnvironment>(availableContexts);
-      this.reclamationHandler = reclamationHandler;
    }
 
    @Override
@@ -34,8 +30,6 @@ public class PackageBindingsImpl implements PackageBindings {
          final Environment env = bindingEnvironment.environment();
 
          for (Service discoveredService : env.services()) {
-            reclamationHandler.watch(new InstanceContextImpl<Reclaimable>(env, discoveredService));
-
             services.add(new InstanceContextImpl<Service>(env, discoveredService));
          }
       }

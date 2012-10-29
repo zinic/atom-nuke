@@ -23,7 +23,7 @@ public class ServerConfigurationHandler {
    private final ServerConfiguration configurationCopy;
 
    public ServerConfigurationHandler(ServerConfiguration configurationCopy) {
-      this.configurationCopy = configurationCopy;
+      this.configurationCopy = configurationCopy != null ? configurationCopy : new ServerConfiguration();
    }
 
    public ServerConfiguration getConfiguration() {

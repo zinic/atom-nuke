@@ -4,12 +4,14 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import org.atomnuke.container.service.annotation.NukeBootstrap;
-import org.atomnuke.service.ResolutionAction;
+import org.atomnuke.service.resolution.ResolutionActionType;
 import org.atomnuke.service.Service;
 import org.atomnuke.service.ServiceManager;
 import org.atomnuke.service.ServiceUnavailableException;
 import org.atomnuke.service.context.ServiceContext;
 import org.atomnuke.service.gc.ReclamationHandler;
+import org.atomnuke.service.resolution.ResolutionAction;
+import org.atomnuke.service.resolution.ResolutionActionImpl;
 import org.atomnuke.task.ReclaimableRunnable;
 import org.atomnuke.task.TaskHandle;
 import org.atomnuke.task.manager.TaskTracker;
@@ -59,7 +61,8 @@ public class FalloutTaskingModuleService implements Service {
 
    @Override
    public ResolutionAction resolve(ServiceManager serviceManager) {
-      return serviceManager.serviceRegistered(ReclamationHandler.class) ? ResolutionAction.INIT : ResolutionAction.DEFER;
+      return new ResolutionActionImpl(
+              serviceManager.serviceRegistered(ReclamationHandler.class) ? ResolutionActionType.INIT : ResolutionActionType.DEFER);
    }
 
    @Override

@@ -1,7 +1,9 @@
 package org.atomnuke.service.operation;
 
-import org.atomnuke.service.ResolutionAction;
+import org.atomnuke.service.resolution.ResolutionActionType;
 import org.atomnuke.service.ServiceManager;
+import org.atomnuke.service.resolution.ResolutionAction;
+import org.atomnuke.service.resolution.ResolutionActionImpl;
 
 /**
  *
@@ -14,8 +16,8 @@ public class ServiceResolutionArgument {
 
    public ServiceResolutionArgument(ServiceManager serviceManager) {
       this.serviceManager = serviceManager;
-      
-      resolutionAction = ResolutionAction.FAIL;
+
+      resolutionAction = new ResolutionActionImpl(ResolutionActionType.FAIL);
    }
 
    public ServiceManager serviceManager() {

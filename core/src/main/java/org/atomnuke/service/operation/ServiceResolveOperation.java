@@ -2,8 +2,8 @@ package org.atomnuke.service.operation;
 
 import org.atomnuke.plugin.operation.ComplexOperation;
 import org.atomnuke.plugin.operation.OperationFailureException;
-import org.atomnuke.service.ResolutionAction;
 import org.atomnuke.service.Service;
+import org.atomnuke.service.resolution.ResolutionAction;
 
 /**
  *

@@ -3,12 +3,14 @@ package org.atomnuke.container.service.config;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import org.atomnuke.container.service.annotation.NukeService;
-import org.atomnuke.service.ResolutionAction;
+import org.atomnuke.service.resolution.ResolutionActionType;
 import org.atomnuke.service.Service;
 import org.atomnuke.service.ServiceManager;
 import org.atomnuke.service.ServiceUnavailableException;
 import org.atomnuke.service.context.ServiceContext;
 import org.atomnuke.service.gc.ReclamationHandler;
+import org.atomnuke.service.resolution.ResolutionAction;
+import org.atomnuke.service.resolution.ResolutionActionImpl;
 import org.atomnuke.task.TaskHandle;
 import org.atomnuke.task.manager.service.TaskingModule;
 import org.atomnuke.util.TimeValue;
@@ -41,7 +43,8 @@ public class ConfigurationService implements Service {
       final boolean hasReclamationHandler = serviceManager.serviceRegistered(ReclamationHandler.class);
       final boolean hasTaskingModule = serviceManager.serviceRegistered(TaskingModule.class);
 
-      return hasTaskingModule && hasReclamationHandler ? ResolutionAction.INIT : ResolutionAction.DEFER;
+      return new ResolutionActionImpl(
+              hasTaskingModule && hasReclamationHandler ? ResolutionActionType.INIT : ResolutionActionType.DEFER);
    }
 
    @Override

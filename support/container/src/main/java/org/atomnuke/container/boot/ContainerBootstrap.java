@@ -1,5 +1,6 @@
 package org.atomnuke.container.boot;
 
+import java.util.Stack;
 import org.atomnuke.container.service.annotation.NukeBootstrap;
 import org.atomnuke.plugin.InstanceContextImpl;
 import org.atomnuke.plugin.env.NopInstanceEnvironment;
@@ -34,15 +35,17 @@ public class ContainerBootstrap implements Bootstrap {
 
       for (Class bootstrapService : bootstrapScanner.getTypesAnnotatedWith(NukeBootstrap.class)) {
          if (Service.class.isAssignableFrom(bootstrapService)) {
-            LOG.info("Initializing bootstrap service: " + bootstrapService.getName());
+            LOG.debug("Submitting bootstrap service: " + bootstrapService.getName());
 
             try {
                final Service serviceInstance = (Service) bootstrapService.newInstance();
-               serviceManager.register(new InstanceContextImpl<Service>(NopInstanceEnvironment.getInstance(), serviceInstance));
+               serviceManager.submit(new InstanceContextImpl<Service>(NopInstanceEnvironment.getInstance(), serviceInstance));
             } catch (Exception ex) {
                LOG.error("Failed to load bootstrap service: " + bootstrapService.getName() + " - This may cause unexpected behavior however the container may still attempt normal init.", ex);
             }
          }
       }
+
+      serviceManager.resolve();
    }
 }

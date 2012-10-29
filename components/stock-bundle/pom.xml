@@ -46,6 +46,11 @@
          <groupId>org.atomnuke.components.services</groupId>
          <artifactId>configuration</artifactId>
       </dependency>
+
+      <dependency>
+         <groupId>org.atomnuke.components.services</groupId>
+         <artifactId>config-rest-api</artifactId>
+      </dependency>
    </dependencies>
 
    <build>
@@ -101,6 +106,11 @@
                   <jarModule>
                      <groupId>org.atomnuke.components.services</groupId>
                      <artifactId>configuration</artifactId>
+                  </jarModule>
+
+                  <jarModule>
+                     <groupId>org.atomnuke.components.services</groupId>
+                     <artifactId>config-rest-api</artifactId>
                   </jarModule>
                </modules>
             </configuration>

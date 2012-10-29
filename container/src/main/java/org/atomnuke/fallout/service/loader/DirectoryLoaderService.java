@@ -16,15 +16,15 @@ import org.atomnuke.container.packaging.loader.impl.BindingAwarePackageLoader;
 import org.atomnuke.container.service.annotation.NukeBootstrap;
 import org.atomnuke.plugin.InstanceContext;
 import org.atomnuke.plugin.ReferenceInstantiationException;
-import org.atomnuke.service.ResolutionAction;
+import org.atomnuke.service.resolution.ResolutionActionType;
 import org.atomnuke.service.Service;
 import org.atomnuke.service.ServiceAlreadyRegisteredException;
 import org.atomnuke.service.ServiceManager;
-import org.atomnuke.service.ServiceUnavailableException;
 import org.atomnuke.service.context.ServiceContext;
 import org.atomnuke.service.gc.ReclamationHandler;
+import org.atomnuke.service.resolution.ResolutionAction;
+import org.atomnuke.service.resolution.ResolutionActionImpl;
 import org.atomnuke.util.lifecycle.InitializationException;
-import org.atomnuke.util.service.ServiceHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,7 +40,7 @@ public class DirectoryLoaderService implements Service {
 
    private final BindingEnvironmentFactory bindingEnvFactory;
    private final File deploymentDirectory, libraryDirectory;
-
+   
    private PackageLoader packageLoader;
 
    public DirectoryLoaderService() {
@@ -52,7 +52,8 @@ public class DirectoryLoaderService implements Service {
 
    @Override
    public ResolutionAction resolve(ServiceManager serviceManager) {
-      return serviceManager.serviceRegistered(ReclamationHandler.class) ? ResolutionAction.INIT : ResolutionAction.DEFER;
+      return new ResolutionActionImpl(
+              serviceManager.serviceRegistered(ReclamationHandler.class) ? ResolutionActionType.INIT : ResolutionActionType.DEFER);
    }
 
    @Override
@@ -72,14 +73,9 @@ public class DirectoryLoaderService implements Service {
 
    @Override
    public void init(ServiceContext sc) throws InitializationException {
-      try {
-         final ReclamationHandler reclamationHandler = ServiceHandler.instance().firstAvailable(sc.manager(), ReclamationHandler.class);
-         packageLoader = new BindingAwarePackageLoader(reclamationHandler, bindingEnvFactory);
-      } catch (ServiceUnavailableException sue) {
-         throw new InitializationException(sue);
-      }
-
       LOG.info("Directory package loader service starting.");
+
+      packageLoader = new BindingAwarePackageLoader(bindingEnvFactory);
 
       try {
          loadPackages();
@@ -103,12 +99,14 @@ public class DirectoryLoaderService implements Service {
    private void gatherServices(ServiceManager serviceManager, PackageContext pkgContext) throws ReferenceInstantiationException {
       for (InstanceContext<Service> svc : pkgContext.packageBindings().resolveServices()) {
          try {
-            serviceManager.register(svc);
+            serviceManager.submit(svc);
          } catch (ServiceAlreadyRegisteredException sare) {
             LOG.debug("Duplicate service for name: " + svc.instance().name() + ", found in package: "
                     + pkgContext.name() + ". This version of the service will not be loaded.", sare);
          }
       }
+
+      serviceManager.resolve();
    }
 
    private void loadPackages() throws PackageLoadingException {

@@ -8,6 +8,7 @@ import org.atomnuke.service.context.ServiceContextImpl;
 import org.atomnuke.service.operation.ServiceInitOperation;
 import org.atomnuke.service.operation.ServiceResolutionArgument;
 import org.atomnuke.service.operation.ServiceResolveOperation;
+import org.atomnuke.service.resolution.ResolutionAction;
 import org.atomnuke.util.remote.AtomicCancellationRemote;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,17 +26,31 @@ public class RuntimeServiceManager extends AbstractServiceManager {
    }
 
    @Override
-   protected synchronized void resolve() {
-      InstanceContext<Service> pendingService;
+   public void resolve() {
+      /**
+       * We can sweep the service registry equal to the number of services that
+       * are pending. While we may miss a few services, calls to this method
+       * should stack and flush everything out correctly.
+       */
+      final int totalSweepsAllowed = servicesPending();
+      boolean continueResolving = true;
 
-      for (int sweeps = servicesPending(); sweeps >= 0 && (pendingService = nextPendingService()) != null; sweeps--) {
+      for (int resolutionSweeps = 0; continueResolving; resolutionSweeps++) {
          final ServiceResolutionArgument resolutionArgument = new ServiceResolutionArgument(this);
+         final InstanceContext<Service> pendingService = nextPendingService();
+
+         boolean initializedService = false;
+
+         // Attempt to resolve the service
          pendingService.perform(ServiceResolveOperation.instance(), resolutionArgument);
 
-         switch (resolutionArgument.resolutionAction()) {
+         // Decide what to do based on what the service told us about its ability to initialize
+         final ResolutionAction action = resolutionArgument.resolutionAction();
+
+         switch (action.type()) {
             case INIT:
-               LOG.info("Service: " + pendingService.instance().name() + " initializing.");
                initService(pendingService);
+               initializedService = true;
                break;
 
             case DEFER:
@@ -47,12 +62,15 @@ public class RuntimeServiceManager extends AbstractServiceManager {
             default:
                LOG.error("Service: " + pendingService.instance().name() + " failed to start.");
          }
+
+         continueResolving = servicesPending() > 0 && (initializedService || resolutionSweeps < totalSweepsAllowed);
       }
    }
 
-   private void initService(final InstanceContext<Service> pendingService) {
-      final ServiceContext serviceContext = new ServiceContextImpl(Collections.EMPTY_MAP, this);
+   private void initService(InstanceContext<Service> pendingService) {
+      LOG.info("Service: " + pendingService.instance().name() + " initializing.");
 
+      final ServiceContext serviceContext = new ServiceContextImpl(Collections.EMPTY_MAP, this);
       pendingService.perform(ServiceInitOperation.<Service>instance(), serviceContext);
 
       final ManagedService managedService = new ManagedService(pendingService, new AtomicCancellationRemote());

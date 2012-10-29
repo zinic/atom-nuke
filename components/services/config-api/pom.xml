@@ -4,28 +4,21 @@
    <modelVersion>4.0.0</modelVersion>
 
    <parent>
-      <groupId>org.atomnuke</groupId>
-      <artifactId>project</artifactId>
+      <groupId>org.atomnuke.components</groupId>
+      <artifactId>components</artifactId>
       <version>1.1.2-SNAPSHOT</version>
-
+      
       <relativePath>./../../</relativePath>
    </parent>
 
-   <groupId>org.atomnuke.container.modules</groupId>
-   <artifactId>cfg-rest-api</artifactId>
+   <groupId>org.atomnuke.components.services</groupId>
+   <artifactId>config-rest-api</artifactId>
 
    <packaging>jar</packaging>
 
-   <name>Atom Nuke - Container - Configuration REST API</name>
+   <name>Atom Nuke - Services - RESTful Configuration Service</name>
 
    <dependencies>
-      <dependency>
-         <groupId>javax</groupId>
-         <artifactId>javaee-web-api</artifactId>
-         <version>6.0</version>
-         <scope>provided</scope>
-      </dependency>
-
       <dependency>
          <groupId>org.eclipse.jetty</groupId>
          <artifactId>jetty-webapp</artifactId>
@@ -39,6 +32,11 @@
       <dependency>
          <groupId>org.eclipse.jetty</groupId>
          <artifactId>jetty-servlet</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>com.sun.jersey</groupId>
+         <artifactId>jersey-server</artifactId>
       </dependency>
 
       <dependency>

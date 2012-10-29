@@ -1,5 +1,7 @@
 package org.atomnuke.container.packaging.classloader;
 
+import org.atomnuke.util.collections.EmptyEnumeration;
+import org.atomnuke.util.collections.SingleValueEnumeration;
 import com.rackspace.papi.commons.util.io.RawInputStreamReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Enumeration;
 import org.atomnuke.container.packaging.resource.Resource;
 import org.atomnuke.container.packaging.resource.ResourceManagerImpl;
 import org.atomnuke.container.packaging.resource.ResourceManager;
@@ -17,7 +20,6 @@ import org.atomnuke.container.packaging.resource.ResourceUtil;
 public class IdentityClassLoader extends ClassLoader {
 
    private static final Logger LOG = LoggerFactory.getLogger(IdentityClassLoader.class);
-
    private final ResourceManager resourceManager;
    private final ClassLoader parent;
 
@@ -102,6 +104,13 @@ public class IdentityClassLoader extends ClassLoader {
       }
 
       return resourceUrl;
+   }
+
+   @Override
+   protected Enumeration<URL> findResources(String name) throws IOException {
+      final URL resourceUrl = findResource(name);
+
+      return resourceUrl != null ? new SingleValueEnumeration<URL>(resourceUrl) : (Enumeration<URL>) EmptyEnumeration.instance();
    }
 
    final Class<?> defineClass(Resource descriptor) throws IOException {

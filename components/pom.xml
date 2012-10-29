@@ -21,7 +21,6 @@
       <module>sources/feed-crawler</module>
       <module>sources/http-listener</module>
       <module>sources/collectd-http</module>
-      <module>sources/syslog</module>
       <module>sources/util-sources</module>
 
       <!-- Listeners -->
@@ -29,6 +28,7 @@
 
       <!-- Services -->
       <module>services/config</module>
+      <module>services/config-api</module>
 
       <!-- Bundle -->
       <module>stock-bundle</module>
@@ -73,9 +73,9 @@
          </dependency>
 
          <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-            <version>4.2</version>
+            <groupId>org.atomnuke.components.services</groupId>
+            <artifactId>config-rest-api</artifactId>
+            <version>${project.version}</version>
          </dependency>
       </dependencies>
    </dependencyManagement>

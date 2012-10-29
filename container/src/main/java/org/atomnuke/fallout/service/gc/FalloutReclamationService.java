@@ -1,12 +1,14 @@
 package org.atomnuke.fallout.service.gc;
 
 import org.atomnuke.container.service.annotation.NukeBootstrap;
-import org.atomnuke.service.ResolutionAction;
 import org.atomnuke.service.gc.ReclamationHandler;
 import org.atomnuke.service.gc.impl.NukeReclamationHandler;
 import org.atomnuke.service.Service;
 import org.atomnuke.service.ServiceManager;
 import org.atomnuke.service.context.ServiceContext;
+import org.atomnuke.service.resolution.ResolutionAction;
+import org.atomnuke.service.resolution.ResolutionActionType;
+import org.atomnuke.service.resolution.ResolutionActionImpl;
 import org.atomnuke.util.lifecycle.InitializationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +31,7 @@ public class FalloutReclamationService implements Service {
 
    @Override
    public ResolutionAction resolve(ServiceManager serviceManager) {
-      return ResolutionAction.INIT;
+      return new ResolutionActionImpl(ResolutionActionType.INIT);
    }
 
    @Override
