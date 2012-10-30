@@ -8,9 +8,9 @@ import java.util.Map;
 import java.util.Set;
 import org.atomnuke.config.model.Binding;
 import org.atomnuke.plugin.InstanceContext;
-import org.atomnuke.listener.AtomListener;
-import org.atomnuke.listener.eps.EventletRelay;
-import org.atomnuke.listener.eps.eventlet.AtomEventlet;
+import org.atomnuke.sink.AtomSink;
+import org.atomnuke.sink.eps.FanoutSink;
+import org.atomnuke.sink.eps.eventlet.AtomEventlet;
 import org.atomnuke.task.AtomTask;
 import org.atomnuke.util.config.ConfigurationException;
 import org.atomnuke.util.remote.CancellationRemote;
@@ -25,17 +25,17 @@ public class ContainerContext {
 
    private static final Logger LOG = LoggerFactory.getLogger(ContainerContext.class);
 
-   private final Map<String, InstanceContext<AtomListener>> listeners;
+   private final Map<String, InstanceContext<AtomSink>> Sinks;
    private final Map<String, InstanceContext<AtomEventlet>> eventlets;
-   private final Map<String, InstanceContext<EventletRelay>> relays;
+   private final Map<String, InstanceContext<FanoutSink>> relays;
    private final Map<String, CancellationRemote> cancellationRemotes;
    private final Map<String, AtomTask> tasks;
    private final Map<String, Binding> bindings;
 
    public ContainerContext() {
-      listeners = new HashMap<String, InstanceContext<AtomListener>>();
+      Sinks = new HashMap<String, InstanceContext<AtomSink>>();
       eventlets = new HashMap<String, InstanceContext<AtomEventlet>>();
-      relays = new HashMap<String, InstanceContext<EventletRelay>>();
+      relays = new HashMap<String, InstanceContext<FanoutSink>>();
 
       cancellationRemotes = new HashMap<String, CancellationRemote>();
       tasks = new HashMap<String, AtomTask>();
@@ -47,7 +47,7 @@ public class ContainerContext {
    }
 
    public boolean hasSink(String name) {
-      return listeners.containsKey(name);
+      return Sinks.containsKey(name);
    }
 
    public boolean hasEventlet(String name) {
@@ -58,16 +58,16 @@ public class ContainerContext {
       return tasks.containsKey(name);
    }
 
-   public void registerRelay(String name, InstanceContext<EventletRelay> instanceCtx) {
+   public void registerRelay(String name, InstanceContext<FanoutSink> instanceCtx) {
       LOG.info("Registering relay: " + name);
 
       relays.put(name, instanceCtx);
    }
 
-   public void registerSink(String name, InstanceContext<AtomListener> instanceCtx) {
-      LOG.info("Registering listener: " + name);
+   public void registerSink(String name, InstanceContext<AtomSink> instanceCtx) {
+      LOG.info("Registering Sink: " + name);
 
-      listeners.put(name, instanceCtx);
+      Sinks.put(name, instanceCtx);
    }
 
    public void registerEventlet(String name, InstanceContext<AtomEventlet> instanceCtx) {
@@ -138,9 +138,9 @@ public class ContainerContext {
          }
       }
 
-      for (String id : new HashSet<String>(listeners.keySet())) {
+      for (String id : new HashSet<String>(Sinks.keySet())) {
          if (!hasRecieverBindingFor(id)) {
-            LOG.info("Garbage collecting listener: " + id);
+            LOG.info("Garbage collecting Sink: " + id);
 
             eventlets.remove(id);
             garbageQueue.add(cancellationRemotes.remove(id));
@@ -181,7 +181,7 @@ public class ContainerContext {
       if (source != null) {
          bind(source, binding);
       } else {
-         final InstanceContext<EventletRelay> relayContext = relays.get(binding.getTarget());
+         final InstanceContext<FanoutSink> relayContext = relays.get(binding.getTarget());
 
          if (relayContext != null) {
             bind(relayContext.instance(), binding);
@@ -191,23 +191,23 @@ public class ContainerContext {
       }
    }
 
-   private InstanceContext<? extends AtomListener> findAtomListener(String id) {
-      final InstanceContext<AtomListener> listenerContext = listeners.get(id);
-      return listenerContext != null ? listenerContext : relays.get(id);
+   private InstanceContext<? extends AtomSink> findAtomSink(String id) {
+      final InstanceContext<AtomSink> SinkContext = Sinks.get(id);
+      return SinkContext != null ? SinkContext : relays.get(id);
    }
 
    private void bind(AtomTask source, Binding binding) throws ConfigurationException {
-      final InstanceContext<? extends AtomListener> listenerCtx = findAtomListener(binding.getReceiver());
+      final InstanceContext<? extends AtomSink> SinkCtx = findAtomSink(binding.getReceiver());
 
-      if (listenerCtx == null) {
-         throw new ConfigurationException("Unable to locate listener or realy, " + binding.getReceiver() + ".");
+      if (SinkCtx == null) {
+         throw new ConfigurationException("Unable to locate Sink or realy, " + binding.getReceiver() + ".");
       }
 
-      cancellationRemotes.put(binding.getReceiver(), source.addListener(listenerCtx));
+      cancellationRemotes.put(binding.getReceiver(), source.addSink(SinkCtx));
       bindings.put(binding.getId(), binding);
    }
 
-   private void bind(EventletRelay source, Binding binding) throws ConfigurationException {
+   private void bind(FanoutSink source, Binding binding) throws ConfigurationException {
       final InstanceContext<? extends AtomEventlet> eventletCtx = eventlets.get(binding.getReceiver());
 
       if (eventletCtx == null) {

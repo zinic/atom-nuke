@@ -3,11 +3,11 @@ package org.atomnuke.examples;
 import java.util.concurrent.TimeUnit;
 import org.atomnuke.NukeKernel;
 import org.atomnuke.atom.model.Entry;
-import org.atomnuke.listener.eps.EventletRelay;
-import org.atomnuke.listener.eps.eventlet.AtomEventlet;
-import org.atomnuke.listener.eps.eventlet.AtomEventletException;
-import org.atomnuke.listener.eps.eventlet.AtomEventletPartial;
-import org.atomnuke.listener.eps.selectors.CategorySelector;
+import org.atomnuke.sink.eps.FanoutSink;
+import org.atomnuke.sink.eps.eventlet.AtomEventlet;
+import org.atomnuke.sink.eps.eventlet.AtomEventletException;
+import org.atomnuke.sink.eps.eventlet.AtomEventletPartial;
+import org.atomnuke.sink.selectors.CategorySelector;
 import org.atomnuke.source.crawler.FeedCrawlerSourceFactory;
 import org.atomnuke.task.AtomTask;
 import org.atomnuke.task.context.AtomTaskContext;
@@ -50,18 +50,18 @@ public class FeedCrawlerMain {
 
       /*
        * Nuke has a smart way of turning feed pages into individual events
-       * through a provided event listener called a Relay.
+       * through a provided event Sink called a Relay.
        */
-      final EventletRelay eventRelay = new EventletRelay();
+      final FanoutSink eventRelay = new FanoutSink();
 
       /*
        * Register the relay to the source task. This allows the relay to recieve
        * events from the feed crawler.
        */
-      crawlerTask.addListener(eventRelay);
+      crawlerTask.addSink(eventRelay);
 
       /*
-       * Event relays may transmit ATOM entry events to special listeners called
+       * Event relays may transmit ATOM entry events to special Sinks called
        * eventlets.
        */
       eventRelay.enlistHandler(new AtomEventlet() {
@@ -128,7 +128,7 @@ public class FeedCrawlerMain {
 
       /*
        * Destroying the nuke kernel will halt task scheduling and begin the
-       * shutdown life-cycle of every task, listener and eventlet.
+       * shutdown life-cycle of every task, Sink and eventlet.
        *
        * This method blocks until all of the tasks have been destroyed.
        */

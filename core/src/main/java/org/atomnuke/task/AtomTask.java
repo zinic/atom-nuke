@@ -1,13 +1,13 @@
 package org.atomnuke.task;
 
-import org.atomnuke.listener.AtomListener;
+import org.atomnuke.sink.AtomSink;
 import org.atomnuke.plugin.InstanceContext;
 import org.atomnuke.util.remote.CancellationRemote;
 
 /**
  * A Nuke Task represents an ATOM polling task. The task executes at a regular
  * interval defined by the interval method. The task, when executed, will
- * dispatch ATOM events to any listeners registered to it.
+ * dispatch ATOM events to any sinks registered to it.
  *
  * @author zinic
  */
@@ -21,24 +21,24 @@ public interface AtomTask {
    TaskHandle handle();
 
    /**
-    * Adds an AtomListener to this task. This method wraps the listener and
-    * passes it to the other addListener method as a SimpleInstanceContext.
+    * Adds an AtomSink to this task. This method wraps the sink and passes
+    * it to the other addSink method as a SimpleInstanceContext.
     *
-    * @param listener
-    * @return the cancellation remote for the newly registered listener.
+    * @param sink
+    * @return the cancellation remote for the newly registered sink.
     */
-   CancellationRemote addListener(AtomListener listener);
+   CancellationRemote addSink(AtomSink sink);
 
    /**
-    * Adds an AtomListener to this task. The tasker requires that an
-    * InstanceContext be give for each AtomSource to allow for the abstraction
-    * of system internals like custom class loaders.
+    * Adds an AtomSink to this task. The tasker requires that an InstanceContext
+    * be give for each AtomSource to allow for the abstraction of system
+    * internals like custom class loaders.
     *
-    * The listener will begin receiving ATOM events during the task's next
+    * The sink will begin receiving ATOM events during the task's next
     * execution.
     *
-    * @param listener
-    * @return the cancellation remote for the newly registered listener.
+    * @param sink
+    * @return the cancellation remote for the newly registered sink.
     */
-   CancellationRemote addListener(InstanceContext<? extends AtomListener> atomListenerContext);
+   CancellationRemote addSink(InstanceContext<? extends AtomSink> atomSinkContext);
 }

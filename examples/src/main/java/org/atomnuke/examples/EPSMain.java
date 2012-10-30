@@ -5,12 +5,12 @@ import java.util.concurrent.TimeUnit;
 import org.atomnuke.Nuke;
 import org.atomnuke.NukeKernel;
 import org.atomnuke.atom.model.Entry;
-import org.atomnuke.examples.handler.FeedFileWriterHandler;
+import org.atomnuke.examples.eventlets.FeedFileWriterHandler;
 import org.atomnuke.examples.source.EventGenerator;
-import org.atomnuke.listener.eps.EventletRelay;
-import org.atomnuke.listener.eps.eventlet.AtomEventletException;
-import org.atomnuke.listener.eps.eventlet.AtomEventletPartial;
-import org.atomnuke.listener.eps.selectors.CategorySelector;
+import org.atomnuke.sink.eps.FanoutSink;
+import org.atomnuke.sink.eps.eventlet.AtomEventletException;
+import org.atomnuke.sink.eps.eventlet.AtomEventletPartial;
+import org.atomnuke.sink.selectors.CategorySelector;
 import org.atomnuke.task.AtomTask;
 import org.atomnuke.util.TimeValue;
 
@@ -35,7 +35,7 @@ public class EPSMain {
    public static void main(String[] args) throws Exception {
       // First relay for selecting feeds that have the category 'test' and only
       // the entries inside that feed that also have the category 'test'
-      final EventletRelay relay1 = new EventletRelay();
+      final FanoutSink relay1 = new FanoutSink();
 
       // Event eventlet partial makes delegate creation more simple
       relay1.enlistHandler(new AtomEventletPartial() {
@@ -49,7 +49,7 @@ public class EPSMain {
 
       // Second relay for selecting feeds that have the category 'test' and only
       // the entries inside that feed that have the category 'other-cat'
-      final EventletRelay relay2 = new EventletRelay();
+      final FanoutSink relay2 = new FanoutSink();
 
       // Creating your own handler allows you to implement the init and destroy
       // methods however you like
@@ -60,14 +60,14 @@ public class EPSMain {
       final NukeKernel nukeKernel = new NukeKernel();
 
       final AtomTask task1 = nukeKernel.follow(new EventGenerator("Task 1", true), new TimeValue(500, TimeUnit.MILLISECONDS));
-      task1.addListener(relay1);
+      task1.addSink(relay1);
 
       final AtomTask task2 = nukeKernel.follow(new EventGenerator("Task 2", true), new TimeValue(1, TimeUnit.SECONDS));
-      task2.addListener(relay1);
-      task2.addListener(relay2);
+      task2.addSink(relay1);
+      task2.addSink(relay2);
 
       final AtomTask task3 = nukeKernel.follow(new EventGenerator("Task 3", true), new TimeValue(2, TimeUnit.SECONDS));
-      task3.addListener(relay1);
+      task3.addSink(relay1);
 
       nukeKernel.start();
 

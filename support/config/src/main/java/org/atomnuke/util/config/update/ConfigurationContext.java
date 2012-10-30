@@ -10,7 +10,7 @@ import org.atomnuke.util.remote.CancellationRemote;
  */
 public interface ConfigurationContext<T> {
 
-   CancellationRemote addListener(ConfigurationListener<T> listener) throws ConfigurationException;
+   CancellationRemote addListener(ConfigurationListener<T> Listener) throws ConfigurationException;
 
    CancellationRemote cancellationRemote();
 }

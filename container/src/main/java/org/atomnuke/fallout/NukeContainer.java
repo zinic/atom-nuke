@@ -60,8 +60,8 @@ public class NukeContainer {
       LOG.debug("Building context manager.");
       buildContextManager();
 
-      LOG.debug("Registering Fallout configuration listener.");
-      registerConfigurationListeners();
+      LOG.debug("Registering Fallout configuration Sink.");
+      registerConfigurationSinks();
 
       LOG.info("Nuke container started. Elapsed start-up time: " + (System.currentTimeMillis() - initTime) + "ms.");
    }
@@ -82,7 +82,7 @@ public class NukeContainer {
       nukeInstance.start();
    }
 
-   private void registerNukeCfgListener(ConfigurationUpdateManager cfgUpdateManager) throws FalloutInitException {
+   private void registerNukeCfgSink(ConfigurationUpdateManager cfgUpdateManager) throws FalloutInitException {
       try {
          final ConfigurationManager<ServerConfiguration> cfgManager = new ServerConfigurationManager(new File(NukeEnv.CONFIG_LOCATION));
          final ConfigurationContext<ServerConfiguration> configurationContext = cfgUpdateManager.register("org.atomnuke.container.cfg", cfgManager);
@@ -98,7 +98,6 @@ public class NukeContainer {
    }
 
    private void buildContextManager() {
-      // First package loader wins
       try {
          final PackageLoader firstLoader = ServiceHandler.instance().firstAvailable(serviceManager, PackageLoader.class);
          contextManager = new ContextManager(serviceManager, firstLoader.packageContexts(), nukeInstance);
@@ -109,10 +108,10 @@ public class NukeContainer {
       }
    }
 
-   private void registerConfigurationListeners() {
+   private void registerConfigurationSinks() {
       try {
          final ConfigurationUpdateManager cfgUpdateManager = ServiceHandler.instance().firstAvailable(serviceManager, ConfigurationUpdateManager.class);
-         registerNukeCfgListener(cfgUpdateManager);
+         registerNukeCfgSink(cfgUpdateManager);
       } catch (ServiceUnavailableException sue) {
          LOG.error(sue.getMessage(), sue);
       }

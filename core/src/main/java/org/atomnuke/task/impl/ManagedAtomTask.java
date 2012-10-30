@@ -1,10 +1,10 @@
 package org.atomnuke.task.impl;
 
 import org.atomnuke.plugin.InstanceContext;
-import org.atomnuke.listener.manager.ManagedListener;
-import org.atomnuke.listener.driver.AtomListenerDriver;
-import org.atomnuke.listener.driver.DriverArgument;
-import org.atomnuke.listener.manager.ListenerManager;
+import org.atomnuke.sink.manager.ManagedSink;
+import org.atomnuke.sink.driver.AtomSinkDriver;
+import org.atomnuke.sink.driver.DriverArgument;
+import org.atomnuke.sink.manager.SinkManager;
 import org.atomnuke.plugin.operation.ComplexOperation;
 import org.atomnuke.plugin.operation.OperationFailureException;
 import org.atomnuke.source.AtomSource;
@@ -40,23 +40,23 @@ public class ManagedAtomTask implements ReclaimableRunnable {
 
    private final InstanceContext<AtomSource> atomSourceContext;
    private final ExecutionManager executionManager;
-   private final ListenerManager listenerManager;
+   private final SinkManager SinkManager;
 
-   public ManagedAtomTask(InstanceContext<AtomSource> atomSourceContext, ExecutionManager executionManager, ListenerManager listenerManager) {
+   public ManagedAtomTask(InstanceContext<AtomSource> atomSourceContext, ExecutionManager executionManager, SinkManager SinkManager) {
       this.atomSourceContext = atomSourceContext;
       this.executionManager = executionManager;
-      this.listenerManager = listenerManager;
+      this.SinkManager = SinkManager;
    }
 
    @Override
    public void run() {
-      // Only poll if we have listeners
-      if (listenerManager.hasListeners()) {
+      // Only poll if we have Sinks
+      if (SinkManager.hasRegisteredSinks()) {
          final ResultCatch<AtomSourceResult> resultCatch = new ResultCatchImpl<AtomSourceResult>();
          atomSourceContext.perform(POLLING_OPERATION, resultCatch);
 
          if (resultCatch.hasResult()) {
-            dispatchToListeners(resultCatch.result());
+            dispatchToSinks(resultCatch.result());
          }
       }
    }
@@ -66,11 +66,11 @@ public class ManagedAtomTask implements ReclaimableRunnable {
       atomSourceContext.perform(ReclaimOperation.<AtomSource>instance());
    }
 
-   private void dispatchToListeners(AtomSourceResult pollResult) {
+   private void dispatchToSinks(AtomSourceResult pollResult) {
       final DriverArgument driverArgument = new DriverArgument(pollResult.feed(), pollResult.entry());
 
-      for (ManagedListener listener : listenerManager.listeners()) {
-         executionManager.submit(listener.taskId(), new AtomListenerDriver(listener, driverArgument));
+      for (ManagedSink Sink : SinkManager.sinks()) {
+         executionManager.submit(Sink.taskId(), new AtomSinkDriver(Sink, driverArgument));
       }
    }
 }

@@ -4,7 +4,7 @@ import java.util.concurrent.TimeUnit;
 import org.atomnuke.NukeKernel;
 import org.atomnuke.atom.io.writer.stax.StaxAtomWriterFactory;
 import org.atomnuke.task.AtomTask;
-import org.atomnuke.examples.listener.HDFSFeedListener;
+import org.atomnuke.examples.sinks.HDFSFeedSink;
 import org.atomnuke.source.crawler.FeedCrawlerSourceFactory;
 import org.atomnuke.util.TimeValue;
 
@@ -15,13 +15,13 @@ import org.atomnuke.util.TimeValue;
 public class HDFSMain {
 
    public static void main(String[] args) throws Exception {
-      final HDFSFeedListener listener = new HDFSFeedListener("example-1.feed", new StaxAtomWriterFactory());
-      final HDFSFeedListener listener2 = new HDFSFeedListener("example-2.feed", new StaxAtomWriterFactory());
+      final HDFSFeedSink Sink = new HDFSFeedSink("example-1.feed", new StaxAtomWriterFactory());
+      final HDFSFeedSink Sink2 = new HDFSFeedSink("example-2.feed", new StaxAtomWriterFactory());
 
       /*
        * Still todo...
        *
-       * - Consider using a listener delegation pattern ala SAX
+       * - Consider using a Sink delegation pattern ala SAX
        *    Might not implement this one due to the execution pattern I took. Still
        *    investigating the model.
        *
@@ -38,15 +38,15 @@ public class HDFSMain {
 
       // Polls once per minute
       final AtomTask task1 = nuke.follow(crawlerFactory.newCrawlerSource("feed-1", "http://feed.com/feed1"), new TimeValue(1, TimeUnit.MINUTES));
-      task1.addListener(listener2);
+      task1.addSink(Sink2);
 
       // Sets the polling interval to five minutes
       final AtomTask task2 = nuke.follow(crawlerFactory.newCrawlerSource("feed-2", "http://feed.com/feed2"), new TimeValue(5, TimeUnit.MINUTES));
-      task2.addListener(listener);
-      task2.addListener(listener2);
+      task2.addSink(Sink);
+      task2.addSink(Sink2);
 
       // Sets the polling interval to one hour
       final AtomTask task3 = nuke.follow(crawlerFactory.newCrawlerSource("feed-3", "http://feed.com/feed3"), new TimeValue(1, TimeUnit.HOURS));
-      task3.addListener(listener);
+      task3.addSink(Sink);
    }
 }

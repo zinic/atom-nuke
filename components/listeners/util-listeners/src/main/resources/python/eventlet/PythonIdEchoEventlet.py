@@ -1,4 +1,4 @@
-from org.atomnuke.listener.eps.eventlet import AtomEventlet
+from org.atomnuke.sink.eps.eventlet import AtomEventlet
 
 # Python <3
 class PythonIdEchoEventlet(AtomEventlet):

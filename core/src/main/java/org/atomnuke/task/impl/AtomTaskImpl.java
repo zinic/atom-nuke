@@ -2,8 +2,8 @@ package org.atomnuke.task.impl;
 
 import org.atomnuke.plugin.InstanceContext;
 import org.atomnuke.plugin.env.NopInstanceEnvironment;
-import org.atomnuke.listener.AtomListener;
-import org.atomnuke.listener.manager.ListenerManager;
+import org.atomnuke.sink.AtomSink;
+import org.atomnuke.sink.manager.SinkManager;
 import org.atomnuke.plugin.InstanceContextImpl;
 import org.atomnuke.task.AtomTask;
 import org.atomnuke.task.TaskHandle;
@@ -15,11 +15,11 @@ import org.atomnuke.util.remote.CancellationRemote;
  */
 public class AtomTaskImpl implements AtomTask {
 
-   private final ListenerManager listenerManager;
+   private final SinkManager sinkManager;
    private final TaskHandle taskHandle;
 
-   public AtomTaskImpl(ListenerManager listenerManager, TaskHandle taskHandle) {
-      this.listenerManager = listenerManager;
+   public AtomTaskImpl(SinkManager sinkManager, TaskHandle taskHandle) {
+      this.sinkManager = sinkManager;
       this.taskHandle = taskHandle;
    }
 
@@ -29,12 +29,12 @@ public class AtomTaskImpl implements AtomTask {
    }
 
    @Override
-   public CancellationRemote addListener(AtomListener listener) {
-      return addListener(new InstanceContextImpl<AtomListener>(NopInstanceEnvironment.getInstance(), listener));
+   public CancellationRemote addSink(AtomSink sink) {
+      return addSink(new InstanceContextImpl<AtomSink>(NopInstanceEnvironment.getInstance(), sink));
    }
 
    @Override
-   public CancellationRemote addListener(InstanceContext<? extends AtomListener> atomListenerContext) {
-      return listenerManager.addListener(atomListenerContext);
+   public CancellationRemote addSink(InstanceContext<? extends AtomSink> atomSinkContext) {
+      return sinkManager.addSink(atomSinkContext);
    }
 }

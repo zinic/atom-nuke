@@ -2,10 +2,10 @@ package org.atomnuke;
 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
-import org.atomnuke.examples.listener.eventlet.CounterEventlet;
+import org.atomnuke.examples.eventlets.CounterEventlet;
 import org.atomnuke.examples.source.EventGenerator;
 import org.atomnuke.fallout.service.gc.FalloutReclamationService;
-import org.atomnuke.listener.eps.EventletRelay;
+import org.atomnuke.sink.eps.FanoutSink;
 import org.atomnuke.plugin.InstanceContextImpl;
 import org.atomnuke.plugin.env.NopInstanceEnvironment;
 import org.atomnuke.plugin.proxy.japi.JapiProxyFactory;
@@ -31,7 +31,7 @@ public class NukeKernelTest {
       for (int taskId = 1; taskId <= 30; taskId++) {
          final AtomTask task = nukeKernel.follow(new EventGenerator("Task " + taskId, true), new TimeValue(1000 * taskId, TimeUnit.NANOSECONDS));
 
-         final EventletRelay relay = new EventletRelay();
+         final FanoutSink relay = new FanoutSink();
 
          final ServiceManager svcManager = new RuntimeServiceManager(new JapiProxyFactory());
 
@@ -46,7 +46,7 @@ public class NukeKernelTest {
          relay.enlistHandler(new CounterEventlet(eventsProcessed, false));
          relay.enlistHandler(new CounterEventlet(eventsProcessed, false));
 
-         task.addListener(relay);
+         task.addSink(relay);
       }
 
       nukeKernel.start();

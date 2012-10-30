@@ -2,11 +2,11 @@ package org.atomnuke.util.config.update;
 
 import org.atomnuke.util.config.io.ConfigurationManager;
 import java.util.Iterator;
-import org.atomnuke.util.config.update.listener.ConfigurationListener;
 import java.util.LinkedList;
 import java.util.List;
 import org.atomnuke.util.config.ConfigurationException;
 import org.atomnuke.util.config.io.UpdateTag;
+import org.atomnuke.util.config.update.listener.ConfigurationListener;
 import org.atomnuke.util.config.update.listener.ListenerContext;
 import org.atomnuke.util.remote.AtomicCancellationRemote;
 import org.atomnuke.util.remote.CancellationRemote;
@@ -21,7 +21,7 @@ public class UpdateContext<T> implements ConfigurationContext<T> {
 
    private static final Logger LOG = LoggerFactory.getLogger(UpdateContext.class);
 
-   private final List<ListenerContext<T>> listenerContexts;
+   private final List<ListenerContext<T>> ListenerContexts;
    private final CancellationRemote cancellationRemote;
    private final ConfigurationManager<T> manager;
 
@@ -31,7 +31,7 @@ public class UpdateContext<T> implements ConfigurationContext<T> {
       this.manager = manager;
       this.cancellationRemote = cancellationRemote;
 
-      listenerContexts = new LinkedList<ListenerContext<T>>();
+      ListenerContexts = new LinkedList<ListenerContext<T>>();
    }
 
    @Override
@@ -40,12 +40,12 @@ public class UpdateContext<T> implements ConfigurationContext<T> {
    }
 
    private synchronized void addListenerContext(ListenerContext<T> context) {
-      listenerContexts.add(context);
+      ListenerContexts.add(context);
    }
 
    @Override
-   public CancellationRemote addListener(ConfigurationListener<T> listener) throws ConfigurationException {
-      final ListenerContext<T> newListenerContext = new ListenerContext<T>(listener, new AtomicCancellationRemote());
+   public CancellationRemote addListener(ConfigurationListener<T> Listener) throws ConfigurationException {
+      final ListenerContext<T> newListenerContext = new ListenerContext<T>(Listener, new AtomicCancellationRemote());
       addListenerContext(newListenerContext);
 
       dispatch();
@@ -54,21 +54,21 @@ public class UpdateContext<T> implements ConfigurationContext<T> {
    }
 
    private synchronized List<ConfigurationListener<T>> getListeners() {
-      final List<ConfigurationListener<T>> listeners = new LinkedList<ConfigurationListener<T>>();
+      final List<ConfigurationListener<T>> Listeners = new LinkedList<ConfigurationListener<T>>();
 
-      for (Iterator<ListenerContext<T>> listenerContextItr = listenerContexts.iterator(); listenerContextItr.hasNext();) {
-         final ListenerContext<T> nextCtx = listenerContextItr.next();
+      for (Iterator<ListenerContext<T>> ListenerContextItr = ListenerContexts.iterator(); ListenerContextItr.hasNext();) {
+         final ListenerContext<T> nextCtx = ListenerContextItr.next();
 
          // Cancellation may happen at anytime, remotely - check for it on every poll
          if (nextCtx.cancellationRemote().canceled()) {
-            listenerContextItr.remove();
+            ListenerContextItr.remove();
             continue;
          }
 
-         listeners.add(nextCtx.configurationListener());
+         Listeners.add(nextCtx.configurationListener());
       }
 
-      return listeners;
+      return Listeners;
    }
 
    public boolean updated() throws ConfigurationException {
@@ -85,9 +85,9 @@ public class UpdateContext<T> implements ConfigurationContext<T> {
    public void dispatch() throws ConfigurationException {
       final T configuration = manager.read();
 
-      for (ConfigurationListener<T> listener : getListeners()) {
+      for (ConfigurationListener<T> Listener : getListeners()) {
          try {
-            listener.updated(configuration);
+            Listener.updated(configuration);
          } catch (Exception ex) {
             LOG.error("Configuration exception during dispatch: " + ex.getMessage(), ex);
          }

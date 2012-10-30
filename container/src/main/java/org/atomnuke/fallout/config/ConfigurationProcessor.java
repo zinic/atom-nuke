@@ -20,9 +20,9 @@ import org.atomnuke.fallout.context.ContainerContext;
 import org.atomnuke.container.packaging.PackageContext;
 import org.atomnuke.container.packaging.bindings.lang.BindingLanguage;
 import org.atomnuke.plugin.env.NopInstanceEnvironment;
-import org.atomnuke.listener.AtomListener;
-import org.atomnuke.listener.eps.EventletRelay;
-import org.atomnuke.listener.eps.eventlet.AtomEventlet;
+import org.atomnuke.sink.AtomSink;
+import org.atomnuke.sink.eps.FanoutSink;
+import org.atomnuke.sink.eps.eventlet.AtomEventlet;
 import org.atomnuke.plugin.InstanceContextImpl;
 import org.atomnuke.plugin.ReferenceInstantiationException;
 import org.atomnuke.task.operation.TaskLifeCycleInitOperation;
@@ -75,7 +75,7 @@ public class ConfigurationProcessor {
    public void merge(Nuke kernelBeingBuilt) throws ConfigurationException {
       processSources(kernelBeingBuilt);
       processRelays();
-      processListeners();
+      processSinks();
       processEventlets();
 
       containerContext.process(cfgHandler.getBindings());
@@ -109,14 +109,14 @@ public class ConfigurationProcessor {
       throw new ReferenceInstantiationException("Unable to locate reference: " + ref);
    }
 
-   public InstanceContext<AtomListener> constructListener(LanguageType langType, String ref) throws ReferenceInstantiationException {
+   public InstanceContext<AtomSink> constructSink(LanguageType langType, String ref) throws ReferenceInstantiationException {
       final BindingLanguage bindingLanguage = LanguageTypeUtil.asBindingLanguage(langType);
 
       for (PackageContext packageContext : loadedPackages) {
-         final InstanceContext<AtomListener> listener = packageContext.packageBindings().resolveReference(AtomListener.class, bindingLanguage, ref);
+         final InstanceContext<AtomSink> Sink = packageContext.packageBindings().resolveReference(AtomSink.class, bindingLanguage, ref);
 
-         if (listener != null) {
-            return listener;
+         if (Sink != null) {
+            return Sink;
          }
       }
 
@@ -133,7 +133,7 @@ public class ConfigurationProcessor {
       return false;
    }
 
-   public boolean hasListenerBinding(String name) throws ConfigurationException {
+   public boolean hasSinkBinding(String name) throws ConfigurationException {
       for (Binding binding : cfgHandler.getBindings()) {
          if (binding.getReceiver().equals(name)) {
             return true;
@@ -165,12 +165,12 @@ public class ConfigurationProcessor {
       for (Relay relay : cfgHandler.getRelays()) {
          final String relayId = relay.getId();
 
-         if (hasListenerBinding(relayId) && !containerContext.hasRelay(relayId)) {
-            final EventletRelay newRelay = new EventletRelay();
+         if (hasSinkBinding(relayId) && !containerContext.hasRelay(relayId)) {
+            final FanoutSink newRelay = new FanoutSink();
 
             try {
-               newRelay.init(new TaskContextImpl(LoggerFactory.getLogger(EventletRelay.class), Collections.EMPTY_MAP, services, tasker));
-               containerContext.registerRelay(relay.getId(), new InstanceContextImpl<EventletRelay>(NopInstanceEnvironment.getInstance(), newRelay));
+               newRelay.init(new TaskContextImpl(LoggerFactory.getLogger(FanoutSink.class), Collections.EMPTY_MAP, services, tasker));
+               containerContext.registerRelay(relay.getId(), new InstanceContextImpl<FanoutSink>(NopInstanceEnvironment.getInstance(), newRelay));
             } catch (InitializationException ie) {
                LOG.error("Failed to create relay instance " + relay.getId() + ". Reason: " + ie.getMessage(), ie);
             }
@@ -178,17 +178,17 @@ public class ConfigurationProcessor {
       }
    }
 
-   public void processListeners() throws ConfigurationException {
+   public void processSinks() throws ConfigurationException {
       for (Sink sink : cfgHandler.getSinks()) {
          final String sinkId = sink.getId();
 
-         if (hasListenerBinding(sinkId) && !containerContext.hasSink(sinkId)) {
+         if (hasSinkBinding(sinkId) && !containerContext.hasSink(sinkId)) {
             try {
-               final InstanceContext<AtomListener> listenerCtx = constructListener(sink.getType(), sink.getHref());
+               final InstanceContext<AtomSink> SinkCtx = constructSink(sink.getType(), sink.getHref());
 
-               listenerCtx.perform(TaskLifeCycleInitOperation.<AtomListener>instance(), new TaskContextImpl(LoggerFactory.getLogger(sinkId), parametersToMap(sink.getParameters()), services, tasker));
+               SinkCtx.perform(TaskLifeCycleInitOperation.<AtomSink>instance(), new TaskContextImpl(LoggerFactory.getLogger(sinkId), parametersToMap(sink.getParameters()), services, tasker));
 
-               containerContext.registerSink(sink.getId(), listenerCtx);
+               containerContext.registerSink(sink.getId(), SinkCtx);
             } catch (ReferenceInstantiationException bie) {
                LOG.error("Could not create sink instance " + sink.getId() + ". Reason: " + bie.getMessage(), bie);
                throw new ConfigurationException(bie);
@@ -201,7 +201,7 @@ public class ConfigurationProcessor {
       for (Eventlet eventlet : cfgHandler.getEventlets()) {
          final String eventletId = eventlet.getId();
 
-         if (hasListenerBinding(eventletId) && !containerContext.hasEventlet(eventletId)) {
+         if (hasSinkBinding(eventletId) && !containerContext.hasEventlet(eventletId)) {
             try {
                final InstanceContext<AtomEventlet> eventletCtx = constructEventlet(eventlet.getType(), eventlet.getHref());
                final AtomTaskContext taskContext = new TaskContextImpl(LoggerFactory.getLogger(eventletId), parametersToMap(eventlet.getParameters()), services, tasker);

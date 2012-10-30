@@ -5,12 +5,11 @@ import java.util.concurrent.atomic.AtomicLong;
 import org.atomnuke.atom.model.Entry;
 import org.atomnuke.atom.model.Feed;
 import org.atomnuke.atom.model.builder.FeedBuilder;
-import org.atomnuke.listener.AtomListener;
+import org.atomnuke.sink.AtomSink;
 import org.atomnuke.plugin.env.NopInstanceEnvironment;
-import org.atomnuke.listener.AtomListenerException;
-import org.atomnuke.listener.AtomListenerResult;
-import org.atomnuke.listener.ListenerResult;
-import org.atomnuke.listener.ReentrantAtomListener;
+import org.atomnuke.sink.AtomSinkException;
+import org.atomnuke.sink.AtomSinkResult;
+import org.atomnuke.sink.SinkResult;
 import org.atomnuke.plugin.InstanceContextImpl;
 import org.atomnuke.source.AtomSource;
 import org.atomnuke.source.AtomSourceException;
@@ -48,19 +47,19 @@ public class NukeKernelTest {
          }
       };
 
-      final AtomListener listener = new ReentrantAtomListener() {
+      final AtomSink Sink = new AtomSink() {
          @Override
-         public ListenerResult entry(Entry entry) throws AtomListenerException {
+         public SinkResult entry(Entry entry) throws AtomSinkException {
             eventsProcessed.incrementAndGet();
 
-            return AtomListenerResult.ok();
+            return AtomSinkResult.ok();
          }
 
          @Override
-         public ListenerResult feedPage(Feed page) throws AtomListenerException {
+         public SinkResult feedPage(Feed page) throws AtomSinkException {
             eventsProcessed.incrementAndGet();
 
-            return AtomListenerResult.ok();
+            return AtomSinkResult.ok();
          }
 
          @Override
@@ -74,7 +73,7 @@ public class NukeKernelTest {
 
       for (int taskId = 1; taskId <= 30; taskId++) {
          final AtomTask task = nukeKernel.follow(source, new TimeValue(10 * taskId, TimeUnit.MICROSECONDS));
-         task.addListener(new InstanceContextImpl<AtomListener>(NopInstanceEnvironment.getInstance(), listener));
+         task.addSink(new InstanceContextImpl<AtomSink>(NopInstanceEnvironment.getInstance(), Sink));
       }
 
       nukeKernel.start();

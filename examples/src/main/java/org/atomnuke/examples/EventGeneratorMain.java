@@ -4,9 +4,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 import org.atomnuke.Nuke;
 import org.atomnuke.NukeKernel;
-import org.atomnuke.examples.listener.eventlet.PrintStreamEventlet;
+import org.atomnuke.examples.eventlets.PrintStreamEventlet;
 import org.atomnuke.examples.source.EventGenerator;
-import org.atomnuke.listener.eps.EventletRelay;
+import org.atomnuke.sink.eps.FanoutSink;
 import org.atomnuke.task.AtomTask;
 import org.atomnuke.util.TimeValue;
 
@@ -22,13 +22,13 @@ public class EventGeneratorMain {
 
       for (int taskId = 1; taskId <= 30; taskId++) {
          final AtomTask task = nukeKernel.follow(new EventGenerator("Task " + taskId, true), new TimeValue(100 * taskId, TimeUnit.NANOSECONDS));
-         final EventletRelay relay = new EventletRelay();
+         final FanoutSink relay = new FanoutSink();
 
-         relay.enlistHandler(new PrintStreamEventlet(System.out, "Task " + taskId + " - Listener 1", eventsProcessed));
-         relay.enlistHandler(new PrintStreamEventlet(System.out, "Task " + taskId + " - Listener 2", eventsProcessed));
-         relay.enlistHandler(new PrintStreamEventlet(System.out, "Task " + taskId + " - Listener 3", eventsProcessed));
-         relay.enlistHandler(new PrintStreamEventlet(System.out, "Task " + taskId + " - Listener 4", eventsProcessed));
-         relay.enlistHandler(new PrintStreamEventlet(System.out, "Task " + taskId + " - Listener 5", eventsProcessed));
+         relay.enlistHandler(new PrintStreamEventlet(System.out, "Task " + taskId + " - Sink 1", eventsProcessed));
+         relay.enlistHandler(new PrintStreamEventlet(System.out, "Task " + taskId + " - Sink 2", eventsProcessed));
+         relay.enlistHandler(new PrintStreamEventlet(System.out, "Task " + taskId + " - Sink 3", eventsProcessed));
+         relay.enlistHandler(new PrintStreamEventlet(System.out, "Task " + taskId + " - Sink 4", eventsProcessed));
+         relay.enlistHandler(new PrintStreamEventlet(System.out, "Task " + taskId + " - Sink 5", eventsProcessed));
       }
 
       nukeKernel.start();
