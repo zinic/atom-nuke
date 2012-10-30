@@ -1,13 +1,18 @@
 package org.atomnuke.collectd;
 
-import org.atomnuke.collectd.servlet.jetty.JettyServer;
+import org.atomnuke.collectd.servlet.CollectdSinkServlet;
 import org.atomnuke.source.AtomSource;
 import org.atomnuke.source.AtomSourceException;
 import org.atomnuke.source.result.AtomSourceResult;
 import org.atomnuke.collectd.source.QueueSource;
 import org.atomnuke.collectd.source.QueueSourceImpl;
+import org.atomnuke.service.ServiceUnavailableException;
+import org.atomnuke.service.jetty.server.ContextBuilder;
 import org.atomnuke.task.context.AtomTaskContext;
 import org.atomnuke.util.lifecycle.InitializationException;
+import org.atomnuke.util.service.ServiceHandler;
+import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.eclipse.jetty.servlet.ServletHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,11 +25,10 @@ public class CollectdSource implements AtomSource {
    private static final Logger LOG = LoggerFactory.getLogger(CollectdSource.class);
 
    private final QueueSource queueSource;
-   private final JettyServer jettyServer;
+   private ServletContextHandler servletContextHandler;
 
    public CollectdSource() {
       queueSource = new QueueSourceImpl();
-      jettyServer = new JettyServer(8080, queueSource);
    }
 
    @Override
@@ -35,26 +39,27 @@ public class CollectdSource implements AtomSource {
    @Override
    public void init(AtomTaskContext tc) throws InitializationException {
       try {
-         jettyServer.start();
-
-         while (!jettyServer.isStarted()) {
-            Thread.sleep(100);
-         }
-      } catch (Exception ex) {
-         throw new InitializationException(ex.getMessage(), ex.getCause());
+         final ContextBuilder contextBuilder = ServiceHandler.instance().firstAvailable(tc.services(), ContextBuilder.class);
+         servletContextHandler = contextBuilder.newContext("/collecd");
+      } catch (ServiceUnavailableException sue) {
+         LOG.error("The CollecD source requires a service that provides a ContextBuilder implementation for regsitering servlets.");
+         throw new InitializationException(sue);
       }
+
+      // Register the JAX-RS servlet
+      final ServletHolder servletInstance = new ServletHolder(new CollectdSinkServlet(queueSource));
+      servletContextHandler.addServlet(servletInstance, "/*");
    }
 
    @Override
    public void destroy() {
-      try {
-         jettyServer.stop();
-
-         while (!jettyServer.isStopped() && !jettyServer.isFailed()) {
-            Thread.sleep(100);
+      if (servletContextHandler != null && !(servletContextHandler.isStopping() || servletContextHandler.isStopped())) {
+         try {
+            servletContextHandler.stop();
+            servletContextHandler.destroy();
+         } catch (Exception ex) {
+            LOG.error(ex.getMessage(), ex);
          }
-      } catch (Exception ex) {
-         LOG.error("Failed to destroy HTTPSource. Reason: " + ex.getMessage(), ex);
       }
    }
 }

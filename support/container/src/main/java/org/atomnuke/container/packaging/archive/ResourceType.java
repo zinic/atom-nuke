@@ -16,7 +16,8 @@ public enum ResourceType {
    PYTHON("py", ".*\\.py"),
    JAR("jar", ".*\\.jar"),
    CLASS("class", ".*\\.class"),
-   RESOURCE("", ".*");
+   RESOURCE("", ".*"),
+   DIRECTORY("", ".*");
 
 
    private static final ResourceType[] SEARCH_EXCLUDE = new ResourceType[]{RESOURCE};

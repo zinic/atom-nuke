@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Enumeration;
 import org.atomnuke.container.packaging.resource.Resource;
@@ -20,6 +19,7 @@ import org.atomnuke.container.packaging.resource.ResourceUtil;
 public class IdentityClassLoader extends ClassLoader {
 
    private static final Logger LOG = LoggerFactory.getLogger(IdentityClassLoader.class);
+
    private final ResourceManager resourceManager;
    private final ClassLoader parent;
 
@@ -97,7 +97,7 @@ public class IdentityClassLoader extends ClassLoader {
          final Resource descriptor = resourceManager.lookup(resourcePath);
 
          if (descriptor != null) {
-            resourceUrl = descriptorToUrl(descriptor);
+            resourceUrl = descriptor.url();
          } else if (parent instanceof IdentityClassLoader) {
             LOG.debug("Unable to find resource: " + resourcePath);
          }
@@ -113,8 +113,23 @@ public class IdentityClassLoader extends ClassLoader {
       return resourceUrl != null ? new SingleValueEnumeration<URL>(resourceUrl) : (Enumeration<URL>) EmptyEnumeration.instance();
    }
 
+   @Override
+   public URL getResource(String name) {
+      return findResource(name);
+   }
+
+   @Override
+   public Enumeration<URL> getResources(String name) throws IOException {
+      return findResources(name);
+   }
+
+   @Override
+   public InputStream getResourceAsStream(String name) {
+      return super.getResourceAsStream(name); //To change body of generated methods, choose Tools | Templates.
+   }
+
    final Class<?> defineClass(Resource descriptor) throws IOException {
-      final URL resourceUrl = descriptorToUrl(descriptor);
+      final URL resourceUrl = descriptor.url();
 
       if (resourceUrl == null) {
          return null;
@@ -144,14 +159,5 @@ public class IdentityClassLoader extends ClassLoader {
       resourceInputStream.close();
 
       return byteArrayOutputStream;
-   }
-
-   private URL descriptorToUrl(Resource descriptor) {
-      try {
-         return descriptor.location().toURL();
-      } catch (MalformedURLException murle) {
-         LOG.error("Error building location for resource: " + descriptor);
-         return null;
-      }
    }
 }

@@ -48,7 +48,7 @@ public class RhinoInterpreterContext implements BindingEnvironment {
    @Override
    public void load(Resource resource) throws PackageLoadingException {
       try {
-         final InputStream in = resource.location().toURL().openStream();
+         final InputStream in = resource.uri().toURL().openStream();
          jsEngine.eval(new InputStreamReader(in));
 
          in.close();

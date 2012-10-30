@@ -1,6 +1,7 @@
 package org.atomnuke.container.packaging.resource;
 
 import java.net.URI;
+import java.net.URL;
 import org.atomnuke.container.packaging.archive.ResourceType;
 
 /**
@@ -9,7 +10,9 @@ import org.atomnuke.container.packaging.archive.ResourceType;
  */
 public interface Resource {
 
-   URI location();
+   URI uri();
+
+   URL url();
 
    byte[] digestBytes();
 

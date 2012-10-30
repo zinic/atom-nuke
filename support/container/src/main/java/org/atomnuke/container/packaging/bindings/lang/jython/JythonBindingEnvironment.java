@@ -54,7 +54,7 @@ public class JythonBindingEnvironment implements BindingEnvironment {
    @Override
    public void load(Resource resource) throws PackageLoadingException {
       try {
-         final InputStream in = resource.location().toURL().openStream();
+         final InputStream in = resource.uri().toURL().openStream();
          pythonInterpreter.execfile(in);
 
          in.close();

@@ -7,7 +7,7 @@
       <groupId>org.atomnuke.components</groupId>
       <artifactId>components</artifactId>
       <version>1.1.2-SNAPSHOT</version>
-      
+
       <relativePath>./../../</relativePath>
    </parent>
 
@@ -20,18 +20,8 @@
 
    <dependencies>
       <dependency>
-         <groupId>org.eclipse.jetty</groupId>
-         <artifactId>jetty-webapp</artifactId>
-      </dependency>
-
-      <dependency>
-         <groupId>org.eclipse.jetty</groupId>
-         <artifactId>jetty-server</artifactId>
-      </dependency>
-
-      <dependency>
-         <groupId>org.eclipse.jetty</groupId>
-         <artifactId>jetty-servlet</artifactId>
+         <groupId>org.atomnuke.components.services.jee</groupId>
+         <artifactId>servlet-jetty</artifactId>
       </dependency>
 
       <dependency>

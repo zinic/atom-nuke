@@ -44,7 +44,7 @@ public class ResourceManagerImpl implements ResourceManager {
 
    @Override
    public void register(Resource resource) {
-      resourceMappings.put(resource.location(), resource);
+      resourceMappings.put(resource.uri(), resource);
    }
 
    @Override
@@ -54,7 +54,7 @@ public class ResourceManagerImpl implements ResourceManager {
 
    @Override
    public boolean hasConflictingIdentity(Resource resourceDescriptor) {
-      final Resource internalDescriptor = resourceMappings.get(resourceDescriptor.location());
+      final Resource internalDescriptor = resourceMappings.get(resourceDescriptor.uri());
 
       if (internalDescriptor != null) {
          // If the identies are not equal then this may be a potential conflict

@@ -38,7 +38,7 @@ public class JavaBindingEnvironment implements BindingEnvironment {
    public void load(Resource resource) throws PackageLoadingException {
       if (resource.type() == ResourceType.CLASS) {
          final String classPath = ResourceUtil.instance().relativePathToClassPath(resource.relativePath());
-         resourceManager.alias(classPath, resource.location());
+         resourceManager.alias(classPath, resource.uri());
       }
    }
 

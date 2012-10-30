@@ -12,9 +12,9 @@
    <groupId>org.atomnuke.components</groupId>
    <artifactId>stock-bundle</artifactId>
 
-   <packaging>ear</packaging>
+   <packaging>jar</packaging>
 
-   <name>Atom Nuke - Components - Stock Bundle EAR</name>
+   <name>Atom Nuke - Components - Stock Library Bundle</name>
 
    <dependencies>
       <dependency>
@@ -57,63 +57,24 @@
       <plugins>
          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-ear-plugin</artifactId>
-            <version>2.7</version>
-
-            <extensions>true</extensions>
+            <artifactId>maven-shade-plugin</artifactId>
+            <version>2.0</version>
 
             <executions>
                <execution>
-                  <id>Package Ear Contents</id>
-
                   <phase>package</phase>
 
                   <goals>
-                     <goal>ear</goal>
+                     <goal>shade</goal>
                   </goals>
+
+                  <configuration>
+                     <transformers>
+                        <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+                     </transformers>
+                  </configuration>
                </execution>
             </executions>
-
-            <configuration>
-               <generateApplicationXml>false</generateApplicationXml>
-
-               <modules>
-                  <jarModule>
-                     <groupId>org.atomnuke.components.source</groupId>
-                     <artifactId>feed-crawler</artifactId>
-                  </jarModule>
-
-                  <jarModule>
-                     <groupId>org.atomnuke.components.source</groupId>
-                     <artifactId>http-listener</artifactId>
-                  </jarModule>
-
-                  <jarModule>
-                     <groupId>org.atomnuke.components.source</groupId>
-                     <artifactId>collectd-http</artifactId>
-                  </jarModule>
-
-                  <jarModule>
-                     <groupId>org.atomnuke.components.source</groupId>
-                     <artifactId>util-sources</artifactId>
-                  </jarModule>
-
-                  <jarModule>
-                     <groupId>org.atomnuke.components.listener</groupId>
-                     <artifactId>util-listeners</artifactId>
-                  </jarModule>
-
-                  <jarModule>
-                     <groupId>org.atomnuke.components.services</groupId>
-                     <artifactId>configuration</artifactId>
-                  </jarModule>
-
-                  <jarModule>
-                     <groupId>org.atomnuke.components.services</groupId>
-                     <artifactId>config-rest-api</artifactId>
-                  </jarModule>
-               </modules>
-            </configuration>
          </plugin>
       </plugins>
    </build>

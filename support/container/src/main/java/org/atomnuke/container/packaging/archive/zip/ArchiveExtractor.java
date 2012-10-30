@@ -86,13 +86,18 @@ public class ArchiveExtractor implements Unpacker {
       ZipEntry entry;
 
       while ((entry = rootInputStream.getNextEntry()) != null) {
-         final File extractionTarget = new File(deploymentRoot + File.separator + entry.getName());
+         final String rawEntryName = entry.getName();
+         final String entryName = rawEntryName.endsWith("/") ? rawEntryName.substring(0, rawEntryName.length() - 1) : rawEntryName;
+
+         final File extractionTarget = new File(deploymentRoot + File.separator + entryName);
          final URI extractionTargetUri = extractionTarget.toURI();
 
          if (entry.isDirectory()) {
             if (!extractionTarget.exists() && !extractionTarget.mkdirs()) {
                throw new RuntimeException("Can't make deployment directories.");
             }
+
+            resourceIdentityTree.register(new ResourceDescriptorImpl(extractionTargetUri, entryName, ResourceType.DIRECTORY));
          } else {
             final File parentDir = extractionTarget.getParentFile();
 
@@ -100,9 +105,11 @@ public class ArchiveExtractor implements Unpacker {
                throw new RuntimeException("Can't make deployment directories.");
             }
 
+            // What kind of file is it?
             final ArchiveResource archiveResource = new ArchiveResourceImpl(entry.getName());
 
             switch (archiveResource.type()) {
+               // Add embedded archives for processing later
                case EAR:
                case JAR:
                case ZIP:
@@ -123,10 +130,11 @@ public class ArchiveExtractor implements Unpacker {
             // Close all streams tied to the splitter
             outputStreamSplitter.close();
 
-            // Register the new resource
             resourceIdentityTree.register(new ResourceDescriptorImpl(extractionTargetUri, archiveResource.name(), archiveResource.type(), digesterStream.getDigest()));
-            resourceIdentityTree.alias(archiveResource.name(), extractionTargetUri);
          }
+
+         // Alias the resource for ease of searching
+         resourceIdentityTree.alias(entryName, extractionTargetUri);
       }
 //      if (!new File(location).delete()) {
 //         LOG.info("Failed to delete temp archive. This may make the deployment directory messy but shouldn't hurt anything.");

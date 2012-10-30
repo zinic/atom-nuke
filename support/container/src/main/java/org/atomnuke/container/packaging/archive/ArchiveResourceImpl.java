@@ -10,8 +10,12 @@ public class ArchiveResourceImpl implements ArchiveResource {
    private final String name;
 
    public ArchiveResourceImpl(String name) {
+      this(name, ResourceType.findResourceTypeForName(name));
+   }
+
+   public ArchiveResourceImpl(String name, ResourceType resourceType) {
       this.name = name;
-      this.type = ResourceType.findResourceTypeForName(name);
+      this.type = resourceType;
    }
 
    @Override

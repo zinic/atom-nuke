@@ -7,31 +7,36 @@
       <groupId>org.atomnuke.components</groupId>
       <artifactId>components</artifactId>
       <version>1.1.2-SNAPSHOT</version>
-
+      
       <relativePath>./../../</relativePath>
    </parent>
 
-   <groupId>org.atomnuke.components.source</groupId>
-   <artifactId>collectd-http</artifactId>
+   <groupId>org.atomnuke.components.services.jee</groupId>
+   <artifactId>servlet-jetty</artifactId>
 
    <packaging>jar</packaging>
 
-   <name>Atom Nuke - Components - Collectd HTTP Source</name>
+   <name>Atom Nuke - Services - Jetty Servlet Container</name>
 
    <dependencies>
       <dependency>
-         <groupId>javax</groupId>
-         <artifactId>javaee-web-api</artifactId>
+         <groupId>org.eclipse.jetty</groupId>
+         <artifactId>jetty-webapp</artifactId>
       </dependency>
 
       <dependency>
-         <groupId>org.atomnuke.components.services.jee</groupId>
-         <artifactId>servlet-jetty</artifactId>
+         <groupId>org.eclipse.jetty</groupId>
+         <artifactId>jetty-server</artifactId>
       </dependency>
 
       <dependency>
-         <groupId>org.atomnuke</groupId>
-         <artifactId>nuke</artifactId>
+         <groupId>org.eclipse.jetty</groupId>
+         <artifactId>jetty-servlet</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>org.atomnuke.container</groupId>
+         <artifactId>fallout</artifactId>
       </dependency>
 
       <dependency>
@@ -42,11 +47,6 @@
       <dependency>
          <groupId>org.slf4j</groupId>
          <artifactId>slf4j-api</artifactId>
-      </dependency>
-
-      <dependency>
-         <groupId>org.apache.commons</groupId>
-         <artifactId>commons-lang3</artifactId>
       </dependency>
 
       <dependency>

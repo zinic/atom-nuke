@@ -22,26 +22,12 @@
       <dependency>
          <groupId>javax</groupId>
          <artifactId>javaee-web-api</artifactId>
-         <version>6.0</version>
          <scope>provided</scope>
       </dependency>
 
       <dependency>
-         <groupId>org.eclipse.jetty</groupId>
-         <artifactId>jetty-webapp</artifactId>
-         <version>8.1.4.v20120524</version>
-      </dependency>
-
-      <dependency>
-         <groupId>org.eclipse.jetty</groupId>
-         <artifactId>jetty-server</artifactId>
-         <version>8.1.4.v20120524</version>
-      </dependency>
-
-      <dependency>
-         <groupId>org.eclipse.jetty</groupId>
-         <artifactId>jetty-servlet</artifactId>
-         <version>8.1.4.v20120524</version>
+         <groupId>org.atomnuke.components.services.jee</groupId>
+         <artifactId>servlet-jetty</artifactId>
       </dependency>
 
       <dependency>
