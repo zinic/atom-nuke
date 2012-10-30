@@ -34,12 +34,7 @@ public class ConfigurationManagerImpl<T> implements ConfigurationManager<T> {
    }
 
    @Override
-   public final ConfigurationWriter<T> writer() {
-      return writer;
-   }
-
-   @Override
-   public final ConfigurationReader<T> reader() {
-      return reader;
+   public UpdateTag readUpdateTag() throws ConfigurationException {
+      return reader.readUpdateTag();
    }
 }

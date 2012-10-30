@@ -4,7 +4,7 @@ import java.io.File;
 import org.atomnuke.cli.command.Root;
 import org.atomnuke.cli.CliConfigurationHandler;
 import org.atomnuke.config.model.ServerConfiguration;
-import org.atomnuke.fallout.config.server.ServerConfigurationManager;
+import org.atomnuke.fallout.config.server.ServerConfigurationFileManager;
 import org.atomnuke.util.cli.CommandDriver;
 import org.atomnuke.util.cli.command.Command;
 import org.atomnuke.util.cli.command.result.CommandResult;
@@ -20,7 +20,7 @@ public final class NukeMain {
    }
 
    public static void main(String[] args) throws Exception {
-      final ConfigurationManager<ServerConfiguration> cfgManager = new ServerConfigurationManager(new File(NukeEnv.CONFIG_LOCATION));
+      final ConfigurationManager<ServerConfiguration> cfgManager = new ServerConfigurationFileManager(new File(NukeEnv.CONFIG_LOCATION));
       final ServerConfiguration previousCfg = cfgManager.read();
 
       final CliConfigurationHandler handler = new CliConfigurationHandler(cfgManager, previousCfg != null ? previousCfg : new ServerConfiguration());

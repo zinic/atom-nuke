@@ -13,7 +13,5 @@ public interface ConfigurationManager<T> extends Reclaimable {
 
    T read() throws ConfigurationException;
 
-   ConfigurationWriter<T> writer();
-
-   ConfigurationReader<T> reader();
+   UpdateTag readUpdateTag() throws ConfigurationException;
 }

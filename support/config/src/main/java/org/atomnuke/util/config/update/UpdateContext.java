@@ -72,7 +72,7 @@ public class UpdateContext<T> implements ConfigurationContext<T> {
    }
 
    public boolean updated() throws ConfigurationException {
-      final UpdateTag newUpdateTag = manager.reader().readUpdateTag();
+      final UpdateTag newUpdateTag = manager.readUpdateTag();
 
       if (lastUpdateTag == null || !lastUpdateTag.equals(newUpdateTag)) {
          lastUpdateTag = newUpdateTag;

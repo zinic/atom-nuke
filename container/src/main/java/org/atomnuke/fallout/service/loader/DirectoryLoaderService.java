@@ -40,7 +40,7 @@ public class DirectoryLoaderService implements Service {
 
    private final BindingEnvironmentFactory bindingEnvFactory;
    private final File deploymentDirectory, libraryDirectory;
-   
+
    private PackageLoader packageLoader;
 
    public DirectoryLoaderService() {
@@ -131,13 +131,15 @@ public class DirectoryLoaderService implements Service {
          final URI archiveUri = archive.toURI();
 
          if (archiveUnpacker.canUnpack(archiveUri)) {
-            LOG.info("Loading URI: " + archive.getAbsolutePath());
+            LOG.info("Extracting package \"" + archiveUri.toString() + "\"");
 
             try {
                final DeployedPackage deployedPackage = archiveUnpacker.unpack(archiveUri);
+
+               LOG.info("Loading package \"" + archiveUri.toString() + "\"");
                packageLoader.load(deployedPackage);
 
-               LOG.info("Loaded URI: " + archive.getAbsolutePath());
+               LOG.info("Package \"" + archive.getAbsolutePath() + "\" loaded");
             } catch (UnpackerException ue) {
                LOG.error("Failed to unpack package (" + archive.getAbsolutePath() + ") - Reason: " + ue.getMessage(), ue);
             } catch (PackageLoadingException ple) {

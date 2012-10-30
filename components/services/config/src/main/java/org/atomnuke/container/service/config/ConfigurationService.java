@@ -43,8 +43,8 @@ public class ConfigurationService implements Service {
       final boolean hasReclamationHandler = serviceManager.serviceRegistered(ReclamationHandler.class);
       final boolean hasTaskingModule = serviceManager.serviceRegistered(TaskingModule.class);
 
-      return new ResolutionActionImpl(
-              hasTaskingModule && hasReclamationHandler ? ResolutionActionType.INIT : ResolutionActionType.DEFER);
+      return hasTaskingModule && hasReclamationHandler
+              ? new ResolutionActionImpl(ResolutionActionType.INIT) : new ResolutionActionImpl(ResolutionActionType.DEFER);
    }
 
    @Override

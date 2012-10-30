@@ -9,7 +9,7 @@ import org.atomnuke.NukeEnv;
 import org.atomnuke.NukeKernel;
 import org.atomnuke.config.model.ServerConfiguration;
 import org.atomnuke.container.boot.ContainerBootstrap;
-import org.atomnuke.fallout.config.server.ServerConfigurationManager;
+import org.atomnuke.fallout.config.server.ServerConfigurationFileManager;
 import org.atomnuke.fallout.context.ContextManager;
 import org.atomnuke.container.packaging.loader.PackageLoader;
 import org.atomnuke.plugin.proxy.japi.JapiProxyFactory;
@@ -84,7 +84,7 @@ public class NukeContainer {
 
    private void registerNukeCfgSink(ConfigurationUpdateManager cfgUpdateManager) throws FalloutInitException {
       try {
-         final ConfigurationManager<ServerConfiguration> cfgManager = new ServerConfigurationManager(new File(NukeEnv.CONFIG_LOCATION));
+         final ConfigurationManager<ServerConfiguration> cfgManager = new ServerConfigurationFileManager(new File(NukeEnv.CONFIG_LOCATION));
          final ConfigurationContext<ServerConfiguration> configurationContext = cfgUpdateManager.register("org.atomnuke.container.cfg", cfgManager);
 
          configurationContext.addListener(contextManager);

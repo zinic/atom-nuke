@@ -1,7 +1,15 @@
 package org.atomnuke.control.service;
 
 import com.sun.jersey.spi.container.servlet.ServletContainer;
+import java.io.File;
+import javax.xml.bind.JAXBException;
+import org.atomnuke.NukeEnv;
+import org.atomnuke.config.model.ServerConfiguration;
 import org.atomnuke.container.service.annotation.NukeService;
+import org.atomnuke.control.pubsub.SubscriptionManager;
+import org.atomnuke.control.pubsub.SubscriptionManagerImpl;
+import org.atomnuke.control.service.config.ConfigurationModelControllerImpl;
+import org.atomnuke.fallout.config.server.ServerConfigurationFileManager;
 import org.atomnuke.service.Service;
 import org.atomnuke.service.ServiceManager;
 import org.atomnuke.service.ServiceUnavailableException;
@@ -10,6 +18,7 @@ import org.atomnuke.service.jetty.server.ContextBuilder;
 import org.atomnuke.service.resolution.ResolutionAction;
 import org.atomnuke.service.resolution.ResolutionActionImpl;
 import org.atomnuke.service.resolution.ResolutionActionType;
+import org.atomnuke.util.config.ConfigurationException;
 import org.atomnuke.util.config.update.ConfigurationUpdateManager;
 import org.atomnuke.util.lifecycle.InitializationException;
 import org.atomnuke.util.service.ServiceHandler;
@@ -55,12 +64,21 @@ public class FalloutControlApiService implements Service {
 
    @Override
    public void init(ServiceContext serviceCtx) throws InitializationException {
+      final File fileConfigLocation = new File(NukeEnv.CONFIG_LOCATION);
+      final ConfigurationModelControllerImpl modelController = new ConfigurationModelControllerImpl(readIntialConfiguration(fileConfigLocation));
+
       try {
          final ContextBuilder contextBuilder = ServiceHandler.instance().firstAvailable(serviceCtx.manager(), ContextBuilder.class);
+         final ConfigurationUpdateManager cfgService = ServiceHandler.instance().firstAvailable(serviceCtx.manager(), ConfigurationUpdateManager.class);
+
          servletContextHandler = contextBuilder.newContext("/control/api");
+//         modelController.registerToUpdateManager(cfgService);
       } catch (ServiceUnavailableException sue) {
          throw new InitializationException(sue);
       }
+
+      // Set up the subscription manager
+      servletContextHandler.setAttribute(SubscriptionManager.SERVLET_CTX_NAME, new SubscriptionManagerImpl(modelController));
 
       // Register the JAX-RS servlet
       final ServletHolder servletInstance = new ServletHolder(ServletContainer.class);
@@ -81,5 +99,17 @@ public class FalloutControlApiService implements Service {
             LOG.error(ex.getMessage(), ex);
          }
       }
+   }
+
+   private ServerConfiguration readIntialConfiguration(File location) {
+      try {
+         return new ServerConfigurationFileManager(location).read();
+      } catch (JAXBException jaxbe) {
+         LOG.warn("Failed to read intial configuration model. Reason: " + jaxbe.getMessage(), jaxbe);
+      } catch (ConfigurationException ce) {
+         LOG.warn("Failed to read intial configuration model. Reason: " + ce.getMessage(), ce);
+      }
+
+      return new ServerConfiguration();
    }
 }

@@ -9,9 +9,9 @@ import org.atomnuke.util.config.io.file.FileConfigurationManager;
  *
  * @author zinic
  */
-public class ServerConfigurationManager extends FileConfigurationManager<ServerConfiguration> {
+public class ServerConfigurationFileManager extends FileConfigurationManager<ServerConfiguration> {
 
-   public ServerConfigurationManager(File file) throws JAXBException {
+   public ServerConfigurationFileManager(File file) throws JAXBException {
       super(new ServerConfigurationMarhsaller(), file);
    }
 }
