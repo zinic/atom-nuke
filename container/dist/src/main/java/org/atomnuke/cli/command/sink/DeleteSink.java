@@ -41,7 +41,7 @@ public class DeleteSink extends AbstractNukeCommand {
       for (Iterator<Sink> sinkItr = cfgHandler.getSinks().iterator(); sinkItr.hasNext();) {
          if (sinkItr.next().getId().equals(arguments[SINK_ID])) {
             sinkItr.remove();
-            unbindReciever(cfgHandler, arguments[SINK_ID]);
+            unbindSink(cfgHandler, arguments[SINK_ID]);
 
             cfgHandler.write();
 

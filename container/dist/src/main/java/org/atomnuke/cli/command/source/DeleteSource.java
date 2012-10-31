@@ -41,7 +41,7 @@ public class DeleteSource extends AbstractNukeCommand {
       for (Iterator<Source> sourceItr = cfgHandler.getSources().iterator(); sourceItr.hasNext();) {
          if (sourceItr.next().getId().equals(arguments[SOURCE_ID])) {
             sourceItr.remove();
-            unbindTarget(cfgHandler, arguments[SOURCE_ID]);
+            unbindSource(cfgHandler, arguments[SOURCE_ID]);
 
             cfgHandler.write();
             return new CommandSuccess();

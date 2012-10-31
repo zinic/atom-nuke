@@ -1,11 +1,14 @@
 package org.atomnuke.fallout.config.server;
 
+import java.util.LinkedList;
 import java.util.List;
+import java.util.UUID;
 import org.atomnuke.config.model.Binding;
 import org.atomnuke.config.model.Bindings;
 import org.atomnuke.config.model.EventProcessingSystem;
 import org.atomnuke.config.model.Eventlet;
 import org.atomnuke.config.model.Eventlets;
+import org.atomnuke.config.model.Parameter;
 import org.atomnuke.config.model.Relay;
 import org.atomnuke.config.model.Relays;
 import org.atomnuke.config.model.ServerConfiguration;
@@ -28,6 +31,25 @@ public class ServerConfigurationHandler {
 
    public ServerConfiguration getConfiguration() {
       return configurationCopy;
+   }
+
+   public void addSource(Source source) {
+      getSources().add(source);
+   }
+
+   public void addSink(Sink sink) {
+      getSinks().add(sink);
+   }
+
+   public void addRelay(String id) {
+      final Relay newRelay = new Relay();
+      newRelay.setId(id);
+
+      getRelays().add(newRelay);
+   }
+
+   public void addEventlet(Eventlet eventlet) {
+      getEventlets().add(eventlet);
    }
 
    public List<Source> getSources() {
@@ -79,6 +101,41 @@ public class ServerConfigurationHandler {
       return configurationCopy.getBindings().getBinding();
    }
 
+   public void bind(String source, String sink) {
+      // Bind only if we don't already have a binding
+      if (findBinding(source, sink) == null) {
+         final Binding newBinding = new Binding();
+
+         newBinding.setId(UUID.randomUUID().toString());
+         newBinding.setSource(source);
+         newBinding.setSink(sink);
+
+         getBindings().add(newBinding);
+      }
+   }
+
+   public Binding findBinding(String source, String sink) {
+      for (Binding binding : getBindings()) {
+         if (binding.getSource().equals(source) && binding.getSink().equals(sink)) {
+            return binding;
+         }
+      }
+
+      return null;
+   }
+
+   public List<Binding> findBindingsForSource(String source) {
+      final List<Binding> bindingsFound = new LinkedList<Binding>();
+
+      for (Binding binding : getBindings()) {
+         if (binding.getSource().equals(source)) {
+            bindingsFound.add(binding);
+         }
+      }
+
+      return bindingsFound;
+   }
+
    public Relay findRelay(String id) {
       for (Relay relay : getRelays()) {
          if (relay.getId().equals(id)) {
@@ -93,6 +150,20 @@ public class ServerConfigurationHandler {
       for (Eventlet eventlet : getEventlets()) {
          if (eventlet.getId().equals(eventletId)) {
             return eventlet;
+         }
+      }
+
+      return null;
+   }
+
+   public Eventlet firstEventletByParameter(Parameter parameter) {
+      for (Eventlet eventlet : getEventlets()) {
+         if (eventlet.getParameters() != null) {
+            for (Parameter eventletParameter : eventlet.getParameters().getParam()) {
+               if (eventletParameter.getName().equals(parameter.getName()) && eventletParameter.getValue().equals(parameter.getValue())) {
+                  return eventlet;
+               }
+            }
          }
       }
 

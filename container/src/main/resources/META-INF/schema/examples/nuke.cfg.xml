@@ -2,42 +2,73 @@
 
 <nuke xmlns='http://atomnuke.org/configuration'>
    <sinks>
-      <sink id="" type="" href="" />
-      <sink id="" type="" href="" />
-      <sink id="" type="" href="" />
+      <sink id="" type="" href="">
+         <parameters>
+            <param name="" value=""></param>
+            <param name="" value=""></param>
+            <param name="" value=""></param>
+         </parameters>
+      </sink>
+
+      <sink id="" type="" href="">
+         <parameters>
+         </parameters>
+      </sink>
+
+      <sink id="" type="" href="">
+         <parameters>
+         </parameters>
+      </sink>
    </sinks>
 
    <sources>
       <source id="" type="" href="">
-         <polling-interval value="" unit="" />
+         <parameters>
+         </parameters>
+         <polling-interval value="" unit=""></polling-interval>
       </source>
 
       <source id="" type="" href="">
-         <polling-interval value="" unit="" />
+         <parameters>
+         </parameters>
+         <polling-interval value="" unit=""></polling-interval>
       </source>
 
       <source id="" type="" href="">
-         <polling-interval value="" unit="" />
+         <parameters>
+         </parameters>
+         <polling-interval value="" unit=""></polling-interval>
       </source>
    </sources>
 
    <eps>
       <relays>
-         <relay id="" />
-         <relay id="" />
-         <relay id="" />
+         <relay id=""></relay>
+         <relay id=""></relay>
+         <relay id=""></relay>
       </relays>
 
       <eventlets>
-         <eventlet id="" type="" href="" />
-         <eventlet id="" type="" href="" />
-         <eventlet id="" type="" href="" />
+         <eventlet id="" type="" href="">
+            <parameters>
+            </parameters>
+         </eventlet>
+
+         <eventlet id="" type="" href="">
+            <parameters>
+            </parameters>
+         </eventlet>
+
+         <eventlet id="" type="" href="">
+            <parameters>
+            </parameters>
+         </eventlet>
       </eventlets>
    </eps>
 
    <bindings>
-      <binding id="" target="" receiver="" />
-      <binding id="" target="" receiver="" />
-      <binding id="" target="" receiver="" />
+      <binding id="" sink="" source=""></binding>
+      <binding id="" sink="" source=""></binding>
+      <binding id="" sink="" source=""></binding>
    </bindings>
 </nuke>

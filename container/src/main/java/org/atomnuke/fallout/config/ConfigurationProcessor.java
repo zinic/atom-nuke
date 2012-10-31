@@ -123,9 +123,9 @@ public class ConfigurationProcessor {
       throw new ReferenceInstantiationException("Unable to locate reference: " + ref);
    }
 
-   public boolean hasSourceBinding(String name) throws ConfigurationException {
+   public boolean hasSourceBinding(String source) throws ConfigurationException {
       for (Binding binding : cfgHandler.getBindings()) {
-         if (binding.getTarget().equals(name)) {
+         if (binding.getSource().equals(source)) {
             return true;
          }
       }
@@ -133,9 +133,9 @@ public class ConfigurationProcessor {
       return false;
    }
 
-   public boolean hasSinkBinding(String name) throws ConfigurationException {
+   public boolean hasSinkBinding(String sink) throws ConfigurationException {
       for (Binding binding : cfgHandler.getBindings()) {
-         if (binding.getReceiver().equals(name)) {
+         if (binding.getSink().equals(sink)) {
             return true;
          }
       }

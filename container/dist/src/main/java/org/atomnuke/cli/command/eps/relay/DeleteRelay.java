@@ -41,8 +41,8 @@ import org.atomnuke.util.cli.command.result.CommandSuccess;
       for (Iterator<Relay> relayItr = cfgHandler.getRelays().iterator(); relayItr.hasNext();) {
          if (relayItr.next().getId().equals(arguments[RELAY_ID])) {
             relayItr.remove();
-            unbindTarget(cfgHandler, arguments[RELAY_ID]);
-            unbindReciever(cfgHandler, arguments[RELAY_ID]);
+            unbindSource(cfgHandler, arguments[RELAY_ID]);
+            unbindSink(cfgHandler, arguments[RELAY_ID]);
 
             cfgHandler.write();
             return new CommandSuccess();

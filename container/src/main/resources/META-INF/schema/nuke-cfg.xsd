@@ -314,7 +314,7 @@
          </xs:annotation>
       </xs:attribute>
 
-      <xs:attribute name="target" type="xs:string" use="required">
+      <xs:attribute name="sink" type="xs:string" use="required">
          <xs:annotation>
             <xs:documentation>
                <html:p>
@@ -323,7 +323,7 @@
          </xs:annotation>
       </xs:attribute>
 
-      <xs:attribute name="receiver" type="xs:string" use="required">
+      <xs:attribute name="source" type="xs:string" use="required">
          <xs:annotation>
             <xs:documentation>
                <html:p>

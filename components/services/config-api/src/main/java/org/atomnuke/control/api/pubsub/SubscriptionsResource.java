@@ -11,13 +11,21 @@ import javax.ws.rs.core.Response;
 import org.apache.commons.lang3.StringUtils;
 import org.atomnuke.control.api.ApiResource;
 import org.atomnuke.control.api.type.SubscriptionDocument;
+import org.atomnuke.control.service.config.SubscriptionException;
 
 /**
  *
  * @author zinic
  */
-@Path("/subscription")
-public class SubscriptionResource extends ApiResource {
+@Path("/subscriptions")
+public class SubscriptionsResource extends ApiResource {
+
+   @GET
+   @Path("/active")
+   @Produces({"application/json", "text/json"})
+   public Response getActiveSubscriptions(@PathParam("subscriptionId") String subscriptionId) {
+      return Response.ok(subscriptionManager().getAll()).build();
+   }
 
    @GET
    @Path("/active/{subscriptionId}")
@@ -40,7 +48,11 @@ public class SubscriptionResource extends ApiResource {
          return Response.status(Response.Status.BAD_REQUEST).build();
       }
 
-      subscriptionManager().put(doc);
+      try {
+         subscriptionManager().put(doc, callbackUri);
+      } catch (SubscriptionException se) {
+         return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(se.getMessage()).build();
+      }
 
       return Response.status(Response.Status.ACCEPTED).build();
    }

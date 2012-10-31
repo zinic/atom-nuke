@@ -22,7 +22,7 @@ public class BindingCommands extends AbstractCommandList {
       final StringBuilder output = new StringBuilder();
 
       for (Binding binding : cfgHandler.getBindings()) {
-         output.append("Binding definition, ").append(binding.getId()).append(" binds reciever ").append(binding.getReceiver()).append(" to target ").append(binding.getTarget()).append("\n");
+         output.append("Binding definition, ").append(binding.getId()).append(" binds source ").append(binding.getSource()).append(" to sink ").append(binding.getSink()).append("\n");
       }
 
       return new MessageResult(output.toString());

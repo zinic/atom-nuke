@@ -3,7 +3,7 @@ package org.atomnuke.control.api;
 import javax.servlet.ServletContext;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
-import org.atomnuke.control.pubsub.SubscriptionManager;
+import org.atomnuke.pubsub.SubscriptionManager;
 
 /**
  *

@@ -25,7 +25,7 @@ public class ContainerContext {
 
    private static final Logger LOG = LoggerFactory.getLogger(ContainerContext.class);
 
-   private final Map<String, InstanceContext<AtomSink>> Sinks;
+   private final Map<String, InstanceContext<AtomSink>> sinks;
    private final Map<String, InstanceContext<AtomEventlet>> eventlets;
    private final Map<String, InstanceContext<FanoutSink>> relays;
    private final Map<String, CancellationRemote> cancellationRemotes;
@@ -33,7 +33,7 @@ public class ContainerContext {
    private final Map<String, Binding> bindings;
 
    public ContainerContext() {
-      Sinks = new HashMap<String, InstanceContext<AtomSink>>();
+      sinks = new HashMap<String, InstanceContext<AtomSink>>();
       eventlets = new HashMap<String, InstanceContext<AtomEventlet>>();
       relays = new HashMap<String, InstanceContext<FanoutSink>>();
 
@@ -47,7 +47,7 @@ public class ContainerContext {
    }
 
    public boolean hasSink(String name) {
-      return Sinks.containsKey(name);
+      return sinks.containsKey(name);
    }
 
    public boolean hasEventlet(String name) {
@@ -67,7 +67,7 @@ public class ContainerContext {
    public void registerSink(String name, InstanceContext<AtomSink> instanceCtx) {
       LOG.info("Registering Sink: " + name);
 
-      Sinks.put(name, instanceCtx);
+      sinks.put(name, instanceCtx);
    }
 
    public void registerEventlet(String name, InstanceContext<AtomEventlet> instanceCtx) {
@@ -106,9 +106,9 @@ public class ContainerContext {
       garbageCollect();
    }
 
-   private boolean hasTargetBindingFor(String id) {
+   private boolean hasSourceBindingFor(String id) {
       for (Binding binding : bindings.values()) {
-         if (binding.getTarget().equals(id)) {
+         if (binding.getSource().equals(id)) {
             return true;
          }
       }
@@ -116,9 +116,9 @@ public class ContainerContext {
       return false;
    }
 
-   private boolean hasRecieverBindingFor(String id) {
+   private boolean hasSinkBindingFor(String id) {
       for (Binding binding : bindings.values()) {
-         if (binding.getReceiver().equals(id)) {
+         if (binding.getSink().equals(id)) {
             return true;
          }
       }
@@ -130,7 +130,7 @@ public class ContainerContext {
       final List<CancellationRemote> garbageQueue = new LinkedList<CancellationRemote>();
 
       for (String id : new HashSet<String>(tasks.keySet())) {
-         if (!hasTargetBindingFor(id)) {
+         if (!hasSourceBindingFor(id)) {
             LOG.info("Garbage collecting task: " + id);
 
             tasks.remove(id);
@@ -138,8 +138,8 @@ public class ContainerContext {
          }
       }
 
-      for (String id : new HashSet<String>(Sinks.keySet())) {
-         if (!hasRecieverBindingFor(id)) {
+      for (String id : new HashSet<String>(sinks.keySet())) {
+         if (!hasSinkBindingFor(id)) {
             LOG.info("Garbage collecting Sink: " + id);
 
             eventlets.remove(id);
@@ -148,7 +148,7 @@ public class ContainerContext {
       }
 
       for (String id : new HashSet<String>(relays.keySet())) {
-         if (!hasTargetBindingFor(id) && !hasRecieverBindingFor(id)) {
+         if (!hasSourceBindingFor(id) && !hasSinkBindingFor(id)) {
             LOG.info("Garbage collecting relay: " + id);
 
             eventlets.remove(id);
@@ -157,7 +157,7 @@ public class ContainerContext {
       }
 
       for (String id : new HashSet<String>(eventlets.keySet())) {
-         if (!hasRecieverBindingFor(id)) {
+         if (!hasSinkBindingFor(id)) {
             LOG.info("Garbage collecting eventlet: " + id);
 
             eventlets.remove(id);
@@ -174,47 +174,47 @@ public class ContainerContext {
    }
 
    private void bind(Binding binding) throws ConfigurationException {
-      LOG.info("Binding " + binding.getReceiver() + " to source " + binding.getTarget());
+      LOG.info("Binding source " + binding.getSource() + " to sink " + binding.getSink());
 
-      final AtomTask source = tasks.get(binding.getTarget());
+      final AtomTask source = tasks.get(binding.getSource());
 
       if (source != null) {
          bind(source, binding);
       } else {
-         final InstanceContext<FanoutSink> relayContext = relays.get(binding.getTarget());
+         final InstanceContext<FanoutSink> relayContext = relays.get(binding.getSource());
 
          if (relayContext != null) {
             bind(relayContext.instance(), binding);
          } else {
-            throw new ConfigurationException("Unable to locate source or relay, " + binding.getTarget());
+            throw new ConfigurationException("Unable to locate source or relay, " + binding.getSource());
          }
       }
    }
 
    private InstanceContext<? extends AtomSink> findAtomSink(String id) {
-      final InstanceContext<AtomSink> SinkContext = Sinks.get(id);
+      final InstanceContext<AtomSink> SinkContext = sinks.get(id);
       return SinkContext != null ? SinkContext : relays.get(id);
    }
 
    private void bind(AtomTask source, Binding binding) throws ConfigurationException {
-      final InstanceContext<? extends AtomSink> SinkCtx = findAtomSink(binding.getReceiver());
+      final InstanceContext<? extends AtomSink> SinkCtx = findAtomSink(binding.getSink());
 
       if (SinkCtx == null) {
-         throw new ConfigurationException("Unable to locate Sink or realy, " + binding.getReceiver() + ".");
+         throw new ConfigurationException("Unable to locate Sink or realy, " + binding.getSink() + ".");
       }
 
-      cancellationRemotes.put(binding.getReceiver(), source.addSink(SinkCtx));
+      cancellationRemotes.put(binding.getSink(), source.addSink(SinkCtx));
       bindings.put(binding.getId(), binding);
    }
 
    private void bind(FanoutSink source, Binding binding) throws ConfigurationException {
-      final InstanceContext<? extends AtomEventlet> eventletCtx = eventlets.get(binding.getReceiver());
+      final InstanceContext<? extends AtomEventlet> eventletCtx = eventlets.get(binding.getSink());
 
       if (eventletCtx == null) {
-         throw new ConfigurationException("Unable to locate eventlet, " + binding.getReceiver() + ".");
+         throw new ConfigurationException("Unable to locate eventlet, " + binding.getSink() + ".");
       }
 
-      cancellationRemotes.put(binding.getReceiver(), source.enlistHandler(eventletCtx));
+      cancellationRemotes.put(binding.getSink(), source.enlistHandler(eventletCtx));
       bindings.put(binding.getId(), binding);
    }
 }

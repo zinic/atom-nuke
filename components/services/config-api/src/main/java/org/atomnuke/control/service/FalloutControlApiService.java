@@ -6,10 +6,11 @@ import javax.xml.bind.JAXBException;
 import org.atomnuke.NukeEnv;
 import org.atomnuke.config.model.ServerConfiguration;
 import org.atomnuke.container.service.annotation.NukeService;
-import org.atomnuke.control.pubsub.SubscriptionManager;
-import org.atomnuke.control.pubsub.SubscriptionManagerImpl;
-import org.atomnuke.control.service.config.ConfigurationModelControllerImpl;
+import org.atomnuke.pubsub.SubscriptionManager;
+import org.atomnuke.pubsub.SubscriptionManagerImpl;
+import org.atomnuke.control.service.config.ServerCfgUpdateManager;
 import org.atomnuke.fallout.config.server.ServerConfigurationFileManager;
+import org.atomnuke.fallout.config.server.ServerConfigurationHandler;
 import org.atomnuke.service.Service;
 import org.atomnuke.service.ServiceManager;
 import org.atomnuke.service.ServiceUnavailableException;
@@ -19,6 +20,7 @@ import org.atomnuke.service.resolution.ResolutionAction;
 import org.atomnuke.service.resolution.ResolutionActionImpl;
 import org.atomnuke.service.resolution.ResolutionActionType;
 import org.atomnuke.util.config.ConfigurationException;
+import org.atomnuke.util.config.update.ConfigurationContext;
 import org.atomnuke.util.config.update.ConfigurationUpdateManager;
 import org.atomnuke.util.lifecycle.InitializationException;
 import org.atomnuke.util.service.ServiceHandler;
@@ -38,6 +40,7 @@ public class FalloutControlApiService implements Service {
    private static final String SVC_NAME = "org.atomnuke.control.service.FalloutControlApiService";
 
    private ServletContextHandler servletContextHandler;
+   private ConfigurationContext cfgContext;
 
    @Override
    public String name() {
@@ -64,21 +67,25 @@ public class FalloutControlApiService implements Service {
 
    @Override
    public void init(ServiceContext serviceCtx) throws InitializationException {
-      final File fileConfigLocation = new File(NukeEnv.CONFIG_LOCATION);
-      final ConfigurationModelControllerImpl modelController = new ConfigurationModelControllerImpl(readIntialConfiguration(fileConfigLocation));
+      final ServerConfiguration initialConfiguration = readIntialConfiguration(new File(NukeEnv.CONFIG_LOCATION));
+      final ServerCfgUpdateManager updateManager = new ServerCfgUpdateManager(initialConfiguration);
+
+      SubscriptionManager subManager;
 
       try {
          final ContextBuilder contextBuilder = ServiceHandler.instance().firstAvailable(serviceCtx.manager(), ContextBuilder.class);
          final ConfigurationUpdateManager cfgService = ServiceHandler.instance().firstAvailable(serviceCtx.manager(), ConfigurationUpdateManager.class);
 
          servletContextHandler = contextBuilder.newContext("/control/api");
-//         modelController.registerToUpdateManager(cfgService);
+
+         cfgContext = cfgService.register("org.atomnuke.config.fallout.ApiManagedServerConfiguration", updateManager);
+         subManager = new SubscriptionManagerImpl(new ServerConfigurationHandler(initialConfiguration), updateManager);
       } catch (ServiceUnavailableException sue) {
          throw new InitializationException(sue);
       }
 
       // Set up the subscription manager
-      servletContextHandler.setAttribute(SubscriptionManager.SERVLET_CTX_NAME, new SubscriptionManagerImpl(modelController));
+      servletContextHandler.setAttribute(SubscriptionManager.SERVLET_CTX_NAME, subManager);
 
       // Register the JAX-RS servlet
       final ServletHolder servletInstance = new ServletHolder(ServletContainer.class);
