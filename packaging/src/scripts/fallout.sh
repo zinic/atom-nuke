@@ -3,7 +3,7 @@
 # Nuke env variables
 export NUKE_HOME="/var/lib/atomnuke";
 export NUKE_DEPLOY="${NUKE_HOME}/deployed";
-export NUKE_LIB="${NUKE_HOME}/lib";
+export NUKE_LIB="${NUKE_HOME}/deployable";
 export NUKE_CONFIG="/etc/atomnuke/nuke.cfg.xml";
 
 # Location of the jar distribution

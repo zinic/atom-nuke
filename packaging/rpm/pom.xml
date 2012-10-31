@@ -133,7 +133,7 @@
 
                      <sources>
                         <source>
-                           <location>../../components/stock-bundle/target/stock-bundle-${project.version}.ear</location>
+                           <location>../../components/stock-bundle/target/stock-bundle-${project.version}.jar</location>
                            <destination>stock-lib.ear</destination>
                         </source>
                      </sources>
