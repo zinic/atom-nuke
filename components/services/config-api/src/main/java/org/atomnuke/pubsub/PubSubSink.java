@@ -7,7 +7,6 @@ import org.atomnuke.service.ServiceUnavailableException;
 import org.atomnuke.service.jetty.server.ContextBuilder;
 import org.atomnuke.sink.eps.FanoutSink;
 import org.atomnuke.task.context.AtomTaskContext;
-import org.atomnuke.util.config.update.ConfigurationContext;
 import org.atomnuke.util.lifecycle.InitializationException;
 import org.atomnuke.util.service.ServiceHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
@@ -24,7 +23,6 @@ public class PubSubSink extends FanoutSink {
    private static final Logger LOG = LoggerFactory.getLogger(PubSubSink.class);
 
    private ServletContextHandler servletContextHandler;
-   private ConfigurationContext cfgContext;
 
    @Override
    public void init(AtomTaskContext context) throws InitializationException {
@@ -35,7 +33,7 @@ public class PubSubSink extends FanoutSink {
          final ContextBuilder contextBuilder = ServiceHandler.instance().firstAvailable(context.services(), ContextBuilder.class);
          final SubscriptionManager subManager = new TemporarySubscriptionManager(this);
 
-         initServletContext(contextBuilder.newContext("/control/api"), subManager);
+         initServletContext(contextBuilder.newContext("/pubsub"), subManager);
       } catch (ServiceUnavailableException sue) {
          throw new InitializationException(sue);
       }
@@ -43,8 +41,6 @@ public class PubSubSink extends FanoutSink {
 
    @Override
    public void destroy() {
-      cfgContext.cancellationRemote().cancel();
-
       if (servletContextHandler != null && !(servletContextHandler.isStopping() || servletContextHandler.isStopped())) {
          try {
             servletContextHandler.stop();

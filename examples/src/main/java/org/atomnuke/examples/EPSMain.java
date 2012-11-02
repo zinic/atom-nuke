@@ -2,14 +2,15 @@ package org.atomnuke.examples;
 
 import java.io.File;
 import java.util.concurrent.TimeUnit;
-import org.atomnuke.Nuke;
 import org.atomnuke.NukeKernel;
 import org.atomnuke.atom.model.Entry;
+import org.atomnuke.atom.model.builder.CategoryBuilder;
 import org.atomnuke.examples.eventlets.FeedFileWriterHandler;
 import org.atomnuke.examples.source.EventGenerator;
 import org.atomnuke.sink.eps.FanoutSink;
 import org.atomnuke.sink.eps.eventlet.AtomEventletException;
 import org.atomnuke.sink.eps.eventlet.AtomEventletPartial;
+import org.atomnuke.sink.selectors.CategorySelector;
 import org.atomnuke.sink.selectors.CategorySelectorImpl;
 import org.atomnuke.task.AtomTask;
 import org.atomnuke.util.TimeValue;
@@ -37,6 +38,9 @@ public class EPSMain {
       // the entries inside that feed that also have the category 'test'
       final FanoutSink relay1 = new FanoutSink();
 
+      final CategorySelector selector1 = new CategorySelectorImpl();
+      selector1.addCategory(new CategoryBuilder().setTerm("test").build());
+
       // Event eventlet partial makes delegate creation more simple
       relay1.enlistHandler(new AtomEventletPartial() {
 
@@ -44,7 +48,7 @@ public class EPSMain {
          public void entry(Entry entry) throws AtomEventletException {
             System.out.println("Relay 1 - Entry: " + entry.id().toString());
          }
-      }, new CategorySelectorImpl(new String[]{"test"}, new String[]{"test"}));
+      }, selector1);
 
 
       // Second relay for selecting feeds that have the category 'test' and only
@@ -53,7 +57,11 @@ public class EPSMain {
 
       // Creating your own handler allows you to implement the init and destroy
       // methods however you like
-      relay2.enlistHandler(new FeedFileWriterHandler(new File("/tmp/test.feed")), new CategorySelectorImpl(new String[]{"test"}, new String[]{"other-cat"}));
+      final CategorySelector selector2 = new CategorySelectorImpl();
+      selector1.addCategory(new CategoryBuilder().setTerm("test").build());
+      selector1.addCategory(new CategoryBuilder().setTerm("other-cat").build());
+
+      relay2.enlistHandler(new FeedFileWriterHandler(new File("/tmp/test.feed")), selector2);
 
 
       // Set up Nuke

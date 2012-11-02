@@ -23,7 +23,7 @@ public class FileWriterPerformance {
       final AtomicLong events = new AtomicLong(0);
 
       final FanoutSink relay = new FanoutSink();
-      relay.enlistHandler(new FeedFileWriterHandler(new File("/tmp/test.feed")), new CategorySelectorImpl(new String[]{"test"}, new String[]{"test"}));
+      relay.enlistHandler(new FeedFileWriterHandler(new File("/tmp/test.feed")));
       relay.enlistHandler(new CounterEventlet(events, false));
 
       final NukeKernel nukeKernel = new NukeKernel();

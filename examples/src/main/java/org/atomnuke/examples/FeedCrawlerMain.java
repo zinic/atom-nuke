@@ -3,10 +3,12 @@ package org.atomnuke.examples;
 import java.util.concurrent.TimeUnit;
 import org.atomnuke.NukeKernel;
 import org.atomnuke.atom.model.Entry;
+import org.atomnuke.atom.model.builder.CategoryBuilder;
 import org.atomnuke.sink.eps.FanoutSink;
 import org.atomnuke.sink.eps.eventlet.AtomEventlet;
 import org.atomnuke.sink.eps.eventlet.AtomEventletException;
 import org.atomnuke.sink.eps.eventlet.AtomEventletPartial;
+import org.atomnuke.sink.selectors.CategorySelector;
 import org.atomnuke.sink.selectors.CategorySelectorImpl;
 import org.atomnuke.source.crawler.FeedCrawlerSourceFactory;
 import org.atomnuke.task.AtomTask;
@@ -104,12 +106,15 @@ public class FeedCrawlerMain {
        * have the desired category terms will be passed to the eventlet.
        */
 
+      final CategorySelector selector1 = new CategorySelectorImpl();
+      selector1.addCategory(new CategoryBuilder().setTerm("desired-entry-category").build());
+
       eventRelay.enlistHandler(new AtomEventletPartial() {
          @Override
          public void entry(Entry entry) throws AtomEventletException {
             System.out.println("Eventlet 3 - New event: " + entry.id().toString());
          }
-      }, new CategorySelectorImpl(new String[]{"desired-entry-category"}));
+      }, selector1);
 
       /*
        * Start the nuke kernel.
