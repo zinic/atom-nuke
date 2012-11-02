@@ -2,7 +2,6 @@ package org.atomnuke.control.api.pubsub;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -20,15 +19,31 @@ import org.atomnuke.control.service.config.SubscriptionException;
 @Path("/subscriptions")
 public class SubscriptionsResource extends ApiResource {
 
+   @PUT
+   @Consumes({"application/json", "text/json"})
+   public Response createNewSubscription(SubscriptionDocument doc) {
+      if (StringUtils.isEmpty(doc.getId()) || StringUtils.isEmpty(doc.getCallback()) || doc.getCategories().isEmpty()) {
+         return Response.status(Response.Status.BAD_REQUEST).entity("Please validate your JSON input.").build();
+      }
+
+      try {
+         subscriptionManager().put(doc);
+      } catch (SubscriptionException se) {
+         return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(se.getMessage()).build();
+      }
+
+      return Response.status(Response.Status.ACCEPTED).build();
+   }
+
    @GET
-   @Path("/active")
+   @Path("/")
    @Produces({"application/json", "text/json"})
    public Response getActiveSubscriptions(@PathParam("subscriptionId") String subscriptionId) {
       return Response.ok(subscriptionManager().getAll()).build();
    }
 
    @GET
-   @Path("/active/{subscriptionId}")
+   @Path("/{subscriptionId}")
    @Produces({"application/json", "text/json"})
    public Response getActiveSubscription(@PathParam("subscriptionId") String subscriptionId) {
       final SubscriptionDocument doc = subscriptionManager().get(subscriptionId);
@@ -38,22 +53,5 @@ public class SubscriptionsResource extends ApiResource {
       }
 
       return Response.ok(doc).build();
-   }
-
-   @PUT
-   @Path("/new")
-   @Consumes({"application/json", "text/json"})
-   public Response createNewSubscription(@HeaderParam("X-CALLBACK") String callbackUri, SubscriptionDocument doc) {
-      if (StringUtils.isEmpty(doc.getId()) || doc.getCategories().isEmpty()) {
-         return Response.status(Response.Status.BAD_REQUEST).build();
-      }
-
-      try {
-         subscriptionManager().put(doc, callbackUri);
-      } catch (SubscriptionException se) {
-         return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(se.getMessage()).build();
-      }
-
-      return Response.status(Response.Status.ACCEPTED).build();
    }
 }

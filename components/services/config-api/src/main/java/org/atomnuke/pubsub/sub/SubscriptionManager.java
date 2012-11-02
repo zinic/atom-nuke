@@ -1,4 +1,4 @@
-package org.atomnuke.pubsub;
+package org.atomnuke.pubsub.sub;
 
 import org.atomnuke.control.api.type.SubscriptionDocument;
 import org.atomnuke.control.api.type.SubscriptionDocumentCollection;
@@ -16,5 +16,7 @@ public interface SubscriptionManager {
 
    SubscriptionDocumentCollection getAll();
 
-   void put(SubscriptionDocument doc, String callback) throws SubscriptionException;
+   boolean has(SubscriptionDocument doc);
+
+   void put(SubscriptionDocument doc) throws SubscriptionException;
 }

@@ -4,8 +4,8 @@ import org.atomnuke.collectd.servlet.CollectdSinkServlet;
 import org.atomnuke.source.AtomSource;
 import org.atomnuke.source.AtomSourceException;
 import org.atomnuke.source.result.AtomSourceResult;
-import org.atomnuke.collectd.source.QueueSource;
-import org.atomnuke.collectd.source.QueueSourceImpl;
+import org.atomnuke.fallout.source.queue.QueueSource;
+import org.atomnuke.fallout.source.queue.EntryQueueImpl;
 import org.atomnuke.service.ServiceUnavailableException;
 import org.atomnuke.service.jetty.server.ContextBuilder;
 import org.atomnuke.task.context.AtomTaskContext;
@@ -28,7 +28,7 @@ public class CollectdSource implements AtomSource {
    private ServletContextHandler servletContextHandler;
 
    public CollectdSource() {
-      queueSource = new QueueSourceImpl();
+      queueSource = new EntryQueueImpl();
    }
 
    @Override

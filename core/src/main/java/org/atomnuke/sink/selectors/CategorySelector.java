@@ -1,68 +1,20 @@
 package org.atomnuke.sink.selectors;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.Collection;
 import org.atomnuke.atom.model.Category;
-import org.atomnuke.atom.model.Entry;
-import org.atomnuke.atom.model.Feed;
-import org.atomnuke.sink.eps.selector.Selector;
-import org.atomnuke.sink.eps.selector.SelectorResult;
+import org.atomnuke.sink.eps.selector.EntrySelector;
 
 /**
  *
  * @author zinic
  */
-public class CategorySelector implements Selector {
+public interface CategorySelector extends EntrySelector {
 
-   private final String[] feedTerms;
-   private final String[] entryTerms;
+   void addCategory(Category cat);
 
-   public CategorySelector(String[] entryTerms) {
-      this(new String[0], entryTerms);
-   }
+   boolean hasCategory(Category categoryToFind);
 
-   public CategorySelector(String[] feedTerms, String[] entryTerms) {
-      this.feedTerms = Arrays.copyOf(feedTerms, feedTerms.length);
-      this.entryTerms = Arrays.copyOf(entryTerms, entryTerms.length);
-   }
+   Collection<Category> interestedCategories();
 
-   public static boolean hasCategoryTerm(String[] termsToSearchThrough, List<Category> categories) {
-      for (Category category : categories) {
-         if (hasCategoryTerm(termsToSearchThrough, category.term())) {
-            return true;
-         }
-      }
-
-      return false;
-   }
-
-   public static boolean hasCategoryTerm(String[] termsToSearchThrough, String termToFind) {
-      if (termToFind != null) {
-         for (String targetCategory : termsToSearchThrough) {
-            if (targetCategory.equals(termToFind)) {
-               return true;
-            }
-         }
-      }
-
-      return false;
-   }
-
-   @Override
-   public SelectorResult select(Feed feed) {
-      if (feedTerms.length == 0 || hasCategoryTerm(feedTerms, feed.categories())) {
-         return SelectorResult.PROCESS;
-      }
-
-      return SelectorResult.PASS;
-   }
-
-   @Override
-   public SelectorResult select(Entry entry) {
-      if (entryTerms.length == 0 || hasCategoryTerm(entryTerms, entry.categories())) {
-         return SelectorResult.PROCESS;
-      }
-
-      return SelectorResult.PASS;
-   }
+   boolean removeCategory(Category categoryToFind);
 }

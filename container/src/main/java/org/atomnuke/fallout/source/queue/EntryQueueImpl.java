@@ -1,4 +1,4 @@
-package org.atomnuke.collectd.source;
+package org.atomnuke.fallout.source.queue;
 
 import org.atomnuke.source.result.AtomSourceResult;
 import java.util.LinkedList;
@@ -6,17 +6,28 @@ import java.util.Queue;
 import org.atomnuke.atom.model.Entry;
 import org.atomnuke.source.AtomSourceException;
 import org.atomnuke.source.result.AtomSourceResultImpl;
+import org.atomnuke.task.context.AtomTaskContext;
+import org.atomnuke.util.lifecycle.InitializationException;
 
 /**
  *
  * @author zinic
  */
-public class QueueSourceImpl implements QueueSource {
+public class EntryQueueImpl implements QueueSource {
 
    private final Queue<Entry> entryQueue;
 
-   public QueueSourceImpl() {
+   public EntryQueueImpl() {
       entryQueue = new LinkedList<Entry>();
+   }
+
+   @Override
+   public void init(AtomTaskContext contextObject) throws InitializationException {
+   }
+
+   @Override
+   public synchronized void destroy() {
+      entryQueue.clear();
    }
 
    @Override

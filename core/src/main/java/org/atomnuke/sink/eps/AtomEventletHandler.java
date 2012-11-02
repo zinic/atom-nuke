@@ -1,7 +1,7 @@
 package org.atomnuke.sink.eps;
 
 import org.atomnuke.sink.eps.eventlet.AtomEventlet;
-import org.atomnuke.sink.eps.selector.Selector;
+import org.atomnuke.sink.eps.selector.EntrySelector;
 import org.atomnuke.plugin.InstanceContext;
 import org.atomnuke.util.remote.CancellationRemote;
 
@@ -13,9 +13,9 @@ public interface AtomEventletHandler {
 
    CancellationRemote enlistHandler(AtomEventlet handler);
 
-   CancellationRemote enlistHandler(AtomEventlet handler, Selector selector);
+   CancellationRemote enlistHandler(AtomEventlet handler, EntrySelector selector);
 
    CancellationRemote enlistHandler(InstanceContext<? extends AtomEventlet> handler);
 
-   CancellationRemote enlistHandler(InstanceContext<? extends AtomEventlet> handler, Selector selector);
+   CancellationRemote enlistHandler(InstanceContext<? extends AtomEventlet> handler, EntrySelector selector);
 }

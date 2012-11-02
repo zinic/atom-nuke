@@ -10,7 +10,7 @@ import org.atomnuke.examples.source.EventGenerator;
 import org.atomnuke.sink.eps.FanoutSink;
 import org.atomnuke.sink.eps.eventlet.AtomEventletException;
 import org.atomnuke.sink.eps.eventlet.AtomEventletPartial;
-import org.atomnuke.sink.selectors.CategorySelector;
+import org.atomnuke.sink.selectors.CategorySelectorImpl;
 import org.atomnuke.task.AtomTask;
 import org.atomnuke.util.TimeValue;
 
@@ -44,7 +44,7 @@ public class EPSMain {
          public void entry(Entry entry) throws AtomEventletException {
             System.out.println("Relay 1 - Entry: " + entry.id().toString());
          }
-      }, new CategorySelector(new String[]{"test"}, new String[]{"test"}));
+      }, new CategorySelectorImpl(new String[]{"test"}, new String[]{"test"}));
 
 
       // Second relay for selecting feeds that have the category 'test' and only
@@ -53,7 +53,7 @@ public class EPSMain {
 
       // Creating your own handler allows you to implement the init and destroy
       // methods however you like
-      relay2.enlistHandler(new FeedFileWriterHandler(new File("/tmp/test.feed")), new CategorySelector(new String[]{"test"}, new String[]{"other-cat"}));
+      relay2.enlistHandler(new FeedFileWriterHandler(new File("/tmp/test.feed")), new CategorySelectorImpl(new String[]{"test"}, new String[]{"other-cat"}));
 
 
       // Set up Nuke

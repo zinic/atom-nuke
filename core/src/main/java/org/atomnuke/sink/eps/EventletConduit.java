@@ -2,10 +2,9 @@ package org.atomnuke.sink.eps;
 
 import org.atomnuke.sink.eps.eventlet.AtomEventletException;
 import org.atomnuke.atom.model.Entry;
-import org.atomnuke.atom.model.Feed;
 import org.atomnuke.plugin.InstanceContext;
 import org.atomnuke.sink.eps.eventlet.AtomEventlet;
-import org.atomnuke.sink.eps.selector.Selector;
+import org.atomnuke.sink.eps.selector.EntrySelector;
 import org.atomnuke.sink.eps.selector.SelectorResult;
 import org.atomnuke.plugin.operation.ComplexOperation;
 import org.atomnuke.plugin.operation.OperationFailureException;
@@ -31,9 +30,9 @@ public class EventletConduit {
 
    private final InstanceContext<AtomEventlet> eventletContext;
    private final CancellationRemote cancellationRemote;
-   private final Selector selector;
+   private final EntrySelector selector;
 
-   public EventletConduit(InstanceContext<AtomEventlet> eventletContext, CancellationRemote cancellationRemote, Selector selector) {
+   public EventletConduit(InstanceContext<AtomEventlet> eventletContext, CancellationRemote cancellationRemote, EntrySelector selector) {
       this.eventletContext = eventletContext;
       this.cancellationRemote = cancellationRemote;
       this.selector = selector;
@@ -45,18 +44,6 @@ public class EventletConduit {
 
    public CancellationRemote cancellationRemote() {
       return cancellationRemote;
-   }
-
-   public SelectorResult select(Feed page) {
-      final SelectorResult result = selector.select(page);
-
-      if (result == SelectorResult.PROCESS) {
-         for (Entry entry : page.entries()) {
-            select(entry);
-         }
-      }
-
-      return result;
    }
 
    public SelectorResult select(Entry entry) {

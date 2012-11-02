@@ -7,7 +7,7 @@ import org.atomnuke.sink.eps.FanoutSink;
 import org.atomnuke.sink.eps.eventlet.AtomEventlet;
 import org.atomnuke.sink.eps.eventlet.AtomEventletException;
 import org.atomnuke.sink.eps.eventlet.AtomEventletPartial;
-import org.atomnuke.sink.selectors.CategorySelector;
+import org.atomnuke.sink.selectors.CategorySelectorImpl;
 import org.atomnuke.source.crawler.FeedCrawlerSourceFactory;
 import org.atomnuke.task.AtomTask;
 import org.atomnuke.task.context.AtomTaskContext;
@@ -109,7 +109,7 @@ public class FeedCrawlerMain {
          public void entry(Entry entry) throws AtomEventletException {
             System.out.println("Eventlet 3 - New event: " + entry.id().toString());
          }
-      }, new CategorySelector(new String[]{"desired-entry-category"}));
+      }, new CategorySelectorImpl(new String[]{"desired-entry-category"}));
 
       /*
        * Start the nuke kernel.

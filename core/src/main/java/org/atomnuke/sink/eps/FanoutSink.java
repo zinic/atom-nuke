@@ -10,12 +10,14 @@ import org.atomnuke.sink.AtomSinkResult;
 import org.atomnuke.sink.SinkResult;
 import org.atomnuke.sink.eps.eventlet.AtomEventlet;
 import org.atomnuke.sink.eps.selector.DefaultSelector;
-import org.atomnuke.sink.eps.selector.Selector;
+import org.atomnuke.sink.eps.selector.EntrySelector;
 import org.atomnuke.plugin.InstanceContext;
 import org.atomnuke.plugin.InstanceContextImpl;
 import org.atomnuke.plugin.env.NopInstanceEnvironment;
 import org.atomnuke.service.ServiceUnavailableException;
 import org.atomnuke.service.gc.ReclamationHandler;
+import org.atomnuke.sink.SinkAction;
+import org.atomnuke.sink.eps.selector.SelectorResult;
 import org.atomnuke.task.context.AtomTaskContext;
 import org.atomnuke.util.lifecycle.InitializationException;
 import org.atomnuke.util.remote.CancellationRemote;
@@ -70,7 +72,7 @@ public class FanoutSink implements AtomSink, AtomEventletHandler {
    }
 
    @Override
-   public CancellationRemote enlistHandler(AtomEventlet handler, Selector selector) {
+   public CancellationRemote enlistHandler(AtomEventlet handler, EntrySelector selector) {
       return enlistHandler(new InstanceContextImpl<AtomEventlet>(NopInstanceEnvironment.getInstance(), handler), selector);
    }
 
@@ -80,7 +82,7 @@ public class FanoutSink implements AtomSink, AtomEventletHandler {
    }
 
    @Override
-   public synchronized CancellationRemote enlistHandler(InstanceContext<? extends AtomEventlet> handler, Selector selector) {
+   public final synchronized CancellationRemote enlistHandler(InstanceContext<? extends AtomEventlet> handler, EntrySelector selector) {
       final CancellationRemote cancellationRemote = reclamationHandler.watch(handler);
 
       final EventletConduit newConduit = new EventletConduit((InstanceContext<AtomEventlet>) handler, cancellationRemote, selector);
@@ -116,16 +118,12 @@ public class FanoutSink implements AtomSink, AtomEventletHandler {
    }
 
    @Override
-   public SinkResult entry(Entry entry) throws AtomSinkException {
+   public final SinkResult entry(Entry entry) throws AtomSinkException {
       garbageCollect();
 
       for (EventletConduit conduit : copyConduits()) {
-         switch (conduit.select(entry)) {
-            case HALT:
-               removeConduit(conduit);
-               break;
-
-            default:
+         if (conduit.select(entry) == SelectorResult.HALT) {
+            break;
          }
       }
 
@@ -133,19 +131,20 @@ public class FanoutSink implements AtomSink, AtomEventletHandler {
    }
 
    @Override
-   public SinkResult feedPage(Feed page) throws AtomSinkException {
+   public final SinkResult feedPage(Feed page) throws AtomSinkException {
       garbageCollect();
 
-      for (EventletConduit conduit : copyConduits()) {
-         switch (conduit.select(page)) {
-            case HALT:
-               removeConduit(conduit);
-               break;
+      SinkResult resultReturn = AtomSinkResult.ok();
 
-            default:
+      for (Entry entry : page.entries()) {
+         final SinkResult result = entry(entry);
+
+         if (entry(entry).action() == SinkAction.HALT) {
+            resultReturn = result;
+            break;
          }
       }
 
-      return AtomSinkResult.ok();
+      return resultReturn;
    }
 }
