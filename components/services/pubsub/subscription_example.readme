@@ -1,6 +1,7 @@
 The XML Configuration
 
 nuke.cfg.xml:
+```xml
    <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 
    <nuke xmlns="http://atomnuke.org/configuration">
@@ -20,6 +21,7 @@ nuke.cfg.xml:
        <binding id="44f81044-b49b-47da-a1bd-026f75ee0348" sink="pubsub-sink" source="http-source-1"/>
      </bindings>
    </nuke>
+```
 
 Utilizing the above configuration will allow you to perform the following to validate that your system is working. To publish a subscription, edit the subscription.json file provided in this directory.
 
