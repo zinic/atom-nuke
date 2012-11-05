@@ -7,7 +7,7 @@ import org.atomnuke.atom.model.Entry;
 import org.atomnuke.atom.model.builder.CategoryBuilder;
 import org.atomnuke.examples.eventlets.FeedFileWriterHandler;
 import org.atomnuke.examples.source.EventGenerator;
-import org.atomnuke.sink.eps.FanoutSink;
+import org.atomnuke.sink.eps.EventletChainSink;
 import org.atomnuke.sink.eps.eventlet.AtomEventletException;
 import org.atomnuke.sink.eps.eventlet.AtomEventletPartial;
 import org.atomnuke.sink.selectors.CategorySelector;
@@ -36,7 +36,7 @@ public class EPSMain {
    public static void main(String[] args) throws Exception {
       // First relay for selecting feeds that have the category 'test' and only
       // the entries inside that feed that also have the category 'test'
-      final FanoutSink relay1 = new FanoutSink();
+      final EventletChainSink relay1 = new EventletChainSink();
 
       final CategorySelector selector1 = new CategorySelectorImpl();
       selector1.addCategory(new CategoryBuilder().setTerm("test").build());
@@ -53,7 +53,7 @@ public class EPSMain {
 
       // Second relay for selecting feeds that have the category 'test' and only
       // the entries inside that feed that have the category 'other-cat'
-      final FanoutSink relay2 = new FanoutSink();
+      final EventletChainSink relay2 = new EventletChainSink();
 
       // Creating your own handler allows you to implement the init and destroy
       // methods however you like

@@ -3,6 +3,7 @@ package org.atomnuke.task.context;
 import java.util.Map;
 import org.atomnuke.service.ServiceManager;
 import org.atomnuke.task.manager.AtomTasker;
+import org.atomnuke.util.remote.CancellationRemote;
 import org.slf4j.Logger;
 
 /**

@@ -49,7 +49,12 @@
 
       <dependency>
          <groupId>org.atomnuke.components.services</groupId>
-         <artifactId>config-rest-api</artifactId>
+         <artifactId>http-client</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>org.atomnuke.components.services</groupId>
+         <artifactId>pubsub</artifactId>
       </dependency>
    </dependencies>
 

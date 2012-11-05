@@ -1,0 +1,7 @@
+<entry>
+   <category scheme="ah-cluster-n1.metrics" term="req_per_min" />
+
+   <content type="application/json">
+      { "timestamp" : "12345678", "value" : "000000" }
+   </content>
+</entry>

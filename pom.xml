@@ -125,6 +125,18 @@
          </dependency>
 
          <dependency>
+            <groupId>org.atomnuke.components.services</groupId>
+            <artifactId>http-client</artifactId>
+            <version>${project.version}</version>
+         </dependency>
+
+         <dependency>
+            <groupId>org.atomnuke.components.services</groupId>
+            <artifactId>pubsub</artifactId>
+            <version>${project.version}</version>
+         </dependency>
+
+         <dependency>
             <groupId>javax</groupId>
             <artifactId>javaee-web-api</artifactId>
             <version>6.0</version>

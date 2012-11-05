@@ -8,7 +8,7 @@ import org.atomnuke.NukeKernel;
 import org.atomnuke.examples.eventlets.FeedFileWriterHandler;
 import org.atomnuke.examples.eventlets.CounterEventlet;
 import org.atomnuke.examples.source.EventGenerator;
-import org.atomnuke.sink.eps.FanoutSink;
+import org.atomnuke.sink.eps.EventletChainSink;
 import org.atomnuke.sink.selectors.CategorySelectorImpl;
 import org.atomnuke.task.AtomTask;
 import org.atomnuke.util.TimeValue;
@@ -22,7 +22,7 @@ public class FileWriterPerformance {
    public static void main(String[] args) throws Exception {
       final AtomicLong events = new AtomicLong(0);
 
-      final FanoutSink relay = new FanoutSink();
+      final EventletChainSink relay = new EventletChainSink();
       relay.enlistHandler(new FeedFileWriterHandler(new File("/tmp/test.feed")));
       relay.enlistHandler(new CounterEventlet(events, false));
 

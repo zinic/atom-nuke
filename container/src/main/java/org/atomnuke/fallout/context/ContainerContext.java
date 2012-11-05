@@ -9,7 +9,7 @@ import java.util.Set;
 import org.atomnuke.config.model.Binding;
 import org.atomnuke.plugin.InstanceContext;
 import org.atomnuke.sink.AtomSink;
-import org.atomnuke.sink.eps.FanoutSink;
+import org.atomnuke.sink.eps.EventletChainSink;
 import org.atomnuke.sink.eps.eventlet.AtomEventlet;
 import org.atomnuke.task.AtomTask;
 import org.atomnuke.util.config.ConfigurationException;
@@ -27,7 +27,7 @@ public class ContainerContext {
 
    private final Map<String, InstanceContext<AtomSink>> sinks;
    private final Map<String, InstanceContext<AtomEventlet>> eventlets;
-   private final Map<String, InstanceContext<FanoutSink>> relays;
+   private final Map<String, InstanceContext<EventletChainSink>> relays;
    private final Map<String, CancellationRemote> cancellationRemotes;
    private final Map<String, AtomTask> tasks;
    private final Map<String, Binding> bindings;
@@ -35,7 +35,7 @@ public class ContainerContext {
    public ContainerContext() {
       sinks = new HashMap<String, InstanceContext<AtomSink>>();
       eventlets = new HashMap<String, InstanceContext<AtomEventlet>>();
-      relays = new HashMap<String, InstanceContext<FanoutSink>>();
+      relays = new HashMap<String, InstanceContext<EventletChainSink>>();
 
       cancellationRemotes = new HashMap<String, CancellationRemote>();
       tasks = new HashMap<String, AtomTask>();
@@ -58,7 +58,7 @@ public class ContainerContext {
       return tasks.containsKey(name);
    }
 
-   public void registerRelay(String name, InstanceContext<FanoutSink> instanceCtx) {
+   public void registerRelay(String name, InstanceContext<EventletChainSink> instanceCtx) {
       LOG.info("Registering relay: " + name);
 
       relays.put(name, instanceCtx);
@@ -181,7 +181,7 @@ public class ContainerContext {
       if (source != null) {
          bind(source, binding);
       } else {
-         final InstanceContext<FanoutSink> relayContext = relays.get(binding.getSource());
+         final InstanceContext<EventletChainSink> relayContext = relays.get(binding.getSource());
 
          if (relayContext != null) {
             bind(relayContext.instance(), binding);
@@ -207,7 +207,7 @@ public class ContainerContext {
       bindings.put(binding.getId(), binding);
    }
 
-   private void bind(FanoutSink source, Binding binding) throws ConfigurationException {
+   private void bind(EventletChainSink source, Binding binding) throws ConfigurationException {
       final InstanceContext<? extends AtomEventlet> eventletCtx = eventlets.get(binding.getSink());
 
       if (eventletCtx == null) {

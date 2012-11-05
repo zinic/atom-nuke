@@ -4,7 +4,7 @@ import java.util.concurrent.TimeUnit;
 import org.atomnuke.NukeKernel;
 import org.atomnuke.atom.model.Entry;
 import org.atomnuke.atom.model.builder.CategoryBuilder;
-import org.atomnuke.sink.eps.FanoutSink;
+import org.atomnuke.sink.eps.EventletChainSink;
 import org.atomnuke.sink.eps.eventlet.AtomEventlet;
 import org.atomnuke.sink.eps.eventlet.AtomEventletException;
 import org.atomnuke.sink.eps.eventlet.AtomEventletPartial;
@@ -54,7 +54,7 @@ public class FeedCrawlerMain {
        * Nuke has a smart way of turning feed pages into individual events
        * through a provided event Sink called a Relay.
        */
-      final FanoutSink eventRelay = new FanoutSink();
+      final EventletChainSink eventRelay = new EventletChainSink();
 
       /*
        * Register the relay to the source task. This allows the relay to recieve

@@ -28,8 +28,9 @@
 
       <!-- Services -->
       <module>services/config</module>
-      <module>services/config-api</module>
+      <module>services/pubsub</module>
       <module>services/jetty</module>
+      <module>services/http-client</module>
 
       <!-- Bundle -->
       <module>stock-bundle</module>

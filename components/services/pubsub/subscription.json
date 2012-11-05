@@ -1,0 +1,10 @@
+{
+    "categories": [
+        {
+            "scheme": "ah-cluster-n1.metrics",
+            "term": "req_per_min"
+        }
+    ],
+    "id": "80e99533-73ee-4576-940d-bdf8091a56ce",
+    "callback": "http://localhost:8080/pubsub/callback"
+}

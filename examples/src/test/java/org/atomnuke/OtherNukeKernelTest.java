@@ -4,7 +4,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 import org.atomnuke.examples.eventlets.CounterEventlet;
 import org.atomnuke.examples.source.EventGenerator;
-import org.atomnuke.sink.eps.FanoutSink;
+import org.atomnuke.sink.eps.EventletChainSink;
 import org.atomnuke.task.AtomTask;
 import org.atomnuke.util.TimeValue;
 import org.junit.Ignore;
@@ -23,7 +23,7 @@ public class OtherNukeKernelTest {
 
       final AtomTask task = nukeKernel.follow(new EventGenerator("Task 1", true), new TimeValue(1, TimeUnit.SECONDS));
 
-      final FanoutSink relay = new FanoutSink();
+      final EventletChainSink relay = new EventletChainSink();
       relay.enlistHandler(new CounterEventlet(eventsProcessed, false));
 
       task.addSink(relay);

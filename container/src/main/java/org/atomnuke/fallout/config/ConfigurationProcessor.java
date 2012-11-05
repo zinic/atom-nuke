@@ -21,7 +21,7 @@ import org.atomnuke.container.packaging.PackageContext;
 import org.atomnuke.container.packaging.bindings.lang.BindingLanguage;
 import org.atomnuke.plugin.env.NopInstanceEnvironment;
 import org.atomnuke.sink.AtomSink;
-import org.atomnuke.sink.eps.FanoutSink;
+import org.atomnuke.sink.eps.EventletChainSink;
 import org.atomnuke.sink.eps.eventlet.AtomEventlet;
 import org.atomnuke.plugin.InstanceContextImpl;
 import org.atomnuke.plugin.ReferenceInstantiationException;
@@ -166,11 +166,11 @@ public class ConfigurationProcessor {
          final String relayId = relay.getId();
 
          if (hasSinkBinding(relayId) && !containerContext.hasRelay(relayId)) {
-            final FanoutSink newRelay = new FanoutSink();
+            final EventletChainSink newRelay = new EventletChainSink();
 
             try {
-               newRelay.init(new TaskContextImpl(LoggerFactory.getLogger(FanoutSink.class), Collections.EMPTY_MAP, services, tasker));
-               containerContext.registerRelay(relay.getId(), new InstanceContextImpl<FanoutSink>(NopInstanceEnvironment.getInstance(), newRelay));
+               newRelay.init(new TaskContextImpl(LoggerFactory.getLogger(EventletChainSink.class), Collections.EMPTY_MAP, services, tasker));
+               containerContext.registerRelay(relay.getId(), new InstanceContextImpl<EventletChainSink>(NopInstanceEnvironment.getInstance(), newRelay));
             } catch (InitializationException ie) {
                LOG.error("Failed to create relay instance " + relay.getId() + ". Reason: " + ie.getMessage(), ie);
             }

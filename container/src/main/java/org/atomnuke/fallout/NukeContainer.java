@@ -85,7 +85,9 @@ public class NukeContainer {
    private void registerNukeCfgSink(ConfigurationUpdateManager cfgUpdateManager) throws FalloutInitException {
       try {
          final ConfigurationManager<ServerConfiguration> cfgManager = new ServerConfigurationFileManager(new File(NukeEnv.CONFIG_LOCATION));
-         final ConfigurationContext<ServerConfiguration> configurationContext = cfgUpdateManager.get("org.atomnuke.config.fallout.ApiManagedServerConfiguration");
+         final ConfigurationContext<ServerConfiguration> configurationContext = cfgUpdateManager.register("Fallout File CFG", cfgManager);
+         
+//         final ConfigurationContext<ServerConfiguration> configurationContext = cfgUpdateManager.get("org.atomnuke.config.fallout.ApiManagedServerConfiguration");
 
          configurationContext.addListener(contextManager);
       } catch (JAXBException jaxbe) {
