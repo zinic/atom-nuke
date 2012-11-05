@@ -89,7 +89,7 @@ public class ConfigurationService implements Service {
          final TaskingModule taskingModule = ServiceHandler.instance().firstAvailable(sc.manager(), TaskingModule.class);
 
          cfgUpdateMangaer = new ConfigurationUpdateManagerImpl(reclamationHandler);
-         cfgPollerHandle = taskingModule.tasker().task(new ConfigurationUpdateRunnable(cfgUpdateMangaer), pollerTime);
+         cfgPollerHandle = taskingModule.tasker().pollTask(new ConfigurationUpdateRunnable(cfgUpdateMangaer), pollerTime);
       } catch (ServiceUnavailableException sue) {
          throw new InitializationException(sue);
       }

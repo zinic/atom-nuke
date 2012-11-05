@@ -15,7 +15,7 @@ import org.atomnuke.source.AtomSource;
 import org.atomnuke.source.AtomSourceException;
 import org.atomnuke.source.result.AtomSourceResult;
 import org.atomnuke.source.result.AtomSourceResultImpl;
-import org.atomnuke.task.AtomTask;
+import org.atomnuke.task.atom.AtomTask;
 import org.atomnuke.task.context.AtomTaskContext;
 import org.atomnuke.util.lifecycle.InitializationException;
 import org.atomnuke.util.TimeValue;
@@ -47,7 +47,7 @@ public class NukeKernelTest {
          }
       };
 
-      final AtomSink Sink = new AtomSink() {
+      final AtomSink sink = new AtomSink() {
          @Override
          public SinkResult entry(Entry entry) throws AtomSinkException {
             eventsProcessed.incrementAndGet();
@@ -73,7 +73,7 @@ public class NukeKernelTest {
 
       for (int taskId = 1; taskId <= 30; taskId++) {
          final AtomTask task = nukeKernel.follow(source, new TimeValue(10 * taskId, TimeUnit.MICROSECONDS));
-         task.addSink(new InstanceContextImpl<AtomSink>(NopInstanceEnvironment.getInstance(), Sink));
+         task.addSink(new InstanceContextImpl<AtomSink>(NopInstanceEnvironment.getInstance(), sink));
       }
 
       nukeKernel.start();

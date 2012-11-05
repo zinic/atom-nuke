@@ -1,7 +1,8 @@
-package org.atomnuke.task;
+package org.atomnuke.task.atom;
 
 import org.atomnuke.sink.AtomSink;
 import org.atomnuke.plugin.InstanceContext;
+import org.atomnuke.task.TaskHandle;
 import org.atomnuke.util.remote.CancellationRemote;
 
 /**

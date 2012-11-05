@@ -5,7 +5,7 @@ import org.atomnuke.plugin.env.NopInstanceEnvironment;
 import org.atomnuke.sink.AtomSink;
 import org.atomnuke.sink.manager.SinkManager;
 import org.atomnuke.plugin.InstanceContextImpl;
-import org.atomnuke.task.AtomTask;
+import org.atomnuke.task.atom.AtomTask;
 import org.atomnuke.task.TaskHandle;
 import org.atomnuke.util.remote.CancellationRemote;
 

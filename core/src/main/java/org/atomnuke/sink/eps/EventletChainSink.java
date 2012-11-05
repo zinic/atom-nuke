@@ -40,7 +40,6 @@ import org.slf4j.LoggerFactory;
 public class EventletChainSink implements AtomSink, AtomEventletHandler {
 
    private static final Logger LOG = LoggerFactory.getLogger(EventletChainSink.class);
-
    private final List<EventletConduit> epsConduits;
    private ReclamationHandler reclamationHandler;
 
@@ -122,7 +121,23 @@ public class EventletChainSink implements AtomSink, AtomEventletHandler {
       garbageCollect();
 
       for (EventletConduit conduit : copyConduits()) {
-         if (conduit.select(entry) == SelectorResult.HALT) {
+         final SelectorResult result = conduit.select(entry);
+         boolean shouldStop = false;
+
+         switch (result) {
+            case PROCESS:
+               conduit.perform(entry);
+               break;
+
+            case HALT:
+               shouldStop = true;
+               break;
+
+            case PASS:
+            default:
+         }
+
+         if (shouldStop) {
             break;
          }
       }

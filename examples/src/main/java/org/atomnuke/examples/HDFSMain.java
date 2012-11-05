@@ -3,7 +3,7 @@ package org.atomnuke.examples;
 import java.util.concurrent.TimeUnit;
 import org.atomnuke.NukeKernel;
 import org.atomnuke.atom.io.writer.stax.StaxAtomWriterFactory;
-import org.atomnuke.task.AtomTask;
+import org.atomnuke.task.atom.AtomTask;
 import org.atomnuke.examples.sinks.HDFSFeedSink;
 import org.atomnuke.source.crawler.FeedCrawlerSourceFactory;
 import org.atomnuke.util.TimeValue;

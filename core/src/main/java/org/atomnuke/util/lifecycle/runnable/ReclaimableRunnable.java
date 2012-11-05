@@ -1,4 +1,4 @@
-package org.atomnuke.task;
+package org.atomnuke.util.lifecycle.runnable;
 
 import org.atomnuke.util.lifecycle.Reclaimable;
 

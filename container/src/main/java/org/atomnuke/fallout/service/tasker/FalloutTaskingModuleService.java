@@ -12,7 +12,7 @@ import org.atomnuke.service.context.ServiceContext;
 import org.atomnuke.service.gc.ReclamationHandler;
 import org.atomnuke.service.resolution.ResolutionAction;
 import org.atomnuke.service.resolution.ResolutionActionImpl;
-import org.atomnuke.task.ReclaimableRunnable;
+import org.atomnuke.util.lifecycle.runnable.ReclaimableRunnable;
 import org.atomnuke.task.TaskHandle;
 import org.atomnuke.task.manager.TaskTracker;
 import org.atomnuke.task.manager.Tasker;
@@ -76,7 +76,7 @@ public class FalloutTaskingModuleService implements Service {
          // As the tasking service, it's our job to spin up essential polling services
 
          // TODO: This feature should be extensible
-         explicitlyManagedTasks.add(tasker.task(new ReclaimableRunnable() {
+         explicitlyManagedTasks.add(tasker.pollTask(new ReclaimableRunnable() {
             @Override
             public void run() {
                reclamationHandler.garbageCollect();

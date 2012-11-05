@@ -12,21 +12,21 @@ import org.atomnuke.util.TimeValue;
  *
  * @author zinic
  */
-public interface ManagedTask extends Runnable {
+public interface ManagedTask<T extends TaskHandle> extends Runnable {
 
    /**
     * Returns the task handle that this managed task manages.
     *
     * @return the handle of the task that this managed task manages.
     */
-   TaskHandle handle();
+   T handle();
 
    /**
     * Returns the next polling interval desired by the task.
     *
     * @return the time value of the next desired polling interval.
     */
-   TimeValue nextPollTime();
+   TimeValue nextRunTime();
 
    /**
     * Notifies the task that it has been scheduled and to set its internal state

@@ -3,7 +3,6 @@ package org.atomnuke.task.threading;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.UUID;
 import org.atomnuke.service.context.ServiceContext;
 
 /**
@@ -12,7 +11,7 @@ import org.atomnuke.service.context.ServiceContext;
  */
 public class ExecutionManagerImpl implements ExecutionManager {
 
-   private final Map<UUID, ExecutionFuture> taskFutures;
+   private final Map<Long, ExecutionFuture> taskFutures;
    private final ExecutionQueue executionQueue;
    private final StateManager stateManager;
 
@@ -24,10 +23,10 @@ public class ExecutionManagerImpl implements ExecutionManager {
       this.executionQueue = executionQueue;
 
       stateManager = new StateManager(State.NEW);
-      taskFutures = new TreeMap<UUID, ExecutionFuture>();
+      taskFutures = new TreeMap<Long, ExecutionFuture>();
    }
 
-   private synchronized Map<UUID, ExecutionFuture> taskFutures() {
+   private synchronized Map<Long, ExecutionFuture> taskFutures() {
       for (Iterator<ExecutionFuture> itr = taskFutures.values().iterator(); itr.hasNext();) {
          final ExecutionFuture nextTask = itr.next();
 
@@ -56,7 +55,7 @@ public class ExecutionManagerImpl implements ExecutionManager {
    }
 
    @Override
-   public synchronized ExecutionFuture submit(UUID taskId, Runnable r) {
+   public synchronized ExecutionFuture submit(long taskId, Runnable r) {
       final ExecutionFuture taskFuture = new ExecutionFuture(executionQueue.submit(r), taskId);
       taskFutures.put(taskId, taskFuture);
 
@@ -88,7 +87,7 @@ public class ExecutionManagerImpl implements ExecutionManager {
    }
 
    @Override
-   public boolean submitted(UUID taskId) {
+   public boolean submitted(long taskId) {
       return taskFutures().containsKey(taskId);
    }
 }

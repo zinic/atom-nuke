@@ -47,12 +47,10 @@ public class EventletConduit {
    }
 
    public SelectorResult select(Entry entry) {
-      final SelectorResult result = selector.select(entry);
+      return selector.select(entry);
+   }
 
-      if (result == SelectorResult.PROCESS) {
-         eventletContext.perform(ENTRY_OPERATION, entry);
-      }
-
-      return result;
+   public void perform(Entry entry) {
+      eventletContext.perform(ENTRY_OPERATION, entry);
    }
 }

@@ -5,7 +5,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import org.atomnuke.examples.eventlets.CounterEventlet;
 import org.atomnuke.examples.source.EventGenerator;
 import org.atomnuke.sink.eps.EventletChainSink;
-import org.atomnuke.task.AtomTask;
+import org.atomnuke.task.atom.AtomTask;
 import org.atomnuke.util.TimeValue;
 import org.junit.Ignore;
 import org.junit.Test;

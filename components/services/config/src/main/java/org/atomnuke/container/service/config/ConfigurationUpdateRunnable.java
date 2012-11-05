@@ -1,6 +1,6 @@
 package org.atomnuke.container.service.config;
 
-import org.atomnuke.task.ReclaimableRunnable;
+import org.atomnuke.util.lifecycle.runnable.ReclaimableRunnable;
 import org.atomnuke.util.config.update.ConfigurationUpdateManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -45,7 +45,7 @@ public class NukeKernel extends AbstractNukeImpl {
    public NukeKernel(ExecutionManager executionManager, ReclamationHandler reclamationHandler, TaskManager taskManager, Tasker tasker) {
       super(new KernelShutdownHook(), new GenericKernelDelegate(taskManager));
 
-      atomTasker = new AtomTaskerImpl(reclamationHandler, executionManager, tasker);
+      atomTasker = new AtomTaskerImpl(reclamationHandler, tasker);
    }
 
    @Override

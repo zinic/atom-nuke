@@ -7,7 +7,7 @@ import org.atomnuke.NukeKernel;
 import org.atomnuke.examples.eventlets.PrintStreamEventlet;
 import org.atomnuke.examples.source.EventGenerator;
 import org.atomnuke.sink.eps.EventletChainSink;
-import org.atomnuke.task.AtomTask;
+import org.atomnuke.task.atom.AtomTask;
 import org.atomnuke.util.TimeValue;
 
 /**

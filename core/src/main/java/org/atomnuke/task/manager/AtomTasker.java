@@ -2,7 +2,7 @@ package org.atomnuke.task.manager;
 
 import org.atomnuke.plugin.InstanceContext;
 import org.atomnuke.source.AtomSource;
-import org.atomnuke.task.AtomTask;
+import org.atomnuke.task.atom.AtomTask;
 import org.atomnuke.util.TimeValue;
 
 /**

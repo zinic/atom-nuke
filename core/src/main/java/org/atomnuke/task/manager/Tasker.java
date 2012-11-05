@@ -1,7 +1,7 @@
 package org.atomnuke.task.manager;
 
 import org.atomnuke.plugin.InstanceContext;
-import org.atomnuke.task.ReclaimableRunnable;
+import org.atomnuke.util.lifecycle.runnable.ReclaimableRunnable;
 import org.atomnuke.task.TaskHandle;
 import org.atomnuke.util.TimeValue;
 
@@ -11,7 +11,11 @@ import org.atomnuke.util.TimeValue;
  */
 public interface Tasker {
 
-   TaskHandle task(ReclaimableRunnable runnable, TimeValue pollingInterval);
+   TaskHandle queueTask(ReclaimableRunnable runnable);
 
-   TaskHandle task(InstanceContext<? extends ReclaimableRunnable> instanceContext, TimeValue pollingInterval);
+   TaskHandle queueTask(InstanceContext<? extends ReclaimableRunnable> instanceContext);
+
+   TaskHandle pollTask(ReclaimableRunnable runnable, TimeValue pollingInterval);
+
+   TaskHandle pollTask(InstanceContext<? extends ReclaimableRunnable> instanceContext, TimeValue pollingInterval);
 }

@@ -12,7 +12,7 @@ import org.atomnuke.sink.eps.eventlet.AtomEventletException;
 import org.atomnuke.sink.eps.eventlet.AtomEventletPartial;
 import org.atomnuke.sink.selectors.CategorySelector;
 import org.atomnuke.sink.selectors.CategorySelectorImpl;
-import org.atomnuke.task.AtomTask;
+import org.atomnuke.task.atom.AtomTask;
 import org.atomnuke.util.TimeValue;
 
 /**

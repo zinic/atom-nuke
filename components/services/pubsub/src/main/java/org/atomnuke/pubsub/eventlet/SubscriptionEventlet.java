@@ -44,10 +44,8 @@ public class SubscriptionEventlet implements AtomEventlet {
 
       JX_FACTORY = jsonFactory;
    }
-
    private final JsonReader<SubscriptionContent> contentReader = JX_FACTORY.newReader(SubscriptionContent.class);
    private final JsonWriter<SubscriptionDocument> documentWriter = JX_FACTORY.newWriter(SubscriptionDocument.class);
-
    private final String subscriptionId, callbackUrl;
    private final HttpClient httpClient;
 
@@ -86,21 +84,24 @@ public class SubscriptionEventlet implements AtomEventlet {
          payload.addCategory(subscriptionCategory);
       }
 
+      final HttpPost webhookPost = new HttpPost(callbackUrl);
+
       try {
          final ByteArrayOutputStream baos = new ByteArrayOutputStream();
          documentWriter.write(payload, baos);
 
-         final HttpPost webhookPost = new HttpPost(callbackUrl);
          webhookPost.setHeader("Content-Type", "application/json");
          webhookPost.setEntity(new ByteArrayEntity(baos.toByteArray()));
 
          final HttpResponse webhookResponse = httpClient.execute(webhookPost);
 
-         if (webhookResponse.getStatusLine().getStatusCode() != Response.Status.NO_CONTENT.getStatusCode()) {
+         if (webhookResponse.getStatusLine().getStatusCode() != Response.Status.ACCEPTED.getStatusCode()) {
             LOG.error("Potential error with webhook client. Recieved the following: " + webhookResponse.getStatusLine().toString());
          }
       } catch (Exception ex) {
          LOG.error(ex.getMessage(), ex);
+      } finally {
+         webhookPost.releaseConnection();
       }
    }
 

@@ -6,12 +6,13 @@ import org.atomnuke.sink.AtomSinkResult;
 import org.atomnuke.sink.manager.ManagedSink;
 import org.atomnuke.plugin.operation.ComplexOperation;
 import org.atomnuke.plugin.operation.OperationFailureException;
+import org.atomnuke.util.lifecycle.runnable.ReclaimableRunnable;
 
 /**
  *
  * @author zinic
  */
-public class AtomSinkDriver implements Runnable {
+public class AtomSinkDriver implements ReclaimableRunnable {
 
    private static final ComplexOperation<AtomSink, DriverArgument> DRIVER_OPERATION = new ComplexOperation<AtomSink, DriverArgument>() {
       @Override
@@ -29,7 +30,7 @@ public class AtomSinkDriver implements Runnable {
          }
       }
    };
-
+   
    private final ManagedSink registeredSink;
    private final DriverArgument driverArgument;
 
@@ -49,5 +50,9 @@ public class AtomSinkDriver implements Runnable {
 
          default:
       }
+   }
+
+   @Override
+   public void destroy() {
    }
 }

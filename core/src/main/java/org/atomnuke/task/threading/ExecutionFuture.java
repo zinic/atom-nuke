@@ -1,6 +1,5 @@
 package org.atomnuke.task.threading;
 
-import java.util.UUID;
 import java.util.concurrent.Future;
 
 /**
@@ -10,9 +9,9 @@ import java.util.concurrent.Future;
 public class ExecutionFuture {
 
    private final Future future;
-   private final UUID taskId;
+   private final long taskId;
 
-   public ExecutionFuture(Future future, UUID taskId) {
+   public ExecutionFuture(Future future, long taskId) {
       this.future = future;
       this.taskId = taskId;
    }
@@ -21,7 +20,7 @@ public class ExecutionFuture {
       return future;
    }
 
-   public UUID taskId() {
+   public long taskId() {
       return taskId;
    }
 

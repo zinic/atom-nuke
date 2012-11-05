@@ -12,7 +12,7 @@ import org.atomnuke.plugin.proxy.japi.JapiProxyFactory;
 import org.atomnuke.service.RuntimeServiceManager;
 import org.atomnuke.service.Service;
 import org.atomnuke.service.ServiceManager;
-import org.atomnuke.task.AtomTask;
+import org.atomnuke.task.atom.AtomTask;
 import org.atomnuke.task.context.TaskContextImpl;
 import org.atomnuke.util.TimeValue;
 import org.junit.Test;

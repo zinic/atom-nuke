@@ -6,7 +6,7 @@ import com.sun.jersey.spi.container.servlet.ServletContainer;
 import org.apache.http.client.HttpClient;
 import org.atomnuke.service.ServiceUnavailableException;
 import org.atomnuke.service.jetty.server.ContextBuilder;
-import org.atomnuke.sink.eps.FanoutSink;
+import org.atomnuke.sink.eps.EventletChainSink;
 import org.atomnuke.task.context.AtomTaskContext;
 import org.atomnuke.util.lifecycle.InitializationException;
 import org.atomnuke.util.service.ServiceHandler;
@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author zinic
  */
-public class PubSubSink extends FanoutSink {
+public class PubSubSink extends EventletChainSink {
 
    private static final Logger LOG = LoggerFactory.getLogger(PubSubSink.class);
 

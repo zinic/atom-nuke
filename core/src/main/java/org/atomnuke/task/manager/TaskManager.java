@@ -37,7 +37,7 @@ public interface TaskManager extends Reclaimable {
     * @param taskId the task ID to look up.
     * @return the managed instance of the task, null otherwise.
     */
-   ManagedTask findTask(UUID taskId);
+   ManagedTask findTask(long taskId);
 
    /**
     * Advances the scheduler and dispatches tasks to the execution queue.

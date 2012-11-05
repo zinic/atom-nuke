@@ -11,7 +11,7 @@ import org.atomnuke.examples.sinks.ClasspathSource;
 import org.atomnuke.examples.eventlets.CounterEventlet;
 import org.atomnuke.sink.eps.EventletChainSink;
 import org.atomnuke.sink.selectors.CategorySelectorImpl;
-import org.atomnuke.task.AtomTask;
+import org.atomnuke.task.atom.AtomTask;
 import org.atomnuke.util.TimeValue;
 
 /**

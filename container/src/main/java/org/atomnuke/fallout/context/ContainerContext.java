@@ -11,7 +11,7 @@ import org.atomnuke.plugin.InstanceContext;
 import org.atomnuke.sink.AtomSink;
 import org.atomnuke.sink.eps.EventletChainSink;
 import org.atomnuke.sink.eps.eventlet.AtomEventlet;
-import org.atomnuke.task.AtomTask;
+import org.atomnuke.task.atom.AtomTask;
 import org.atomnuke.util.config.ConfigurationException;
 import org.atomnuke.util.remote.CancellationRemote;
 import org.slf4j.Logger;

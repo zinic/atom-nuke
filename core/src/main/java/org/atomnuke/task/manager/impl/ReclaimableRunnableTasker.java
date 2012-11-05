@@ -1,17 +1,20 @@
 package org.atomnuke.task.manager.impl;
 
 import org.atomnuke.task.manager.Tasker;
-import java.util.UUID;
 import org.atomnuke.plugin.InstanceContext;
 import org.atomnuke.plugin.InstanceContextImpl;
 import org.atomnuke.plugin.env.NopInstanceEnvironment;
 import org.atomnuke.service.gc.ReclamationHandler;
-import org.atomnuke.task.ReclaimableRunnable;
+import org.atomnuke.task.PollingTaskHandle;
+import org.atomnuke.util.lifecycle.runnable.ReclaimableRunnable;
 import org.atomnuke.task.TaskHandle;
-import org.atomnuke.task.impl.EnvAwareManagedRunTask;
+import org.atomnuke.task.impl.PollingTask;
+import org.atomnuke.task.impl.PollingTaskHandleImpl;
+import org.atomnuke.task.impl.QueuedRunTask;
 import org.atomnuke.task.impl.TaskHandleImpl;
 import org.atomnuke.task.manager.TaskTracker;
 import org.atomnuke.util.TimeValue;
+import org.atomnuke.util.lifecycle.runnable.ReclaimableRunnable;
 import org.atomnuke.util.remote.CancellationRemote;
 
 /**
@@ -29,17 +32,32 @@ public class ReclaimableRunnableTasker implements Tasker {
    }
 
    @Override
-   public TaskHandle task(ReclaimableRunnable runnable, TimeValue pollingInterval) {
-      return task(new InstanceContextImpl<ReclaimableRunnable>(NopInstanceEnvironment.getInstance(), runnable), pollingInterval);
+   public TaskHandle queueTask(ReclaimableRunnable runnableContext) {
+      return queueTask(new InstanceContextImpl<ReclaimableRunnable>(NopInstanceEnvironment.getInstance(), runnableContext));
    }
 
    @Override
-   public TaskHandle task(InstanceContext<? extends ReclaimableRunnable> instanceContext, TimeValue pollingInterval) {
+   public TaskHandle queueTask(InstanceContext<? extends ReclaimableRunnable> runnableContext) {
+      final CancellationRemote cancellationRemote = reclamationHandler.watch(runnableContext);
+      final TaskHandle newHandle = new TaskHandleImpl(true, cancellationRemote);
+
+      taskTracker.add(new QueuedRunTask(runnableContext, newHandle));
+
+      return newHandle;
+   }
+
+   @Override
+   public TaskHandle pollTask(ReclaimableRunnable runnable, TimeValue pollingInterval) {
+      return pollTask(new InstanceContextImpl<ReclaimableRunnable>(NopInstanceEnvironment.getInstance(), runnable), pollingInterval);
+   }
+
+   @Override
+   public TaskHandle pollTask(InstanceContext<? extends ReclaimableRunnable> instanceContext, TimeValue pollingInterval) {
       final CancellationRemote cancellationRemote = reclamationHandler.watch(instanceContext);
-      final TaskHandle taskHandle = new TaskHandleImpl(cancellationRemote, pollingInterval, UUID.randomUUID());
+      final PollingTaskHandle newHandle = new PollingTaskHandleImpl(false, pollingInterval, cancellationRemote);
 
-      taskTracker.add(new EnvAwareManagedRunTask(instanceContext, taskHandle));
+      taskTracker.add(new PollingTask(instanceContext, newHandle));
 
-      return taskHandle;
+      return newHandle;
    }
 }

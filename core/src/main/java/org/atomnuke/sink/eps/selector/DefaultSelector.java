@@ -1,7 +1,6 @@
 package org.atomnuke.sink.eps.selector;
 
 import org.atomnuke.atom.model.Entry;
-import org.atomnuke.atom.model.Feed;
 
 /**
  * Default selector processes all events.

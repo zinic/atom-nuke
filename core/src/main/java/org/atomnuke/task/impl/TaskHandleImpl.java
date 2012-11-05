@@ -1,8 +1,8 @@
 package org.atomnuke.task.impl;
 
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicLong;
 import org.atomnuke.task.TaskHandle;
-import org.atomnuke.util.TimeValue;
 import org.atomnuke.util.remote.CancellationRemote;
 
 /**
@@ -11,23 +11,25 @@ import org.atomnuke.util.remote.CancellationRemote;
  */
 public class TaskHandleImpl implements TaskHandle {
 
+   private final static AtomicLong TASK_COUNT = new AtomicLong(1);
+
    private final CancellationRemote cancelationRemote;
-   private final TimeValue interval;
-   private final UUID taskId;
+   private final boolean reenterant;
+   private final long taskId;
 
-   public TaskHandleImpl(CancellationRemote cancelationRemote, TimeValue interval, UUID taskId) {
+   public TaskHandleImpl(boolean reenterant, CancellationRemote cancelationRemote) {
+      this.reenterant = reenterant;
       this.cancelationRemote = cancelationRemote;
-      this.interval = interval;
-      this.taskId = taskId;
+      this.taskId = TASK_COUNT.incrementAndGet();
    }
 
    @Override
-   public TimeValue scheduleInterval() {
-      return interval;
+   public boolean reenterant() {
+      return reenterant;
    }
 
    @Override
-   public UUID id() {
+   public long id() {
       return taskId;
    }
 
