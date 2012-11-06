@@ -23,6 +23,7 @@ import org.slf4j.LoggerFactory;
 public class CollectdSource implements AtomSource {
 
    private static final Logger LOG = LoggerFactory.getLogger(CollectdSource.class);
+   private static final String DEBUG_PARAM = "debug";
 
    private final QueueSource queueSource;
    private ServletContextHandler servletContextHandler;
@@ -47,7 +48,7 @@ public class CollectdSource implements AtomSource {
       }
 
       // Register the JAX-RS servlet
-      boolean debug = tc.parameters().containsKey("debug") && tc.parameters().get("deubg").equalsIgnoreCase("true");
+      boolean debug = tc.parameters().containsKey(DEBUG_PARAM) && tc.parameters().get(DEBUG_PARAM).equalsIgnoreCase(Boolean.TRUE.toString());
 
       final ServletHolder servletInstance = new ServletHolder(new CollectdSinkServlet(queueSource, debug));
       servletContextHandler.addServlet(servletInstance, "/*");

@@ -41,7 +41,7 @@ public class ParamsCommand extends AbstractCommandList {
          }
       }
 
-      if (arguments.length == 4) {
+      if (arguments.length == 3 && "rm".equals(arguments[1])) {
          final Parameters params = findParametersFor(arguments[0]);
 
          if (params == null) {
@@ -57,29 +57,32 @@ public class ParamsCommand extends AbstractCommandList {
 
             getConfigHandler().write();
             return new CommandSuccess();
-         } else if (arguments[1].equals("set")) {
-            boolean updated = false;
-
-            for (Parameter param : params.getParam()) {
-               if (param.getName().equals(arguments[2])) {
-                  param.setValue(arguments[3]);
-                  updated = true;
-               }
-            }
-
-            if (!updated) {
-               final Parameter paramToAdd = new Parameter();
-               paramToAdd.setName(arguments[2]);
-               paramToAdd.setValue(arguments[3]);
-
-               params.getParam().add(paramToAdd);
-            }
-
-            getConfigHandler().write();
-            
-            return new CommandSuccess();
          }
+      } else if (arguments.length == 4 && "set".equals(arguments[1])) {
+         final Parameters params = findParametersFor(arguments[0]);
+
+         boolean updated = false;
+
+         for (Parameter param : params.getParam()) {
+            if (param.getName().equals(arguments[2])) {
+               param.setValue(arguments[3]);
+               updated = true;
+            }
+         }
+
+         if (!updated) {
+            final Parameter paramToAdd = new Parameter();
+            paramToAdd.setName(arguments[2]);
+            paramToAdd.setValue(arguments[3]);
+
+            params.getParam().add(paramToAdd);
+         }
+
+         getConfigHandler().write();
+
+         return new CommandSuccess();
       }
+
 
       return new CommandFailure("Usage: <id> [set|rm] <param-name> <param-value>");
    }
