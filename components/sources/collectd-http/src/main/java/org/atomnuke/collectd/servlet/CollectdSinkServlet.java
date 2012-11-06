@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.time.FastDateFormat;
+import org.atomnuke.atom.model.Category;
 import org.atomnuke.atom.model.builder.CategoryBuilder;
 import org.atomnuke.atom.model.builder.ContentBuilder;
 import org.atomnuke.atom.model.builder.EntryBuilder;
@@ -23,8 +24,6 @@ import org.slf4j.LoggerFactory;
 
 /**
  *
- * PUTVAL\s([^/]+)/([^/]+)/([^\s]+)\sinterval=([\d]+)\s([\d.]+):([\d.]+)
- *
  * @author zinic
  */
 public class CollectdSinkServlet extends HttpServlet {
@@ -32,19 +31,17 @@ public class CollectdSinkServlet extends HttpServlet {
    private static final Logger LOG = LoggerFactory.getLogger(CollectdSinkServlet.class);
 
    private static final String COLLECTD_SCHEME = "collectd";
-
+   private static final String PATH_SEPERATOR = "/";
    private static final String COLLECTD_TYPE_SCHEME = "collectd.stats.type";
-   private static final String COLLECTD_TYPE_INSTANCE_SCHEME = "collectd.stats.type.instance";
-
    private static final String COLLECTD_PLUGIN_SCHEME = "collectd.stats.plugin";
-   private static final String COLLECTD_PLUGIN_INSTANCE_SCHEME = "collectd.stats.plugin.instance";
-
    private static final String JSON_CONTENT_TEMPLATE = "{\"timestamp\" : \"$\", \"value\" : \"$\"}";
 
    private final QueueSource queueSource;
+   private final boolean debug;
 
-   public CollectdSinkServlet(QueueSource queueSource) {
+   public CollectdSinkServlet(QueueSource queueSource, boolean debug) {
       this.queueSource = queueSource;
+      this.debug = debug;
    }
 
    @Override
@@ -67,36 +64,14 @@ public class CollectdSinkServlet extends HttpServlet {
          entryBuilder.setId(new IdBuilder().setValue(UUID.randomUUID().toString()).build());
 
          // Put in the proper categories
-
          // Plugin category
          entryBuilder.addCategory(new CategoryBuilder().setScheme(COLLECTD_PLUGIN_SCHEME).setTerm(parsedValue.plugin()).build());
-
-         if (parsedValue.pluginInstance() != null) {
-            entryBuilder.addCategory(new CategoryBuilder().setScheme(COLLECTD_PLUGIN_INSTANCE_SCHEME).setTerm(parsedValue.pluginInstance()).build());
-         }
 
          // Type category
          entryBuilder.addCategory(new CategoryBuilder().setScheme(COLLECTD_TYPE_SCHEME).setTerm(parsedValue.type()).build());
 
-         if (parsedValue.typeInstance() != null) {
-            entryBuilder.addCategory(new CategoryBuilder().setScheme(COLLECTD_TYPE_INSTANCE_SCHEME).setTerm(parsedValue.typeInstance()).build());
-         }
-
          // Metrics category
-         final StringBuilder catBuilder = new StringBuilder(parsedValue.host());
-         catBuilder.append(".").append(parsedValue.type());
-
-         if (parsedValue.pluginInstance() != null) {
-            catBuilder.append(".").append(parsedValue.pluginInstance());
-         }
-
-         if (parsedValue.typeInstance() != null) {
-            catBuilder.append(".").append(parsedValue.typeInstance());
-         }
-
-         entryBuilder.addCategory(new CategoryBuilder().setScheme(COLLECTD_SCHEME).setTerm(catBuilder.toString()).build());
-
-         LOG.debug("Emitting: " + COLLECTD_SCHEME + "." + catBuilder.toString());
+         entryBuilder.addCategory(buildMetricsCat(parsedValue));
 
          // Set the publication time
          entryBuilder.setPublished(new PublishedBuilder().setValue(FastDateFormat.getInstance().format(Calendar.getInstance())).build());
@@ -111,5 +86,24 @@ public class CollectdSinkServlet extends HttpServlet {
       }
 
       bufferedReader.close();
+   }
+
+   private Category buildMetricsCat(PutValCommand parsedValue) {
+      final StringBuilder catBuilder = new StringBuilder(parsedValue.host());
+      catBuilder.append(PATH_SEPERATOR).append(parsedValue.type());
+
+      if (parsedValue.pluginInstance() != null) {
+         catBuilder.append(PATH_SEPERATOR).append(parsedValue.pluginInstance());
+      }
+
+      if (parsedValue.typeInstance() != null) {
+         catBuilder.append(PATH_SEPERATOR).append(parsedValue.typeInstance());
+      }
+
+      if (debug) {
+         LOG.info("Emitting: " + COLLECTD_SCHEME + "." + catBuilder.toString());
+      }
+
+      return new CategoryBuilder().setScheme(COLLECTD_SCHEME).setTerm(catBuilder.toString()).build();
    }
 }

@@ -2,7 +2,7 @@
     "categories": [
         {
             "scheme": "collectd",
-            "term": "fallout-test-n01.jpserver.net.memory.used"
+            "term": "fallout-test-n01.jpserver.net/memory.used"
         }
     ],
     "id": "80e99533-73ee-4576-940d-bdf8091a56ce",

@@ -47,7 +47,9 @@ public class CollectdSource implements AtomSource {
       }
 
       // Register the JAX-RS servlet
-      final ServletHolder servletInstance = new ServletHolder(new CollectdSinkServlet(queueSource));
+      boolean debug = tc.parameters().containsKey("debug") && tc.parameters().get("deubg").equalsIgnoreCase("true");
+
+      final ServletHolder servletInstance = new ServletHolder(new CollectdSinkServlet(queueSource, debug));
       servletContextHandler.addServlet(servletInstance, "/*");
    }
 
