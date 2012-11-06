@@ -30,12 +30,12 @@ public class AtomTaskerImpl implements AtomTasker {
    @Override
    public AtomTask follow(InstanceContext<AtomSource> source, TimeValue pollingInterval) {
       // New Sink manager
-      final SinkManager SinkManager = new SinkManagerImpl(reclamationHandler);
+      final SinkManager sinkManager = new SinkManagerImpl(reclamationHandler);
 
       // Register and track the new source
-      final ManagedAtomTask managedAtomTask = new ManagedAtomTask(source, SinkManager, tasker);
+      final ManagedAtomTask managedAtomTask = new ManagedAtomTask(source, sinkManager, tasker);
       final TaskHandle newHandle = tasker.pollTask(managedAtomTask, pollingInterval);
 
-      return new AtomTaskImpl(SinkManager, newHandle);
+      return new AtomTaskImpl(sinkManager, newHandle);
    }
 }

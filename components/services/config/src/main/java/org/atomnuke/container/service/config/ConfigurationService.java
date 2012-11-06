@@ -12,7 +12,7 @@ import org.atomnuke.service.gc.ReclamationHandler;
 import org.atomnuke.service.resolution.ResolutionAction;
 import org.atomnuke.service.resolution.ResolutionActionImpl;
 import org.atomnuke.task.TaskHandle;
-import org.atomnuke.task.manager.service.TaskingModule;
+import org.atomnuke.task.manager.service.TaskingService;
 import org.atomnuke.util.TimeValue;
 import org.atomnuke.util.config.update.ConfigurationUpdateManager;
 import org.atomnuke.util.config.update.ConfigurationUpdateManagerImpl;
@@ -41,7 +41,7 @@ public class ConfigurationService implements Service {
    @Override
    public ResolutionAction resolve(ServiceManager serviceManager) {
       final boolean hasReclamationHandler = serviceManager.serviceRegistered(ReclamationHandler.class);
-      final boolean hasTaskingModule = serviceManager.serviceRegistered(TaskingModule.class);
+      final boolean hasTaskingModule = serviceManager.serviceRegistered(TaskingService.class);
 
       return hasTaskingModule && hasReclamationHandler
               ? new ResolutionActionImpl(ResolutionActionType.INIT) : new ResolutionActionImpl(ResolutionActionType.DEFER);
@@ -86,7 +86,7 @@ public class ConfigurationService implements Service {
 
       try {
          final ReclamationHandler reclamationHandler = ServiceHandler.instance().firstAvailable(sc.manager(), ReclamationHandler.class);
-         final TaskingModule taskingModule = ServiceHandler.instance().firstAvailable(sc.manager(), TaskingModule.class);
+         final TaskingService taskingModule = ServiceHandler.instance().firstAvailable(sc.manager(), TaskingService.class);
 
          cfgUpdateMangaer = new ConfigurationUpdateManagerImpl(reclamationHandler);
          cfgPollerHandle = taskingModule.tasker().pollTask(new ConfigurationUpdateRunnable(cfgUpdateMangaer), pollerTime);

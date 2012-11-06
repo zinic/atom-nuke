@@ -44,8 +44,10 @@ public class SubscriptionEventlet implements AtomEventlet {
 
       JX_FACTORY = jsonFactory;
    }
+
    private final JsonReader<SubscriptionContent> contentReader = JX_FACTORY.newReader(SubscriptionContent.class);
    private final JsonWriter<SubscriptionDocument> documentWriter = JX_FACTORY.newWriter(SubscriptionDocument.class);
+
    private final String subscriptionId, callbackUrl;
    private final HttpClient httpClient;
 

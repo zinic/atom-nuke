@@ -7,7 +7,7 @@ import org.atomnuke.task.manager.Tasker;
  *
  * @author zinic
  */
-public interface TaskingModule {
+public interface TaskingService {
 
    TaskTracker taskTracker();
 

@@ -31,13 +31,15 @@ public class CollectdSinkServlet extends HttpServlet {
 
    private static final Logger LOG = LoggerFactory.getLogger(CollectdSinkServlet.class);
 
+   private static final String COLLECTD_SCHEME = "collectd";
+
    private static final String COLLECTD_TYPE_SCHEME = "collectd.stats.type";
    private static final String COLLECTD_TYPE_INSTANCE_SCHEME = "collectd.stats.type.instance";
 
    private static final String COLLECTD_PLUGIN_SCHEME = "collectd.stats.plugin";
    private static final String COLLECTD_PLUGIN_INSTANCE_SCHEME = "collectd.stats.plugin.instance";
 
-   private static final String JSON_CONTENT_TEMPLATE = "{ \"timestamp\" : $, \"value\" : $ }";
+   private static final String JSON_CONTENT_TEMPLATE = "{\"timestamp\" : \"$\", \"value\" : \"$\"}";
 
    private final QueueSource queueSource;
 
@@ -79,6 +81,22 @@ public class CollectdSinkServlet extends HttpServlet {
          if (parsedValue.typeInstance() != null) {
             entryBuilder.addCategory(new CategoryBuilder().setScheme(COLLECTD_TYPE_INSTANCE_SCHEME).setTerm(parsedValue.typeInstance()).build());
          }
+
+         // Metrics category
+         final StringBuilder catBuilder = new StringBuilder(parsedValue.host());
+         catBuilder.append(".").append(parsedValue.type());
+
+         if (parsedValue.pluginInstance() != null) {
+            catBuilder.append(".").append(parsedValue.pluginInstance());
+         }
+
+         if (parsedValue.typeInstance() != null) {
+            catBuilder.append(".").append(parsedValue.typeInstance());
+         }
+
+         entryBuilder.addCategory(new CategoryBuilder().setScheme(COLLECTD_SCHEME).setTerm(catBuilder.toString()).build());
+
+         LOG.debug("Emitting: " + COLLECTD_SCHEME + "." + catBuilder.toString());
 
          // Set the publication time
          entryBuilder.setPublished(new PublishedBuilder().setValue(FastDateFormat.getInstance().format(Calendar.getInstance())).build());

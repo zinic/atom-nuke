@@ -40,7 +40,7 @@ public class CollectdSource implements AtomSource {
    public void init(AtomTaskContext tc) throws InitializationException {
       try {
          final ContextBuilder contextBuilder = ServiceHandler.instance().firstAvailable(tc.services(), ContextBuilder.class);
-         servletContextHandler = contextBuilder.newContext("/collecd");
+         servletContextHandler = contextBuilder.newContext("/collectd");
       } catch (ServiceUnavailableException sue) {
          LOG.error("The CollecD source requires a service that provides a ContextBuilder implementation for regsitering servlets.");
          throw new InitializationException(sue);

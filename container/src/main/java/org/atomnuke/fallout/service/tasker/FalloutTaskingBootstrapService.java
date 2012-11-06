@@ -18,7 +18,7 @@ import org.atomnuke.task.manager.TaskTracker;
 import org.atomnuke.task.manager.Tasker;
 import org.atomnuke.task.manager.impl.ReclaimableRunnableTasker;
 import org.atomnuke.task.manager.impl.ThreadSafeTaskTracker;
-import org.atomnuke.task.manager.service.TaskingModule;
+import org.atomnuke.task.manager.service.TaskingService;
 import org.atomnuke.util.TimeValue;
 import org.atomnuke.util.lifecycle.InitializationException;
 import org.atomnuke.util.remote.AtomicCancellationRemote;
@@ -30,16 +30,16 @@ import org.atomnuke.util.service.ServiceHandler;
  * @author zinic
  */
 @NukeBootstrap
-public class FalloutTaskingModuleService implements Service {
+public class FalloutTaskingBootstrapService implements Service {
 
    private static final String SERVICE_NAME = "org.atomnuke.task.manager.impl.TaskerService";
 
    private final CancellationRemote taskTrackerCancelRemote;
    private final List<TaskHandle> explicitlyManagedTasks;
 
-   private TaskingModule taskingModule;
+   private TaskingService taskingService;
 
-   public FalloutTaskingModuleService() {
+   public FalloutTaskingBootstrapService() {
       taskTrackerCancelRemote = new AtomicCancellationRemote();
       explicitlyManagedTasks = new LinkedList<TaskHandle>();
    }
@@ -51,12 +51,12 @@ public class FalloutTaskingModuleService implements Service {
 
    @Override
    public boolean provides(Class serviceInterface) {
-      return serviceInterface.isAssignableFrom(TaskingModule.class);
+      return serviceInterface.isAssignableFrom(TaskingService.class);
    }
 
    @Override
    public Object instance() {
-      return taskingModule;
+      return taskingService;
    }
 
    @Override
@@ -73,7 +73,7 @@ public class FalloutTaskingModuleService implements Service {
          final TaskTracker taskTracker = new ThreadSafeTaskTracker(taskTrackerCancelRemote);
          final Tasker tasker = new ReclaimableRunnableTasker(taskTracker, reclamationHandler);
 
-         // As the tasking service, it's our job to spin up essential polling services
+         // As the tasking service, it's our job to spin up essential polling services?
 
          // TODO: This feature should be extensible
          explicitlyManagedTasks.add(tasker.pollTask(new ReclaimableRunnable() {
@@ -87,7 +87,7 @@ public class FalloutTaskingModuleService implements Service {
             }
          }, new TimeValue(15, TimeUnit.MILLISECONDS)));
 
-         taskingModule = new FalloutTaskingModule(taskTracker, tasker);
+         taskingService = new FalloutTaskingService(taskTracker, tasker);
       } catch (ServiceUnavailableException sue) {
          throw new InitializationException(sue);
       }

@@ -17,7 +17,7 @@ import org.atomnuke.service.ServiceManager;
 import org.atomnuke.service.RuntimeServiceManager;
 import org.atomnuke.service.gc.ReclamationHandler;
 import org.atomnuke.task.manager.impl.GenericTaskManger;
-import org.atomnuke.task.manager.service.TaskingModule;
+import org.atomnuke.task.manager.service.TaskingService;
 import org.atomnuke.task.threading.ExecutionManager;
 import org.atomnuke.task.threading.ExecutionManagerImpl;
 import org.atomnuke.task.threading.ExecutionQueueImpl;
@@ -69,7 +69,7 @@ public class NukeContainer {
    private void initNuke() {
       try {
          final ReclamationHandler reclamationHandler = ServiceHandler.instance().firstAvailable(serviceManager, ReclamationHandler.class);
-         final TaskingModule taskingService = ServiceHandler.instance().firstAvailable(serviceManager, TaskingModule.class);
+         final TaskingService taskingService = ServiceHandler.instance().firstAvailable(serviceManager, TaskingService.class);
 
          final ExecutionManager executionManager = new ExecutionManagerImpl(new ExecutionQueueImpl());
 
@@ -86,7 +86,7 @@ public class NukeContainer {
       try {
          final ConfigurationManager<ServerConfiguration> cfgManager = new ServerConfigurationFileManager(new File(NukeEnv.CONFIG_LOCATION));
          final ConfigurationContext<ServerConfiguration> configurationContext = cfgUpdateManager.register("Fallout File CFG", cfgManager);
-         
+
 //         final ConfigurationContext<ServerConfiguration> configurationContext = cfgUpdateManager.get("org.atomnuke.config.fallout.ApiManagedServerConfiguration");
 
          configurationContext.addListener(contextManager);
