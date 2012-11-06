@@ -1,6 +1,7 @@
 package org.atomnuke.plugin.proxy.japi;
 
 import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import org.atomnuke.plugin.InstanceContext;
 import org.atomnuke.plugin.operation.ComplexOperation;
@@ -29,7 +30,9 @@ public class ServiceInvocationHandler implements InvocationHandler {
          public void perform(Service service, ResultCatchImpl argument) throws OperationFailureException {
             try {
                argument.setResult(method.invoke(service.instance(), args));
-            } catch (Exception ex) {
+            } catch (InvocationTargetException ex) {
+               throw new OperationFailureException(ex.getTargetException());
+            } catch(Exception ex) {
                throw new OperationFailureException(ex);
             }
          }

@@ -2,7 +2,6 @@ package org.atomnuke.service;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
@@ -13,6 +12,8 @@ import org.atomnuke.plugin.operation.OperationFailureException;
 import org.atomnuke.plugin.proxy.InstanceEnvProxyFactory;
 import org.atomnuke.service.gc.ReclamationHandler;
 import org.atomnuke.util.lifecycle.operation.ReclaimOperation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -28,6 +29,8 @@ public abstract class AbstractServiceManager implements ServiceManager {
          }
       }
    };
+
+   private static final Logger LOG = LoggerFactory.getLogger(AbstractServiceManager.class);
 
    private final Map<String, ManagedService> registeredServicesByName;
    private final Queue<InstanceContext<Service>> pendingServices;
@@ -68,7 +71,12 @@ public abstract class AbstractServiceManager implements ServiceManager {
       final ProvidesOperationArgument argument = new ProvidesOperationArgument(serviceInterface);
 
       for (ManagedService managedService : registeredServices) {
-         managedService.serviceContext().perform(PROVIDES_OPERATION, argument);
+         try {
+            argument.reset();
+            managedService.serviceContext().perform(PROVIDES_OPERATION, argument);
+         } catch (OperationFailureException ofe) {
+            LOG.error("Failed to identify if the given service: " + managedService + " provides the interface: " + serviceInterface.getName() + " - Reason: " + ofe.getMessage(), ofe);
+         }
 
          if (argument.provides()) {
             return true;
@@ -102,21 +110,19 @@ public abstract class AbstractServiceManager implements ServiceManager {
    public synchronized void destroy() {
       final ProvidesOperationArgument argument = new ProvidesOperationArgument(ReclamationHandler.class);
 
-      for (Iterator<ManagedService> managedServiceItr = registeredServices.iterator(); managedServiceItr.hasNext();) {
-         final ManagedService potentialReclaimer = managedServiceItr.next();
-
-         argument.reset();
-         potentialReclaimer.serviceContext().perform(PROVIDES_OPERATION, argument);
-
-         if (argument.provides()) {
-            managedServiceItr.remove();
-            potentialReclaimer.serviceContext().perform(ReclaimOperation.<Service>instance());
-         }
-      }
-
       while (!registeredServices.empty()) {
          final ManagedService managedService = registeredServices.pop();
-         managedService.serviceContext().perform(ReclaimOperation.<Service>instance());
+         argument.reset();
+
+         try {
+            managedService.serviceContext().perform(PROVIDES_OPERATION, argument);
+
+            if (argument.provides()) {
+               managedService.serviceContext().perform(ReclaimOperation.<Service>instance());
+            }
+         } catch (OperationFailureException ofe) {
+            LOG.error("Failed to reclaim service: " + managedService + " - Reason: " + ofe.getMessage());
+         }
       }
    }
 
@@ -137,13 +143,17 @@ public abstract class AbstractServiceManager implements ServiceManager {
       final ProvidesOperationArgument argument = new ProvidesOperationArgument(serviceInterface);
 
       for (ManagedService managedService : registeredServices) {
+         final InstanceContext<Service> serviceContext = managedService.serviceContext();
          argument.reset();
 
-         final InstanceContext<Service> serviceContext = managedService.serviceContext();
-         serviceContext.perform(PROVIDES_OPERATION, argument);
+         try {
+            serviceContext.perform(PROVIDES_OPERATION, argument);
 
-         if (argument.provides()) {
-            servicesMatchingInterface.add(serviceContext.instance().name());
+            if (argument.provides()) {
+               servicesMatchingInterface.add(serviceContext.instance().name());
+            }
+         } catch (OperationFailureException ofe) {
+            LOG.error("Failed to identify if the given service: " + managedService + " provides the interface: " + serviceInterface.getName() + " - Reason: " + ofe.getMessage(), ofe);
          }
       }
 

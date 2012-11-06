@@ -6,10 +6,6 @@ package org.atomnuke.plugin.operation;
  */
 public class OperationFailureException extends Exception {
 
-   public OperationFailureException(String message) {
-      super(message);
-   }
-
    public OperationFailureException(String message, Throwable cause) {
       super(message, cause);
    }

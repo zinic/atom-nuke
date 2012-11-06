@@ -2,6 +2,7 @@ package org.atomnuke.service;
 
 import java.util.Collections;
 import org.atomnuke.plugin.InstanceContext;
+import org.atomnuke.plugin.operation.OperationFailureException;
 import org.atomnuke.plugin.proxy.InstanceEnvProxyFactory;
 import org.atomnuke.service.context.ServiceContext;
 import org.atomnuke.service.context.ServiceContextImpl;
@@ -42,7 +43,12 @@ public class RuntimeServiceManager extends AbstractServiceManager {
          boolean initializedService = false;
 
          // Attempt to resolve the service
-         pendingService.perform(ServiceResolveOperation.instance(), resolutionArgument);
+         try {
+            pendingService.perform(ServiceResolveOperation.instance(), resolutionArgument);
+         } catch (OperationFailureException ofe) {
+            LOG.error("Unable to resolve service: " + pendingService + " - Reason: " + ofe.getMessage(), ofe);
+            continue;
+         }
 
          // Decide what to do based on what the service told us about its ability to initialize
          final ResolutionAction action = resolutionArgument.resolutionAction();
@@ -71,9 +77,14 @@ public class RuntimeServiceManager extends AbstractServiceManager {
       LOG.info("Service: " + pendingService.instance().name() + " initializing.");
 
       final ServiceContext serviceContext = new ServiceContextImpl(Collections.EMPTY_MAP, this);
-      pendingService.perform(ServiceInitOperation.<Service>instance(), serviceContext);
 
-      final ManagedService managedService = new ManagedService(pendingService, new AtomicCancellationRemote());
-      register(pendingService.instance().name(), managedService);
+      try {
+         pendingService.perform(ServiceInitOperation.<Service>instance(), serviceContext);
+
+         final ManagedService managedService = new ManagedService(pendingService, new AtomicCancellationRemote());
+         register(pendingService.instance().name(), managedService);
+      } catch (OperationFailureException ofe) {
+         LOG.error("Unable to initialize service: " + pendingService + " - Reason: " + ofe.getMessage(), ofe);
+      }
    }
 }

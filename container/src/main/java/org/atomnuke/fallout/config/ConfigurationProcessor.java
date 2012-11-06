@@ -25,6 +25,7 @@ import org.atomnuke.sink.eps.EventletChainSink;
 import org.atomnuke.sink.eps.eventlet.AtomEventlet;
 import org.atomnuke.plugin.InstanceContextImpl;
 import org.atomnuke.plugin.ReferenceInstantiationException;
+import org.atomnuke.plugin.operation.OperationFailureException;
 import org.atomnuke.task.operation.TaskLifeCycleInitOperation;
 import org.atomnuke.service.ServiceManager;
 import org.atomnuke.source.AtomSource;
@@ -156,6 +157,8 @@ public class ConfigurationProcessor {
                containerContext.registerSource(source.getId(), newTask);
             } catch (ReferenceInstantiationException bie) {
                LOG.error("Could not create source instance " + source.getId() + ". Reason: " + bie.getMessage(), bie);
+            } catch(OperationFailureException ofe) {
+               LOG.error("Unable to initialize source: " + source.getId() + " with href: " + source.getHref() + " - Reason: " + ofe.getMessage(), ofe);
             }
          }
       }
@@ -189,7 +192,7 @@ public class ConfigurationProcessor {
                SinkCtx.perform(TaskLifeCycleInitOperation.<AtomSink>instance(), new TaskContextImpl(LoggerFactory.getLogger(sinkId), parametersToMap(sink.getParameters()), services, tasker));
 
                containerContext.registerSink(sink.getId(), SinkCtx);
-            } catch (ReferenceInstantiationException bie) {
+            } catch (Exception bie) {
                LOG.error("Could not create sink instance " + sink.getId() + ". Reason: " + bie.getMessage(), bie);
                throw new ConfigurationException(bie);
             }
@@ -209,7 +212,7 @@ public class ConfigurationProcessor {
                eventletCtx.perform(TaskLifeCycleInitOperation.<AtomEventlet>instance(), taskContext);
 
                containerContext.registerEventlet(eventlet.getId(), eventletCtx);
-            } catch (ReferenceInstantiationException bie) {
+            } catch (Exception bie) {
                LOG.error("Could not create eventlet instance " + eventlet.getId() + ". Reason: " + bie.getMessage(), bie);
                throw new ConfigurationException(bie);
             }

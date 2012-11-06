@@ -48,10 +48,12 @@ public class SubscriptionEventlet implements AtomEventlet {
    private final JsonReader<SubscriptionContent> contentReader = JX_FACTORY.newReader(SubscriptionContent.class);
    private final JsonWriter<SubscriptionDocument> documentWriter = JX_FACTORY.newWriter(SubscriptionDocument.class);
 
+   private final SubscriptionCategory subscriptionCategory;
    private final String subscriptionId, callbackUrl;
    private final HttpClient httpClient;
 
-   public SubscriptionEventlet(HttpClient httpClient, String subscriptionId, String callbackUrl) {
+   public SubscriptionEventlet(SubscriptionCategory subscriptionCategory, HttpClient httpClient, String subscriptionId, String callbackUrl) {
+      this.subscriptionCategory = subscriptionCategory;
       this.httpClient = httpClient;
       this.subscriptionId = subscriptionId;
       this.callbackUrl = callbackUrl;
@@ -77,14 +79,15 @@ public class SubscriptionEventlet implements AtomEventlet {
       payload.setId(subscriptionId);
       payload.setCallback(callbackUrl);
       payload.setContent(content);
+      payload.addCategory(subscriptionCategory);
 
-      for (Category entryCategory : entry.categories()) {
-         final SubscriptionCategory subscriptionCategory = new SubscriptionCategory();
-         subscriptionCategory.setScheme(entryCategory.scheme());
-         subscriptionCategory.setTerm(entryCategory.term());
-
-         payload.addCategory(subscriptionCategory);
-      }
+//      for (Category entryCategory : entry.categories()) {
+//         final SubscriptionCategory subscriptionCategory = new SubscriptionCategory();
+//         subscriptionCategory.setScheme(entryCategory.scheme());
+//         subscriptionCategory.setTerm(entryCategory.term());
+//
+//         payload.addCategory(subscriptionCategory);
+//      }
 
       final HttpPost webhookPost = new HttpPost(callbackUrl);
 
@@ -96,6 +99,10 @@ public class SubscriptionEventlet implements AtomEventlet {
          webhookPost.setEntity(new ByteArrayEntity(baos.toByteArray()));
 
          final HttpResponse webhookResponse = httpClient.execute(webhookPost);
+
+         if (webhookResponse == null || webhookResponse.getStatusLine() == null) {
+            LOG.error("Failed to get a response from the webhook endpoint.");
+         }
 
          if (webhookResponse.getStatusLine().getStatusCode() != Response.Status.ACCEPTED.getStatusCode()) {
             LOG.error("Potential error with webhook client. Recieved the following: " + webhookResponse.getStatusLine().toString());

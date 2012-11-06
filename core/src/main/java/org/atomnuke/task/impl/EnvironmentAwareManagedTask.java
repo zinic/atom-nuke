@@ -5,6 +5,8 @@ import org.atomnuke.plugin.operation.OperationFailureException;
 import org.atomnuke.plugin.operation.SimpleOperation;
 import org.atomnuke.task.ManagedTask;
 import org.atomnuke.task.TaskHandle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -12,6 +14,7 @@ import org.atomnuke.task.TaskHandle;
  */
 public abstract class EnvironmentAwareManagedTask<T extends TaskHandle> implements ManagedTask {
 
+   private static final Logger LOG = LoggerFactory.getLogger(EnvironmentAwareManagedTask.class);
    private static final SimpleOperation<Runnable> RUN_OPERATION = new SimpleOperation<Runnable>() {
       @Override
       public void perform(Runnable instance) throws OperationFailureException {
@@ -34,6 +37,10 @@ public abstract class EnvironmentAwareManagedTask<T extends TaskHandle> implemen
 
    @Override
    public final void run() {
-      runnableCtx.perform(RUN_OPERATION);
+      try {
+         runnableCtx.perform(RUN_OPERATION);
+      } catch (OperationFailureException ofe) {
+         LOG.error(ofe.getMessage(), ofe);
+      }
    }
 }

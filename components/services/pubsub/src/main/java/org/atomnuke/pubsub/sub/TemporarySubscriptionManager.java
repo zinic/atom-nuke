@@ -37,22 +37,26 @@ public class TemporarySubscriptionManager implements SubscriptionManager {
    @Override
    public synchronized void put(SubscriptionDocument sdoc) throws SubscriptionException {
       // Get the eventlet configuration reference
-      ActiveSubscription subscription = activeSubscriptions.get(sdoc.getCallback());
+      ActiveSubscription subscription = activeSubscriptions.get(sdoc.getId());
 
-      if (subscription == null) {
-         final SubscriptionEventlet eventlet = new SubscriptionEventlet(httpClient, sdoc.getId(), sdoc.getCallback());
+      if (subscription == null && !sdoc.getCategories().isEmpty()) {
+         final SubscriptionCategory subscriptionCategory = sdoc.getCategories().iterator().next();
+         final SubscriptionEventlet eventlet = new SubscriptionEventlet(subscriptionCategory, httpClient, sdoc.getId(), sdoc.getCallback());
          final SubscriptionSelector selector = new SubscriptionSelector();
          final CancellationRemote cancellationRemote = eventletHandler.enlistHandler(eventlet, selector);
 
          subscription = new ActiveSubscription(selector, eventlet, cancellationRemote);
          activeSubscriptions.put(sdoc.getCallback(), subscription);
-      }
 
-      // Subscribe
-      for (SubscriptionCategory subscriptionCategory : sdoc.getCategories()) {
          subscription.subscriptionSelector().addCategory(
                  new CategoryBuilder().setScheme(subscriptionCategory.getScheme()).setTerm(subscriptionCategory.getTerm()).build());
       }
+
+      // Subscribe
+//      for (SubscriptionCategory subscriptionCategory : sdoc.getCategories()) {
+//         subscription.subscriptionSelector().addCategory(
+//                 new CategoryBuilder().setScheme(subscriptionCategory.getScheme()).setTerm(subscriptionCategory.getTerm()).build());
+//      }
    }
 
    @Override

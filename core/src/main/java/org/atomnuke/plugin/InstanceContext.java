@@ -1,6 +1,7 @@
 package org.atomnuke.plugin;
 
 import org.atomnuke.plugin.operation.ComplexOperation;
+import org.atomnuke.plugin.operation.OperationFailureException;
 import org.atomnuke.plugin.operation.SimpleOperation;
 
 /**
@@ -13,7 +14,7 @@ public interface InstanceContext<T> {
 
    T instance();
 
-   void perform(SimpleOperation<T> requestedOperation);
+   void perform(SimpleOperation<T> requestedOperation) throws OperationFailureException;
 
-   <A> void perform(ComplexOperation<T, A> requestedOperation, A argument);
+   <A> void perform(ComplexOperation<T, A> requestedOperation, A argument) throws OperationFailureException;
 }

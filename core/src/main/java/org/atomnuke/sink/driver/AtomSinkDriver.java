@@ -6,7 +6,10 @@ import org.atomnuke.sink.AtomSinkResult;
 import org.atomnuke.sink.manager.ManagedSink;
 import org.atomnuke.plugin.operation.ComplexOperation;
 import org.atomnuke.plugin.operation.OperationFailureException;
+import org.atomnuke.task.impl.ManagedAtomTask;
 import org.atomnuke.util.lifecycle.runnable.ReclaimableRunnable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -14,6 +17,7 @@ import org.atomnuke.util.lifecycle.runnable.ReclaimableRunnable;
  */
 public class AtomSinkDriver implements ReclaimableRunnable {
 
+   private static final Logger LOG = LoggerFactory.getLogger(AtomSinkDriver.class);
    private static final ComplexOperation<AtomSink, DriverArgument> DRIVER_OPERATION = new ComplexOperation<AtomSink, DriverArgument>() {
       @Override
       public void perform(AtomSink instance, DriverArgument argument) throws OperationFailureException {
@@ -30,7 +34,6 @@ public class AtomSinkDriver implements ReclaimableRunnable {
          }
       }
    };
-   
    private final ManagedSink registeredSink;
    private final DriverArgument driverArgument;
 
@@ -41,14 +44,17 @@ public class AtomSinkDriver implements ReclaimableRunnable {
 
    @Override
    public void run() {
-      registeredSink.sinkContext().perform(DRIVER_OPERATION, driverArgument);
+      try {
+         registeredSink.sinkContext().perform(DRIVER_OPERATION, driverArgument);
 
-      switch (driverArgument.result().action()) {
-         case HALT:
-            registeredSink.cancellationRemote().cancel();
-            break;
+         switch (driverArgument.result().action()) {
+            case HALT:
+               registeredSink.cancellationRemote().cancel();
+               break;
 
-         default:
+            default:
+         }
+      } catch (OperationFailureException ofe) {
       }
    }
 

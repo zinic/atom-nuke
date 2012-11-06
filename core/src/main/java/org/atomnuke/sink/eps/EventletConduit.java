@@ -10,6 +10,8 @@ import org.atomnuke.plugin.operation.ComplexOperation;
 import org.atomnuke.plugin.operation.OperationFailureException;
 import org.atomnuke.util.lifecycle.operation.ReclaimOperation;
 import org.atomnuke.util.remote.CancellationRemote;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -17,6 +19,7 @@ import org.atomnuke.util.remote.CancellationRemote;
  */
 public class EventletConduit {
 
+   private static final Logger LOG = LoggerFactory.getLogger(EventletConduit.class);
    private static final ComplexOperation<AtomEventlet, Entry> ENTRY_OPERATION = new ComplexOperation<AtomEventlet, Entry>() {
       @Override
       public void perform(AtomEventlet instance, Entry argument) throws OperationFailureException {
@@ -39,7 +42,11 @@ public class EventletConduit {
    }
 
    public void destroy() {
-      eventletContext.perform(ReclaimOperation.<AtomEventlet>instance());
+      try {
+         eventletContext.perform(ReclaimOperation.<AtomEventlet>instance());
+      } catch (OperationFailureException ofe) {
+         LOG.error("Failed to destroy conduit: " + this + " - Reason: " + ofe.getMessage(), ofe);
+      }
    }
 
    public CancellationRemote cancellationRemote() {
@@ -51,6 +58,10 @@ public class EventletConduit {
    }
 
    public void perform(Entry entry) {
-      eventletContext.perform(ENTRY_OPERATION, entry);
+      try {
+         eventletContext.perform(ENTRY_OPERATION, entry);
+      } catch (OperationFailureException ofe) {
+         LOG.error("Failed to perform entry operation - Reason: " + ofe.getMessage(), ofe);
+      }
    }
 }

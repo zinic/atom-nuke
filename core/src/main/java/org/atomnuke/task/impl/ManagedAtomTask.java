@@ -17,6 +17,8 @@ import org.atomnuke.util.lifecycle.runnable.ReclaimableRunnable;
 import org.atomnuke.util.lifecycle.operation.ReclaimOperation;
 import org.atomnuke.util.result.ResultCatch;
 import org.atomnuke.util.result.ResultCatchImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -24,8 +26,8 @@ import org.atomnuke.util.result.ResultCatchImpl;
  */
 public class ManagedAtomTask implements ReclaimableRunnable {
 
+   private static final Logger LOG = LoggerFactory.getLogger(ManagedAtomTask.class);
    private static final ComplexOperation<AtomSource, ResultCatch<AtomSourceResult>> POLLING_OPERATION = new ComplexOperation<AtomSource, ResultCatch<AtomSourceResult>>() {
-
       @Override
       public void perform(AtomSource instance, ResultCatch<AtomSourceResult> resultCatch) throws OperationFailureException {
          try {
@@ -54,18 +56,26 @@ public class ManagedAtomTask implements ReclaimableRunnable {
    public void run() {
       // Only poll if we have Sinks
       if (sinkManager.hasRegisteredSinks()) {
-         final ResultCatch<AtomSourceResult> resultCatch = new ResultCatchImpl<AtomSourceResult>();
-         atomSourceContext.perform(POLLING_OPERATION, resultCatch);
+         try {
+            final ResultCatch<AtomSourceResult> resultCatch = new ResultCatchImpl<AtomSourceResult>();
+            atomSourceContext.perform(POLLING_OPERATION, resultCatch);
 
-         if (resultCatch.hasResult()) {
-            dispatchToSinks(resultCatch.result());
+            if (resultCatch.hasResult()) {
+               dispatchToSinks(resultCatch.result());
+            }
+         } catch (OperationFailureException ofe) {
+            LOG.error("Failed to poll atom source: " + atomSourceContext + " - Reason: " + ofe.getMessage(), ofe);
          }
       }
    }
 
    @Override
    public void destroy() {
-      atomSourceContext.perform(ReclaimOperation.<AtomSource>instance());
+      try {
+         atomSourceContext.perform(ReclaimOperation.<AtomSource>instance());
+      } catch (OperationFailureException ofe) {
+         LOG.error("Failed to destroy atom source: " + atomSourceContext + " - Reason: " + ofe.getMessage(), ofe);
+      }
    }
 
    private void dispatchToSinks(AtomSourceResult pollResult) {

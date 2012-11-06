@@ -1,15 +1,21 @@
 package org.atomnuke.service.gc.impl;
 
 import org.atomnuke.plugin.InstanceContext;
+import org.atomnuke.plugin.operation.OperationFailureException;
+import org.atomnuke.task.impl.ManagedAtomTask;
 import org.atomnuke.util.lifecycle.Reclaimable;
 import org.atomnuke.util.lifecycle.operation.ReclaimOperation;
 import org.atomnuke.util.remote.CancellationRemote;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author zinic
  */
 public class ReclamationHandle {
+
+   private static final Logger LOG = LoggerFactory.getLogger(ManagedAtomTask.class);
 
    private final InstanceContext<Reclaimable> reclaimableContext;
    private final CancellationRemote cancellationRemote;
@@ -25,6 +31,11 @@ public class ReclamationHandle {
 
    public void reclaim() {
       cancellationRemote.cancel();
-      reclaimableContext.perform(ReclaimOperation.instance());
+
+      try {
+         reclaimableContext.perform(ReclaimOperation.instance());
+      } catch (OperationFailureException ofe) {
+         LOG.error("Failed to destroy reclamation context: " + reclaimableContext+ " - Reason: " + ofe.getMessage(), ofe);
+      }
    }
 }
