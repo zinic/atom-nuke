@@ -107,6 +107,12 @@
          </dependency>
 
          <dependency>
+            <groupId>org.atomnuke.components.source</groupId>
+            <artifactId>aggregator</artifactId>
+            <version>${project.version}</version>
+         </dependency>
+
+         <dependency>
             <groupId>org.atomnuke.container</groupId>
             <artifactId>fallout</artifactId>
             <version>${project.version}</version>

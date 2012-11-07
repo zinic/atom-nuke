@@ -30,7 +30,7 @@ public class ContextManager implements ConfigurationListener<ServerConfiguration
    }
 
    @Override
-   public void updated(ServerConfiguration configuration) throws ConfigurationException {
+   public synchronized void updated(ServerConfiguration configuration) throws ConfigurationException {
       new ConfigurationProcessor(nukeReference.atomTasker(), services, containerContext, new ServerConfigurationHandler(configuration), packages).merge(nukeReference);
    }
 }

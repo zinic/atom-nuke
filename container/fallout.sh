@@ -19,7 +19,7 @@ fi
 
 
 if [ -z "${DEBUG}" ]; then
-    java -jar "${JAR_LOCATION}" $@
+    java -Xmx8G -jar "${JAR_LOCATION}" $@
 else
     java -agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=y -jar "${JAR_LOCATION}" $@
 fi

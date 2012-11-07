@@ -1,5 +1,6 @@
 package org.atomnuke.servlet;
 
+import com.rackspace.papi.commons.util.io.RawInputStreamReader;
 import java.io.IOException;
 import java.util.GregorianCalendar;
 import java.util.UUID;
@@ -14,6 +15,7 @@ import org.atomnuke.atom.io.AtomReadException;
 import org.atomnuke.atom.io.AtomReaderFactory;
 import org.atomnuke.atom.io.ReaderResult;
 import org.atomnuke.atom.io.reader.sax.SaxAtomReaderFactory;
+import org.atomnuke.atom.model.builder.ContentBuilder;
 import org.atomnuke.atom.model.builder.EntryBuilder;
 import org.atomnuke.atom.model.builder.IdBuilder;
 import org.atomnuke.atom.model.builder.UpdatedBuilder;
@@ -62,7 +64,12 @@ public class AtomSinkServlet extends HttpServlet {
       final String contentType = req.getHeader("Content-Type");
 
       if (contentType == null || !contentType.equalsIgnoreCase("application/atom+xml")) {
-         resp.setStatus(HttpStatus.UNSUPPORTED_MEDIA_TYPE_415);
+         final String content = new String(RawInputStreamReader.instance().readFully(req.getInputStream()));
+
+         final EntryBuilder newEntry = new EntryBuilder();
+         newEntry.setContent(new ContentBuilder().setType(contentType).setValue(content).build());
+
+         queueSource.put(newEntry.build());
       } else {
          try {
             final ReaderResult readerResult = atomReaderFactory.getInstance().read(new LimitedReadInputStream(req.getInputStream(), 5242880));

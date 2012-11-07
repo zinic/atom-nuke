@@ -30,11 +30,13 @@ public class CollectdSinkServlet extends HttpServlet {
 
    private static final Logger LOG = LoggerFactory.getLogger(CollectdSinkServlet.class);
 
+   private static final String JSON_CONTENT_TEMPLATE = "{\"timestamp\" : \"$\", \"value\" : \"$\"}";
+
+   private static final String COLLECTD_PLUGIN_SCHEME = "collectd.stats.plugin";
+   private static final String COLLECTD_TYPE_SCHEME = "collectd.stats.type";
+
    private static final String COLLECTD_SCHEME = "collectd";
    private static final String PATH_SEPERATOR = "/";
-   private static final String COLLECTD_TYPE_SCHEME = "collectd.stats.type";
-   private static final String COLLECTD_PLUGIN_SCHEME = "collectd.stats.plugin";
-   private static final String JSON_CONTENT_TEMPLATE = "{\"timestamp\" : \"$\", \"value\" : \"$\"}";
 
    private final QueueSource queueSource;
    private final boolean debug;
@@ -101,7 +103,7 @@ public class CollectdSinkServlet extends HttpServlet {
       }
 
       if (debug) {
-         LOG.info("Emitting: " + COLLECTD_SCHEME + "." + catBuilder.toString());
+         LOG.info("Emitting: " + COLLECTD_SCHEME + "." + catBuilder.toString() + " - Value: " + parsedValue.value());
       }
 
       return new CategoryBuilder().setScheme(COLLECTD_SCHEME).setTerm(catBuilder.toString()).build();

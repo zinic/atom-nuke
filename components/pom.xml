@@ -22,6 +22,7 @@
       <module>sources/http-listener</module>
       <module>sources/collectd-http</module>
       <module>sources/util-sources</module>
+      <module>sources/aggregator</module>
 
       <!-- Listeners -->
       <module>listeners/util-listeners</module>

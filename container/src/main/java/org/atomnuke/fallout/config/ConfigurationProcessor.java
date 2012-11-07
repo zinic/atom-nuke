@@ -47,6 +47,7 @@ public class ConfigurationProcessor {
 
    private static final Logger LOG = LoggerFactory.getLogger(ConfigurationProcessor.class);
 
+   private final Map<String, InstanceContext> builtInstances;
    private final Collection<PackageContext> loadedPackages;
    private final ServerConfigurationHandler cfgHandler;
    private final ContainerContext containerContext;
@@ -59,6 +60,8 @@ public class ConfigurationProcessor {
       this.containerContext = containerContext;
       this.cfgHandler = cfgHandler;
       this.loadedPackages = loadedPackages;
+
+      builtInstances = new HashMap<String, InstanceContext>();
    }
 
    private static Map<String, String> parametersToMap(Parameters parameters) {
@@ -80,6 +83,7 @@ public class ConfigurationProcessor {
       processEventlets();
 
       containerContext.process(cfgHandler.getBindings());
+      builtInstances.clear();
    }
 
    public InstanceContext<AtomEventlet> constructEventlet(LanguageType langType, String ref) throws ReferenceInstantiationException {
@@ -97,12 +101,17 @@ public class ConfigurationProcessor {
    }
 
    public InstanceContext<AtomSource> constructSource(LanguageType langType, String ref) throws ReferenceInstantiationException {
+      if (builtInstances.containsKey(ref)) {
+         return builtInstances.get(ref);
+      }
+
       final BindingLanguage bindingLanguage = LanguageTypeUtil.asBindingLanguage(langType);
 
       for (PackageContext packageContext : loadedPackages) {
          final InstanceContext<AtomSource> source = packageContext.packageBindings().resolveReference(AtomSource.class, bindingLanguage, ref);
 
          if (source != null) {
+            builtInstances.put(ref, source);
             return source;
          }
       }
@@ -111,13 +120,18 @@ public class ConfigurationProcessor {
    }
 
    public InstanceContext<AtomSink> constructSink(LanguageType langType, String ref) throws ReferenceInstantiationException {
+      if (builtInstances.containsKey(ref)) {
+         return builtInstances.get(ref);
+      }
+
       final BindingLanguage bindingLanguage = LanguageTypeUtil.asBindingLanguage(langType);
 
       for (PackageContext packageContext : loadedPackages) {
-         final InstanceContext<AtomSink> Sink = packageContext.packageBindings().resolveReference(AtomSink.class, bindingLanguage, ref);
+         final InstanceContext<AtomSink> sink = packageContext.packageBindings().resolveReference(AtomSink.class, bindingLanguage, ref);
 
-         if (Sink != null) {
-            return Sink;
+         if (sink != null) {
+            builtInstances.put(ref, sink);
+            return sink;
          }
       }
 
