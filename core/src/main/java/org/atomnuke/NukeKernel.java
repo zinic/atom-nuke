@@ -10,7 +10,7 @@ import org.atomnuke.task.manager.TaskTracker;
 import org.atomnuke.task.manager.Tasker;
 import org.atomnuke.task.manager.impl.AtomTaskerImpl;
 import org.atomnuke.task.manager.impl.GenericTaskManger;
-import org.atomnuke.task.manager.impl.ReclaimableRunnableTasker;
+import org.atomnuke.task.manager.impl.FalloutTasker;
 import org.atomnuke.task.manager.impl.ThreadSafeTaskTracker;
 import org.atomnuke.task.threading.ExecutionManager;
 import org.atomnuke.task.threading.ExecutionManagerImpl;
@@ -34,7 +34,7 @@ public class NukeKernel extends AbstractNukeImpl {
    }
 
    public NukeKernel(ExecutionManager executionManager, ReclamationHandler reclamationHandler, TaskTracker taskTracker) {
-      this(executionManager, reclamationHandler, new GenericTaskManger(executionManager, taskTracker), new ReclaimableRunnableTasker(taskTracker, reclamationHandler));
+      this(executionManager, reclamationHandler, new GenericTaskManger(executionManager, taskTracker), new FalloutTasker(taskTracker, reclamationHandler));
    }
 
    /**

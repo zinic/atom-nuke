@@ -6,5 +6,5 @@ import org.atomnuke.util.lifecycle.Reclaimable;
  *
  * @author zinic
  */
-public interface ReclaimableRunnable extends Reclaimable, Runnable {
+public interface ReclaimableTask extends Reclaimable, Runnable {
 }

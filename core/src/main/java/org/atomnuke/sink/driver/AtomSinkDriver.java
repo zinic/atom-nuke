@@ -7,7 +7,7 @@ import org.atomnuke.sink.manager.ManagedSink;
 import org.atomnuke.plugin.operation.ComplexOperation;
 import org.atomnuke.plugin.operation.OperationFailureException;
 import org.atomnuke.task.impl.ManagedAtomTask;
-import org.atomnuke.util.lifecycle.runnable.ReclaimableRunnable;
+import org.atomnuke.util.lifecycle.runnable.ReclaimableTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author zinic
  */
-public class AtomSinkDriver implements ReclaimableRunnable {
+public class AtomSinkDriver implements ReclaimableTask {
 
    private static final Logger LOG = LoggerFactory.getLogger(AtomSinkDriver.class);
    private static final ComplexOperation<AtomSink, DriverArgument> DRIVER_OPERATION = new ComplexOperation<AtomSink, DriverArgument>() {

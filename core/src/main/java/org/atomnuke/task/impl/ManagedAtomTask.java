@@ -2,6 +2,7 @@ package org.atomnuke.task.impl;
 
 import java.util.UUID;
 import org.atomnuke.plugin.InstanceContext;
+import org.atomnuke.plugin.LocalInstanceContext;
 import org.atomnuke.sink.manager.ManagedSink;
 import org.atomnuke.sink.driver.AtomSinkDriver;
 import org.atomnuke.sink.driver.DriverArgument;
@@ -13,7 +14,7 @@ import org.atomnuke.source.AtomSourceException;
 import org.atomnuke.source.result.AtomSourceResult;
 import org.atomnuke.source.result.ResultType;
 import org.atomnuke.task.manager.Tasker;
-import org.atomnuke.util.lifecycle.runnable.ReclaimableRunnable;
+import org.atomnuke.util.lifecycle.runnable.ReclaimableTask;
 import org.atomnuke.util.lifecycle.operation.ReclaimOperation;
 import org.atomnuke.util.result.ResultCatch;
 import org.atomnuke.util.result.ResultCatchImpl;
@@ -24,7 +25,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author zinic
  */
-public class ManagedAtomTask implements ReclaimableRunnable {
+public class ManagedAtomTask implements ReclaimableTask {
 
    private static final Logger LOG = LoggerFactory.getLogger(ManagedAtomTask.class);
    private static final ComplexOperation<AtomSource, ResultCatch<AtomSourceResult>> POLLING_OPERATION = new ComplexOperation<AtomSource, ResultCatch<AtomSourceResult>>() {
@@ -41,7 +42,7 @@ public class ManagedAtomTask implements ReclaimableRunnable {
          }
       }
    };
-
+   
    private final InstanceContext<AtomSource> atomSourceContext;
    private final SinkManager sinkManager;
    private final Tasker tasker;
@@ -82,7 +83,7 @@ public class ManagedAtomTask implements ReclaimableRunnable {
       final DriverArgument driverArgument = new DriverArgument(pollResult.feed(), pollResult.entry());
 
       for (ManagedSink sink : sinkManager.sinks()) {
-         tasker.queueTask(new AtomSinkDriver(sink, driverArgument));
+         tasker.queueTask(new LocalInstanceContext(new AtomSinkDriver(sink, driverArgument)));
       }
    }
 }

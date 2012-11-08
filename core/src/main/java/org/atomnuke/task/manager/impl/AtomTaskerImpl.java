@@ -5,6 +5,7 @@ import org.atomnuke.task.manager.Tasker;
 import org.atomnuke.sink.manager.SinkManager;
 import org.atomnuke.sink.manager.SinkManagerImpl;
 import org.atomnuke.plugin.InstanceContext;
+import org.atomnuke.plugin.LocalInstanceContext;
 import org.atomnuke.service.gc.ReclamationHandler;
 import org.atomnuke.source.AtomSource;
 import org.atomnuke.task.atom.AtomTask;
@@ -34,7 +35,7 @@ public class AtomTaskerImpl implements AtomTasker {
 
       // Register and track the new source
       final ManagedAtomTask managedAtomTask = new ManagedAtomTask(source, sinkManager, tasker);
-      final TaskHandle newHandle = tasker.pollTask(managedAtomTask, pollingInterval);
+      final TaskHandle newHandle = tasker.pollTask(new LocalInstanceContext(managedAtomTask), pollingInterval);
 
       return new AtomTaskImpl(sinkManager, newHandle);
    }

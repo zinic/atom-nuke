@@ -1,6 +1,5 @@
 package org.atomnuke.task.impl;
 
-import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;
 import org.atomnuke.task.TaskHandle;
 import org.atomnuke.util.remote.CancellationRemote;

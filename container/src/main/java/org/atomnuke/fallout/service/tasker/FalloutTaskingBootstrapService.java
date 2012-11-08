@@ -4,6 +4,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import org.atomnuke.container.service.annotation.NukeBootstrap;
+import org.atomnuke.fallout.service.gc.GarbageCollectionTask;
+import org.atomnuke.plugin.InstanceContext;
+import org.atomnuke.plugin.LocalInstanceContext;
 import org.atomnuke.service.resolution.ResolutionActionType;
 import org.atomnuke.service.Service;
 import org.atomnuke.service.ServiceManager;
@@ -12,11 +15,10 @@ import org.atomnuke.service.context.ServiceContext;
 import org.atomnuke.service.gc.ReclamationHandler;
 import org.atomnuke.service.resolution.ResolutionAction;
 import org.atomnuke.service.resolution.ResolutionActionImpl;
-import org.atomnuke.util.lifecycle.runnable.ReclaimableRunnable;
 import org.atomnuke.task.TaskHandle;
 import org.atomnuke.task.manager.TaskTracker;
 import org.atomnuke.task.manager.Tasker;
-import org.atomnuke.task.manager.impl.ReclaimableRunnableTasker;
+import org.atomnuke.task.manager.impl.FalloutTasker;
 import org.atomnuke.task.manager.impl.ThreadSafeTaskTracker;
 import org.atomnuke.task.manager.service.TaskingService;
 import org.atomnuke.util.TimeValue;
@@ -71,21 +73,13 @@ public class FalloutTaskingBootstrapService implements Service {
          final ReclamationHandler reclamationHandler = ServiceHandler.instance().firstAvailable(contextObject.manager(), ReclamationHandler.class);
 
          final TaskTracker taskTracker = new ThreadSafeTaskTracker(taskTrackerCancelRemote);
-         final Tasker tasker = new ReclaimableRunnableTasker(taskTracker, reclamationHandler);
+         final Tasker tasker = new FalloutTasker(taskTracker, reclamationHandler);
 
          // As the tasking service, it's our job to spin up essential polling services?
+         final InstanceContext gcTaskCtx = new LocalInstanceContext(new GarbageCollectionTask(reclamationHandler));
 
          // TODO: This feature should be extensible
-         explicitlyManagedTasks.add(tasker.pollTask(new ReclaimableRunnable() {
-            @Override
-            public void run() {
-               reclamationHandler.garbageCollect();
-            }
-
-            @Override
-            public void destroy() {
-            }
-         }, new TimeValue(15, TimeUnit.MILLISECONDS)));
+         explicitlyManagedTasks.add(tasker.pollTask(gcTaskCtx, new TimeValue(15, TimeUnit.MILLISECONDS)));
 
          taskingService = new FalloutTaskingService(taskTracker, tasker);
       } catch (ServiceUnavailableException sue) {

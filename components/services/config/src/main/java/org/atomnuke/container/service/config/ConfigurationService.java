@@ -3,6 +3,7 @@ package org.atomnuke.container.service.config;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import org.atomnuke.container.service.annotation.NukeService;
+import org.atomnuke.plugin.LocalInstanceContext;
 import org.atomnuke.service.resolution.ResolutionActionType;
 import org.atomnuke.service.Service;
 import org.atomnuke.service.ServiceManager;
@@ -89,7 +90,7 @@ public class ConfigurationService implements Service {
          final TaskingService taskingModule = ServiceHandler.instance().firstAvailable(sc.manager(), TaskingService.class);
 
          cfgUpdateMangaer = new ConfigurationUpdateManagerImpl(reclamationHandler);
-         cfgPollerHandle = taskingModule.tasker().pollTask(new ConfigurationUpdateRunnable(cfgUpdateMangaer), pollerTime);
+         cfgPollerHandle = taskingModule.tasker().pollTask(new LocalInstanceContext(new ConfigurationUpdateRunnable(cfgUpdateMangaer)), pollerTime);
       } catch (ServiceUnavailableException sue) {
          throw new InitializationException(sue);
       }
