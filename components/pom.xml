@@ -40,32 +40,32 @@
    <dependencyManagement>
       <dependencies>
          <dependency>
-            <groupId>org.atomnuke.components.source</groupId>
+            <groupId>org.atomnuke.components.sources</groupId>
             <artifactId>feed-crawler</artifactId>
             <version>${project.version}</version>
          </dependency>
 
          <dependency>
-            <groupId>org.atomnuke.components.source</groupId>
+            <groupId>org.atomnuke.components.sources</groupId>
             <artifactId>http-listener</artifactId>
             <version>${project.version}</version>
          </dependency>
 
          <dependency>
-            <groupId>org.atomnuke.components.source</groupId>
+            <groupId>org.atomnuke.components.sources</groupId>
             <artifactId>collectd-http</artifactId>
             <version>${project.version}</version>
          </dependency>
 
          <dependency>
-            <groupId>org.atomnuke.components.source</groupId>
+            <groupId>org.atomnuke.components.sources</groupId>
             <artifactId>util-sources</artifactId>
             <version>${project.version}</version>
          </dependency>
 
          <dependency>
-            <groupId>org.atomnuke.components.listener</groupId>
-            <artifactId>util-listeners</artifactId>
+            <groupId>org.atomnuke.components.sinks</groupId>
+            <artifactId>util-sinks</artifactId>
             <version>${project.version}</version>
          </dependency>
 

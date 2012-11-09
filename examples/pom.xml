@@ -24,7 +24,7 @@
       </dependency>
 
       <dependency>
-         <groupId>org.atomnuke.components.source</groupId>
+         <groupId>org.atomnuke.components.sources</groupId>
          <artifactId>feed-crawler</artifactId>
          <version>${project.version}</version>
       </dependency>
