@@ -152,7 +152,7 @@
          <dependency>
             <groupId>net.jps.jx</groupId>
             <artifactId>jx-xjc</artifactId>
-            <version>0.3.0-SNAPSHOT</version>
+            <version>0.3.0</version>
          </dependency>
 
          <dependency>
