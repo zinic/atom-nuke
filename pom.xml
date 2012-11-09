@@ -16,7 +16,7 @@
       <!-- Core -->
       <module>core</module>
 
-      <!--- Fallout -->
+      <!-- Fallout -->
       <module>container</module>
       <module>container/dist</module>
 
