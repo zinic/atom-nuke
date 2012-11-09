@@ -1,6 +1,10 @@
 package org.atomnuke.container.boot;
 
-import java.util.Stack;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+import org.atomnuke.NukeEnv;
 import org.atomnuke.container.service.annotation.NukeBootstrap;
 import org.atomnuke.plugin.InstanceContextImpl;
 import org.atomnuke.plugin.env.NopInstanceEnvironment;
@@ -29,8 +33,11 @@ public class ContainerBootstrap implements Bootstrap {
 
    @Override
    public void bootstrap() {
+      final ExecutorService bootStrapExecutorService = new ThreadPoolExecutor(NukeEnv.NUM_PROCESSORS, NukeEnv.NUM_PROCESSORS, 5, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>());
+
       final Reflections bootstrapScanner = new Reflections(new ConfigurationBuilder()
               .setScanners(new TypeAnnotationsScanner())
+              .setExecutorService(new ThreadPoolExecutor(NukeEnv.NUM_PROCESSORS, NukeEnv.NUM_PROCESSORS, 5, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>()))
               .setUrls(ClasspathHelper.forClassLoader(Thread.currentThread().getContextClassLoader(), ClassLoader.getSystemClassLoader())));
 
       for (Class bootstrapService : bootstrapScanner.getTypesAnnotatedWith(NukeBootstrap.class)) {
@@ -45,6 +52,8 @@ public class ContainerBootstrap implements Bootstrap {
             }
          }
       }
+
+      bootStrapExecutorService.shutdownNow();
 
       serviceManager.resolve();
    }

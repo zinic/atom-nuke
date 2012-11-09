@@ -3,19 +3,14 @@ package org.atomnuke.fallout.config.server;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
+import org.apache.commons.lang3.StringUtils;
 import org.atomnuke.config.model.Binding;
 import org.atomnuke.config.model.Bindings;
-import org.atomnuke.config.model.EventProcessingSystem;
-import org.atomnuke.config.model.Eventlet;
-import org.atomnuke.config.model.Eventlets;
-import org.atomnuke.config.model.Parameter;
-import org.atomnuke.config.model.Relay;
-import org.atomnuke.config.model.Relays;
+import org.atomnuke.config.model.MessageActor;
+import org.atomnuke.config.model.MessageActors;
+import org.atomnuke.config.model.MessageSource;
+import org.atomnuke.config.model.MessageSources;
 import org.atomnuke.config.model.ServerConfiguration;
-import org.atomnuke.config.model.Sink;
-import org.atomnuke.config.model.Sinks;
-import org.atomnuke.config.model.Source;
-import org.atomnuke.config.model.Sources;
 
 /**
  *
@@ -33,63 +28,22 @@ public class ServerConfigurationHandler {
       return configurationCopy;
    }
 
-   public void addSource(Source source) {
-      getSources().add(source);
-   }
-
-   public void addSink(Sink sink) {
-      getSinks().add(sink);
-   }
-
-   public void addRelay(String id) {
-      final Relay newRelay = new Relay();
-      newRelay.setId(id);
-
-      getRelays().add(newRelay);
-   }
-
-   public void addEventlet(Eventlet eventlet) {
-      getEventlets().add(eventlet);
-   }
-
-   public List<Source> getSources() {
-      if (configurationCopy.getSources() == null) {
-         configurationCopy.setSources(new Sources());
+   public List<MessageActor> getMessageActors() {
+      if (configurationCopy.getActors() == null) {
+         final MessageActors actors = new MessageActors();
+         configurationCopy.setActors(actors);
       }
 
-      return configurationCopy.getSources().getSource();
+      return configurationCopy.getActors().getActor();
    }
 
-   public List<Sink> getSinks() {
-      if (configurationCopy.getSinks() == null) {
-         configurationCopy.setSinks(new Sinks());
+   public List<MessageSource> getMessageSources() {
+      if (configurationCopy.getMessageSources() == null) {
+         final MessageSources sources = new MessageSources();
+         configurationCopy.setMessageSources(sources);
       }
 
-      return configurationCopy.getSinks().getSink();
-   }
-
-   public List<Relay> getRelays() {
-      if (configurationCopy.getEps() == null) {
-         final EventProcessingSystem eps = new EventProcessingSystem();
-         eps.setEventlets(new Eventlets());
-         eps.setRelays(new Relays());
-
-         configurationCopy.setEps(eps);
-      }
-
-      return configurationCopy.getEps().getRelays().getRelay();
-   }
-
-   public List<Eventlet> getEventlets() {
-      if (configurationCopy.getEps() == null) {
-         final EventProcessingSystem eps = new EventProcessingSystem();
-         eps.setEventlets(new Eventlets());
-         eps.setRelays(new Relays());
-
-         configurationCopy.setEps(eps);
-      }
-
-      return configurationCopy.getEps().getEventlets().getEventlet();
+      return configurationCopy.getMessageSources().getSource();
    }
 
    public List<Binding> getBindings() {
@@ -107,8 +61,8 @@ public class ServerConfigurationHandler {
          final Binding newBinding = new Binding();
 
          newBinding.setId(UUID.randomUUID().toString());
-         newBinding.setSource(source);
-         newBinding.setSink(sink);
+         newBinding.setSourceActor(source);
+         newBinding.setSinkActor(sink);
 
          getBindings().add(newBinding);
       }
@@ -116,7 +70,7 @@ public class ServerConfigurationHandler {
 
    public Binding findBinding(String source, String sink) {
       for (Binding binding : getBindings()) {
-         if (binding.getSource().equals(source) && binding.getSink().equals(sink)) {
+         if (binding.getSourceActor().equals(source) && binding.getSinkActor().equals(sink)) {
             return binding;
          }
       }
@@ -128,7 +82,7 @@ public class ServerConfigurationHandler {
       final List<Binding> bindingsFound = new LinkedList<Binding>();
 
       for (Binding binding : getBindings()) {
-         if (binding.getSource().equals(source)) {
+         if (binding.getSourceActor().equals(source)) {
             bindingsFound.add(binding);
          }
       }
@@ -136,54 +90,20 @@ public class ServerConfigurationHandler {
       return bindingsFound;
    }
 
-   public Relay findRelay(String id) {
-      for (Relay relay : getRelays()) {
-         if (relay.getId().equals(id)) {
-            return relay;
+   public MessageActor findMessageActor(String id) {
+      for (MessageActor actor : getMessageActors()) {
+         if (StringUtils.isNotEmpty(actor.getId()) && actor.getId().equals(id)) {
+            return actor;
          }
       }
 
       return null;
    }
 
-   public Eventlet findEventlet(String eventletId) {
-      for (Eventlet eventlet : getEventlets()) {
-         if (eventlet.getId().equals(eventletId)) {
-            return eventlet;
-         }
-      }
-
-      return null;
-   }
-
-   public Eventlet firstEventletByParameter(Parameter parameter) {
-      for (Eventlet eventlet : getEventlets()) {
-         if (eventlet.getParameters() != null) {
-            for (Parameter eventletParameter : eventlet.getParameters().getParam()) {
-               if (eventletParameter.getName().equals(parameter.getName()) && eventletParameter.getValue().equals(parameter.getValue())) {
-                  return eventlet;
-               }
-            }
-         }
-      }
-
-      return null;
-   }
-
-   public Source findSource(String id) {
-      for (Source source : getSources()) {
-         if (source.getId().equals(id)) {
+   public MessageSource findMessageSource(String id) {
+      for (MessageSource source : getMessageSources()) {
+         if (StringUtils.isNotEmpty(source.getActorRef()) && source.getActorRef().equals(id)) {
             return source;
-         }
-      }
-
-      return null;
-   }
-
-   public Sink findSink(String id) {
-      for (Sink sink : getSinks()) {
-         if (sink.getId().equals(id)) {
-            return sink;
          }
       }
 

@@ -34,9 +34,9 @@ public abstract class AbstractNukeCommand extends AbstractCommand {
       return configurationHandler;
    }
 
-   protected void unbindSink(CliConfigurationHandler cfgHandler, String sinkId) throws ConfigurationException {
+   protected void unbindSink(CliConfigurationHandler cfgHandler, String sinkActorId) throws ConfigurationException {
       for (Iterator<Binding> bindingItr = cfgHandler.getBindings().iterator(); bindingItr.hasNext();) {
-         if (bindingItr.next().getSink().equals(sinkId)) {
+         if (bindingItr.next().getSinkActor().equals(sinkActorId)) {
             bindingItr.remove();
          }
       }
@@ -44,9 +44,9 @@ public abstract class AbstractNukeCommand extends AbstractCommand {
       cfgHandler.write();
    }
 
-   protected void unbindSource(CliConfigurationHandler cfgHandler, String sourceId) throws ConfigurationException {
+   protected void unbindSource(CliConfigurationHandler cfgHandler, String sourceActorId) throws ConfigurationException {
       for (Iterator<Binding> bindingItr = cfgHandler.getBindings().iterator(); bindingItr.hasNext();) {
-         if (bindingItr.next().getSource().equals(sourceId)) {
+         if (bindingItr.next().getSourceActor().equals(sourceActorId)) {
             bindingItr.remove();
          }
       }

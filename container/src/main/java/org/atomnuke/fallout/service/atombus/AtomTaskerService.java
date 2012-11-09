@@ -6,9 +6,8 @@ import org.atomnuke.service.ServiceManager;
 import org.atomnuke.service.ServiceUnavailableException;
 import org.atomnuke.service.context.ServiceContext;
 import org.atomnuke.service.gc.ReclamationHandler;
+import org.atomnuke.service.resolution.RequiresAction;
 import org.atomnuke.service.resolution.ResolutionAction;
-import org.atomnuke.service.resolution.ResolutionActionImpl;
-import org.atomnuke.service.resolution.ResolutionActionType;
 import org.atomnuke.task.manager.AtomTasker;
 import org.atomnuke.task.manager.impl.AtomTaskerImpl;
 import org.atomnuke.task.manager.service.TaskingService;
@@ -43,10 +42,7 @@ public class AtomTaskerService implements Service {
 
    @Override
    public ResolutionAction resolve(ServiceManager serviceManager) {
-      final boolean hasReclamationService = serviceManager.serviceRegistered(ReclamationHandler.class);
-      final boolean hasTaskingService = serviceManager.serviceRegistered(TaskingService.class);
-
-      return hasTaskingService && hasReclamationService ? new ResolutionActionImpl(ResolutionActionType.INIT) : new ResolutionActionImpl(ResolutionActionType.FAIL);
+      return new RequiresAction(serviceManager, ReclamationHandler.class, TaskingService.class);
    }
 
    @Override

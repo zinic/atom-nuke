@@ -20,12 +20,11 @@ import org.slf4j.LoggerFactory;
 public class UpdateContext<T> implements ConfigurationContext<T> {
 
    private static final Logger LOG = LoggerFactory.getLogger(UpdateContext.class);
-
+   
    private final List<ListenerContext<T>> ListenerContexts;
    private final CancellationRemote cancellationRemote;
    private final ConfigurationManager<T> manager;
-
-   private UpdateTag lastUpdateTag;
+   private UpdateTag latestUpdateTag;
 
    public UpdateContext(ConfigurationManager<T> manager, CancellationRemote cancellationRemote) {
       this.manager = manager;
@@ -53,8 +52,8 @@ public class UpdateContext<T> implements ConfigurationContext<T> {
       return newListenerContext.cancellationRemote();
    }
 
-   private synchronized List<ConfigurationListener<T>> getListeners() {
-      final List<ConfigurationListener<T>> Listeners = new LinkedList<ConfigurationListener<T>>();
+   private synchronized List<ListenerContext<T>> getListeners() {
+      final List<ListenerContext<T>> listeners = new LinkedList<ListenerContext<T>>();
 
       for (Iterator<ListenerContext<T>> ListenerContextItr = ListenerContexts.iterator(); ListenerContextItr.hasNext();) {
          final ListenerContext<T> nextCtx = ListenerContextItr.next();
@@ -65,31 +64,40 @@ public class UpdateContext<T> implements ConfigurationContext<T> {
             continue;
          }
 
-         Listeners.add(nextCtx.configurationListener());
+         listeners.add(nextCtx);
       }
 
-      return Listeners;
+      return listeners;
+   }
+
+   public synchronized UpdateTag currentUpdateTag() throws ConfigurationException {
+      final UpdateTag newUpdateTag = manager.readUpdateTag();
+
+      if (latestUpdateTag == null || !latestUpdateTag.equals(newUpdateTag)) {
+         latestUpdateTag = newUpdateTag;
+      }
+
+      return latestUpdateTag;
    }
 
    public boolean updated() throws ConfigurationException {
-      final UpdateTag newUpdateTag = manager.readUpdateTag();
-
-      if (lastUpdateTag == null || !lastUpdateTag.equals(newUpdateTag)) {
-         lastUpdateTag = newUpdateTag;
-         return true;
-      }
-
-      return false;
+      final UpdateTag previousUpdateTag = latestUpdateTag;
+      return !previousUpdateTag.equals(currentUpdateTag());
    }
 
    public void dispatch() throws ConfigurationException {
       final T configuration = manager.read();
 
-      for (ConfigurationListener<T> Listener : getListeners()) {
-         try {
-            Listener.updated(configuration);
-         } catch (Exception ex) {
-            LOG.error("Configuration exception during dispatch: " + ex.getMessage(), ex);
+      final UpdateTag currentUpdateTag = currentUpdateTag();
+
+      for (ListenerContext<T> listenerContext : getListeners()) {
+         if (listenerContext.lastUpdateTagSeen() == null || !listenerContext.lastUpdateTagSeen().equals(currentUpdateTag)) {
+            try {
+               listenerContext.configurationListener().updated(configuration);
+               listenerContext.setLastUpdateTagSeen(currentUpdateTag);
+            } catch (Exception ex) {
+               LOG.error("Configuration exception during dispatch: " + ex.getMessage(), ex);
+            }
          }
       }
    }

@@ -1,9 +1,9 @@
-package org.atomnuke.cli.command.eps.eventlet;
+package org.atomnuke.cli.command.actor;
 
 import java.util.Iterator;
 import org.atomnuke.cli.CliConfigurationHandler;
 import org.atomnuke.cli.command.AbstractNukeCommand;
-import org.atomnuke.config.model.Eventlet;
+import org.atomnuke.config.model.MessageActor;
 import org.atomnuke.util.cli.command.result.CommandFailure;
 import org.atomnuke.util.cli.command.result.CommandResult;
 import org.atomnuke.util.cli.command.result.CommandSuccess;
@@ -12,11 +12,11 @@ import org.atomnuke.util.cli.command.result.CommandSuccess;
  *
  * @author zinic
  */
-public class DeleteEventlet extends AbstractNukeCommand {
+public class DeleteActor extends AbstractNukeCommand {
 
-   private static final int EVENTLET_ID = 0;
+   private static final int ACTOR_ID = 0;
 
-   public DeleteEventlet(CliConfigurationHandler configurationHandler) {
+   public DeleteActor(CliConfigurationHandler configurationHandler) {
       super(configurationHandler);
    }
 
@@ -27,7 +27,7 @@ public class DeleteEventlet extends AbstractNukeCommand {
 
    @Override
    public String getCommandDescription() {
-      return "Removes an eventlet definition. This will unbind the eventlet from all relays its registered to.";
+      return "Removes a message actor's definition. This will unbind any recievers tied to the message actor being deleted.";
    }
 
    @Override
@@ -38,16 +38,16 @@ public class DeleteEventlet extends AbstractNukeCommand {
 
       final CliConfigurationHandler cfgHandler = getConfigHandler();
 
-      for (Iterator<Eventlet> eventletItr = cfgHandler.getEventlets().iterator(); eventletItr.hasNext();) {
-         if (eventletItr.next().getId().equals(arguments[EVENTLET_ID])) {
-            eventletItr.remove();
-            unbindSink(cfgHandler, arguments[EVENTLET_ID]);
+      for (Iterator<MessageActor> actorItr = cfgHandler.getMessageActors().iterator(); actorItr.hasNext();) {
+         if (actorItr.next().getId().equals(arguments[ACTOR_ID])) {
+            actorItr.remove();
+            unbindSource(cfgHandler, arguments[ACTOR_ID]);
 
             cfgHandler.write();
             return new CommandSuccess();
          }
       }
 
-      return new CommandFailure("No eventlet with an id matching, \"" + arguments[EVENTLET_ID] + "\" seems to exist.");
+      return new CommandFailure("No message actor with an id matching, \"" + arguments[ACTOR_ID] + "\" seems to exist.");
    }
 }

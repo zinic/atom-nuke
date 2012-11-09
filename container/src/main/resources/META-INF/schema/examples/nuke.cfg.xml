@@ -1,74 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<nuke xmlns='http://atomnuke.org/configuration'>
-   <sinks>
-      <sink id="" type="" href="">
+<nuke xmlns='http://atomnuke.org/configuration'
+      xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+      xsi:schemaLocation='http://atomnuke.org/configuration ../nuke-cfg.xsd'>
+
+   <actors>
+      <actor id="" type="" href="">
          <parameters>
             <param name="" value=""></param>
             <param name="" value=""></param>
             <param name="" value=""></param>
          </parameters>
-      </sink>
+      </actor>
 
-      <sink id="" type="" href="">
+      <actor id="" type="" href="">
          <parameters>
          </parameters>
-      </sink>
+      </actor>
 
-      <sink id="" type="" href="">
+      <actor id="" type="" href="">
          <parameters>
          </parameters>
-      </sink>
-   </sinks>
-
-   <sources>
-      <source id="" type="" href="">
-         <parameters>
-         </parameters>
-         <polling-interval value="" unit=""></polling-interval>
-      </source>
-
-      <source id="" type="" href="">
-         <parameters>
-         </parameters>
-         <polling-interval value="" unit=""></polling-interval>
-      </source>
-
-      <source id="" type="" href="">
-         <parameters>
-         </parameters>
-         <polling-interval value="" unit=""></polling-interval>
-      </source>
-   </sources>
-
-   <eps>
-      <relays>
-         <relay id=""></relay>
-         <relay id=""></relay>
-         <relay id=""></relay>
-      </relays>
-
-      <eventlets>
-         <eventlet id="" type="" href="">
-            <parameters>
-            </parameters>
-         </eventlet>
-
-         <eventlet id="" type="" href="">
-            <parameters>
-            </parameters>
-         </eventlet>
-
-         <eventlet id="" type="" href="">
-            <parameters>
-            </parameters>
-         </eventlet>
-      </eventlets>
-   </eps>
+      </actor>
+   </actors>
 
    <bindings>
-      <binding id="" sink="" source=""></binding>
-      <binding id="" sink="" source=""></binding>
-      <binding id="" sink="" source=""></binding>
+      <binding id="" sink-actor="" source-actor=""></binding>
+      <binding id="" sink-actor="" source-actor=""></binding>
+      <binding id="" sink-actor="" source-actor=""></binding>
    </bindings>
 </nuke>

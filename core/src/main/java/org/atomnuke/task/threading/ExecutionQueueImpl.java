@@ -7,6 +7,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
+import org.atomnuke.NukeEnv;
 import org.atomnuke.kernel.NukeRejectionHandler;
 import org.atomnuke.kernel.NukeThreadPoolExecutor;
 import org.atomnuke.util.TimeValue;
@@ -30,15 +31,14 @@ public class ExecutionQueueImpl implements ExecutionQueue {
    private static final TimeValue DEFAULT_THREAD_KEEPALIVE = new TimeValue(30, TimeUnit.SECONDS);
    private static final Logger LOG = LoggerFactory.getLogger(ExecutionQueueImpl.class);
 
-   private static final int NUM_PROCESSORS = Runtime.getRuntime().availableProcessors();
-   private static final int MAX_THREADS = NUM_PROCESSORS * 2;
+   private static final int MAX_THREADS = NukeEnv.NUM_PROCESSORS * 2;
    private static final int DEFAULT_QUEUE_SIZE = 256000;
 
    private final BlockingQueue<Runnable> executionQueue;
    private final ExecutorService executorService;
 
    public ExecutionQueueImpl() {
-      this(NUM_PROCESSORS, MAX_THREADS);
+      this(NukeEnv.NUM_PROCESSORS, MAX_THREADS);
    }
 
    /**

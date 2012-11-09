@@ -83,9 +83,8 @@
       </xs:annotation>
 
       <xs:all>
-         <xs:element name="sinks" type="nuke:Sinks" minOccurs="0" maxOccurs="1" />
-         <xs:element name="sources" type="nuke:Sources" minOccurs="0" maxOccurs="1" />
-         <xs:element name="eps" type="nuke:EventProcessingSystem" minOccurs="0" maxOccurs="1" />
+         <xs:element name="actors" type="nuke:MessageActors" minOccurs="0" maxOccurs="1" />
+         <xs:element name="message-sources" type="nuke:MessageSources" minOccurs="0" maxOccurs="1" />
          <xs:element name="bindings" type="nuke:Bindings" minOccurs="0" maxOccurs="1" />
       </xs:all>
    </xs:complexType>
@@ -117,7 +116,7 @@
       </xs:attribute>
    </xs:complexType>
 
-   <xs:complexType name="CodeDefinition">
+   <xs:complexType name="MessageActorDefinition">
       <xs:annotation>
          <xs:documentation>
             <html:p>
@@ -157,7 +156,7 @@
       </xs:attribute>
    </xs:complexType>
 
-   <xs:complexType name="Sinks">
+   <xs:complexType name="MessageActors">
       <xs:annotation>
          <xs:documentation>
             <html:p>
@@ -166,13 +165,13 @@
       </xs:annotation>
 
       <xs:sequence>
-         <xs:element name="sink" type="nuke:Sink" minOccurs="0" maxOccurs="unbounded" />
+         <xs:element name="actor" type="nuke:MessageActor" minOccurs="0" maxOccurs="unbounded" />
       </xs:sequence>
    </xs:complexType>
 
-   <xs:complexType name="Sink">
+   <xs:complexType name="MessageActor">
       <xs:complexContent>
-         <xs:extension base="nuke:CodeDefinition">
+         <xs:extension base="nuke:MessageActorDefinition">
             <xs:annotation>
                <xs:documentation>
                   <html:p>
@@ -183,7 +182,7 @@
       </xs:complexContent>
    </xs:complexType>
 
-   <xs:complexType name="Sources">
+   <xs:complexType name="MessageSources">
       <xs:annotation>
          <xs:documentation>
             <html:p>
@@ -192,42 +191,11 @@
       </xs:annotation>
 
       <xs:sequence>
-         <xs:element name="source" type="nuke:Source" minOccurs="0" maxOccurs="unbounded" />
+         <xs:element name="source" type="nuke:MessageSource" minOccurs="0" maxOccurs="unbounded" />
       </xs:sequence>
    </xs:complexType>
 
-   <xs:complexType name="Source">
-      <xs:complexContent>
-         <xs:extension base="nuke:CodeDefinition">
-            <xs:annotation>
-               <xs:documentation>
-                  <html:p>
-                  </html:p>
-               </xs:documentation>
-            </xs:annotation>
-
-            <xs:sequence>
-               <xs:element name="polling-interval" type="nuke:PollingInterval" minOccurs="0" maxOccurs="1" />
-            </xs:sequence>
-         </xs:extension>
-      </xs:complexContent>
-   </xs:complexType>
-
-   <xs:complexType name="EventProcessingSystem">
-      <xs:annotation>
-         <xs:documentation>
-            <html:p>
-            </html:p>
-         </xs:documentation>
-      </xs:annotation>
-
-      <xs:all>
-         <xs:element name="relays" type="nuke:Relays" minOccurs="0" maxOccurs="1" />
-         <xs:element name="eventlets" type="nuke:Eventlets" minOccurs="0" maxOccurs="1" />
-      </xs:all>
-   </xs:complexType>
-
-   <xs:complexType name="Relays">
+   <xs:complexType name="MessageSource">
       <xs:annotation>
          <xs:documentation>
             <html:p>
@@ -236,19 +204,10 @@
       </xs:annotation>
 
       <xs:sequence>
-         <xs:element name="relay" type="nuke:Relay" minOccurs="0" maxOccurs="unbounded" />
+         <xs:element name="polling-interval" type="nuke:PollingInterval" minOccurs="0" maxOccurs="1" />
       </xs:sequence>
-   </xs:complexType>
 
-   <xs:complexType name="Relay">
-      <xs:annotation>
-         <xs:documentation>
-            <html:p>
-            </html:p>
-         </xs:documentation>
-      </xs:annotation>
-
-      <xs:attribute name="id" type="xs:string" use="required">
+      <xs:attribute name="actor-ref" type="xs:string" use="required">
          <xs:annotation>
             <xs:documentation>
                <html:p>
@@ -256,32 +215,6 @@
             </xs:documentation>
          </xs:annotation>
       </xs:attribute>
-   </xs:complexType>
-
-   <xs:complexType name="Eventlets">
-      <xs:annotation>
-         <xs:documentation>
-            <html:p>
-            </html:p>
-         </xs:documentation>
-      </xs:annotation>
-
-      <xs:sequence>
-         <xs:element name="eventlet" type="nuke:Eventlet" minOccurs="0" maxOccurs="unbounded" />
-      </xs:sequence>
-   </xs:complexType>
-
-   <xs:complexType name="Eventlet">
-      <xs:complexContent>
-         <xs:extension base="nuke:CodeDefinition">
-            <xs:annotation>
-               <xs:documentation>
-                  <html:p>
-                  </html:p>
-               </xs:documentation>
-            </xs:annotation>
-         </xs:extension>
-      </xs:complexContent>
    </xs:complexType>
 
    <xs:complexType name="Bindings">
@@ -314,7 +247,7 @@
          </xs:annotation>
       </xs:attribute>
 
-      <xs:attribute name="sink" type="xs:string" use="required">
+      <xs:attribute name="sink-actor" type="xs:string" use="required">
          <xs:annotation>
             <xs:documentation>
                <html:p>
@@ -323,7 +256,7 @@
          </xs:annotation>
       </xs:attribute>
 
-      <xs:attribute name="source" type="xs:string" use="required">
+      <xs:attribute name="source-actor" type="xs:string" use="required">
          <xs:annotation>
             <xs:documentation>
                <html:p>

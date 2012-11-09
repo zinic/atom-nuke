@@ -2,9 +2,8 @@ package org.atomnuke.cli.command.source;
 
 import org.atomnuke.cli.CliConfigurationHandler;
 import org.atomnuke.cli.command.AbstractNukeCommand;
-import org.atomnuke.config.model.LanguageType;
+import org.atomnuke.config.model.MessageSource;
 import org.atomnuke.config.model.PollingInterval;
-import org.atomnuke.config.model.Source;
 import org.atomnuke.config.model.TimeUnitType;
 import org.atomnuke.util.cli.command.result.CommandFailure;
 import org.atomnuke.util.cli.command.result.CommandResult;
@@ -16,7 +15,7 @@ import org.atomnuke.util.cli.command.result.CommandSuccess;
  */
 public class AddSource extends AbstractNukeCommand {
 
-   private static final int SOURCE_ID = 0, SOURCE_LANG = 1, SOURCE_REFERENCE = 2, POLLING_INTERVAL = 3, TIME_UNIT = 4;
+   private static final int SOURCE_ID = 0, POLLING_INTERVAL = 2, TIME_UNIT = 3;
 
    public AddSource(CliConfigurationHandler configurationHandler) {
       super(configurationHandler);
@@ -29,13 +28,13 @@ public class AddSource extends AbstractNukeCommand {
 
    @Override
    public String getCommandDescription() {
-      return "Adds a new source definition.";
+      return "Adds a new message source definition for polling.";
    }
 
    @Override
    public CommandResult perform(String[] arguments) throws Exception {
-      if (arguments.length < 3 || arguments.length > 5) {
-         return new CommandFailure("Usage: <source-id> <language-type> <ref> [polling interval] [time-unit]");
+      if (arguments.length < 1 || arguments.length > 3) {
+         return new CommandFailure("Usage: <source-id> [polling interval] [time-unit]");
       }
 
       final boolean hasPollingInterval = arguments.length > 3;
@@ -43,22 +42,12 @@ public class AddSource extends AbstractNukeCommand {
 
       final CliConfigurationHandler cfgHandler = getConfigHandler();
 
-      if (cfgHandler.findSource(arguments[SOURCE_ID]) != null) {
-         return new CommandFailure("A source with the id \"" + arguments[SOURCE_ID] + "\" already exists.");
+      if (cfgHandler.findMessageSource(arguments[SOURCE_ID]) != null) {
+         return new CommandFailure("A message source with the id \"" + arguments[SOURCE_ID] + "\" already exists.");
       }
 
-      final LanguageType sinkLanguageType;
-
-      try {
-         sinkLanguageType = LanguageType.fromValue(arguments[SOURCE_LANG].toLowerCase());
-      } catch (IllegalArgumentException iae) {
-         return new CommandFailure("Language must be one of: java, javascript, python.");
-      }
-
-      final Source newSource = new Source();
-      newSource.setId(arguments[SOURCE_ID]);
-      newSource.setType(sinkLanguageType);
-      newSource.setHref(arguments[SOURCE_REFERENCE]);
+      final MessageSource newSource = new MessageSource();
+      newSource.setActorRef(arguments[SOURCE_ID]);
 
       final PollingInterval pollingInterval = new PollingInterval();
 
@@ -81,7 +70,7 @@ public class AddSource extends AbstractNukeCommand {
 
       newSource.setPollingInterval(pollingInterval);
 
-      cfgHandler.getSources().add(newSource);
+      cfgHandler.getMessageSources().add(newSource);
       cfgHandler.write();
 
       return new CommandSuccess();

@@ -11,8 +11,8 @@
       <relativePath>./../../</relativePath>
    </parent>
 
-   <groupId>org.atomnuke.components.listener</groupId>
-   <artifactId>util-listeners</artifactId>
+   <groupId>org.atomnuke.components.sinks</groupId>
+   <artifactId>util-sinks</artifactId>
 
    <packaging>jar</packaging>
 

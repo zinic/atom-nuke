@@ -1,7 +1,7 @@
 package org.atomnuke.cli.command.source;
 
 import org.atomnuke.cli.CliConfigurationHandler;
-import org.atomnuke.config.model.Source;
+import org.atomnuke.config.model.MessageSource;
 import org.atomnuke.util.cli.command.AbstractCommandList;
 import org.atomnuke.util.cli.command.result.CommandResult;
 import org.atomnuke.util.cli.command.result.MessageResult;
@@ -21,8 +21,8 @@ public class SourceCommands extends AbstractCommandList {
       final CliConfigurationHandler cfgHandler = getConfigHandler();
       final StringBuilder output = new StringBuilder();
 
-      for (Source source : cfgHandler.getSources()) {
-         output.append("Source definition, ").append(source.getId()).append(" binds ").append(source.getHref()).append(" as language type ").append(source.getType().name().toLowerCase()).append("\n");
+      for (MessageSource source : cfgHandler.getMessageSources()) {
+         output.append("Source definition for actor \"").append(source.getActorRef()).append("\" will poll every ").append(source.getPollingInterval().getValue()).append(" ").append(source.getPollingInterval().getUnit()).append("\n");
       }
 
       return new MessageResult(output.toString());

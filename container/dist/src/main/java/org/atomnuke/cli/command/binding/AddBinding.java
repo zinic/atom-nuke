@@ -38,24 +38,24 @@ public class AddBinding extends AbstractNukeCommand {
 
       final CliConfigurationHandler cfgHandler = getConfigHandler();
 
-      if (cfgHandler.findSource(arguments[SOURCE_ID]) == null && cfgHandler.findRelay(arguments[SOURCE_ID]) == null) {
-         return new CommandFailure("Unable to locate a source or relay with the id, \"" + arguments[SOURCE_ID] + "\"");
+      if (cfgHandler.findMessageSource(arguments[SOURCE_ID]) == null) {
+         return new CommandFailure("Unable to locate a source with the id, \"" + arguments[SOURCE_ID] + "\" to binding to.");
       }
 
-      if (cfgHandler.findSink(arguments[SINK_ID]) == null && cfgHandler.findRelay(arguments[SINK_ID]) == null && cfgHandler.findEventlet(arguments[SINK_ID]) == null) {
-         return new CommandFailure("Unable to locate a sink or eventlet with the id, \"" + arguments[SINK_ID] + "\"");
+      if (cfgHandler.findMessageActor(arguments[SINK_ID]) == null) {
+         return new CommandFailure("Unable to locate a message actor with the id, \"" + arguments[SINK_ID] + "\" for binding to.");
       }
 
       for (Binding binding : cfgHandler.getBindings()) {
-         if (binding.getSource().equals(arguments[SOURCE_ID]) && binding.getSink().equals(arguments[SINK_ID])) {
+         if (binding.getSourceActor().equals(arguments[SOURCE_ID]) && binding.getSinkActor().equals(arguments[SINK_ID])) {
             return new CommandFailure("Binding already exists as binding, \"" + binding.getId() + "\"");
          }
       }
 
       final Binding newBinding = new Binding();
       newBinding.setId(UUID.randomUUID().toString());
-      newBinding.setSource(arguments[SOURCE_ID]);
-      newBinding.setSink(arguments[SINK_ID]);
+      newBinding.setSourceActor(arguments[SOURCE_ID]);
+      newBinding.setSinkActor(arguments[SINK_ID]);
 
       cfgHandler.getBindings().add(newBinding);
       cfgHandler.write();

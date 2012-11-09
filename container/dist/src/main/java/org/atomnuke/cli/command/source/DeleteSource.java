@@ -3,7 +3,7 @@ package org.atomnuke.cli.command.source;
 import java.util.Iterator;
 import org.atomnuke.cli.CliConfigurationHandler;
 import org.atomnuke.cli.command.AbstractNukeCommand;
-import org.atomnuke.config.model.Source;
+import org.atomnuke.config.model.MessageSource;
 import org.atomnuke.util.cli.command.result.CommandFailure;
 import org.atomnuke.util.cli.command.result.CommandResult;
 import org.atomnuke.util.cli.command.result.CommandSuccess;
@@ -27,7 +27,7 @@ public class DeleteSource extends AbstractNukeCommand {
 
    @Override
    public String getCommandDescription() {
-      return "Removes a source definition. This will unbind any recievers tied to the source being deleted.";
+      return "Removes a message actor's source definition. This will unbind any recievers tied to the source definition being deleted.";
    }
 
    @Override
@@ -38,8 +38,8 @@ public class DeleteSource extends AbstractNukeCommand {
 
       final CliConfigurationHandler cfgHandler = getConfigHandler();
 
-      for (Iterator<Source> sourceItr = cfgHandler.getSources().iterator(); sourceItr.hasNext();) {
-         if (sourceItr.next().getId().equals(arguments[SOURCE_ID])) {
+      for (Iterator<MessageSource> sourceItr = cfgHandler.getMessageSources().iterator(); sourceItr.hasNext();) {
+         if (sourceItr.next().getActorRef().equals(arguments[SOURCE_ID])) {
             sourceItr.remove();
             unbindSource(cfgHandler, arguments[SOURCE_ID]);
 
@@ -47,8 +47,6 @@ public class DeleteSource extends AbstractNukeCommand {
             return new CommandSuccess();
          }
       }
-
-
 
       return new CommandFailure("No source with an id matching, \"" + arguments[SOURCE_ID] + "\" seems to exist.");
    }

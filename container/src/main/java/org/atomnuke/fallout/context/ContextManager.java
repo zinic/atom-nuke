@@ -18,19 +18,15 @@ public class ContextManager implements ConfigurationListener<ServerConfiguration
 
    private final ContainerContext containerContext;
    private final Collection<PackageContext> packages;
-   private final ServiceManager services;
-   private final Nuke nukeReference;
 
    public ContextManager(ServiceManager services, Collection<PackageContext> packages, Nuke nukeReference) {
-      this.services = services;
       this.packages = packages;
-      this.nukeReference = nukeReference;
 
-      containerContext = new ContainerContext();
+      containerContext = new ContainerContext(nukeReference.atomTasker(), services);
    }
 
    @Override
    public synchronized void updated(ServerConfiguration configuration) throws ConfigurationException {
-      new ConfigurationProcessor(nukeReference.atomTasker(), services, containerContext, new ServerConfigurationHandler(configuration), packages).merge(nukeReference);
+      new ConfigurationProcessor(containerContext, new ServerConfigurationHandler(configuration), packages).merge();
    }
 }
