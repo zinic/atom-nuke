@@ -9,8 +9,8 @@ import org.atomnuke.plugin.env.NopInstanceEnvironment;
 import org.atomnuke.source.AtomSource;
 import org.atomnuke.task.atom.AtomTask;
 import org.atomnuke.util.TimeValue;
-import org.atomnuke.util.lifecycle.InitializationException;
-import org.atomnuke.util.lifecycle.Reclaimable;
+import org.atomnuke.lifecycle.InitializationException;
+import org.atomnuke.lifecycle.Reclaimable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

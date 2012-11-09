@@ -1,8 +1,7 @@
 package org.atomnuke.service;
 
-import org.atomnuke.service.context.ServiceContext;
-import org.atomnuke.service.resolution.ResolutionAction;
-import org.atomnuke.util.lifecycle.ResourceLifeCycle;
+import org.atomnuke.lifecycle.ResourceLifeCycle;
+import org.atomnuke.lifecycle.resolution.ResolutionAction;
 
 /**
  *

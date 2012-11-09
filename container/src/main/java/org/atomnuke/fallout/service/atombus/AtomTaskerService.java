@@ -4,14 +4,14 @@ import org.atomnuke.container.service.annotation.NukeService;
 import org.atomnuke.service.Service;
 import org.atomnuke.service.ServiceManager;
 import org.atomnuke.service.ServiceUnavailableException;
-import org.atomnuke.service.context.ServiceContext;
+import org.atomnuke.service.ServiceContext;
 import org.atomnuke.service.gc.ReclamationHandler;
 import org.atomnuke.service.resolution.RequiresAction;
-import org.atomnuke.service.resolution.ResolutionAction;
+import org.atomnuke.lifecycle.resolution.ResolutionAction;
 import org.atomnuke.task.manager.AtomTasker;
 import org.atomnuke.task.manager.impl.AtomTaskerImpl;
 import org.atomnuke.task.manager.service.TaskingService;
-import org.atomnuke.util.lifecycle.InitializationException;
+import org.atomnuke.lifecycle.InitializationException;
 import org.atomnuke.util.service.ServiceHandler;
 
 /**

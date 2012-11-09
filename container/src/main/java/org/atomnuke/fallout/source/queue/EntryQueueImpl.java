@@ -7,7 +7,7 @@ import org.atomnuke.atom.model.Entry;
 import org.atomnuke.source.AtomSourceException;
 import org.atomnuke.source.result.AtomSourceResultImpl;
 import org.atomnuke.task.context.AtomTaskContext;
-import org.atomnuke.util.lifecycle.InitializationException;
+import org.atomnuke.lifecycle.InitializationException;
 
 /**
  *

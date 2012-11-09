@@ -1,8 +1,8 @@
 package org.atomnuke.source;
 
-import org.atomnuke.source.result.AtomSourceResult;
 import org.atomnuke.task.context.AtomTaskContext;
-import org.atomnuke.util.lifecycle.ResourceLifeCycle;
+import org.atomnuke.lifecycle.ResourceLifeCycle;
+import org.atomnuke.source.result.AtomSourceResult;
 
 /**
  * An AtomSource represents an object that may be polled for ATOM data.

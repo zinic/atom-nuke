@@ -8,8 +8,8 @@ import org.atomnuke.source.AtomSourceException;
 import org.atomnuke.source.result.AtomSourceResult;
 import org.atomnuke.source.result.AtomSourceResultImpl;
 import org.atomnuke.task.context.AtomTaskContext;
-import org.atomnuke.util.lifecycle.DestructionException;
-import org.atomnuke.util.lifecycle.InitializationException;
+import org.atomnuke.lifecycle.DestructionException;
+import org.atomnuke.lifecycle.InitializationException;
 
 /**
  *

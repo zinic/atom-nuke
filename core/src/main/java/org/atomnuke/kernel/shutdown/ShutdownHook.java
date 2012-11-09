@@ -1,6 +1,6 @@
 package org.atomnuke.kernel.shutdown;
 
-import org.atomnuke.util.lifecycle.Reclaimable;
+import org.atomnuke.lifecycle.Reclaimable;
 
 /**
  *

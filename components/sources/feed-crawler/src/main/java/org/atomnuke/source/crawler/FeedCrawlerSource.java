@@ -22,7 +22,7 @@ import org.atomnuke.source.result.AtomSourceResult;
 import org.atomnuke.source.result.AtomSourceResultImpl;
 import org.atomnuke.source.result.ResultType;
 import org.atomnuke.task.context.AtomTaskContext;
-import org.atomnuke.util.lifecycle.InitializationException;
+import org.atomnuke.lifecycle.InitializationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

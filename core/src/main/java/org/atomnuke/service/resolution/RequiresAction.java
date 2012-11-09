@@ -1,5 +1,7 @@
 package org.atomnuke.service.resolution;
 
+import org.atomnuke.lifecycle.resolution.ResolutionAction;
+import org.atomnuke.lifecycle.resolution.ResolutionActionType;
 import org.atomnuke.service.ServiceManager;
 
 /**

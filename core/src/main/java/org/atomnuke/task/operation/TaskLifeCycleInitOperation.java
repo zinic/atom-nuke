@@ -3,8 +3,8 @@ package org.atomnuke.task.operation;
 import org.atomnuke.plugin.operation.ComplexOperation;
 import org.atomnuke.plugin.operation.OperationFailureException;
 import org.atomnuke.task.context.AtomTaskContext;
-import org.atomnuke.util.lifecycle.InitializationException;
-import org.atomnuke.util.lifecycle.ResourceLifeCycle;
+import org.atomnuke.lifecycle.InitializationException;
+import org.atomnuke.lifecycle.ResourceLifeCycle;
 
 /**
  *

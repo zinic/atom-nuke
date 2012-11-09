@@ -24,7 +24,7 @@ import org.atomnuke.task.manager.AtomTasker;
 import org.atomnuke.task.operation.TaskLifeCycleInitOperation;
 import org.atomnuke.util.TimeValueUtil;
 import org.atomnuke.util.config.ConfigurationException;
-import org.atomnuke.util.lifecycle.Reclaimable;
+import org.atomnuke.lifecycle.Reclaimable;
 import org.atomnuke.util.remote.CancellationRemote;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,9 +33,9 @@ import org.slf4j.LoggerFactory;
  *
  * @author zinic
  */
-public class ContainerContext {
+public class FalloutContextImpl implements FalloutContext {
 
-   private static final Logger LOG = LoggerFactory.getLogger(ContainerContext.class);
+   private static final Logger LOG = LoggerFactory.getLogger(FalloutContextImpl.class);
 
    private final Map<String, InstanceContext<? extends Reclaimable>> actors;
    private final Map<String, CancellationRemote> cancellationRemotes;
@@ -44,7 +44,7 @@ public class ContainerContext {
    private final ServiceManager services;
    private final AtomTasker atomTasker;
 
-   public ContainerContext(AtomTasker atomTasker, ServiceManager services) {
+   public FalloutContextImpl(AtomTasker atomTasker, ServiceManager services) {
       this.atomTasker = atomTasker;
       this.services = services;
 
@@ -86,12 +86,14 @@ public class ContainerContext {
       return false;
    }
 
+   @Override
    public void enlistActor(String name, InstanceContext<? extends Reclaimable> actor) {
       LOG.debug("Found configuration for actor: " + name);
 
       actors.put(name, actor);
    }
 
+   @Override
    public void process(ServerConfigurationHandler cfgHandler) throws ConfigurationException {
       final List<Binding> bindingsToMerge = cfgHandler.getBindings();
       final Set<String> bindingsToBreak = new HashSet<String>(bindings.keySet());

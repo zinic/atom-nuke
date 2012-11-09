@@ -1,7 +1,7 @@
 package org.atomnuke.kernel.shutdown;
 
 import java.util.Stack;
-import org.atomnuke.util.lifecycle.Reclaimable;
+import org.atomnuke.lifecycle.Reclaimable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

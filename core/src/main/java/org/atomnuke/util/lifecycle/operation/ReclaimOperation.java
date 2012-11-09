@@ -2,7 +2,7 @@ package org.atomnuke.util.lifecycle.operation;
 
 import org.atomnuke.plugin.operation.OperationFailureException;
 import org.atomnuke.plugin.operation.SimpleOperation;
-import org.atomnuke.util.lifecycle.Reclaimable;
+import org.atomnuke.lifecycle.Reclaimable;
 
 /**
  *

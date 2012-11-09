@@ -1,7 +1,7 @@
 package org.atomnuke.service.gc;
 
 import org.atomnuke.plugin.InstanceContext;
-import org.atomnuke.util.lifecycle.Reclaimable;
+import org.atomnuke.lifecycle.Reclaimable;
 import org.atomnuke.util.remote.CancellationRemote;
 
 /**

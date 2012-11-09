@@ -2,7 +2,7 @@ package org.atomnuke.service;
 
 import java.util.Collection;
 import org.atomnuke.plugin.InstanceContext;
-import org.atomnuke.util.lifecycle.Reclaimable;
+import org.atomnuke.lifecycle.Reclaimable;
 
 /**
  *

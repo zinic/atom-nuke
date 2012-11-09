@@ -20,7 +20,7 @@ import org.atomnuke.atom.model.builder.EntryBuilder;
 import org.atomnuke.atom.model.builder.IdBuilder;
 import org.atomnuke.atom.model.builder.UpdatedBuilder;
 import org.atomnuke.source.QueueSource;
-import org.atomnuke.util.lifecycle.InitializationException;
+import org.atomnuke.lifecycle.InitializationException;
 import org.atomnuke.util.io.LimitedReadInputStream;
 import org.atomnuke.util.io.ReadLimitException;
 import org.slf4j.Logger;

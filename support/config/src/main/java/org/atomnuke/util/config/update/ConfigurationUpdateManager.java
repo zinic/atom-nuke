@@ -1,7 +1,7 @@
 package org.atomnuke.util.config.update;
 
 import org.atomnuke.util.config.io.ConfigurationManager;
-import org.atomnuke.util.lifecycle.Reclaimable;
+import org.atomnuke.lifecycle.Reclaimable;
 
 /**
  *

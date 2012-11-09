@@ -1,4 +1,4 @@
-package org.atomnuke.service.resolution;
+package org.atomnuke.lifecycle.resolution;
 
 /**
  *

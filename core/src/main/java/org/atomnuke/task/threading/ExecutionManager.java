@@ -1,7 +1,7 @@
 package org.atomnuke.task.threading;
 
-import org.atomnuke.service.context.ServiceContext;
-import org.atomnuke.util.lifecycle.ResourceLifeCycle;
+import org.atomnuke.service.ServiceContext;
+import org.atomnuke.lifecycle.ResourceLifeCycle;
 
 /**
  *

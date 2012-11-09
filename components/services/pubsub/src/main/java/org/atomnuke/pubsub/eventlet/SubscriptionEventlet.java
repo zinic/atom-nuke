@@ -20,7 +20,7 @@ import org.atomnuke.pubsub.api.type.SubscriptionDocument;
 import org.atomnuke.sink.eps.eventlet.AtomEventlet;
 import org.atomnuke.sink.eps.eventlet.AtomEventletException;
 import org.atomnuke.task.context.AtomTaskContext;
-import org.atomnuke.util.lifecycle.InitializationException;
+import org.atomnuke.lifecycle.InitializationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

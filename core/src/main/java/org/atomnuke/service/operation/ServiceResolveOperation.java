@@ -3,7 +3,7 @@ package org.atomnuke.service.operation;
 import org.atomnuke.plugin.operation.ComplexOperation;
 import org.atomnuke.plugin.operation.OperationFailureException;
 import org.atomnuke.service.Service;
-import org.atomnuke.service.resolution.ResolutionAction;
+import org.atomnuke.lifecycle.resolution.ResolutionAction;
 
 /**
  *

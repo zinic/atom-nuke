@@ -19,7 +19,7 @@ import org.atomnuke.service.gc.ReclamationHandler;
 import org.atomnuke.sink.SinkAction;
 import org.atomnuke.sink.eps.selector.SelectorResult;
 import org.atomnuke.task.context.AtomTaskContext;
-import org.atomnuke.util.lifecycle.InitializationException;
+import org.atomnuke.lifecycle.InitializationException;
 import org.atomnuke.util.remote.CancellationRemote;
 import org.atomnuke.util.service.ServiceHandler;
 import org.slf4j.Logger;

@@ -1,4 +1,4 @@
-package org.atomnuke.fallout.config;
+package org.atomnuke.fallout.context.config;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -8,14 +8,13 @@ import org.atomnuke.config.model.LanguageType;
 import org.atomnuke.config.model.MessageActor;
 import org.atomnuke.util.LanguageTypeUtil;
 import org.atomnuke.fallout.config.server.ServerConfigurationHandler;
-import org.atomnuke.fallout.context.ContainerContext;
 import org.atomnuke.container.packaging.PackageContext;
 import org.atomnuke.container.packaging.bindings.lang.BindingLanguage;
+import org.atomnuke.fallout.context.FalloutContext;
 import org.atomnuke.plugin.ReferenceInstantiationException;
-import org.atomnuke.source.AtomSource;
 import org.atomnuke.util.config.ConfigurationException;
-import org.atomnuke.util.lifecycle.Reclaimable;
-import org.atomnuke.util.lifecycle.ResourceLifeCycle;
+import org.atomnuke.lifecycle.Reclaimable;
+import org.atomnuke.lifecycle.ResourceLifeCycle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,9 +29,9 @@ public class ConfigurationProcessor {
    private final Map<String, InstanceContext> builtInstances;
    private final Collection<PackageContext> loadedPackages;
    private final ServerConfigurationHandler cfgHandler;
-   private final ContainerContext containerContext;
+   private final FalloutContext containerContext;
 
-   public ConfigurationProcessor(ContainerContext containerContext, ServerConfigurationHandler cfgHandler, Collection<PackageContext> loadedPackages) {
+   public ConfigurationProcessor(FalloutContext containerContext, ServerConfigurationHandler cfgHandler, Collection<PackageContext> loadedPackages) {
       this.containerContext = containerContext;
       this.cfgHandler = cfgHandler;
       this.loadedPackages = loadedPackages;

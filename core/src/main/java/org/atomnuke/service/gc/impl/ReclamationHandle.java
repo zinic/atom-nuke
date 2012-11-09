@@ -3,7 +3,7 @@ package org.atomnuke.service.gc.impl;
 import org.atomnuke.plugin.InstanceContext;
 import org.atomnuke.plugin.operation.OperationFailureException;
 import org.atomnuke.task.impl.ManagedAtomTask;
-import org.atomnuke.util.lifecycle.Reclaimable;
+import org.atomnuke.lifecycle.Reclaimable;
 import org.atomnuke.util.lifecycle.operation.ReclaimOperation;
 import org.atomnuke.util.remote.CancellationRemote;
 import org.slf4j.Logger;

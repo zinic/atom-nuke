@@ -2,9 +2,9 @@ package org.atomnuke.service.operation;
 
 import org.atomnuke.plugin.operation.ComplexOperation;
 import org.atomnuke.plugin.operation.OperationFailureException;
-import org.atomnuke.service.context.ServiceContext;
-import org.atomnuke.util.lifecycle.InitializationException;
-import org.atomnuke.util.lifecycle.ResourceLifeCycle;
+import org.atomnuke.service.ServiceContext;
+import org.atomnuke.lifecycle.InitializationException;
+import org.atomnuke.lifecycle.ResourceLifeCycle;
 
 /**
  *

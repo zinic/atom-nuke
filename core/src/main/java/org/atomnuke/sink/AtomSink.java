@@ -2,8 +2,8 @@ package org.atomnuke.sink;
 
 import org.atomnuke.atom.model.Entry;
 import org.atomnuke.atom.model.Feed;
+import org.atomnuke.lifecycle.ResourceLifeCycle;
 import org.atomnuke.task.context.AtomTaskContext;
-import org.atomnuke.util.lifecycle.ResourceLifeCycle;
 
 /**
  *

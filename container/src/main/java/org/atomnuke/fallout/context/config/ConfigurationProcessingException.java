@@ -1,4 +1,4 @@
-package org.atomnuke.fallout.config;
+package org.atomnuke.fallout.context.config;
 
 /**
  *

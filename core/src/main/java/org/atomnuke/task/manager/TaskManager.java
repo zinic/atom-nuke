@@ -3,7 +3,7 @@ package org.atomnuke.task.manager;
 import java.util.UUID;
 import org.atomnuke.task.ManagedTask;
 import org.atomnuke.util.TimeValue;
-import org.atomnuke.util.lifecycle.Reclaimable;
+import org.atomnuke.lifecycle.Reclaimable;
 
 /**
  * The TaskManager interface abstracts the complexity of of adding tasks to the

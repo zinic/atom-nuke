@@ -1,5 +1,6 @@
 package org.atomnuke.service.context;
 
+import org.atomnuke.service.ServiceContext;
 import java.util.Map;
 import org.atomnuke.service.ServiceManager;
 

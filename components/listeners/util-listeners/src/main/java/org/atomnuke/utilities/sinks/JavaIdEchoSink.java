@@ -8,7 +8,7 @@ import org.atomnuke.sink.AtomSinkException;
 import org.atomnuke.sink.AtomSinkResult;
 import org.atomnuke.sink.SinkResult;
 import org.atomnuke.task.context.AtomTaskContext;
-import org.atomnuke.util.lifecycle.InitializationException;
+import org.atomnuke.lifecycle.InitializationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

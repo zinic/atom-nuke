@@ -13,7 +13,7 @@ import org.atomnuke.sink.selectors.CategorySelectorImpl;
 import org.atomnuke.source.crawler.FeedCrawlerSourceFactory;
 import org.atomnuke.task.atom.AtomTask;
 import org.atomnuke.task.context.AtomTaskContext;
-import org.atomnuke.util.lifecycle.InitializationException;
+import org.atomnuke.lifecycle.InitializationException;
 import org.atomnuke.util.TimeValue;
 
 /**

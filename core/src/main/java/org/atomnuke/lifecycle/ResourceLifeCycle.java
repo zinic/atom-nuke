@@ -1,4 +1,4 @@
-package org.atomnuke.util.lifecycle;
+package org.atomnuke.lifecycle;
 
 /**
  * The resource life-cycle defines two methods that will be called once during

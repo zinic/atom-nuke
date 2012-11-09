@@ -9,7 +9,7 @@ import org.atomnuke.source.result.AtomSourceResult;
 import org.atomnuke.source.QueueSource;
 import org.atomnuke.source.QueueSourceImpl;
 import org.atomnuke.task.context.AtomTaskContext;
-import org.atomnuke.util.lifecycle.InitializationException;
+import org.atomnuke.lifecycle.InitializationException;
 import org.atomnuke.util.service.ServiceHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;

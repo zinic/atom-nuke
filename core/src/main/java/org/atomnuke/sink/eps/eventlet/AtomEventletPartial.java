@@ -1,7 +1,7 @@
 package org.atomnuke.sink.eps.eventlet;
 
 import org.atomnuke.task.context.AtomTaskContext;
-import org.atomnuke.util.lifecycle.InitializationException;
+import org.atomnuke.lifecycle.InitializationException;
 
 /**
  * This is an abstract class that implements empty init and destroy methods. For

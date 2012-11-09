@@ -1,7 +1,7 @@
 package org.atomnuke.util.config.io;
 
 import org.atomnuke.util.config.ConfigurationException;
-import org.atomnuke.util.lifecycle.Reclaimable;
+import org.atomnuke.lifecycle.Reclaimable;
 
 /**
  *

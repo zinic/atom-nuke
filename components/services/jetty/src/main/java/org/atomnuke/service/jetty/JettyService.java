@@ -1,15 +1,15 @@
 package org.atomnuke.service.jetty;
 
 import org.atomnuke.container.service.annotation.NukeService;
+import org.atomnuke.lifecycle.InitializationException;
 import org.atomnuke.service.Service;
+import org.atomnuke.service.ServiceContext;
 import org.atomnuke.service.ServiceManager;
-import org.atomnuke.service.context.ServiceContext;
 import org.atomnuke.service.jetty.server.ContextBuilder;
 import org.atomnuke.service.jetty.server.JettyServer;
-import org.atomnuke.service.resolution.ResolutionAction;
-import org.atomnuke.service.resolution.ResolutionActionImpl;
-import org.atomnuke.service.resolution.ResolutionActionType;
-import org.atomnuke.util.lifecycle.InitializationException;
+import org.atomnuke.lifecycle.resolution.ResolutionAction;
+import org.atomnuke.lifecycle.resolution.ResolutionActionImpl;
+import org.atomnuke.lifecycle.resolution.ResolutionActionType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,7 +22,7 @@ public class JettyService implements Service {
 
    private static final Logger LOG = LoggerFactory.getLogger(JettyService.class);
    private static final String SVC_NAME = "org.atomnuke.service.jetty.JettyService";
-   
+
    private final JettyServer jettyServer;
 
    public JettyService() {

@@ -10,7 +10,7 @@ import org.atomnuke.NukeKernel;
 import org.atomnuke.config.model.ServerConfiguration;
 import org.atomnuke.container.boot.ContainerBootstrap;
 import org.atomnuke.fallout.config.server.ServerConfigurationFileManager;
-import org.atomnuke.fallout.context.ContextManager;
+import org.atomnuke.fallout.context.config.ConfigurationContextUpdateListener;
 import org.atomnuke.container.packaging.loader.PackageLoader;
 import org.atomnuke.plugin.proxy.japi.JapiProxyFactory;
 import org.atomnuke.service.ServiceManager;
@@ -37,7 +37,7 @@ public class NukeContainer {
    private static final Logger LOG = LoggerFactory.getLogger(NukeContainer.class);
 
    private ServiceManager serviceManager;
-   private ContextManager contextManager;
+   private ConfigurationContextUpdateListener contextManager;
    private Nuke nukeInstance;
 
    public Nuke nukeInstance() {
@@ -87,8 +87,6 @@ public class NukeContainer {
          final ConfigurationManager<ServerConfiguration> cfgManager = new ServerConfigurationFileManager(new File(NukeEnv.NUKE_CONFIG_LOCATION));
          final ConfigurationContext<ServerConfiguration> configurationContext = cfgUpdateManager.register("Fallout File CFG", cfgManager);
 
-//         final ConfigurationContext<ServerConfiguration> configurationContext = cfgUpdateManager.get("org.atomnuke.config.fallout.ApiManagedServerConfiguration");
-
          configurationContext.addListener(contextManager);
       } catch (JAXBException jaxbe) {
          LOG.error(jaxbe.getMessage(), jaxbe);
@@ -102,7 +100,7 @@ public class NukeContainer {
    private void buildContextManager() {
       try {
          final PackageLoader firstLoader = ServiceHandler.instance().firstAvailable(serviceManager, PackageLoader.class);
-         contextManager = new ContextManager(serviceManager, firstLoader.packageContexts(), nukeInstance);
+         contextManager = new ConfigurationContextUpdateListener(serviceManager, firstLoader.packageContexts(), nukeInstance);
       } catch (ServiceUnavailableException sue) {
          LOG.error(sue.getMessage(), sue);
       } catch (Exception ex) {
