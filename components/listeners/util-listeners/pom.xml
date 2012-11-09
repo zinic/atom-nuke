@@ -16,7 +16,7 @@
 
    <packaging>jar</packaging>
 
-   <name>Atom Nuke - Components - Utility Listeners</name>
+   <name>Atom Nuke - Components - Utility Sinks</name>
 
    <dependencies>
       <dependency>

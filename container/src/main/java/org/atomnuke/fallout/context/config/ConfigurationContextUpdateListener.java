@@ -4,7 +4,6 @@ import java.util.Collection;
 import org.atomnuke.Nuke;
 import org.atomnuke.config.model.ServerConfiguration;
 import org.atomnuke.fallout.config.server.ServerConfigurationHandler;
-import org.atomnuke.fallout.context.config.ConfigurationProcessor;
 import org.atomnuke.container.packaging.PackageContext;
 import org.atomnuke.fallout.context.FalloutContext;
 import org.atomnuke.fallout.context.FalloutContextImpl;
