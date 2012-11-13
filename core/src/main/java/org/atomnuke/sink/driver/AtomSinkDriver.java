@@ -6,18 +6,14 @@ import org.atomnuke.sink.AtomSinkResult;
 import org.atomnuke.sink.manager.ManagedSink;
 import org.atomnuke.plugin.operation.ComplexOperation;
 import org.atomnuke.plugin.operation.OperationFailureException;
-import org.atomnuke.task.impl.ManagedAtomTask;
-import org.atomnuke.util.lifecycle.runnable.ReclaimableTask;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.atomnuke.util.lifecycle.runnable.ReclaimableTaskPartial;
 
 /**
  *
  * @author zinic
  */
-public class AtomSinkDriver implements ReclaimableTask {
+public class AtomSinkDriver extends ReclaimableTaskPartial {
 
-   private static final Logger LOG = LoggerFactory.getLogger(AtomSinkDriver.class);
    private static final ComplexOperation<AtomSink, DriverArgument> DRIVER_OPERATION = new ComplexOperation<AtomSink, DriverArgument>() {
       @Override
       public void perform(AtomSink instance, DriverArgument argument) throws OperationFailureException {
@@ -34,6 +30,7 @@ public class AtomSinkDriver implements ReclaimableTask {
          }
       }
    };
+
    private final ManagedSink registeredSink;
    private final DriverArgument driverArgument;
 
@@ -56,9 +53,5 @@ public class AtomSinkDriver implements ReclaimableTask {
          }
       } catch (OperationFailureException ofe) {
       }
-   }
-
-   @Override
-   public void destroy() {
    }
 }

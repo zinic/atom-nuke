@@ -1,7 +1,7 @@
 package org.atomnuke.container.service.config;
 
-import org.atomnuke.util.lifecycle.runnable.ReclaimableTask;
 import org.atomnuke.util.config.update.ConfigurationUpdateManager;
+import org.atomnuke.util.lifecycle.runnable.ReclaimableTaskPartial;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author zinic
  */
-public class ConfigurationUpdateRunnable implements ReclaimableTask {
+public class ConfigurationUpdateRunnable extends ReclaimableTaskPartial {
 
    private static final Logger LOG = LoggerFactory.getLogger(ConfigurationUpdateRunnable.class);
 

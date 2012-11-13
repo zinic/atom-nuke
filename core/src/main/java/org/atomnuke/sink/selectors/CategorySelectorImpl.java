@@ -3,6 +3,7 @@ package org.atomnuke.sink.selectors;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import org.apache.commons.lang3.StringUtils;
 import org.atomnuke.atom.model.Category;
 import org.atomnuke.atom.model.Entry;
 import org.atomnuke.sink.eps.selector.SelectorResult;
@@ -25,7 +26,10 @@ public class CategorySelectorImpl implements CategorySelector {
 
    public static boolean hasCategoryTerm(List<Category> categoriesToSearch, Category categoryToFind) {
       for (Category targetCategory : categoriesToSearch) {
-         if (targetCategory.scheme().equals(categoryToFind.scheme()) && targetCategory.term().equals(categoryToFind.term())) {
+         final boolean schemesMatch = StringUtils.isBlank(targetCategory.scheme()) ? StringUtils.isBlank(categoryToFind.scheme()) : targetCategory.scheme().equals(categoryToFind.scheme());
+         final boolean termsMatch = StringUtils.isBlank(targetCategory.term()) ? StringUtils.isBlank(categoryToFind.term()) : targetCategory.term().equals(categoryToFind.term());
+
+         if (schemesMatch && termsMatch) {
             return true;
          }
       }

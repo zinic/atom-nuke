@@ -2,7 +2,6 @@ package org.atomnuke.service.gc.impl;
 
 import org.atomnuke.plugin.InstanceContext;
 import org.atomnuke.plugin.operation.OperationFailureException;
-import org.atomnuke.task.impl.ManagedAtomTask;
 import org.atomnuke.lifecycle.Reclaimable;
 import org.atomnuke.util.lifecycle.operation.ReclaimOperation;
 import org.atomnuke.util.remote.CancellationRemote;
@@ -15,7 +14,7 @@ import org.slf4j.LoggerFactory;
  */
 public class ReclamationHandle {
 
-   private static final Logger LOG = LoggerFactory.getLogger(ManagedAtomTask.class);
+   private static final Logger LOG = LoggerFactory.getLogger(ReclamationHandle.class);
 
    private final InstanceContext<Reclaimable> reclaimableContext;
    private final CancellationRemote cancellationRemote;

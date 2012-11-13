@@ -1,22 +1,18 @@
 package org.atomnuke.fallout.service.gc;
 
 import org.atomnuke.service.gc.ReclamationHandler;
-import org.atomnuke.util.lifecycle.runnable.ReclaimableTask;
+import org.atomnuke.util.lifecycle.runnable.ReclaimableTaskPartial;
 
 /**
  *
  * @author zinic
  */
-public class GarbageCollectionTask implements ReclaimableTask {
+public class GarbageCollectionTask extends ReclaimableTaskPartial {
 
    private final ReclamationHandler reclamationHandler;
 
    public GarbageCollectionTask(ReclamationHandler reclamationHandler) {
       this.reclamationHandler = reclamationHandler;
-   }
-
-   @Override
-   public void destroy() {
    }
 
    @Override
