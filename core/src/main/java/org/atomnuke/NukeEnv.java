@@ -14,20 +14,33 @@ public final class NukeEnv {
    public static final String NUKE_DEPLOY = fromEnv("NUKE_DEPLOY", NUKE_HOME + File.separator + "deployed");
    public static final String NUKE_LIB = fromEnv("NUKE_LIB", NUKE_HOME + File.separator + "lib");
    public static final String NUKE_CONFIG_LOCATION = fromEnv("NUKE_CONFIG", NUKE_HOME + File.separator + "nuke.cfg.xml");
-
    public static final int NUM_PROCESSORS = Runtime.getRuntime().availableProcessors();
 
    /**
-    * Private helper method for getting a value from the environment. If the
-    * value is null the default is returned.
+    * Helper method for getting a value from the environment. If the value is
+    * null the default is returned.
     *
     * @param key environment variable name
     * @param defaultValue default value for the variable
     * @return the value of the environment variable
     */
-   private static String fromEnv(String key, String defaultValue) {
+   public static String fromEnv(String key, String defaultValue) {
       final String envValue = System.getenv().get(key);
 
       return envValue != null ? envValue : defaultValue;
+   }
+
+   /**
+    * Helper method for getting a value from the system properties. If the value is
+    * null the default is returned.
+    *
+    * @param key system property name
+    * @param defaultValue default value for the variable
+    * @return the value of the environment variable
+    */
+   public static String fromSystem(String key, String defaultValue) {
+      final String sysValue = System.getProperty(key);
+
+      return sysValue != null ? sysValue : defaultValue;
    }
 }

@@ -11,6 +11,7 @@ import org.atomnuke.task.atom.AtomTask;
 import org.atomnuke.util.TimeValue;
 import org.atomnuke.lifecycle.InitializationException;
 import org.atomnuke.lifecycle.Reclaimable;
+import org.atomnuke.plugin.env.LocalInstanceEnvironment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,7 +54,7 @@ public abstract class AbstractNukeImpl implements Nuke {
     * wit the current task context.
     */
    public AtomTask follow(AtomSource source, TimeValue pollingInterval) {
-      return follow(new InstanceContextImpl<AtomSource>(NopInstanceEnvironment.getInstance(), source), pollingInterval);
+      return follow(new InstanceContextImpl<AtomSource>(LocalInstanceEnvironment.getInstance(), source), pollingInterval);
    }
 
    /**

@@ -8,6 +8,8 @@ import org.atomnuke.source.AtomSourceException;
 import org.atomnuke.source.result.AtomSourceResultImpl;
 import org.atomnuke.task.context.AtomTaskContext;
 import org.atomnuke.lifecycle.InitializationException;
+import org.atomnuke.source.action.ActionType;
+import org.atomnuke.source.action.AtomSourceActionImpl;
 
 /**
  *
@@ -38,7 +40,7 @@ public class EntryQueueImpl implements QueueSource {
    @Override
    public synchronized AtomSourceResult poll() throws AtomSourceException {
       if (entryQueue.isEmpty()) {
-         return new AtomSourceResultImpl();
+         return new AtomSourceResultImpl(new AtomSourceActionImpl(ActionType.SLEEP));
       }
 
       return new AtomSourceResultImpl(entryQueue.poll());

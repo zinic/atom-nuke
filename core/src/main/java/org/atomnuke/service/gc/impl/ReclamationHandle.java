@@ -29,8 +29,6 @@ public class ReclamationHandle {
    }
 
    public void reclaim() {
-      cancellationRemote.cancel();
-
       try {
          reclaimableContext.perform(ReclaimOperation.instance());
       } catch (OperationFailureException ofe) {

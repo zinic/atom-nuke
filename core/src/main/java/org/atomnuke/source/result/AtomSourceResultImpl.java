@@ -3,6 +3,8 @@ package org.atomnuke.source.result;
 import org.atomnuke.source.action.AtomSourceAction;
 import org.atomnuke.atom.model.Entry;
 import org.atomnuke.atom.model.Feed;
+import org.atomnuke.source.action.ActionType;
+import org.atomnuke.source.action.AtomSourceActionImpl;
 
 /**
  *
@@ -10,21 +12,19 @@ import org.atomnuke.atom.model.Feed;
  */
 public class AtomSourceResultImpl implements AtomSourceResult {
 
+   private static final AtomSourceAction DEFAULT_SOURCE_ACTION = new AtomSourceActionImpl(ActionType.OK);
+
    private final AtomSourceAction requestedAction;
    private final ResultType resultType;
    private final Feed feed;
    private final Entry entry;
 
-   public AtomSourceResultImpl() {
-      this(null, ResultType.EMPTY, null, null);
-   }
-
    public AtomSourceResultImpl(Feed feed) {
-      this(null, feed);
+      this(DEFAULT_SOURCE_ACTION, feed);
    }
 
    public AtomSourceResultImpl(Entry entry) {
-      this(null, entry);
+      this(DEFAULT_SOURCE_ACTION, entry);
    }
 
    public AtomSourceResultImpl(AtomSourceAction action) {

@@ -50,6 +50,7 @@ public class FalloutTasker implements Tasker {
 
       try {
          ((InstanceContext<ReclaimableTask>)runnableContext).<TaskHandle>perform(ENLISTED_OPERATION, newHandle);
+
          taskTracker.add(new QueuedRunTask(runnableContext, newHandle));
       } catch(OperationFailureException ofe) {
          LOG.error(ofe.getMessage(), ofe);
@@ -64,7 +65,14 @@ public class FalloutTasker implements Tasker {
       final CancellationRemote cancellationRemote = reclamationHandler.watch(instanceContext);
       final PollingTaskHandle newHandle = new PollingTaskHandleImpl(false, pollingInterval, cancellationRemote);
 
-      taskTracker.add(new PollingTask(instanceContext, newHandle));
+      try {
+         ((InstanceContext<ReclaimableTask>)instanceContext).<TaskHandle>perform(ENLISTED_OPERATION, newHandle);
+
+         taskTracker.add(new PollingTask(instanceContext, newHandle));
+      } catch(OperationFailureException ofe) {
+         LOG.error(ofe.getMessage(), ofe);
+         cancellationRemote.cancel();
+      }
 
       return newHandle;
    }
