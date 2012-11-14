@@ -8,7 +8,6 @@ import org.atomnuke.fallout.service.gc.GarbageCollectionTask;
 import org.atomnuke.plugin.InstanceContext;
 import org.atomnuke.plugin.LocalInstanceContext;
 import org.atomnuke.lifecycle.resolution.ResolutionActionType;
-import org.atomnuke.service.Service;
 import org.atomnuke.service.ServiceManager;
 import org.atomnuke.service.ServiceUnavailableException;
 import org.atomnuke.service.ServiceContext;
@@ -23,6 +22,7 @@ import org.atomnuke.task.manager.impl.ThreadSafeTaskTracker;
 import org.atomnuke.task.manager.service.TaskingService;
 import org.atomnuke.util.TimeValue;
 import org.atomnuke.lifecycle.InitializationException;
+import org.atomnuke.service.runtime.AbstractRuntimeService;
 import org.atomnuke.util.remote.AtomicCancellationRemote;
 import org.atomnuke.util.remote.CancellationRemote;
 import org.atomnuke.util.service.ServiceHandler;
@@ -32,7 +32,7 @@ import org.atomnuke.util.service.ServiceHandler;
  * @author zinic
  */
 @NukeBootstrap
-public class FalloutTaskingBootstrapService implements Service {
+public class FalloutTaskingBootstrapService extends AbstractRuntimeService {
 
    private static final String SERVICE_NAME = "org.atomnuke.task.manager.impl.TaskerService";
 
@@ -42,6 +42,8 @@ public class FalloutTaskingBootstrapService implements Service {
    private TaskingService taskingService;
 
    public FalloutTaskingBootstrapService() {
+      super(TaskingService.class);
+
       taskTrackerCancelRemote = new AtomicCancellationRemote();
       explicitlyManagedTasks = new LinkedList<TaskHandle>();
    }
@@ -49,11 +51,6 @@ public class FalloutTaskingBootstrapService implements Service {
    @Override
    public String name() {
       return SERVICE_NAME;
-   }
-
-   @Override
-   public boolean provides(Class serviceInterface) {
-      return serviceInterface.isAssignableFrom(TaskingService.class);
    }
 
    @Override
@@ -70,7 +67,7 @@ public class FalloutTaskingBootstrapService implements Service {
    @Override
    public void init(ServiceContext contextObject) throws InitializationException {
       try {
-         final ReclamationHandler reclamationHandler = ServiceHandler.instance().firstAvailable(contextObject.manager(), ReclamationHandler.class);
+         final ReclamationHandler reclamationHandler = ServiceHandler.instance().firstAvailable(contextObject.services(), ReclamationHandler.class);
 
          final TaskTracker taskTracker = new ThreadSafeTaskTracker(taskTrackerCancelRemote);
          final Tasker tasker = new FalloutTasker(taskTracker, reclamationHandler);

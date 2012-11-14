@@ -1,6 +1,7 @@
 package org.atomnuke.service;
 
 import java.util.Collections;
+import org.atomnuke.NukeEnvironment;
 import org.atomnuke.plugin.InstanceContext;
 import org.atomnuke.plugin.operation.OperationFailureException;
 import org.atomnuke.plugin.proxy.InstanceEnvProxyFactory;
@@ -20,9 +21,12 @@ import org.slf4j.LoggerFactory;
 public class RuntimeServiceManager extends AbstractServiceManager {
 
    private static final Logger LOG = LoggerFactory.getLogger(RuntimeServiceManager.class);
+   private final NukeEnvironment environment;
 
-   public RuntimeServiceManager(InstanceEnvProxyFactory proxyFactory) {
+   public RuntimeServiceManager(NukeEnvironment environment, InstanceEnvProxyFactory proxyFactory) {
       super(proxyFactory);
+
+      this.environment = environment;
    }
 
    @Override
@@ -75,7 +79,8 @@ public class RuntimeServiceManager extends AbstractServiceManager {
    private void initService(InstanceContext<Service> pendingService) {
       LOG.info("Service: " + pendingService.instance().name() + " initializing.");
 
-      final ServiceContext serviceContext = new ServiceContextImpl(Collections.EMPTY_MAP, this);
+      // TODO: Fix parameter passing - this is just terrible :p
+      final ServiceContext serviceContext = new ServiceContextImpl(environment, Collections.EMPTY_MAP, this);
 
       try {
          pendingService.perform(ServiceInitOperation.<Service>instance(), serviceContext);

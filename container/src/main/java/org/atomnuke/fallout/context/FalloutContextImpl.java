@@ -6,6 +6,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.atomnuke.Nuke;
+import org.atomnuke.NukeEnvironment;
 import org.atomnuke.config.model.Binding;
 import org.atomnuke.config.model.MessageActor;
 import org.atomnuke.config.model.MessageSource;
@@ -39,13 +41,15 @@ public class FalloutContextImpl implements FalloutContext {
 
    private final Map<String, InstanceContext<? extends Reclaimable>> actors;
    private final Map<String, CancellationRemote> cancellationRemotes;
-   private final Map<String, AtomTask> tasks;
+   private final NukeEnvironment nukeEnvironment;
    private final Map<String, Binding> bindings;
+   private final Map<String, AtomTask> tasks;
    private final ServiceManager services;
    private final AtomTasker atomTasker;
 
-   public FalloutContextImpl(AtomTasker atomTasker, ServiceManager services) {
-      this.atomTasker = atomTasker;
+   public FalloutContextImpl(Nuke nukeReference, ServiceManager services) {
+      this.nukeEnvironment = nukeReference.nukeEnvironment();
+      this.atomTasker = nukeReference.atomTasker();
       this.services = services;
 
       actors = new HashMap<String, InstanceContext<? extends Reclaimable>>();
@@ -197,7 +201,7 @@ public class FalloutContextImpl implements FalloutContext {
          throw new ConfigurationException("Actor, \"" + messageActor.getId() + "\" does not implement the AtomSource interface and can not be used as a source.");
       }
 
-      final AtomTaskContext taskContext = new TaskContextImpl(LoggerFactory.getLogger(messageActor.getId()), parametersToMap(messageActor.getParameters()), services, atomTasker);
+      final AtomTaskContext taskContext = new TaskContextImpl(nukeEnvironment, LoggerFactory.getLogger(messageActor.getId()), parametersToMap(messageActor.getParameters()), services, atomTasker);
 
       try {
          ((InstanceContext<AtomSource>) sourceCtx).perform(TaskLifeCycleInitOperation.<AtomSource>instance(), taskContext);

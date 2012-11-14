@@ -4,7 +4,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-import org.atomnuke.NukeEnv;
+import org.atomnuke.NukeEnvironment;
 import org.atomnuke.container.service.annotation.NukeBootstrap;
 import org.atomnuke.plugin.InstanceContextImpl;
 import org.atomnuke.plugin.env.NopInstanceEnvironment;
@@ -25,19 +25,22 @@ public class ContainerBootstrap implements Bootstrap {
 
    private static final Logger LOG = LoggerFactory.getLogger(ContainerBootstrap.class);
 
+   private final NukeEnvironment nukeEnvironment;
    private final ServiceManager serviceManager;
 
-   public ContainerBootstrap(ServiceManager serviceManager) {
+   public ContainerBootstrap(NukeEnvironment nukeEnvironment, ServiceManager serviceManager) {
+      this.nukeEnvironment = nukeEnvironment;
       this.serviceManager = serviceManager;
    }
 
    @Override
    public void bootstrap() {
-      final ExecutorService bootStrapExecutorService = new ThreadPoolExecutor(NukeEnv.NUM_PROCESSORS, NukeEnv.NUM_PROCESSORS, 5, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>());
+      final ExecutorService bootStrapExecutorService = new ThreadPoolExecutor(nukeEnvironment.numProcessors(), nukeEnvironment.numProcessors(),
+              5, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>());
 
       final Reflections bootstrapScanner = new Reflections(new ConfigurationBuilder()
               .setScanners(new TypeAnnotationsScanner())
-              .setExecutorService(new ThreadPoolExecutor(NukeEnv.NUM_PROCESSORS, NukeEnv.NUM_PROCESSORS, 5, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>()))
+              .setExecutorService(bootStrapExecutorService)
               .setUrls(ClasspathHelper.forClassLoader(Thread.currentThread().getContextClassLoader(), ClassLoader.getSystemClassLoader())));
 
       for (Class bootstrapService : bootstrapScanner.getTypesAnnotatedWith(NukeBootstrap.class)) {

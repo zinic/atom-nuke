@@ -14,6 +14,7 @@ import org.atomnuke.task.manager.impl.FalloutTasker;
 import org.atomnuke.task.manager.impl.ThreadSafeTaskTracker;
 import org.atomnuke.task.threading.ExecutionManager;
 import org.atomnuke.task.threading.ExecutionManagerImpl;
+import org.atomnuke.task.threading.ExecutionQueueImpl;
 import org.atomnuke.util.remote.AtomicCancellationRemote;
 
 /**
@@ -30,11 +31,11 @@ public class NukeKernel extends AbstractNukeImpl {
 
 
    public NukeKernel() {
-      this(new ExecutionManagerImpl(), new NukeReclamationHandler(), new ThreadSafeTaskTracker(new AtomicCancellationRemote()));
+      this(StaticNukeEnv.get(), new ExecutionManagerImpl(new ExecutionQueueImpl(StaticNukeEnv.get())), new NukeReclamationHandler(), new ThreadSafeTaskTracker(new AtomicCancellationRemote()));
    }
 
-   public NukeKernel(ExecutionManager executionManager, ReclamationHandler reclamationHandler, TaskTracker taskTracker) {
-      this(executionManager, reclamationHandler, new GenericTaskManger(executionManager, taskTracker), new FalloutTasker(taskTracker, reclamationHandler));
+   public NukeKernel(NukeEnvironment nukeEnvironment, ExecutionManager executionManager, ReclamationHandler reclamationHandler, TaskTracker taskTracker) {
+      this(nukeEnvironment, executionManager, reclamationHandler, new GenericTaskManger(executionManager, taskTracker), new FalloutTasker(taskTracker, reclamationHandler));
    }
 
    /**
@@ -42,8 +43,8 @@ public class NukeKernel extends AbstractNukeImpl {
     *
     * @param executionManager
     */
-   public NukeKernel(ExecutionManager executionManager, ReclamationHandler reclamationHandler, TaskManager taskManager, Tasker tasker) {
-      super(new KernelShutdownHook(), new GenericKernelDelegate(taskManager));
+   public NukeKernel(NukeEnvironment nukeEnvironment, ExecutionManager executionManager, ReclamationHandler reclamationHandler, TaskManager taskManager, Tasker tasker) {
+      super(nukeEnvironment, new KernelShutdownHook(), new GenericKernelDelegate(taskManager));
 
       atomTasker = new AtomTaskerImpl(reclamationHandler, tasker);
    }

@@ -1,7 +1,6 @@
 package org.atomnuke.fallout.service.atombus;
 
 import org.atomnuke.container.service.annotation.NukeService;
-import org.atomnuke.service.Service;
 import org.atomnuke.service.ServiceManager;
 import org.atomnuke.service.ServiceUnavailableException;
 import org.atomnuke.service.ServiceContext;
@@ -12,6 +11,7 @@ import org.atomnuke.task.manager.AtomTasker;
 import org.atomnuke.task.manager.impl.AtomTaskerImpl;
 import org.atomnuke.task.manager.service.TaskingService;
 import org.atomnuke.lifecycle.InitializationException;
+import org.atomnuke.service.runtime.AbstractRuntimeService;
 import org.atomnuke.util.service.ServiceHandler;
 
 /**
@@ -19,20 +19,19 @@ import org.atomnuke.util.service.ServiceHandler;
  * @author zinic
  */
 @NukeService
-public class AtomTaskerService implements Service {
+public class AtomTaskerService extends AbstractRuntimeService {
 
    public static final String SERVICE_NAME = "org.atomnuke.fallout.service.atombus.AtomTaskerService";
 
    private AtomTasker atomTasker;
 
-   @Override
-   public String name() {
-      return SERVICE_NAME;
+   public AtomTaskerService() {
+      super(AtomTasker.class);
    }
 
    @Override
-   public boolean provides(Class serviceInterface) {
-      return serviceInterface.isAssignableFrom(AtomTasker.class);
+   public String name() {
+      return SERVICE_NAME;
    }
 
    @Override
@@ -48,8 +47,8 @@ public class AtomTaskerService implements Service {
    @Override
    public void init(ServiceContext contextObject) throws InitializationException {
       try {
-         final ReclamationHandler reclamationHandler = ServiceHandler.instance().firstAvailable(contextObject.manager(), ReclamationHandler.class);
-         final TaskingService taskingService = ServiceHandler.instance().firstAvailable(contextObject.manager(), TaskingService.class);
+         final ReclamationHandler reclamationHandler = ServiceHandler.instance().firstAvailable(contextObject.services(), ReclamationHandler.class);
+         final TaskingService taskingService = ServiceHandler.instance().firstAvailable(contextObject.services(), TaskingService.class);
 
          atomTasker = new AtomTaskerImpl(reclamationHandler, taskingService.tasker());
       } catch (ServiceUnavailableException sue) {

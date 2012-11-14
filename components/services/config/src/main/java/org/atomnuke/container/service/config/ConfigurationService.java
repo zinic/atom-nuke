@@ -5,7 +5,6 @@ import java.util.concurrent.TimeUnit;
 import org.atomnuke.container.service.annotation.NukeService;
 import org.atomnuke.plugin.LocalInstanceContext;
 import org.atomnuke.lifecycle.resolution.ResolutionActionType;
-import org.atomnuke.service.Service;
 import org.atomnuke.service.ServiceManager;
 import org.atomnuke.service.ServiceUnavailableException;
 import org.atomnuke.service.ServiceContext;
@@ -18,6 +17,7 @@ import org.atomnuke.util.TimeValue;
 import org.atomnuke.util.config.update.ConfigurationUpdateManager;
 import org.atomnuke.util.config.update.ConfigurationUpdateManagerImpl;
 import org.atomnuke.lifecycle.InitializationException;
+import org.atomnuke.service.runtime.AbstractRuntimeService;
 import org.atomnuke.util.service.ServiceHandler;
 
 import org.slf4j.Logger;
@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
  * @author zinic
  */
 @NukeService
-public class ConfigurationService implements Service {
+public class ConfigurationService extends AbstractRuntimeService {
 
    public static final String CFG_POLLER_PROPERTY_KEY = "org.atomnuke.container.service.config.ConfigurationService.poll_interval_ms";
    public static final String CFG_SERVICE_NAME = "org.atomnuke.container.service.config.ConfigurationService";
@@ -38,6 +38,10 @@ public class ConfigurationService implements Service {
 
    private ConfigurationUpdateManager cfgUpdateMangaer;
    private TaskHandle cfgPollerHandle;
+
+   public ConfigurationService() {
+      super(ConfigurationUpdateManager.class);
+   }
 
    @Override
    public ResolutionAction resolve(ServiceManager serviceManager) {
@@ -56,11 +60,6 @@ public class ConfigurationService implements Service {
    @Override
    public String name() {
       return CFG_SERVICE_NAME;
-   }
-
-   @Override
-   public boolean provides(Class serviceInterface) {
-      return serviceInterface.isAssignableFrom(cfgUpdateMangaer.getClass());
    }
 
    private static TimeValue pollerTime(Map<String, String> parameters) {
@@ -86,8 +85,8 @@ public class ConfigurationService implements Service {
       final TimeValue pollerTime = pollerTime(sc.parameters());
 
       try {
-         final ReclamationHandler reclamationHandler = ServiceHandler.instance().firstAvailable(sc.manager(), ReclamationHandler.class);
-         final TaskingService taskingModule = ServiceHandler.instance().firstAvailable(sc.manager(), TaskingService.class);
+         final ReclamationHandler reclamationHandler = ServiceHandler.instance().firstAvailable(sc.services(), ReclamationHandler.class);
+         final TaskingService taskingModule = ServiceHandler.instance().firstAvailable(sc.services(), TaskingService.class);
 
          cfgUpdateMangaer = new ConfigurationUpdateManagerImpl(reclamationHandler);
          cfgPollerHandle = taskingModule.tasker().pollTask(new LocalInstanceContext(new ConfigurationUpdateRunnable(cfgUpdateMangaer)), pollerTime);

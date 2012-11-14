@@ -5,7 +5,6 @@ import org.atomnuke.kernel.GenericKernelDelegate;
 import org.atomnuke.kernel.shutdown.ShutdownHook;
 import org.atomnuke.plugin.InstanceContext;
 import org.atomnuke.plugin.InstanceContextImpl;
-import org.atomnuke.plugin.env.NopInstanceEnvironment;
 import org.atomnuke.source.AtomSource;
 import org.atomnuke.task.atom.AtomTask;
 import org.atomnuke.util.TimeValue;
@@ -25,14 +24,21 @@ public abstract class AbstractNukeImpl implements Nuke {
    private static final long MAX_WAIT_TIME_FOR_SHUTDOWN = 15000;
 
    private final GenericKernelDelegate kernelDelegate;
+   private final NukeEnvironment nukeEnvironment;
    private final ShutdownHook kernelShutdownHook;
    private final Thread controlThread;
 
-   public AbstractNukeImpl(ShutdownHook kernelShutdownHook, GenericKernelDelegate kernelDelegate) {
+   public AbstractNukeImpl(NukeEnvironment nukeEnvironment, ShutdownHook kernelShutdownHook, GenericKernelDelegate kernelDelegate) {
+      this.nukeEnvironment = nukeEnvironment;
       this.kernelShutdownHook = kernelShutdownHook;
       this.kernelDelegate = kernelDelegate;
 
       this.controlThread = new Thread(kernelDelegate, "nuke-kernel-" + UUID.randomUUID().toString());
+   }
+
+   @Override
+   public NukeEnvironment nukeEnvironment() {
+      return nukeEnvironment;
    }
 
    @Override

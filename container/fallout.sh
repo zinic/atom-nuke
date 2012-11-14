@@ -18,8 +18,8 @@ if [ ! -e "${JAR_LOCATION}" ]; then
 fi
 
 
-if [ -z "${DEBUG}" ]; then
-    java -Xmx8G -jar "${JAR_LOCATION}" $@
+if [ -z "${JPDA}" ]; then
+    java -Xmx2G -jar "${JAR_LOCATION}" $@
 else
     java -agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=y -jar "${JAR_LOCATION}" $@
 fi

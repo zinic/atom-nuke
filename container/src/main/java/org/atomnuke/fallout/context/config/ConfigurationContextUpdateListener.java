@@ -2,6 +2,7 @@ package org.atomnuke.fallout.context.config;
 
 import java.util.Collection;
 import org.atomnuke.Nuke;
+import org.atomnuke.NukeEnvironment;
 import org.atomnuke.config.model.ServerConfiguration;
 import org.atomnuke.fallout.config.server.ServerConfigurationHandler;
 import org.atomnuke.container.packaging.PackageContext;
@@ -23,7 +24,7 @@ public class ConfigurationContextUpdateListener implements ConfigurationListener
    public ConfigurationContextUpdateListener(ServiceManager services, Collection<PackageContext> packages, Nuke nukeReference) {
       this.packages = packages;
 
-      containerContext = new FalloutContextImpl(nukeReference.atomTasker(), services);
+      containerContext = new FalloutContextImpl(nukeReference, services);
    }
 
    @Override

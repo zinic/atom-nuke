@@ -3,13 +3,13 @@ package org.atomnuke.fallout.service.gc;
 import org.atomnuke.container.service.annotation.NukeBootstrap;
 import org.atomnuke.service.gc.ReclamationHandler;
 import org.atomnuke.service.gc.impl.NukeReclamationHandler;
-import org.atomnuke.service.Service;
 import org.atomnuke.service.ServiceManager;
 import org.atomnuke.service.ServiceContext;
 import org.atomnuke.lifecycle.resolution.ResolutionAction;
 import org.atomnuke.lifecycle.resolution.ResolutionActionType;
 import org.atomnuke.lifecycle.resolution.ResolutionActionImpl;
 import org.atomnuke.lifecycle.InitializationException;
+import org.atomnuke.service.runtime.AbstractRuntimeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
  * @author zinic
  */
 @NukeBootstrap
-public class FalloutReclamationService implements Service {
+public class FalloutReclamationService extends AbstractRuntimeService {
 
    private static final String SERVICE_NAME = "org.atomnuke.fallout.service.gc.FalloutReclamationService";
    private static final Logger LOG = LoggerFactory.getLogger(FalloutReclamationService.class);
@@ -26,6 +26,8 @@ public class FalloutReclamationService implements Service {
    private final ReclamationHandler reclamationHandler;
 
    public FalloutReclamationService() {
+      super(ReclamationHandler.class);
+
       reclamationHandler = new NukeReclamationHandler();
    }
 
@@ -37,11 +39,6 @@ public class FalloutReclamationService implements Service {
    @Override
    public String name() {
       return SERVICE_NAME;
-   }
-
-   @Override
-   public boolean provides(Class serviceInterface) {
-      return serviceInterface.isAssignableFrom(ReclamationHandler.class);
    }
 
    @Override

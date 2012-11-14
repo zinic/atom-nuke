@@ -1,19 +1,10 @@
 package org.atomnuke.service;
 
-import java.util.Map;
-import org.atomnuke.service.ServiceManager;
+import org.atomnuke.context.Context;
 
 /**
  *
  * @author zinic
  */
-public interface ServiceContext {
-
-   ServiceManager manager();
-
-   /**
-    *
-    * @return
-    */
-   Map<String, String> parameters();
+public interface ServiceContext extends Context {
 }

@@ -3,7 +3,6 @@ package org.atomnuke.fallout.service.loader;
 import org.atomnuke.container.packaging.loader.PackageLoader;
 import java.io.File;
 import java.net.URI;
-import org.atomnuke.NukeEnv;
 import org.atomnuke.container.packaging.bindings.BindingEnvironmentFactory;
 import org.atomnuke.container.packaging.bindings.PackageLoadingException;
 import org.atomnuke.container.packaging.DeployedPackage;
@@ -25,6 +24,7 @@ import org.atomnuke.service.gc.ReclamationHandler;
 import org.atomnuke.lifecycle.resolution.ResolutionAction;
 import org.atomnuke.lifecycle.resolution.ResolutionActionImpl;
 import org.atomnuke.lifecycle.InitializationException;
+import org.atomnuke.service.runtime.AbstractRuntimeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,19 +33,18 @@ import org.slf4j.LoggerFactory;
  * @author zinic
  */
 @NukeBootstrap
-public class DirectoryLoaderService implements Service {
+public class DirectoryLoaderService extends AbstractRuntimeService {
 
    private static final String LOADER_SVC_NAME = "org.atomnuke.container.packaging.loader.impl.DirectoryLoaderService";
    private static final Logger LOG = LoggerFactory.getLogger(DirectoryLoaderService.class);
 
    private final BindingEnvironmentFactory bindingEnvFactory;
-   private final File deploymentDirectory, libraryDirectory;
 
+   private File deploymentDirectory, libraryDirectory;
    private PackageLoader packageLoader;
 
    public DirectoryLoaderService() {
-      this.deploymentDirectory = new File(NukeEnv.NUKE_DEPLOY);
-      this.libraryDirectory = new File(NukeEnv.NUKE_LIB);
+      super(PackageLoader.class);
 
       bindingEnvFactory = new BindingEnvironmentManagerImpl();
    }
@@ -62,11 +61,6 @@ public class DirectoryLoaderService implements Service {
    }
 
    @Override
-   public boolean provides(Class serviceInterface) {
-      return serviceInterface.isAssignableFrom(PackageLoader.class);
-   }
-
-   @Override
    public Object instance() {
       return packageLoader;
    }
@@ -75,11 +69,13 @@ public class DirectoryLoaderService implements Service {
    public void init(ServiceContext sc) throws InitializationException {
       LOG.info("Directory package loader service starting.");
 
+      deploymentDirectory = new File(sc.environment().deploymentDirectory());
+      libraryDirectory = new File(sc.environment().libraryDirectory());
       packageLoader = new BindingAwarePackageLoader(bindingEnvFactory);
 
       try {
          loadPackages();
-         loadServices(sc.manager());
+         loadServices(sc.services());
       } catch (PackageLoadingException ple) {
          LOG.error(ple.getMessage(), ple);
       }

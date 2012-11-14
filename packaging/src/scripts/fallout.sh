@@ -9,7 +9,7 @@ export NUKE_CONFIG="/etc/atomnuke/nuke.cfg.xml";
 # Location of the jar distribution
 JAR_LOCATION="/usr/lib/atomnuke/fallout-full.jar";
 
-if [ -z "${DEBUG}" ]; then
+if [ -z "${JPDA}" ]; then
     java -jar "${JAR_LOCATION}" $@
 else
     java -agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=y -jar "${JAR_LOCATION}" $@

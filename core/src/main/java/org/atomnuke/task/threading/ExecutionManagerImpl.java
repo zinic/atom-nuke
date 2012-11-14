@@ -15,10 +15,6 @@ public class ExecutionManagerImpl implements ExecutionManager {
    private final ExecutionQueue executionQueue;
    private final StateManager stateManager;
 
-   public ExecutionManagerImpl() {
-      this(new ExecutionQueueImpl());
-   }
-
    public ExecutionManagerImpl(ExecutionQueue executionQueue) {
       this.executionQueue = executionQueue;
 
