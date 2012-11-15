@@ -9,11 +9,15 @@ public interface ResourceManager {
 
    Collection<Resource> resources();
 
+   boolean exists(String resourcePath);
+
+   boolean exists(URI location);
+
    Resource lookup(String resourcePath);
 
    Resource lookup(URI location);
 
-   boolean hasConflictingIdentity(Resource resource);
+   boolean conflicts(URI path, byte[] digest);
 
    void register(Resource resource);
 

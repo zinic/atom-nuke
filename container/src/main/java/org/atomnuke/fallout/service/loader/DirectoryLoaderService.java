@@ -12,6 +12,8 @@ import org.atomnuke.container.packaging.UnpackerException;
 import org.atomnuke.container.packaging.archive.zip.ArchiveExtractor;
 import org.atomnuke.container.packaging.bindings.environment.BindingEnvironmentManagerImpl;
 import org.atomnuke.container.packaging.loader.impl.BindingAwarePackageLoader;
+import org.atomnuke.container.packaging.resource.ResourceManager;
+import org.atomnuke.container.packaging.resource.ResourceManagerImpl;
 import org.atomnuke.container.service.annotation.NukeBootstrap;
 import org.atomnuke.plugin.InstanceContext;
 import org.atomnuke.plugin.ReferenceInstantiationException;
@@ -37,9 +39,10 @@ public class DirectoryLoaderService extends AbstractRuntimeService {
 
    private static final String LOADER_SVC_NAME = "org.atomnuke.container.packaging.loader.impl.DirectoryLoaderService";
    private static final Logger LOG = LoggerFactory.getLogger(DirectoryLoaderService.class);
-
+   
    private final BindingEnvironmentFactory bindingEnvFactory;
-
+   private final ResourceManager rootResourceManager;
+   
    private File deploymentDirectory, libraryDirectory;
    private PackageLoader packageLoader;
 
@@ -47,6 +50,7 @@ public class DirectoryLoaderService extends AbstractRuntimeService {
       super(PackageLoader.class);
 
       bindingEnvFactory = new BindingEnvironmentManagerImpl();
+      rootResourceManager = new ResourceManagerImpl();
    }
 
    @Override
@@ -81,6 +85,11 @@ public class DirectoryLoaderService extends AbstractRuntimeService {
       }
    }
 
+   @Override
+   public void destroy() {
+      LOG.info("Directory package loader service stopping.");
+   }
+   
    private void loadServices(ServiceManager serviceManager) {
       for (PackageContext loadedPackage : packageLoader.packageContexts()) {
          try {
@@ -119,34 +128,32 @@ public class DirectoryLoaderService extends AbstractRuntimeService {
       }
 
       for (File archive : libraryDirectory.listFiles()) {
-         if (archive.isDirectory()) {
-            // Ignore this for now
-            continue;
+         if (!archive.isDirectory()) {
+            loadFile(archive, archiveUnpacker);
          }
 
-         final URI archiveUri = archive.toURI();
-
-         if (archiveUnpacker.canUnpack(archiveUri)) {
-            LOG.info("Extracting package \"" + archiveUri.toString() + "\"");
-
-            try {
-               final DeployedPackage deployedPackage = archiveUnpacker.unpack(archiveUri);
-
-               LOG.info("Loading package \"" + archiveUri.toString() + "\"");
-               packageLoader.load(deployedPackage);
-
-               LOG.info("Package \"" + archive.getAbsolutePath() + "\" loaded");
-            } catch (UnpackerException ue) {
-               LOG.error("Failed to unpack package (" + archive.getAbsolutePath() + ") - Reason: " + ue.getMessage(), ue);
-            } catch (PackageLoadingException ple) {
-               LOG.error("Failed to load package (" + archive.getAbsolutePath() + ") - Reason: " + ple.getMessage(), ple);
-            }
-         }
+         // Ignore this for now
       }
    }
 
-   @Override
-   public void destroy() {
-      LOG.info("Directory package loader service stopping.");
+   private void loadFile(File archive, final Unpacker archiveUnpacker) {
+      final URI archiveUri = archive.toURI();
+      
+      if (archiveUnpacker.canUnpack(archiveUri)) {
+         LOG.info("Extracting package \"" + archiveUri.toString() + "\"");
+
+         try {
+            final DeployedPackage deployedPackage = archiveUnpacker.unpack(rootResourceManager, archiveUri);
+
+            LOG.info("Loading package \"" + archiveUri.toString() + "\"");
+            packageLoader.load(deployedPackage);
+
+            LOG.info("Package \"" + archive.getAbsolutePath() + "\" loaded");
+         } catch (UnpackerException ue) {
+            LOG.error("Failed to unpack package (" + archive.getAbsolutePath() + ") - Reason: " + ue.getMessage(), ue);
+         } catch (PackageLoadingException ple) {
+            LOG.error("Failed to load package (" + archive.getAbsolutePath() + ") - Reason: " + ple.getMessage(), ple);
+         }
+      }
    }
 }

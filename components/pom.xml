@@ -19,6 +19,7 @@
       <!-- Sources -->
       <module>sources/feed-crawler</module>
       <module>sources/http-listener</module>
+      <module>sources/smartpub</module>
       <module>sources/collectd-http</module>
       <module>sources/util-sources</module>
       <module>sources/aggregator</module>

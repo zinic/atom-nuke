@@ -1,6 +1,7 @@
 package org.atomnuke.container.packaging;
 
 import java.net.URI;
+import org.atomnuke.container.packaging.resource.ResourceManager;
 
 /**
  *
@@ -8,7 +9,7 @@ import java.net.URI;
  */
 public interface Unpacker {
 
-   DeployedPackage unpack(URI archiveLocation) throws UnpackerException;
+   DeployedPackage unpack(ResourceManager resourceManager, URI archiveLocation) throws UnpackerException;
 
    boolean canUnpack(URI archiveLocation);
 }

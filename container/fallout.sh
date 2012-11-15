@@ -19,7 +19,7 @@ fi
 
 
 if [ -z "${JPDA}" ]; then
-    java -Xmx2G -jar "${JAR_LOCATION}" $@
+    java -XX:MaxPermSize=128M -Xmx3G -jar "${JAR_LOCATION}" $@
 else
     java -agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=y -jar "${JAR_LOCATION}" $@
 fi
