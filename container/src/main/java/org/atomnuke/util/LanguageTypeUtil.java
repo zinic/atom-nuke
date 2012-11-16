@@ -7,7 +7,10 @@ import org.atomnuke.container.packaging.bindings.lang.BindingLanguage;
  *
  * @author zinic
  */
-public class LanguageTypeUtil {
+public final class LanguageTypeUtil {
+
+   private LanguageTypeUtil() {
+   }
 
    public static BindingLanguage asBindingLanguage(LanguageType lt) {
       switch (lt) {

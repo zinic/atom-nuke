@@ -26,7 +26,7 @@ public class JavaEnvironment extends ClassLoaderEnvironment {
    public JavaEnvironment(ClassLoader parent, ResourceManager resourceManager) {
       this(resourceManager, new IdentityClassLoader(parent, resourceManager));
    }
-   
+
    private JavaEnvironment(ResourceManager resourceManager, ClassLoader classLoader) {
       super(classLoader);
 
@@ -36,8 +36,6 @@ public class JavaEnvironment extends ClassLoaderEnvironment {
    @Override
    public List<Service> services() {
       final List<Class> discoveredServiceClasses = new LinkedList<Class>();
-
-      LOG.info("Scanning classpath...");
 
       classLoaderScanner.scan(new ClassVisitor() {
          @Override
