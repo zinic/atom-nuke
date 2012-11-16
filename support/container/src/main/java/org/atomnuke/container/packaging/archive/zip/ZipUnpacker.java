@@ -113,8 +113,8 @@ public class ZipUnpacker {
             fsTargetLocation.delete();
             return;
          }
-         
-         LOG.info("Slotting conflicted resource: " + fsTargetLocation.toURI());
+
+         LOG.debug("Slotting conflicted resource: " + fsTargetLocation.toURI());
       }
 
       // Regsiter our new resource
