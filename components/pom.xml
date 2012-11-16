@@ -25,9 +25,10 @@
       <module>sources/collectd-http</module>
       <module>sources/aggregator</module>
 
-      <!-- Listeners -->
-      <module>listeners</module>
-      <module>listeners/util-listeners</module>
+      <!-- Sinks -->
+      <module>sinks</module>
+      <module>sinks/util-listeners</module>
+      <module>sinks/category-index</module>
 
       <!-- Services -->
       <module>services</module>      

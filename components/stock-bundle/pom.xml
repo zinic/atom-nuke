@@ -47,6 +47,11 @@
       </dependency>
 
       <dependency>
+         <groupId>org.atomnuke.components.sinks</groupId>
+         <artifactId>category-index</artifactId>
+      </dependency>
+
+      <dependency>
          <groupId>org.atomnuke.components.services</groupId>
          <artifactId>configuration</artifactId>
       </dependency>

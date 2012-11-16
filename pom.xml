@@ -118,6 +118,12 @@
          </dependency>
 
          <dependency>
+            <groupId>org.atomnuke.components.sinks</groupId>
+            <artifactId>category-index</artifactId>
+            <version>${project.version}</version>
+         </dependency>
+
+         <dependency>
             <groupId>org.atomnuke.support</groupId>
             <artifactId>configuration-support</artifactId>
             <version>${project.version}</version>
