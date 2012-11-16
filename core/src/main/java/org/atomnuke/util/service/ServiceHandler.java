@@ -20,7 +20,7 @@ public final class ServiceHandler {
    }
 
    public <T> T firstAvailable(ServiceManager manager, Class<T> serviceClass) throws ServiceUnavailableException {
-      final Collection<String> registeredServiceNames = manager.listRegisteredServicesFor(serviceClass);
+      final Collection<String> registeredServiceNames = manager.servicesAdvertising(serviceClass);
 
       if (registeredServiceNames.isEmpty()) {
          throw new ServiceUnavailableException(serviceClass, "No service available for service interface: " + serviceClass.getName());

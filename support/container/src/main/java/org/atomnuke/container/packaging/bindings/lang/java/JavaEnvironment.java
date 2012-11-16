@@ -6,6 +6,7 @@ import java.util.List;
 import org.atomnuke.plugin.env.ClassLoaderEnvironment;
 import org.atomnuke.container.packaging.bindings.lang.java.scanner.ClassLoaderScanner;
 import org.atomnuke.container.packaging.bindings.lang.java.scanner.ClassVisitor;
+import org.atomnuke.container.packaging.classloader.IdentityClassLoader;
 import org.atomnuke.container.packaging.resource.ResourceManager;
 import org.atomnuke.container.service.annotation.NukeService;
 import org.atomnuke.service.Service;
@@ -22,7 +23,11 @@ public class JavaEnvironment extends ClassLoaderEnvironment {
 
    private final ClassLoaderScanner classLoaderScanner;
 
-   public JavaEnvironment(ResourceManager resourceManager, ClassLoader classLoader) {
+   public JavaEnvironment(ClassLoader parent, ResourceManager resourceManager) {
+      this(resourceManager, new IdentityClassLoader(parent, resourceManager));
+   }
+   
+   private JavaEnvironment(ResourceManager resourceManager, ClassLoader classLoader) {
       super(classLoader);
 
       classLoaderScanner = new ClassLoaderScanner(resourceManager, classLoader);

@@ -6,7 +6,6 @@ import org.atomnuke.container.packaging.bindings.lang.LanguageDescriptor;
 import org.atomnuke.container.packaging.bindings.lang.LanguageDescriptorImpl;
 import org.atomnuke.container.packaging.archive.ResourceType;
 import org.atomnuke.container.packaging.bindings.lang.BindingLanguage;
-import org.atomnuke.container.packaging.classloader.IdentityClassLoader;
 import org.atomnuke.container.packaging.resource.Resource;
 import org.atomnuke.container.packaging.resource.ResourceManager;
 import org.atomnuke.container.packaging.resource.ResourceUtil;
@@ -23,10 +22,10 @@ public class JavaBindingEnvironment implements BindingEnvironment {
    private final JavaEnvironment environment;
    private final ResourceManager resourceManager;
 
-   public JavaBindingEnvironment(ResourceManager resourceManager) {
+   public JavaBindingEnvironment(ClassLoader parent, ResourceManager resourceManager) {
       this.resourceManager = resourceManager;
 
-      environment = new JavaEnvironment(resourceManager, new IdentityClassLoader(resourceManager));
+      environment = new JavaEnvironment(parent, resourceManager);
    }
 
    @Override
@@ -38,7 +37,11 @@ public class JavaBindingEnvironment implements BindingEnvironment {
    public void load(Resource resource) throws PackageLoadingException {
       if (resource.type() == ResourceType.CLASS) {
          final String classPath = ResourceUtil.instance().relativePathToClassPath(resource.relativePath());
-         resourceManager.alias(classPath, resource.uri());
+         
+         // Alias the classpath only if we need to
+         if (resourceManager.lookup(classPath) == null) {
+            resourceManager.alias(classPath, resource.uri());
+         }
       }
    }
 

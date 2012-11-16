@@ -17,24 +17,24 @@
 
    <modules>
       <!-- Sources -->
+      <module>sources</module>
+      <module>sources/smartpub</module>
       <module>sources/feed-crawler</module>
       <module>sources/http-listener</module>
-      <module>sources/smartpub</module>
-      <module>sources/collectd-http</module>
       <module>sources/util-sources</module>
+      <module>sources/collectd-http</module>
       <module>sources/aggregator</module>
 
       <!-- Listeners -->
+      <module>listeners</module>
       <module>listeners/util-listeners</module>
 
       <!-- Services -->
+      <module>services</module>      
+      <module>services/jetty</module>
       <module>services/config</module>
       <module>services/pubsub</module>
-      <module>services/jetty</module>
       <module>services/http-client</module>
-
-      <!-- Bundle -->
-      <module>stock-bundle</module>
    </modules>
 
    <dependencyManagement>

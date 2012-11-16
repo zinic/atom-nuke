@@ -39,7 +39,6 @@ public class ZipUnpacker {
          throw new RuntimeException("Required crypto algorithm missing. Exception: " + nsae.getMessage(), nsae);
       }
    }
-   
    private final ResourceManager rootResourceManager;
    private final File deploymentRoot;
 
@@ -71,21 +70,23 @@ public class ZipUnpacker {
             register(localResourceManager, rootInputStream, embeddedArchives, resourceInfo, previousDepth);
          }
       }
-      
+
       return embeddedArchives;
    }
 
    private void registerArchiveDirectory(ArchiveResource archiveResource) throws RuntimeException {
-      final File desiredLocation = new File(deploymentRoot + File.separator + archiveResource.name());
+      if (!rootResourceManager.exists(archiveResource.name())) {
+         final File desiredLocation = new File(deploymentRoot + File.separator + archiveResource.name());
 
-      if (!desiredLocation.exists() && !desiredLocation.mkdirs()) {
-         throw new RuntimeException("Can't make deployment directories.");
+         if (!desiredLocation.exists() && !desiredLocation.mkdirs()) {
+            throw new RuntimeException("Can't make deployment directories.");
+         }
+
+         final URI locationUri = desiredLocation.toURI();
+
+         rootResourceManager.register(new ResourceDescriptorImpl(locationUri, archiveResource.name(), ResourceType.DIRECTORY));
+         rootResourceManager.alias(archiveResource.name(), locationUri);
       }
-
-      final URI locationUri = desiredLocation.toURI();
-      
-      rootResourceManager.register(new ResourceDescriptorImpl(locationUri, archiveResource.name(), ResourceType.DIRECTORY));
-      rootResourceManager.alias(archiveResource.name(), locationUri);
    }
 
    private void register(ResourceManager localResourceManager, ZipInputStream rootInputStream, List<EmbeddedArchive> embeddedArchives, ArchiveResource archiveResource, int previousDepth) throws IOException, FileNotFoundException {
@@ -102,16 +103,18 @@ public class ZipUnpacker {
 
       // If there's an instance of this resource, we might need to slot it
       final Resource conflictingResource = rootResourceManager.lookup(archiveResource.name());
-      
+
       // Should we slot this resource?
       if (conflictingResource != null) {
          targetResrouceManager = localResourceManager;
-         
+
          // Does the resource conflict? If not, remove what we just extracted and don't register this resource
          if (!rootResourceManager.conflicts(conflictingResource.uri(), digest)) {
             fsTargetLocation.delete();
             return;
          }
+         
+         LOG.info("Slotting conflicted resource: " + fsTargetLocation.toURI());
       }
 
       // Regsiter our new resource

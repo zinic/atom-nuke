@@ -39,7 +39,7 @@ public class ArchiveExtractor implements Unpacker {
       final ZipUnpacker zipUnpacker = new ZipUnpacker(rootResourceManager, new File(deploymentRoot, UUID.randomUUID() + "." + SystemUtils.getPid()));
       
       final ResourceType uriType = ResourceType.findResourceTypeForName(archiveLocation.toString());
-      final ResourceManager localResourceManager = new ResourceManagerImpl(rootResourceManager);
+      final ResourceManager localResourceManager = new ResourceManagerImpl();
       
       try {
          unpackArchive(localResourceManager, zipUnpacker, uriType, archiveLocation, 0);

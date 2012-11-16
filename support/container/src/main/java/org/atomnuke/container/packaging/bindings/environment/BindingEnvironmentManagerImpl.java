@@ -6,6 +6,7 @@ import org.atomnuke.container.packaging.bindings.BindingEnvironmentFactory;
 import org.atomnuke.container.packaging.bindings.lang.java.JavaBindingEnvironment;
 import org.atomnuke.container.packaging.bindings.lang.jython.JythonBindingEnvironment;
 import org.atomnuke.container.packaging.bindings.lang.rhinojs.RhinoInterpreterContext;
+import org.atomnuke.container.packaging.classloader.IdentityClassLoader;
 import org.atomnuke.container.packaging.resource.ResourceManager;
 
 /**
@@ -14,11 +15,17 @@ import org.atomnuke.container.packaging.resource.ResourceManager;
  */
 public class BindingEnvironmentManagerImpl implements BindingEnvironmentFactory {
 
+   private final ClassLoader rootClassloader;
+
+   public BindingEnvironmentManagerImpl(ResourceManager resourceManager) {
+      rootClassloader = new IdentityClassLoader(resourceManager);
+   }
+
    @Override
    public List<BindingEnvironment> newEnviornment(ResourceManager resourceManager) {
       final List<BindingEnvironment> bindingContexts = new LinkedList<BindingEnvironment>();
 
-      bindingContexts.add(new JavaBindingEnvironment(resourceManager));
+      bindingContexts.add(new JavaBindingEnvironment(rootClassloader, resourceManager));
       bindingContexts.add(new JythonBindingEnvironment());
       bindingContexts.add(RhinoInterpreterContext.newInstance());
 

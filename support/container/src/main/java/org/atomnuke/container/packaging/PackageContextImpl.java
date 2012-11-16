@@ -1,5 +1,6 @@
 package org.atomnuke.container.packaging;
 
+import java.net.URI;
 import org.atomnuke.container.packaging.bindings.PackageBindings;
 
 /**
@@ -11,8 +12,8 @@ public class PackageContextImpl implements PackageContext {
    private final PackageBindings bindingContextManager;
    private final String name;
 
-   public PackageContextImpl(String name, PackageBindings bindingsManager) {
-      this.bindingContextManager = bindingsManager;
+   public PackageContextImpl(PackageBindings bindingContextManager, String name) {
+      this.bindingContextManager = bindingContextManager;
       this.name = name;
    }
 

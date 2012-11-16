@@ -1,0 +1,50 @@
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+   <modelVersion>4.0.0</modelVersion>
+
+   <parent>
+      <groupId>org.atomnuke.components</groupId>
+      <artifactId>components</artifactId>
+      <version>1.1.4-SNAPSHOT</version>
+   </parent>
+
+   <groupId>org.atomnuke.components.stock</groupId>
+   <artifactId>sink-bundle</artifactId>
+
+   <packaging>jar</packaging>
+
+   <name>Atom Nuke - Components - Stock Library Bundle - Sinks</name>
+
+   <dependencies>
+      <dependency>
+         <groupId>org.atomnuke.components.sinks</groupId>
+         <artifactId>util-sinks</artifactId>
+      </dependency>
+   </dependencies>
+
+   <build>
+      <plugins>
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-shade-plugin</artifactId>
+            <version>2.0</version>
+
+            <executions>
+               <execution>
+                  <phase>package</phase>
+
+                  <goals>
+                     <goal>shade</goal>
+                  </goals>
+
+                  <configuration>
+                     <transformers>
+                        <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
+                     </transformers>
+                  </configuration>
+               </execution>
+            </executions>
+         </plugin>
+      </plugins>
+   </build>
+</project>

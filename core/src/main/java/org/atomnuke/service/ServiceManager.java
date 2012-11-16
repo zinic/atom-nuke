@@ -14,11 +14,11 @@ public interface ServiceManager extends Reclaimable {
 
    void resolve();
 
-   boolean nameRegistered(String serviceName);
+   boolean serviceRegistered(String serviceName);
 
    boolean serviceRegistered(Class serviceInterface);
 
-   Collection<String> listRegisteredServicesFor(Class serviceInterface);
+   Collection<String> servicesAdvertising(Class serviceInterface);
 
    <T> T get(String serviceName, Class<T> serviceInterface);
 }

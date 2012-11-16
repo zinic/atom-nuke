@@ -3,6 +3,9 @@ package org.atomnuke.fallout.service.loader;
 import org.atomnuke.container.packaging.loader.PackageLoader;
 import java.io.File;
 import java.net.URI;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.UUID;
 import org.atomnuke.container.packaging.bindings.BindingEnvironmentFactory;
 import org.atomnuke.container.packaging.bindings.PackageLoadingException;
 import org.atomnuke.container.packaging.DeployedPackage;
@@ -15,11 +18,8 @@ import org.atomnuke.container.packaging.loader.impl.BindingAwarePackageLoader;
 import org.atomnuke.container.packaging.resource.ResourceManager;
 import org.atomnuke.container.packaging.resource.ResourceManagerImpl;
 import org.atomnuke.container.service.annotation.NukeBootstrap;
-import org.atomnuke.plugin.InstanceContext;
 import org.atomnuke.plugin.ReferenceInstantiationException;
 import org.atomnuke.lifecycle.resolution.ResolutionActionType;
-import org.atomnuke.service.Service;
-import org.atomnuke.service.ServiceAlreadyRegisteredException;
 import org.atomnuke.service.ServiceManager;
 import org.atomnuke.service.ServiceContext;
 import org.atomnuke.service.gc.ReclamationHandler;
@@ -49,8 +49,8 @@ public class DirectoryLoaderService extends AbstractRuntimeService {
    public DirectoryLoaderService() {
       super(PackageLoader.class);
 
-      bindingEnvFactory = new BindingEnvironmentManagerImpl();
       rootResourceManager = new ResourceManagerImpl();
+      bindingEnvFactory = new BindingEnvironmentManagerImpl(rootResourceManager);
    }
 
    @Override
@@ -102,15 +102,7 @@ public class DirectoryLoaderService extends AbstractRuntimeService {
    }
 
    private void gatherServices(ServiceManager serviceManager, PackageContext pkgContext) throws ReferenceInstantiationException {
-      for (InstanceContext<Service> svc : pkgContext.packageBindings().resolveServices()) {
-         try {
-            serviceManager.submit(svc);
-         } catch (ServiceAlreadyRegisteredException sare) {
-            LOG.debug("Duplicate service for name: " + svc.instance().name() + ", found in package: "
-                    + pkgContext.name() + ". This version of the service will not be loaded.", sare);
-         }
-      }
-
+      pkgContext.packageBindings().resolveServices(serviceManager);
       serviceManager.resolve();
    }
 
@@ -127,33 +119,49 @@ public class DirectoryLoaderService extends AbstractRuntimeService {
          throw new PackageLoadingException(libraryDirectory.getAbsolutePath() + " is not a valid library directory.");
       }
 
+      final List<DeployedPackage> deployedPackages = new LinkedList<DeployedPackage>();
+      
       for (File archive : libraryDirectory.listFiles()) {
          if (!archive.isDirectory()) {
-            loadFile(archive, archiveUnpacker);
+            final DeployedPackage nextPackage = loadFile(archive, archiveUnpacker);
+            
+            if (nextPackage != null) {
+               deployedPackages.add(nextPackage);
+            }
          }
 
-         // Ignore this for now
+         // Ignore directories for now
+      }
+      
+      // Load the root context first
+      packageLoader.load(UUID.randomUUID() + ".ROOT", rootResourceManager);
+      
+      // Load all of the isolate contexts
+      for (DeployedPackage deployedPackage : deployedPackages) {
+         try {
+            LOG.info("Loading package \"" + deployedPackage.archiveUri().toString() + "\"");
+            packageLoader.load(deployedPackage.archiveUri().toString(), deployedPackage.resourceManager());
+
+            LOG.info("Package \"" + deployedPackage.archiveUri().toString() + "\" loaded");
+         } catch (PackageLoadingException ple) {
+            LOG.error("Failed to load package (" + deployedPackage.archiveUri().toString() + ") - Reason: " + ple.getMessage(), ple);
+         }
       }
    }
 
-   private void loadFile(File archive, final Unpacker archiveUnpacker) {
+   private DeployedPackage loadFile(File archive, final Unpacker archiveUnpacker) {
       final URI archiveUri = archive.toURI();
       
       if (archiveUnpacker.canUnpack(archiveUri)) {
          LOG.info("Extracting package \"" + archiveUri.toString() + "\"");
 
          try {
-            final DeployedPackage deployedPackage = archiveUnpacker.unpack(rootResourceManager, archiveUri);
-
-            LOG.info("Loading package \"" + archiveUri.toString() + "\"");
-            packageLoader.load(deployedPackage);
-
-            LOG.info("Package \"" + archive.getAbsolutePath() + "\" loaded");
+            return archiveUnpacker.unpack(rootResourceManager, archiveUri);
          } catch (UnpackerException ue) {
             LOG.error("Failed to unpack package (" + archive.getAbsolutePath() + ") - Reason: " + ue.getMessage(), ue);
-         } catch (PackageLoadingException ple) {
-            LOG.error("Failed to load package (" + archive.getAbsolutePath() + ") - Reason: " + ple.getMessage(), ple);
          }
       }
+      
+      return null;
    }
 }

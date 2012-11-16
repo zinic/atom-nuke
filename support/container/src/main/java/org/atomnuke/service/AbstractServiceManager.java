@@ -87,7 +87,7 @@ public abstract class AbstractServiceManager implements ServiceManager {
    }
 
    @Override
-   public synchronized boolean nameRegistered(String serviceName) {
+   public synchronized boolean serviceRegistered(String serviceName) {
       return registeredServicesByName.containsKey(serviceName);
    }
 
@@ -138,7 +138,7 @@ public abstract class AbstractServiceManager implements ServiceManager {
    }
 
    @Override
-   public synchronized Collection<String> listRegisteredServicesFor(Class serviceInterface) {
+   public synchronized Collection<String> servicesAdvertising(Class serviceInterface) {
       final Collection<String> servicesMatchingInterface = new LinkedList<String>();
       final ProvidesOperationArgument argument = new ProvidesOperationArgument(serviceInterface);
 

@@ -42,6 +42,11 @@ public class RuntimeServiceManager extends AbstractServiceManager {
       for (int resolutionSweeps = 0; continueResolving; resolutionSweeps++) {
          final ServiceResolutionArgument resolutionArgument = new ServiceResolutionArgument(this);
          final InstanceContext<Service> pendingService = nextPendingService();
+         
+         // There's a possibility that we're trying to resove and the number of pending services has changed drastically
+         if (pendingService == null) {
+            break;
+         }
 
          boolean initializedService = false;
 
