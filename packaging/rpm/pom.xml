@@ -79,7 +79,7 @@
                   <!-- Files -->
 
                   <mapping>
-                     <directory>/etc/atomnuke</directory>
+                     <directory>/etc/atomnuke/</directory>
 
                      <username>atomnuke</username>
                      <groupname>atomnuke</groupname>
@@ -124,7 +124,7 @@
                   </mapping>
 
                   <mapping>
-                     <directory>/var/lib/atomnuke/deployable</directory>
+                     <directory>/var/lib/atomnuke/deployable/</directory>
 
                      <username>atomnuke</username>
                      <groupname>atomnuke</groupname>
@@ -132,8 +132,18 @@
 
                      <sources>
                         <source>
-                           <location>../../components/stock-bundle/target/stock-bundle-${project.version}.jar</location>
-                           <destination>stock-lib.ear</destination>
+                           <location>../../components/sinks/target/sink-bundle-${project.version}.jar</location>
+                           <destination>sink-bundle.jar</destination>
+                        </source>
+
+                        <source>
+                           <location>../../components/sources/target/source-bundle-${project.version}.jar</location>
+                           <destination>source-bundle.jar</destination>
+                        </source>
+
+                        <source>
+                           <location>../../components/services/target/service-bundle-${project.version}.jar</location>
+                           <destination>service-bundle.jar</destination>
                         </source>
                      </sources>
                   </mapping>
