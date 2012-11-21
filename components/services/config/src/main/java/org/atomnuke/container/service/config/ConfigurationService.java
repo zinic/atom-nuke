@@ -3,6 +3,7 @@ package org.atomnuke.container.service.config;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import org.atomnuke.container.service.annotation.NukeService;
+import org.atomnuke.container.service.annotation.Requires;
 import org.atomnuke.plugin.LocalInstanceContext;
 import org.atomnuke.lifecycle.resolution.ResolutionActionType;
 import org.atomnuke.service.ServiceManager;
@@ -18,7 +19,7 @@ import org.atomnuke.util.config.update.ConfigurationUpdateManager;
 import org.atomnuke.util.config.update.ConfigurationUpdateManagerImpl;
 import org.atomnuke.lifecycle.InitializationException;
 import org.atomnuke.service.runtime.AbstractRuntimeService;
-import org.atomnuke.util.service.ServiceHandler;
+import org.atomnuke.service.introspection.ServicesInterrogatorImpl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,10 +29,10 @@ import org.slf4j.LoggerFactory;
  * @author zinic
  */
 @NukeService
+@Requires({ReclamationHandler.class, TaskingService.class})
 public class ConfigurationService extends AbstractRuntimeService {
 
    public static final String CFG_POLLER_PROPERTY_KEY = "org.atomnuke.container.service.config.ConfigurationService.poll_interval_ms";
-   public static final String CFG_SERVICE_NAME = "org.atomnuke.container.service.config.ConfigurationService";
 
    private static final TimeValue DEFAULT_POLL_INTERVAL = new TimeValue(15, TimeUnit.SECONDS);
    private static final Logger LOG = LoggerFactory.getLogger(ConfigurationService.class);
@@ -44,22 +45,8 @@ public class ConfigurationService extends AbstractRuntimeService {
    }
 
    @Override
-   public ResolutionAction resolve(ServiceManager serviceManager) {
-      final boolean hasReclamationHandler = serviceManager.serviceRegistered(ReclamationHandler.class);
-      final boolean hasTaskingModule = serviceManager.serviceRegistered(TaskingService.class);
-
-      return hasTaskingModule && hasReclamationHandler
-              ? new ResolutionActionImpl(ResolutionActionType.INIT) : new ResolutionActionImpl(ResolutionActionType.DEFER);
-   }
-
-   @Override
    public Object instance() {
       return cfgUpdateMangaer;
-   }
-
-   @Override
-   public String name() {
-      return CFG_SERVICE_NAME;
    }
 
    private static TimeValue pollerTime(Map<String, String> parameters) {
@@ -85,8 +72,8 @@ public class ConfigurationService extends AbstractRuntimeService {
       final TimeValue pollerTime = pollerTime(sc.parameters());
 
       try {
-         final ReclamationHandler reclamationHandler = ServiceHandler.instance().firstAvailable(sc.services(), ReclamationHandler.class);
-         final TaskingService taskingModule = ServiceHandler.instance().firstAvailable(sc.services(), TaskingService.class);
+         final ReclamationHandler reclamationHandler = sc.services().firstAvailable(ReclamationHandler.class);
+         final TaskingService taskingModule = sc.services().firstAvailable(TaskingService.class);
 
          cfgUpdateMangaer = new ConfigurationUpdateManagerImpl(reclamationHandler);
          cfgPollerHandle = taskingModule.tasker().pollTask(new LocalInstanceContext(new ConfigurationUpdateRunnable(cfgUpdateMangaer)), pollerTime);

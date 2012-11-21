@@ -11,6 +11,7 @@ import org.atomnuke.util.TimeValue;
 import org.atomnuke.lifecycle.InitializationException;
 import org.atomnuke.lifecycle.Reclaimable;
 import org.atomnuke.plugin.env.LocalInstanceEnvironment;
+import org.atomnuke.service.introspection.ServicesInterrogator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

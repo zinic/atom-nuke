@@ -15,7 +15,6 @@ import org.atomnuke.task.context.AtomTaskContext;
 import org.atomnuke.lifecycle.InitializationException;
 import org.atomnuke.service.ServiceUnavailableException;
 import org.atomnuke.service.jetty.server.ContextBuilder;
-import org.atomnuke.util.service.ServiceHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.slf4j.Logger;
@@ -66,7 +65,7 @@ public class CategoryIndex implements AtomSink {
    @Override
    public void init(AtomTaskContext context) throws InitializationException {
       try {
-         final ContextBuilder contextBuilder = ServiceHandler.instance().firstAvailable(context.services(), ContextBuilder.class);
+         final ContextBuilder contextBuilder = context.services().firstAvailable(ContextBuilder.class);
 
          servletContextHandler = contextBuilder.newContext("/categoryIndex");
          initServletContext(servletContextHandler);

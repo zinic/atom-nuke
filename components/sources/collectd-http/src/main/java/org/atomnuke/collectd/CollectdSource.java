@@ -10,7 +10,6 @@ import org.atomnuke.service.ServiceUnavailableException;
 import org.atomnuke.service.jetty.server.ContextBuilder;
 import org.atomnuke.task.context.AtomTaskContext;
 import org.atomnuke.lifecycle.InitializationException;
-import org.atomnuke.util.service.ServiceHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.slf4j.Logger;
@@ -40,7 +39,7 @@ public class CollectdSource implements AtomSource {
    @Override
    public void init(AtomTaskContext tc) throws InitializationException {
       try {
-         final ContextBuilder contextBuilder = ServiceHandler.instance().firstAvailable(tc.services(), ContextBuilder.class);
+         final ContextBuilder contextBuilder = tc.services().firstAvailable(ContextBuilder.class);
          servletContextHandler = contextBuilder.newContext("/collectd");
       } catch (ServiceUnavailableException sue) {
          LOG.error("The CollecD source requires a service that provides a ContextBuilder implementation for regsitering servlets.");

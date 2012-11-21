@@ -51,4 +51,9 @@ public class ActorEntry {
    public synchronized boolean initialized() {
       return initialized;
    }
+
+   @Override
+   public String toString() {
+      return "ActorEntry{" + "instanceContext=" + instanceContext + ", cancellationRemote=" + cancellationRemote + ", initialized=" + initialized + '}';
+   }
 }

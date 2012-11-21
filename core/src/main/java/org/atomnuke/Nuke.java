@@ -1,10 +1,11 @@
 package org.atomnuke;
 
 import org.atomnuke.kernel.shutdown.ShutdownHook;
+import org.atomnuke.service.introspection.ServicesInterrogator;
 import org.atomnuke.task.manager.AtomTasker;
 
 /**
- * The Nuke kernel interface.
+ * The Nuke interface.
  *
  * This interface allows for thread-safe interaction with the Nuke scheduler.
  *

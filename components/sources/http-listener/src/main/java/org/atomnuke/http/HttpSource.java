@@ -10,7 +10,7 @@ import org.atomnuke.source.QueueSource;
 import org.atomnuke.source.QueueSourceImpl;
 import org.atomnuke.task.context.AtomTaskContext;
 import org.atomnuke.lifecycle.InitializationException;
-import org.atomnuke.util.service.ServiceHandler;
+import org.atomnuke.service.introspection.ServicesInterrogatorImpl;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.slf4j.Logger;
@@ -39,10 +39,10 @@ public class HttpSource implements AtomSource {
    @Override
    public void init(AtomTaskContext tc) throws InitializationException {
       try {
-         final ContextBuilder contextBuilder = ServiceHandler.instance().firstAvailable(tc.services(), ContextBuilder.class);
+         final ContextBuilder contextBuilder = tc.services().firstAvailable(ContextBuilder.class);
          servletContextHandler = contextBuilder.newContext("/publish");
       } catch (ServiceUnavailableException sue) {
-         LOG.error("The CollecD source requires a service that provides a ContextBuilder implementation for regsitering servlets.");
+         LOG.error("The HttpSource source requires a service that provides a ContextBuilder implementation for regsitering servlets.");
          throw new InitializationException(sue);
       }
 

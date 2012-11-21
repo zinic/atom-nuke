@@ -38,6 +38,10 @@ public class ActorManager {
       return new LinkedList<String>(actors.keySet());
    }
 
+   public synchronized boolean hasActor(String actorName) {
+      return actors.containsKey(actorName);
+   }
+
    public synchronized ActorEntry getActor(String actorName) {
       return actors.get(actorName);
    }

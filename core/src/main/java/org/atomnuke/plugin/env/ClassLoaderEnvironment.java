@@ -30,7 +30,6 @@ public abstract class ClassLoaderEnvironment implements Environment {
       currentThread.setContextClassLoader(classLoader);
    }
 
-
    @Override
    public <T> T instantiate(Class<T> interfaceType, String referenceName) throws ReferenceInstantiationException {
       try {
@@ -64,5 +63,10 @@ public abstract class ClassLoaderEnvironment implements Environment {
       currentThread.setContextClassLoader(previousContext.get());
 
       previousContext.remove();
+   }
+
+   @Override
+   public String toString() {
+      return "ClassLoaderEnvironment{" + "classLoader=" + classLoader + '}';
    }
 }

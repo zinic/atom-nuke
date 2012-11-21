@@ -9,7 +9,6 @@ import org.atomnuke.service.jetty.server.ContextBuilder;
 import org.atomnuke.sink.eps.EventletChainSink;
 import org.atomnuke.task.context.AtomTaskContext;
 import org.atomnuke.lifecycle.InitializationException;
-import org.atomnuke.util.service.ServiceHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.slf4j.Logger;
@@ -31,8 +30,8 @@ public class PubSubSink extends EventletChainSink {
       super.init(context);
 
       try {
-         final ContextBuilder contextBuilder = ServiceHandler.instance().firstAvailable(context.services(), ContextBuilder.class);
-         final SubscriptionManager subManager = new TemporarySubscriptionManager(ServiceHandler.instance().firstAvailable(context.services(), HttpClient.class), this);
+         final ContextBuilder contextBuilder = context.services().firstAvailable(ContextBuilder.class);
+         final SubscriptionManager subManager = new TemporarySubscriptionManager(context.services().firstAvailable(HttpClient.class), this);
 
          servletContextHandler = contextBuilder.newContext("/pubsub");
          initServletContext(servletContextHandler, subManager);

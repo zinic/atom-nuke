@@ -4,6 +4,7 @@ import org.atomnuke.service.ServiceContext;
 import java.util.Map;
 import org.atomnuke.NukeEnvironment;
 import org.atomnuke.service.ServiceManager;
+import org.atomnuke.service.introspection.ServicesInterrogator;
 
 /**
  *
@@ -11,13 +12,15 @@ import org.atomnuke.service.ServiceManager;
  */
 public class ServiceContextImpl implements ServiceContext {
 
+   private final ServicesInterrogator interrogator;
    private final Map<String, String> parameters;
    private final NukeEnvironment environment;
    private final ServiceManager manager;
 
-   public ServiceContextImpl(NukeEnvironment environment, Map<String, String> parameters, ServiceManager manager) {
-      this.environment = environment;
+   public ServiceContextImpl(ServicesInterrogator interrogator, Map<String, String> parameters, NukeEnvironment environment, ServiceManager manager) {
+      this.interrogator = interrogator;
       this.parameters = parameters;
+      this.environment = environment;
       this.manager = manager;
    }
 
@@ -27,8 +30,13 @@ public class ServiceContextImpl implements ServiceContext {
    }
 
    @Override
-   public ServiceManager services() {
+   public ServiceManager serviceManager() {
       return manager;
+   }
+
+   @Override
+   public ServicesInterrogator services() {
+      return interrogator;
    }
 
    @Override

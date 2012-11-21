@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import org.atomnuke.container.service.annotation.NukeBootstrap;
+import org.atomnuke.container.service.annotation.Requires;
 import org.atomnuke.fallout.service.gc.GarbageCollectionTask;
 import org.atomnuke.plugin.InstanceContext;
 import org.atomnuke.plugin.LocalInstanceContext;
@@ -25,13 +26,14 @@ import org.atomnuke.lifecycle.InitializationException;
 import org.atomnuke.service.runtime.AbstractRuntimeService;
 import org.atomnuke.util.remote.AtomicCancellationRemote;
 import org.atomnuke.util.remote.CancellationRemote;
-import org.atomnuke.util.service.ServiceHandler;
+import org.atomnuke.service.introspection.ServicesInterrogatorImpl;
 
 /**
  *
  * @author zinic
  */
 @NukeBootstrap
+@Requires(ReclamationHandler.class)
 public class FalloutTaskingBootstrapService extends AbstractRuntimeService {
 
    private static final String SERVICE_NAME = "org.atomnuke.task.manager.impl.TaskerService";
@@ -59,15 +61,9 @@ public class FalloutTaskingBootstrapService extends AbstractRuntimeService {
    }
 
    @Override
-   public ResolutionAction resolve(ServiceManager serviceManager) {
-      return new ResolutionActionImpl(
-              serviceManager.serviceRegistered(ReclamationHandler.class) ? ResolutionActionType.INIT : ResolutionActionType.DEFER);
-   }
-
-   @Override
    public void init(ServiceContext contextObject) throws InitializationException {
       try {
-         final ReclamationHandler reclamationHandler = ServiceHandler.instance().firstAvailable(contextObject.services(), ReclamationHandler.class);
+         final ReclamationHandler reclamationHandler = contextObject.services().firstAvailable(ReclamationHandler.class);
 
          final TaskTracker taskTracker = new ThreadSafeTaskTracker(taskTrackerCancelRemote);
          final Tasker tasker = new FalloutTasker(taskTracker, reclamationHandler);

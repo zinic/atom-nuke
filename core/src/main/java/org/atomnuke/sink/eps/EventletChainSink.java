@@ -21,7 +21,6 @@ import org.atomnuke.sink.eps.selector.SelectorResult;
 import org.atomnuke.task.context.AtomTaskContext;
 import org.atomnuke.lifecycle.InitializationException;
 import org.atomnuke.util.remote.CancellationRemote;
-import org.atomnuke.util.service.ServiceHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -93,7 +92,7 @@ public class EventletChainSink implements AtomSink, AtomEventletHandler {
    @Override
    public void init(AtomTaskContext tc) throws InitializationException {
       try {
-         reclamationHandler = ServiceHandler.instance().firstAvailable(tc.services(), ReclamationHandler.class);
+         reclamationHandler = tc.services().firstAvailable(ReclamationHandler.class);
       } catch (ServiceUnavailableException sue) {
          throw new InitializationException(sue);
       }

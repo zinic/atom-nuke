@@ -2,7 +2,7 @@ package org.atomnuke.context;
 
 import java.util.Map;
 import org.atomnuke.NukeEnvironment;
-import org.atomnuke.service.ServiceManager;
+import org.atomnuke.service.introspection.ServicesInterrogator;
 
 /**
  *
@@ -12,7 +12,7 @@ public interface Context {
 
    NukeEnvironment environment();
 
-   ServiceManager services();
+   ServicesInterrogator services();
 
    /**
     *

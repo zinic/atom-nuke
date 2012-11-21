@@ -8,6 +8,4 @@ import org.atomnuke.lifecycle.resolution.ResolutionAction;
  * @author zinic
  */
 public interface ServiceLifeCycle extends ResourceLifeCycle<ServiceContext> {
-
-   ResolutionAction resolve(ServiceManager serviceManager);
 }

@@ -6,6 +6,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * This interface marks a service as a bootstrap target. This service will be
+ * initialized at container initialization and will be discovered at runtime.
  *
  * @author zinic
  */

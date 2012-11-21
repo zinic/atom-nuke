@@ -6,10 +6,6 @@ import org.apache.http.impl.conn.PoolingClientConnectionManager;
 import org.atomnuke.container.service.annotation.NukeService;
 import org.atomnuke.lifecycle.InitializationException;
 import org.atomnuke.service.ServiceContext;
-import org.atomnuke.service.ServiceManager;
-import org.atomnuke.lifecycle.resolution.ResolutionAction;
-import org.atomnuke.lifecycle.resolution.ResolutionActionImpl;
-import org.atomnuke.lifecycle.resolution.ResolutionActionType;
 import org.atomnuke.service.runtime.AbstractRuntimeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +19,7 @@ import org.slf4j.LoggerFactory;
 public class HttpClientService extends AbstractRuntimeService {
 
    private static final Logger LOG = LoggerFactory.getLogger(HttpClientService.class);
-   
+
    private HttpClient httpClient;
 
    public HttpClientService() {
@@ -31,18 +27,8 @@ public class HttpClientService extends AbstractRuntimeService {
    }
 
    @Override
-   public String name() {
-      return HttpClientService.class.getName();
-   }
-
-   @Override
    public Object instance() {
       return httpClient;
-   }
-
-   @Override
-   public ResolutionAction resolve(ServiceManager serviceManager) {
-      return new ResolutionActionImpl(ResolutionActionType.INIT);
    }
 
    @Override

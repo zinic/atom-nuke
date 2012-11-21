@@ -1,6 +1,8 @@
 package org.atomnuke.service.runtime;
 
+import org.atomnuke.lifecycle.InitializationException;
 import org.atomnuke.service.Service;
+import org.atomnuke.service.ServiceContext;
 
 /**
  *
@@ -12,6 +14,19 @@ public abstract class AbstractRuntimeService implements Service {
 
    public AbstractRuntimeService(Class advertisedService) {
       this.advertisedService = advertisedService;
+   }
+
+   @Override
+   public void init(ServiceContext context) throws InitializationException {
+   }
+
+   @Override
+   public void destroy() {
+   }
+
+   @Override
+   public String name() {
+      return advertisedService.toString();
    }
 
    @Override

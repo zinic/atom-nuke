@@ -23,4 +23,11 @@ public class LocalInstanceEnvironment extends ClassLoaderEnvironment {
    public List<Service> services() {
       return Collections.EMPTY_LIST;
    }
+
+   @Override
+   public String toString() {
+      return "LocalInstanceEnvironment{" + super.toString() + '}';
+   }
+
+
 }

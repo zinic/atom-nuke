@@ -16,7 +16,6 @@ import org.atomnuke.config.model.Parameters;
 import org.atomnuke.fallout.config.server.ServerConfigurationHandler;
 import org.atomnuke.plugin.InstanceContext;
 import org.atomnuke.plugin.operation.OperationFailureException;
-import org.atomnuke.service.ServiceManager;
 import org.atomnuke.sink.AtomSink;
 import org.atomnuke.source.AtomSource;
 import org.atomnuke.task.atom.AtomTask;
@@ -26,7 +25,7 @@ import org.atomnuke.task.manager.AtomTasker;
 import org.atomnuke.util.TimeValueUtil;
 import org.atomnuke.util.config.ConfigurationException;
 import org.atomnuke.lifecycle.Reclaimable;
-import org.atomnuke.util.remote.CancellationRemote;
+import org.atomnuke.service.introspection.ServicesInterrogator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,17 +36,18 @@ import org.slf4j.LoggerFactory;
 public class FalloutContextImpl implements FalloutContext {
 
    private static final Logger LOG = LoggerFactory.getLogger(FalloutContextImpl.class);
+
+   private final ServicesInterrogator servicesInterrogator;
    private final NukeEnvironment nukeEnvironment;
    private final Map<String, Binding> bindings;
    private final Map<String, AtomTask> tasks;
    private final ActorManager actorManager;
-   private final ServiceManager services;
    private final AtomTasker atomTasker;
 
-   public FalloutContextImpl(Nuke nukeReference, ServiceManager services) {
+   public FalloutContextImpl(Nuke nukeReference, ServicesInterrogator servicesInterrogator) {
+      this.servicesInterrogator = servicesInterrogator;
       this.nukeEnvironment = nukeReference.nukeEnvironment();
       this.atomTasker = nukeReference.atomTasker();
-      this.services = services;
 
       actorManager = new ActorManager();
       tasks = new HashMap<String, AtomTask>();
@@ -88,9 +88,17 @@ public class FalloutContextImpl implements FalloutContext {
 
    @Override
    public void enlistActor(String name, InstanceContext<? extends Reclaimable> actor) {
+      // We found an actor!
       LOG.debug("Found configuration for actor: " + name);
 
-      actorManager.manageActor(name, (InstanceContext<Reclaimable>) actor);
+      // Do we already have a living reference to this actor?
+      if (!actorManager.hasActor(name)) {
+         // No? Let's add one then.
+         actorManager.manageActor(name, (InstanceContext<Reclaimable>) actor);
+      } else {
+         // Debug log this case in case of problems
+         LOG.debug("Actor already registered. Ignoring this instance.");
+      }
    }
 
    @Override
@@ -132,9 +140,8 @@ public class FalloutContextImpl implements FalloutContext {
       }
    }
 
-   private void retireActor(String id, final List<ActorEntry> garbageQueue) {
-      // Remove our references
-      actorManager.removeActor(id);
+   private void retireActor(String id, List<ActorEntry> garbageQueue) {
+      // Remove any lingering references - this might be a source
       tasks.remove(id);
 
       // Queue the actor for cancellation
@@ -142,9 +149,11 @@ public class FalloutContextImpl implements FalloutContext {
 
       // If there's a cancellation remote, then this actor was initialized and needs to be garbage collected
       if (actor != null) {
-         LOG.info("Garbage collecting actor: " + id);
+         LOG.debug("Garbage collecting: " + actor);
 
-         garbageQueue.add(actor);
+         if (actor.initialized()) {
+            garbageQueue.add(actor);
+         }
       }
    }
 
@@ -168,7 +177,7 @@ public class FalloutContextImpl implements FalloutContext {
          throw new ConfigurationException("Actor, \"" + binding.getSinkActor() + "\" does not implement the AtomSink interface and can not be used as a sink.");
       }
 
-      final AtomTaskContext taskContext = new TaskContextImpl(nukeEnvironment, LoggerFactory.getLogger(messageActor.getId()), parametersToMap(messageActor.getParameters()), services, atomTasker);
+      final AtomTaskContext taskContext = new TaskContextImpl(nukeEnvironment, LoggerFactory.getLogger(messageActor.getId()), parametersToMap(messageActor.getParameters()), servicesInterrogator, atomTasker);
 
       try {
          sinkActor.init(taskContext);
@@ -207,7 +216,7 @@ public class FalloutContextImpl implements FalloutContext {
          throw new ConfigurationException("Actor, \"" + messageActor.getId() + "\" does not implement the AtomSource interface and can not be used as a source.");
       }
 
-      final AtomTaskContext taskContext = new TaskContextImpl(nukeEnvironment, LoggerFactory.getLogger(messageActor.getId()), parametersToMap(messageActor.getParameters()), services, atomTasker);
+      final AtomTaskContext taskContext = new TaskContextImpl(nukeEnvironment, LoggerFactory.getLogger(messageActor.getId()), parametersToMap(messageActor.getParameters()), servicesInterrogator, atomTasker);
 
       try {
          sourceActor.init(taskContext);

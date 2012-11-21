@@ -19,6 +19,11 @@ public class InstanceContextImpl<T> implements InstanceContext<T> {
    }
 
    @Override
+   public Class<T> instanceClass() {
+      return (Class<T>) instance.getClass();
+   }
+
+   @Override
    public T instance() {
       return instance;
    }
@@ -41,5 +46,10 @@ public class InstanceContextImpl<T> implements InstanceContext<T> {
       } finally {
          environment.stepOut();
       }
+   }
+
+   @Override
+   public String toString() {
+      return "InstanceContextImpl{" + "environment=" + environment + ", instance=" + instance + '}';
    }
 }

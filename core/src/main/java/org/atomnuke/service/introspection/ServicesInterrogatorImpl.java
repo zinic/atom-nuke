@@ -1,4 +1,4 @@
-package org.atomnuke.util.service;
+package org.atomnuke.service.introspection;
 
 import java.util.Collection;
 import org.atomnuke.service.ServiceManager;
@@ -8,18 +8,16 @@ import org.atomnuke.service.ServiceUnavailableException;
  *
  * @author zinic
  */
-public final class ServiceHandler {
+public class ServicesInterrogatorImpl implements ServicesInterrogator {
 
-   private static final ServiceHandler INSTANCE = new ServiceHandler();
+   private final ServiceManager manager;
 
-   public static ServiceHandler instance() {
-      return INSTANCE;
+   public ServicesInterrogatorImpl(ServiceManager manager) {
+      this.manager = manager;
    }
 
-   private ServiceHandler() {
-   }
-
-   public <T> T firstAvailable(ServiceManager manager, Class<T> serviceClass) throws ServiceUnavailableException {
+   @Override
+   public <T> T firstAvailable(Class<T> serviceClass) throws ServiceUnavailableException {
       final Collection<String> registeredServiceNames = manager.servicesAdvertising(serviceClass);
 
       if (registeredServiceNames.isEmpty()) {

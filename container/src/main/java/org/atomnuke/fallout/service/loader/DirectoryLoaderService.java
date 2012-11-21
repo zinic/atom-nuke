@@ -18,13 +18,11 @@ import org.atomnuke.container.packaging.loader.impl.BindingAwarePackageLoader;
 import org.atomnuke.container.packaging.resource.ResourceManager;
 import org.atomnuke.container.packaging.resource.ResourceManagerImpl;
 import org.atomnuke.container.service.annotation.NukeBootstrap;
+import org.atomnuke.container.service.annotation.Requires;
 import org.atomnuke.plugin.ReferenceInstantiationException;
-import org.atomnuke.lifecycle.resolution.ResolutionActionType;
 import org.atomnuke.service.ServiceManager;
 import org.atomnuke.service.ServiceContext;
 import org.atomnuke.service.gc.ReclamationHandler;
-import org.atomnuke.lifecycle.resolution.ResolutionAction;
-import org.atomnuke.lifecycle.resolution.ResolutionActionImpl;
 import org.atomnuke.lifecycle.InitializationException;
 import org.atomnuke.service.runtime.AbstractRuntimeService;
 import org.slf4j.Logger;
@@ -35,14 +33,15 @@ import org.slf4j.LoggerFactory;
  * @author zinic
  */
 @NukeBootstrap
+@Requires(ReclamationHandler.class)
 public class DirectoryLoaderService extends AbstractRuntimeService {
 
    private static final String LOADER_SVC_NAME = "org.atomnuke.container.packaging.loader.impl.DirectoryLoaderService";
    private static final Logger LOG = LoggerFactory.getLogger(DirectoryLoaderService.class);
-   
+
    private final BindingEnvironmentFactory bindingEnvFactory;
    private final ResourceManager rootResourceManager;
-   
+
    private File deploymentDirectory, libraryDirectory;
    private PackageLoader packageLoader;
 
@@ -51,12 +50,6 @@ public class DirectoryLoaderService extends AbstractRuntimeService {
 
       rootResourceManager = new ResourceManagerImpl();
       bindingEnvFactory = new BindingEnvironmentManagerImpl(rootResourceManager);
-   }
-
-   @Override
-   public ResolutionAction resolve(ServiceManager serviceManager) {
-      return new ResolutionActionImpl(
-              serviceManager.serviceRegistered(ReclamationHandler.class) ? ResolutionActionType.INIT : ResolutionActionType.DEFER);
    }
 
    @Override
@@ -79,7 +72,7 @@ public class DirectoryLoaderService extends AbstractRuntimeService {
 
       try {
          loadPackages();
-         loadServices(sc.services());
+         loadServices(sc.serviceManager());
       } catch (PackageLoadingException ple) {
          LOG.error(ple.getMessage(), ple);
       }
@@ -89,7 +82,7 @@ public class DirectoryLoaderService extends AbstractRuntimeService {
    public void destroy() {
       LOG.info("Directory package loader service stopping.");
    }
-   
+
    private void loadServices(ServiceManager serviceManager) {
       for (PackageContext loadedPackage : packageLoader.packageContexts()) {
          try {
@@ -120,11 +113,11 @@ public class DirectoryLoaderService extends AbstractRuntimeService {
       }
 
       final List<DeployedPackage> deployedPackages = new LinkedList<DeployedPackage>();
-      
+
       for (File archive : libraryDirectory.listFiles()) {
          if (!archive.isDirectory()) {
             final DeployedPackage nextPackage = loadFile(archive, archiveUnpacker);
-            
+
             if (nextPackage != null) {
                deployedPackages.add(nextPackage);
             }
@@ -132,10 +125,10 @@ public class DirectoryLoaderService extends AbstractRuntimeService {
 
          // Ignore directories for now
       }
-      
+
       // Load the root context first
       packageLoader.load(UUID.randomUUID() + ".ROOT", rootResourceManager);
-      
+
       // Load all of the isolate contexts
       for (DeployedPackage deployedPackage : deployedPackages) {
          try {
@@ -151,7 +144,7 @@ public class DirectoryLoaderService extends AbstractRuntimeService {
 
    private DeployedPackage loadFile(File archive, final Unpacker archiveUnpacker) {
       final URI archiveUri = archive.toURI();
-      
+
       if (archiveUnpacker.canUnpack(archiveUri)) {
          LOG.info("Extracting package \"" + archiveUri.toString() + "\"");
 
@@ -161,7 +154,7 @@ public class DirectoryLoaderService extends AbstractRuntimeService {
             LOG.error("Failed to unpack package (" + archive.getAbsolutePath() + ") - Reason: " + ue.getMessage(), ue);
          }
       }
-      
+
       return null;
    }
 }

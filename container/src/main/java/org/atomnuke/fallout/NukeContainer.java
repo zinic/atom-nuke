@@ -1,7 +1,7 @@
 package org.atomnuke.fallout;
 
 import org.atomnuke.service.ServiceUnavailableException;
-import org.atomnuke.util.service.ServiceHandler;
+import org.atomnuke.service.introspection.ServicesInterrogatorImpl;
 import java.io.File;
 import javax.xml.bind.JAXBException;
 import org.atomnuke.Nuke;
@@ -16,6 +16,7 @@ import org.atomnuke.plugin.proxy.japi.JapiProxyFactory;
 import org.atomnuke.service.ServiceManager;
 import org.atomnuke.service.RuntimeServiceManager;
 import org.atomnuke.service.gc.ReclamationHandler;
+import org.atomnuke.service.introspection.ServicesInterrogator;
 import org.atomnuke.task.manager.impl.GenericTaskManger;
 import org.atomnuke.task.manager.service.TaskingService;
 import org.atomnuke.task.threading.ExecutionManager;
@@ -37,8 +38,10 @@ public class NukeContainer {
 
    private static final Logger LOG = LoggerFactory.getLogger(NukeContainer.class);
 
+   private final ServicesInterrogator servicesInterrogator;
    private final NukeEnvironment nukeEnvironment;
    private final ServiceManager serviceManager;
+
 
    private ConfigurationListener<ServerConfiguration> contextCfgListener;
    private Nuke nukeInstance;
@@ -47,6 +50,7 @@ public class NukeContainer {
       this.nukeEnvironment = nukeEnvironment;
 
       serviceManager = new RuntimeServiceManager(nukeEnvironment, new JapiProxyFactory());
+      servicesInterrogator = new ServicesInterrogatorImpl(serviceManager);
    }
 
    public Nuke nukeInstance() {
@@ -75,8 +79,8 @@ public class NukeContainer {
 
    private void initNuke() {
       try {
-         final ReclamationHandler reclamationHandler = ServiceHandler.instance().firstAvailable(serviceManager, ReclamationHandler.class);
-         final TaskingService taskingService = ServiceHandler.instance().firstAvailable(serviceManager, TaskingService.class);
+         final ReclamationHandler reclamationHandler = servicesInterrogator.firstAvailable(ReclamationHandler.class);
+         final TaskingService taskingService = servicesInterrogator.firstAvailable(TaskingService.class);
 
          final ExecutionManager executionManager = new ExecutionManagerImpl(new ExecutionQueueImpl(nukeEnvironment));
          nukeInstance = new NukeKernel(nukeEnvironment, executionManager, reclamationHandler, new GenericTaskManger(executionManager, taskingService.taskTracker()), taskingService.tasker());
@@ -105,8 +109,8 @@ public class NukeContainer {
 
    private void buildContextManager() {
       try {
-         final PackageLoader firstLoader = ServiceHandler.instance().firstAvailable(serviceManager, PackageLoader.class);
-         contextCfgListener = new ConfigurationContextUpdateListener(serviceManager, firstLoader.packageContexts(), nukeInstance);
+         final PackageLoader firstLoader = servicesInterrogator.firstAvailable(PackageLoader.class);
+         contextCfgListener = new ConfigurationContextUpdateListener(nukeInstance, servicesInterrogator, firstLoader.packageContexts());
       } catch (ServiceUnavailableException sue) {
          LOG.error(sue.getMessage(), sue);
       } catch (Exception ex) {
@@ -116,7 +120,7 @@ public class NukeContainer {
 
    private void registerConfigurationSinks() {
       try {
-         final ConfigurationUpdateManager cfgUpdateManager = ServiceHandler.instance().firstAvailable(serviceManager, ConfigurationUpdateManager.class);
+         final ConfigurationUpdateManager cfgUpdateManager = servicesInterrogator.firstAvailable(ConfigurationUpdateManager.class);
          registerNukeCfgSink(cfgUpdateManager);
       } catch (ServiceUnavailableException sue) {
          LOG.error(sue.getMessage(), sue);

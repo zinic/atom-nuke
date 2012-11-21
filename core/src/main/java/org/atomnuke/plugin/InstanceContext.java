@@ -12,6 +12,8 @@ import org.atomnuke.plugin.operation.SimpleOperation;
  */
 public interface InstanceContext<T> {
 
+   Class<T> instanceClass();
+
    T instance();
 
    void perform(SimpleOperation<T> requestedOperation) throws OperationFailureException;

@@ -23,4 +23,9 @@ public class AtomicCancellationRemote implements CancellationRemote {
    public void cancel() {
       canceled.set(true);
    }
+
+   @Override
+   public String toString() {
+      return "AtomicCancellationRemote{" + "canceled=" + canceled + '}';
+   }
 }

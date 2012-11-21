@@ -24,6 +24,12 @@ public class WeakReferenceContext<T> implements InstanceContext<T> {
    }
 
    @Override
+   public Class<T> instanceClass() {
+      final T instance = instanceRef.get();
+      return instance != null ? (Class<T>) instance.getClass() : null;
+   }
+
+   @Override
    public T instance() {
       return instanceRef.get();
    }

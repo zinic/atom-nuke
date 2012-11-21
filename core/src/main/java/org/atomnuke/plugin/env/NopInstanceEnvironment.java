@@ -49,4 +49,9 @@ public final class NopInstanceEnvironment implements Environment {
    @Override
    public void stepInto() {
    }
+
+   @Override
+   public String toString() {
+      return "NopInstanceEnvironment{}";
+   }
 }
