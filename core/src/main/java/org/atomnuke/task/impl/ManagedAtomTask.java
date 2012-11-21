@@ -1,7 +1,7 @@
 package org.atomnuke.task.impl;
 
 import org.atomnuke.plugin.InstanceContext;
-import org.atomnuke.plugin.LocalInstanceContext;
+import org.atomnuke.plugin.context.LocalInstanceContext;
 import org.atomnuke.sink.manager.ManagedSink;
 import org.atomnuke.sink.driver.AtomSinkDriver;
 import org.atomnuke.sink.driver.DriverArgument;

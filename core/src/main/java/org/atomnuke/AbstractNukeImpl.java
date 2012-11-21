@@ -4,7 +4,7 @@ import java.util.UUID;
 import org.atomnuke.kernel.GenericKernelDelegate;
 import org.atomnuke.kernel.shutdown.ShutdownHook;
 import org.atomnuke.plugin.InstanceContext;
-import org.atomnuke.plugin.InstanceContextImpl;
+import org.atomnuke.plugin.context.InstanceContextImpl;
 import org.atomnuke.source.AtomSource;
 import org.atomnuke.task.atom.AtomTask;
 import org.atomnuke.util.TimeValue;

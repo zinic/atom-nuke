@@ -7,14 +7,9 @@ import org.atomnuke.container.service.annotation.NukeBootstrap;
 import org.atomnuke.container.service.annotation.Requires;
 import org.atomnuke.fallout.service.gc.GarbageCollectionTask;
 import org.atomnuke.plugin.InstanceContext;
-import org.atomnuke.plugin.LocalInstanceContext;
-import org.atomnuke.lifecycle.resolution.ResolutionActionType;
-import org.atomnuke.service.ServiceManager;
 import org.atomnuke.service.ServiceUnavailableException;
 import org.atomnuke.service.ServiceContext;
 import org.atomnuke.service.gc.ReclamationHandler;
-import org.atomnuke.lifecycle.resolution.ResolutionAction;
-import org.atomnuke.lifecycle.resolution.ResolutionActionImpl;
 import org.atomnuke.task.TaskHandle;
 import org.atomnuke.task.manager.TaskTracker;
 import org.atomnuke.task.manager.Tasker;
@@ -23,10 +18,10 @@ import org.atomnuke.task.manager.impl.ThreadSafeTaskTracker;
 import org.atomnuke.task.manager.service.TaskingService;
 import org.atomnuke.util.TimeValue;
 import org.atomnuke.lifecycle.InitializationException;
+import org.atomnuke.plugin.context.LocalInstanceContext;
 import org.atomnuke.service.runtime.AbstractRuntimeService;
 import org.atomnuke.util.remote.AtomicCancellationRemote;
 import org.atomnuke.util.remote.CancellationRemote;
-import org.atomnuke.service.introspection.ServicesInterrogatorImpl;
 
 /**
  *

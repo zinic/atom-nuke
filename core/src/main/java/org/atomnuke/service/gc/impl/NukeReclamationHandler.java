@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 import org.atomnuke.service.gc.ReclamationHandler;
 import org.atomnuke.plugin.InstanceContext;
-import org.atomnuke.plugin.InstanceContextImpl;
+import org.atomnuke.plugin.context.InstanceContextImpl;
 import org.atomnuke.plugin.env.NopInstanceEnvironment;
 import org.atomnuke.lifecycle.Reclaimable;
 import org.atomnuke.util.remote.AtomicCancellationRemote;

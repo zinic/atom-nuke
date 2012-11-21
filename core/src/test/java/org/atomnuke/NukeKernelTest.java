@@ -10,7 +10,7 @@ import org.atomnuke.plugin.env.NopInstanceEnvironment;
 import org.atomnuke.sink.AtomSinkException;
 import org.atomnuke.sink.AtomSinkResult;
 import org.atomnuke.sink.SinkResult;
-import org.atomnuke.plugin.InstanceContextImpl;
+import org.atomnuke.plugin.context.InstanceContextImpl;
 import org.atomnuke.source.AtomSource;
 import org.atomnuke.source.AtomSourceException;
 import org.atomnuke.source.result.AtomSourceResult;

@@ -12,7 +12,7 @@ import org.atomnuke.sink.eps.eventlet.AtomEventlet;
 import org.atomnuke.sink.eps.selector.DefaultSelector;
 import org.atomnuke.sink.eps.selector.EntrySelector;
 import org.atomnuke.plugin.InstanceContext;
-import org.atomnuke.plugin.InstanceContextImpl;
+import org.atomnuke.plugin.context.InstanceContextImpl;
 import org.atomnuke.plugin.env.NopInstanceEnvironment;
 import org.atomnuke.service.ServiceUnavailableException;
 import org.atomnuke.service.gc.ReclamationHandler;

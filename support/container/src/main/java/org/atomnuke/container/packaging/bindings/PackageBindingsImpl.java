@@ -8,8 +8,8 @@ import org.atomnuke.container.packaging.bindings.environment.BindingEnvironment;
 import org.atomnuke.container.packaging.bindings.lang.BindingLanguage;
 import org.atomnuke.plugin.Environment;
 import org.atomnuke.plugin.InstanceContext;
-import org.atomnuke.plugin.InstanceContextImpl;
 import org.atomnuke.plugin.ReferenceInstantiationException;
+import org.atomnuke.plugin.context.InstanceContextImpl;
 import org.atomnuke.service.Service;
 import org.atomnuke.service.ServiceAlreadyRegisteredException;
 import org.atomnuke.service.ServiceManager;
@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
 public class PackageBindingsImpl implements PackageBindings {
 
    private static final Logger LOG = LoggerFactory.getLogger(PackageBindingsImpl.class);
-   
+
    private final List<BindingEnvironment> availableBindingEnvironments;
 
    public PackageBindingsImpl(List<BindingEnvironment> availableContexts) {

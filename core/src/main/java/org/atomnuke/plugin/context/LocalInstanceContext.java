@@ -1,4 +1,4 @@
-package org.atomnuke.plugin;
+package org.atomnuke.plugin.context;
 
 import org.atomnuke.plugin.env.LocalInstanceEnvironment;
 

@@ -6,7 +6,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import org.atomnuke.NukeEnvironment;
 import org.atomnuke.container.service.annotation.NukeBootstrap;
-import org.atomnuke.plugin.InstanceContextImpl;
+import org.atomnuke.plugin.context.InstanceContextImpl;
 import org.atomnuke.plugin.env.NopInstanceEnvironment;
 import org.atomnuke.service.Service;
 import org.atomnuke.service.ServiceManager;

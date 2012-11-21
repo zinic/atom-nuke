@@ -1,5 +1,7 @@
-package org.atomnuke.plugin;
+package org.atomnuke.plugin.context;
 
+import org.atomnuke.plugin.InstanceContext;
+import org.atomnuke.plugin.Environment;
 import org.atomnuke.plugin.operation.ComplexOperation;
 import org.atomnuke.plugin.operation.OperationFailureException;
 import org.atomnuke.plugin.operation.SimpleOperation;

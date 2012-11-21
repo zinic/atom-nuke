@@ -5,7 +5,7 @@ import org.atomnuke.task.manager.Tasker;
 import org.atomnuke.sink.manager.SinkManager;
 import org.atomnuke.sink.manager.SinkManagerImpl;
 import org.atomnuke.plugin.InstanceContext;
-import org.atomnuke.plugin.LocalInstanceContext;
+import org.atomnuke.plugin.context.LocalInstanceContext;
 import org.atomnuke.service.gc.ReclamationHandler;
 import org.atomnuke.source.AtomSource;
 import org.atomnuke.task.atom.AtomTask;
