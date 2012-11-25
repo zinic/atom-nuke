@@ -31,7 +31,7 @@ public class NukeKernel extends AbstractNukeImpl {
 
 
    public NukeKernel() {
-      this(StaticNukeEnv.get(), new ExecutionManagerImpl(new ExecutionQueueImpl(StaticNukeEnv.get())), new NukeReclamationHandler(), new ThreadSafeTaskTracker(new AtomicCancellationRemote()));
+      this(StaticNukeEnvironment.get(), new ExecutionManagerImpl(new ExecutionQueueImpl(StaticNukeEnvironment.get())), new NukeReclamationHandler(), new ThreadSafeTaskTracker(new AtomicCancellationRemote()));
    }
 
    public NukeKernel(NukeEnvironment nukeEnvironment, ExecutionManager executionManager, ReclamationHandler reclamationHandler, TaskTracker taskTracker) {

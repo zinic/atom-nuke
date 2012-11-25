@@ -16,7 +16,7 @@ import org.atomnuke.util.config.io.ConfigurationManager;
  */
 public final class NukeMain {
 
-   private static final NukeEnvironment ENVIRONMENT = StaticNukeEnv.get();
+   private static final NukeEnvironment ENVIRONMENT = StaticNukeEnvironment.get();
 
    private NukeMain() {
    }

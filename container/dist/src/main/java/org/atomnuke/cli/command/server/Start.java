@@ -1,6 +1,6 @@
 package org.atomnuke.cli.command.server;
 
-import org.atomnuke.StaticNukeEnv;
+import org.atomnuke.StaticNukeEnvironment;
 import org.atomnuke.cli.command.AbstractNukeCommand;
 import org.atomnuke.cli.CliConfigurationHandler;
 import org.atomnuke.fallout.NukeContainer;
@@ -29,7 +29,7 @@ public class Start extends AbstractNukeCommand {
 
    @Override
    public CommandResult perform(String[] arguments) throws Exception {
-      new NukeContainer(StaticNukeEnv.get()).start();
+      new NukeContainer(StaticNukeEnvironment.get()).start();
 
       return new CommandSuccess("");
    }

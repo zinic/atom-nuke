@@ -7,8 +7,8 @@ import org.atomnuke.plugin.operation.OperationFailureException;
 import org.atomnuke.plugin.proxy.InstanceEnvProxyFactory;
 import org.atomnuke.service.context.ServiceContextImpl;
 import org.atomnuke.service.operation.ServiceInitOperation;
-import org.atomnuke.service.operation.ServiceResolutionArgument;
 import org.atomnuke.lifecycle.resolution.ResolutionAction;
+import org.atomnuke.lifecycle.resolution.ResolutionActionType;
 import org.atomnuke.service.introspection.ServicesInterrogatorImpl;
 import org.atomnuke.util.remote.AtomicCancellationRemote;
 import org.slf4j.Logger;
@@ -21,7 +21,6 @@ import org.slf4j.LoggerFactory;
 public class RuntimeServiceManager extends AbstractServiceManager {
 
    private static final Logger LOG = LoggerFactory.getLogger(RuntimeServiceManager.class);
-
    private final ResolutionHandlerImpl resolutionHandler;
    private final NukeEnvironment environment;
 
@@ -39,41 +38,36 @@ public class RuntimeServiceManager extends AbstractServiceManager {
        * are pending. While we may miss a few services, calls to this method
        * should stack and flush everything out correctly.
        */
-      final int totalSweepsAllowed = servicesPending();
-      boolean continueResolving = true;
+      boolean continueResolving;
 
-      for (int resolutionSweeps = 0; continueResolving; resolutionSweeps++) {
-         final ServiceResolutionArgument resolutionArgument = new ServiceResolutionArgument(this);
-         final InstanceContext<Service> pendingService = nextPendingService();
+      do {
+         final int totalResolutionAttemptsAllowed = servicesPending();
+         continueResolving = false;
 
-         // There's a possibility that we're trying to resove and the number of pending services has changed drastically
-         if (pendingService == null) {
-            break;
-         }
+         for (int resolutionAttempt = 0; servicesPending() > 0 && resolutionAttempt < totalResolutionAttemptsAllowed; resolutionAttempt++) {
+            final InstanceContext<Service> pendingService = nextPendingService();
 
-         boolean initializedService = false;
-
-         // Attempt to resolve the service and decide what to do based on that
-         final ResolutionAction action = resolutionHandler.resolve(pendingService);
-
-         switch (action.type()) {
-            case INIT:
-               initService(pendingService);
-               initializedService = true;
+            // There's a possibility that we're trying to resove and the number of pending services has changed drastically
+            if (pendingService == null) {
                break;
+            }
 
-            case DEFER:
+            // Attempt to resolve the service and decide what to do based on that
+            final ResolutionAction action = resolutionHandler.resolve(pendingService);
+            final ResolutionActionType actionType = action.type();
+
+            if (actionType == ResolutionActionType.INIT) {
+               initService(pendingService);
+               continueResolving = true;
+               break;
+            } else if (actionType == ResolutionActionType.DEFER) {
                LOG.debug("Service: " + pendingService.instance().name() + " deferred startup.");
                queuePendingService(pendingService);
-               break;
-
-            case FAIL:
-            default:
+            } else {
                LOG.error("Service: " + pendingService.instance().name() + " failed to start. Fallout will cease attempting to initialize it.");
+            }
          }
-
-         continueResolving = servicesPending() > 0 && (initializedService || resolutionSweeps < totalSweepsAllowed);
-      }
+      } while (continueResolving);
    }
 
    private void initService(InstanceContext<Service> pendingService) {

@@ -6,6 +6,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import org.atomnuke.NukeEnvironment;
 import org.atomnuke.container.service.annotation.NukeBootstrap;
+import org.atomnuke.container.service.annotation.NukeService;
 import org.atomnuke.plugin.context.InstanceContextImpl;
 import org.atomnuke.plugin.env.NopInstanceEnvironment;
 import org.atomnuke.service.Service;
@@ -43,6 +44,8 @@ public class ContainerBootstrap implements Bootstrap {
               .setExecutorService(bootStrapExecutorService)
               .setUrls(ClasspathHelper.forClassLoader(Thread.currentThread().getContextClassLoader(), ClassLoader.getSystemClassLoader())));
 
+      bootStrapExecutorService.shutdownNow();
+
       for (Class bootstrapService : bootstrapScanner.getTypesAnnotatedWith(NukeBootstrap.class)) {
          if (Service.class.isAssignableFrom(bootstrapService)) {
             LOG.debug("Submitting bootstrap service: " + bootstrapService.getName());
@@ -56,7 +59,18 @@ public class ContainerBootstrap implements Bootstrap {
          }
       }
 
-      bootStrapExecutorService.shutdownNow();
+      for (Class bootstrapService : bootstrapScanner.getTypesAnnotatedWith(NukeService.class)) {
+         if (Service.class.isAssignableFrom(bootstrapService)) {
+            LOG.debug("Submitting bootstrap service: " + bootstrapService.getName());
+
+            try {
+               final Service serviceInstance = (Service) bootstrapService.newInstance();
+               serviceManager.submit(new InstanceContextImpl<Service>(NopInstanceEnvironment.getInstance(), serviceInstance));
+            } catch (Exception ex) {
+               LOG.error("Failed to load service: " + bootstrapService.getName() + " - This may cause unexpected behavior however the container may still attempt normal init.", ex);
+            }
+         }
+      }
 
       serviceManager.resolve();
    }

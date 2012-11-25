@@ -8,9 +8,9 @@ import java.io.File;
  *
  * @author zinic
  */
-public final class StaticNukeEnv implements NukeEnvironment {
+public final class StaticNukeEnvironment implements NukeEnvironment {
 
-   private static final StaticNukeEnv INSTANCE = new StaticNukeEnv();
+   private static final StaticNukeEnvironment INSTANCE = new StaticNukeEnvironment();
 
    /**
     * Gets the static instance of the nuke environment.
@@ -24,7 +24,7 @@ public final class StaticNukeEnv implements NukeEnvironment {
    private final boolean debugEnabled;
    private final int numProcessors;
 
-   public StaticNukeEnv() {
+   public StaticNukeEnvironment() {
       homeDirectory = fromEnv("NUKE_HOME", fromSystem("user.home", "") + File.separator + ".nuke");
       deploymentDirectory = fromEnv("NUKE_DEPLOY", homeDirectory + File.separator + "deployed");
       libraryDirectory = fromEnv("NUKE_LIB", homeDirectory + File.separator + "lib");
