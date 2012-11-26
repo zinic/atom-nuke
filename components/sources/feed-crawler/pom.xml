@@ -22,6 +22,11 @@
          <groupId>org.atomnuke</groupId>
          <artifactId>nuke</artifactId>
       </dependency>
+      
+      <dependency>
+         <groupId>org.atomnuke.support</groupId>
+         <artifactId>configuration-support</artifactId>
+      </dependency>
 
       <dependency>
          <groupId>org.apache.httpcomponents</groupId>
@@ -49,4 +54,25 @@
          <scope>test</scope>
       </dependency>
    </dependencies>
+
+   <build>
+      <plugins>
+         <plugin>
+            <groupId>org.jvnet.jaxb2.maven2</groupId>
+            <artifactId>maven-jaxb2-plugin</artifactId>
+
+            <configuration>
+               <schemaDirectory>src/main/resources/META-INF/schema/</schemaDirectory>
+
+               <schemasInclude>
+                  <include>*.xsd</include>
+               </schemasInclude>
+
+               <bindingsInclude>
+                  <include>*.xjb</include>
+               </bindingsInclude>
+            </configuration>
+         </plugin>
+      </plugins>
+   </build>
 </project>

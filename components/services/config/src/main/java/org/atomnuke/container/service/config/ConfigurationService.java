@@ -10,7 +10,7 @@ import org.atomnuke.service.gc.ReclamationHandler;
 import org.atomnuke.task.TaskHandle;
 import org.atomnuke.task.manager.service.TaskingService;
 import org.atomnuke.util.TimeValue;
-import org.atomnuke.util.config.update.ConfigurationUpdateManager;
+import org.atomnuke.util.config.update.ConfigurationUpdateService;
 import org.atomnuke.util.config.update.ConfigurationUpdateManagerImpl;
 import org.atomnuke.lifecycle.InitializationException;
 import org.atomnuke.plugin.context.LocalInstanceContext;
@@ -32,11 +32,11 @@ public class ConfigurationService extends AbstractRuntimeService {
    private static final TimeValue DEFAULT_POLL_INTERVAL = new TimeValue(15, TimeUnit.SECONDS);
    private static final Logger LOG = LoggerFactory.getLogger(ConfigurationService.class);
 
-   private ConfigurationUpdateManager cfgUpdateMangaer;
+   private ConfigurationUpdateService cfgUpdateMangaer;
    private TaskHandle cfgPollerHandle;
 
    public ConfigurationService() {
-      super(ConfigurationUpdateManager.class);
+      super(ConfigurationUpdateService.class);
    }
 
    @Override

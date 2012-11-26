@@ -1,6 +1,5 @@
 package org.atomnuke.container.packaging;
 
-import java.net.URI;
 import org.atomnuke.container.packaging.bindings.PackageBindings;
 
 /**
@@ -10,6 +9,6 @@ import org.atomnuke.container.packaging.bindings.PackageBindings;
 public interface PackageContext {
 
    String name();
-   
+
    PackageBindings packageBindings();
 }

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <xs:schema elementFormDefault="qualified" attributeFormDefault="unqualified"
-           targetNamespace="http://atomnuke.org/configuration"
+           targetNamespace="http://atomnuke.org/configuration/atombus"
            xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
            xmlns:jx="http://jpserver.net/jx"
-           xmlns:nuke="http://atomnuke.org/configuration"
+           xmlns:atombus="http://atomnuke.org/configuration/atombus"
            xmlns:html="http://www.w3.org/1999/xhtml"
            xmlns:xs="http://www.w3.org/2001/XMLSchema">
    <!-- jaxb:extensionBindingPrefixes="jx" -->
@@ -32,7 +32,7 @@
    </xs:simpleType>
 
    <!-- Configuration ComplexType definitions -->
-   <xs:element name="nuke" type="nuke:ServerConfiguration" />
+   <xs:element name="atombus" type="atombus:ServerConfiguration" />
 
    <xs:complexType name="Parameters">
       <xs:annotation>
@@ -43,7 +43,7 @@
       </xs:annotation>
 
       <xs:sequence>
-         <xs:element name="param" type="nuke:Parameter" minOccurs="0" maxOccurs="unbounded" />
+         <xs:element name="param" type="atombus:Parameter" minOccurs="0" maxOccurs="unbounded" />
       </xs:sequence>
    </xs:complexType>
 
@@ -83,9 +83,9 @@
       </xs:annotation>
 
       <xs:all>
-         <xs:element name="actors" type="nuke:MessageActors" minOccurs="0" maxOccurs="1" />
-         <xs:element name="message-sources" type="nuke:MessageSources" minOccurs="0" maxOccurs="1" />
-         <xs:element name="bindings" type="nuke:Bindings" minOccurs="0" maxOccurs="1" />
+         <xs:element name="actors" type="atombus:MessageActors" minOccurs="0" maxOccurs="1" />
+         <xs:element name="message-sources" type="atombus:MessageSources" minOccurs="0" maxOccurs="1" />
+         <xs:element name="bindings" type="atombus:Bindings" minOccurs="0" maxOccurs="1" />
       </xs:all>
    </xs:complexType>
 
@@ -106,7 +106,7 @@
          </xs:annotation>
       </xs:attribute>
 
-      <xs:attribute name="unit" type="nuke:TimeUnitType" use="required">
+      <xs:attribute name="unit" type="atombus:TimeUnitType" use="required">
          <xs:annotation>
             <xs:documentation>
                <html:p>
@@ -125,7 +125,7 @@
       </xs:annotation>
 
       <xs:sequence>
-         <xs:element name="parameters" type="nuke:Parameters" minOccurs="0" maxOccurs="1" />
+         <xs:element name="parameters" type="atombus:Parameters" minOccurs="0" maxOccurs="1" />
       </xs:sequence>
 
       <xs:attribute name="id" type="xs:string" use="required">
@@ -137,7 +137,7 @@
          </xs:annotation>
       </xs:attribute>
 
-      <xs:attribute name="type" type="nuke:LanguageType" use="required">
+      <xs:attribute name="type" type="atombus:LanguageType" use="required">
          <xs:annotation>
             <xs:documentation>
                <html:p>
@@ -165,13 +165,13 @@
       </xs:annotation>
 
       <xs:sequence>
-         <xs:element name="actor" type="nuke:MessageActor" minOccurs="0" maxOccurs="unbounded" />
+         <xs:element name="actor" type="atombus:MessageActor" minOccurs="0" maxOccurs="unbounded" />
       </xs:sequence>
    </xs:complexType>
 
    <xs:complexType name="MessageActor">
       <xs:complexContent>
-         <xs:extension base="nuke:MessageActorDefinition">
+         <xs:extension base="atombus:MessageActorDefinition">
             <xs:annotation>
                <xs:documentation>
                   <html:p>
@@ -191,7 +191,7 @@
       </xs:annotation>
 
       <xs:sequence>
-         <xs:element name="source" type="nuke:MessageSource" minOccurs="0" maxOccurs="unbounded" />
+         <xs:element name="source" type="atombus:MessageSource" minOccurs="0" maxOccurs="unbounded" />
       </xs:sequence>
    </xs:complexType>
 
@@ -204,7 +204,7 @@
       </xs:annotation>
 
       <xs:sequence>
-         <xs:element name="polling-interval" type="nuke:PollingInterval" minOccurs="0" maxOccurs="1" />
+         <xs:element name="polling-interval" type="atombus:PollingInterval" minOccurs="0" maxOccurs="1" />
       </xs:sequence>
 
       <xs:attribute name="actor-ref" type="xs:string" use="required">
@@ -226,7 +226,7 @@
       </xs:annotation>
 
       <xs:sequence>
-         <xs:element name="binding" type="nuke:Binding" minOccurs="0" maxOccurs="unbounded" />
+         <xs:element name="binding" type="atombus:Binding" minOccurs="0" maxOccurs="unbounded" />
       </xs:sequence>
    </xs:complexType>
 

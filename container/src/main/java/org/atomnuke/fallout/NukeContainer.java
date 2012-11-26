@@ -7,7 +7,7 @@ import javax.xml.bind.JAXBException;
 import org.atomnuke.Nuke;
 import org.atomnuke.NukeEnvironment;
 import org.atomnuke.NukeKernel;
-import org.atomnuke.config.model.ServerConfiguration;
+import org.atomnuke.atombus.config.model.ServerConfiguration;
 import org.atomnuke.container.boot.ContainerBootstrap;
 import org.atomnuke.fallout.config.server.ServerConfigurationFileManager;
 import org.atomnuke.fallout.context.config.ConfigurationContextUpdateListener;
@@ -25,7 +25,7 @@ import org.atomnuke.task.threading.ExecutionQueueImpl;
 import org.atomnuke.util.config.ConfigurationException;
 import org.atomnuke.util.config.io.ConfigurationManager;
 import org.atomnuke.util.config.update.ConfigurationContext;
-import org.atomnuke.util.config.update.ConfigurationUpdateManager;
+import org.atomnuke.util.config.update.ConfigurationUpdateService;
 import org.atomnuke.util.config.update.listener.ConfigurationListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -92,7 +92,7 @@ public class NukeContainer {
       nukeInstance.start();
    }
 
-   private void registerNukeCfgSink(ConfigurationUpdateManager cfgUpdateManager) throws FalloutInitException {
+   private void registerNukeCfgSink(ConfigurationUpdateService cfgUpdateManager) throws FalloutInitException {
       try {
          final ConfigurationManager<ServerConfiguration> cfgManager = new ServerConfigurationFileManager(new File(nukeEnvironment.configurationLocation()));
          final ConfigurationContext<ServerConfiguration> configurationContext = cfgUpdateManager.register("Fallout File CFG", cfgManager);
@@ -120,7 +120,7 @@ public class NukeContainer {
 
    private void registerConfigurationSinks() {
       try {
-         final ConfigurationUpdateManager cfgUpdateManager = servicesInterrogator.firstAvailable(ConfigurationUpdateManager.class);
+         final ConfigurationUpdateService cfgUpdateManager = servicesInterrogator.firstAvailable(ConfigurationUpdateService.class);
          registerNukeCfgSink(cfgUpdateManager);
       } catch (ServiceUnavailableException sue) {
          LOG.error(sue.getMessage(), sue);

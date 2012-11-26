@@ -1,7 +1,7 @@
 package org.atomnuke.cli;
 
+import org.atomnuke.atombus.config.model.ServerConfiguration;
 import org.atomnuke.util.config.ConfigurationException;
-import org.atomnuke.config.model.ServerConfiguration;
 import org.atomnuke.fallout.config.server.ServerConfigurationHandler;
 import org.atomnuke.util.config.io.ConfigurationManager;
 

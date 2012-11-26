@@ -1,10 +1,10 @@
 package org.atomnuke.cli.command.source;
 
+import org.atomnuke.atombus.config.model.MessageSource;
+import org.atomnuke.atombus.config.model.PollingInterval;
+import org.atomnuke.atombus.config.model.TimeUnitType;
 import org.atomnuke.cli.CliConfigurationHandler;
 import org.atomnuke.cli.command.AbstractNukeCommand;
-import org.atomnuke.config.model.MessageSource;
-import org.atomnuke.config.model.PollingInterval;
-import org.atomnuke.config.model.TimeUnitType;
 import org.atomnuke.util.cli.command.result.CommandFailure;
 import org.atomnuke.util.cli.command.result.CommandResult;
 import org.atomnuke.util.cli.command.result.CommandSuccess;

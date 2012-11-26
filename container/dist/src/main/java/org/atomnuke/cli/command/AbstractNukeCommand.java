@@ -1,9 +1,9 @@
 package org.atomnuke.cli.command;
 
 import java.util.Iterator;
+import org.atomnuke.atombus.config.model.Binding;
 import org.atomnuke.util.config.ConfigurationException;
 import org.atomnuke.cli.CliConfigurationHandler;
-import org.atomnuke.config.model.Binding;
 import org.atomnuke.util.cli.command.AbstractCommand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

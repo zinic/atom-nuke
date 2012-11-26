@@ -1,9 +1,9 @@
 package org.atomnuke;
 
 import java.io.File;
+import org.atomnuke.atombus.config.model.ServerConfiguration;
 import org.atomnuke.cli.command.Root;
 import org.atomnuke.cli.CliConfigurationHandler;
-import org.atomnuke.config.model.ServerConfiguration;
 import org.atomnuke.fallout.config.server.ServerConfigurationFileManager;
 import org.atomnuke.util.cli.CommandDriver;
 import org.atomnuke.util.cli.command.Command;

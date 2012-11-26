@@ -7,7 +7,7 @@ import org.atomnuke.lifecycle.Reclaimable;
  *
  * @author zinic
  */
-public interface ConfigurationUpdateManager extends Reclaimable {
+public interface ConfigurationUpdateService extends Reclaimable {
 
    void update();
 

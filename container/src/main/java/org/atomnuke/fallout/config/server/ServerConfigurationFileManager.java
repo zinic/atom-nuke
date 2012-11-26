@@ -2,7 +2,7 @@ package org.atomnuke.fallout.config.server;
 
 import java.io.File;
 import javax.xml.bind.JAXBException;
-import org.atomnuke.config.model.ServerConfiguration;
+import org.atomnuke.atombus.config.model.ServerConfiguration;
 import org.atomnuke.util.config.io.file.FileConfigurationManager;
 
 /**

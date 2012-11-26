@@ -2,6 +2,7 @@ package org.atomnuke.util.config.io.marshall.jaxb;
 
 import java.io.InputStream;
 import java.io.OutputStream;
+import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -15,6 +16,12 @@ import org.atomnuke.util.config.io.marshall.ConfigurationMarshaller;
  * @author zinic
  */
 public class JaxbConfigurationMarhsaller<T> implements ConfigurationMarshaller<T> {
+
+   public static <T> ConfigurationMarshaller<T> newJaxConfigurationMarshaller(Class<T> rootType, QName rootQName) throws JAXBException {
+      final JAXBContext jaxbc = JAXBContext.newInstance(rootType.getPackage().getName());
+
+      return new JaxbConfigurationMarhsaller(rootType, rootQName, jaxbc.createMarshaller(), jaxbc.createUnmarshaller());
+   }
 
    private final Unmarshaller jaxbUnmarshaller;
    private final Marshaller jaxbMarshaller;

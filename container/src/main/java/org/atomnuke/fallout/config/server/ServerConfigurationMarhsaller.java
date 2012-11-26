@@ -5,8 +5,8 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.namespace.QName;
-import org.atomnuke.config.model.ObjectFactory;
-import org.atomnuke.config.model.ServerConfiguration;
+import org.atomnuke.atombus.config.model.ObjectFactory;
+import org.atomnuke.atombus.config.model.ServerConfiguration;
 import org.atomnuke.util.config.io.marshall.jaxb.JaxbConfigurationMarhsaller;
 
 /**

@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema elementFormDefault="qualified" attributeFormDefault="unqualified"
+           targetNamespace="http://atomnuke.org/configuration/feed-crawler"
+           xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+           xmlns:jx="http://jpserver.net/jx"
+           xmlns:fc="http://atomnuke.org/configuration/feed-crawler"
+           xmlns:html="http://www.w3.org/1999/xhtml"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+   <!-- jaxb:extensionBindingPrefixes="jx" -->
+
+   <!-- Enumeration and SimpleType definitions -->
+
+   <!-- Configuration ComplexType definitions -->
+   <xs:element name="crawler-targets" type="fc:FeedCrawlerTargets" />
+
+   <xs:complexType name="FeedCrawlerTargets">
+      <xs:annotation>
+         <xs:documentation>
+            <html:p>
+            </html:p>
+         </xs:documentation>
+      </xs:annotation>
+
+      <xs:sequence>
+         <xs:element name="feed" type="fc:FeedTarget" minOccurs="0" maxOccurs="unbounded" />
+      </xs:sequence>
+   </xs:complexType>
+
+   <xs:complexType name="FeedTarget">
+      <xs:annotation>
+         <xs:documentation>
+            <html:p>
+            </html:p>
+         </xs:documentation>
+      </xs:annotation>
+
+      <xs:all>
+         <xs:element name="fs-options" type="fc:FileSystemOptions" minOccurs="0" maxOccurs="1" />
+         <xs:element name="http-options" type="fc:HttpOptions" minOccurs="0" maxOccurs="1" />
+      </xs:all>
+
+      <xs:attribute name="actor-ref" type="xs:string" use="required">
+         <xs:annotation>
+            <xs:documentation>
+               <html:p>
+               </html:p>
+            </xs:documentation>
+         </xs:annotation>
+      </xs:attribute>
+
+      <xs:attribute name="href" type="xs:anyURI" use="required">
+         <xs:annotation>
+            <xs:documentation>
+               <html:p>
+               </html:p>
+            </xs:documentation>
+         </xs:annotation>
+      </xs:attribute>
+   </xs:complexType>
+
+   <xs:complexType name="FileSystemOptions">
+      <xs:annotation>
+         <xs:documentation>
+            <html:p>
+            </html:p>
+         </xs:documentation>
+      </xs:annotation>
+
+      <xs:all>
+         <xs:element name="state-file" type="xs:anyURI" minOccurs="0" maxOccurs="1" />
+      </xs:all>
+   </xs:complexType>
+
+   <xs:complexType name="FeedCrawlerStateFile">
+      <xs:annotation>
+         <xs:documentation>
+            <html:p>
+            </html:p>
+         </xs:documentation>
+      </xs:annotation>
+
+      <xs:all>
+         <xs:element name="headers" type="fc:HttpHeaderCollection" minOccurs="0" maxOccurs="1" />
+      </xs:all>
+   </xs:complexType>
+
+   <xs:complexType name="HttpOptions">
+      <xs:annotation>
+         <xs:documentation>
+            <html:p>
+            </html:p>
+         </xs:documentation>
+      </xs:annotation>
+
+      <xs:all>
+         <xs:element name="headers" type="fc:HttpHeaderCollection" minOccurs="0" maxOccurs="1" />
+      </xs:all>
+   </xs:complexType>
+
+   <xs:complexType name="HttpHeaderCollection">
+      <xs:annotation>
+         <xs:documentation>
+            <html:p>
+            </html:p>
+         </xs:documentation>
+      </xs:annotation>
+
+      <xs:sequence>
+         <xs:element name="header" type="fc:HttpHeader" minOccurs="0" maxOccurs="unbounded" />
+      </xs:sequence>
+   </xs:complexType>
+
+   <xs:complexType name="HttpHeader">
+      <xs:simpleContent>
+         <xs:extension base="xs:string">
+            <xs:annotation>
+               <xs:documentation>
+                  <html:p>
+                  </html:p>
+               </xs:documentation>
+            </xs:annotation>
+
+            <xs:attribute name="name" type="xs:string" use="required">
+               <xs:annotation>
+                  <xs:documentation>
+                     <html:p>
+                     </html:p>
+                  </xs:documentation>
+               </xs:annotation>
+            </xs:attribute>
+         </xs:extension>
+      </xs:simpleContent>
+   </xs:complexType>
+</xs:schema>

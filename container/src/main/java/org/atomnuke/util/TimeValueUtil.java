@@ -1,8 +1,8 @@
 package org.atomnuke.util;
 
 import java.util.concurrent.TimeUnit;
-import org.atomnuke.config.model.PollingInterval;
-import org.atomnuke.config.model.TimeUnitType;
+import org.atomnuke.atombus.config.model.PollingInterval;
+import org.atomnuke.atombus.config.model.TimeUnitType;
 
 /**
  *

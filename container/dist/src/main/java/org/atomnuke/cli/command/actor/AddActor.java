@@ -4,10 +4,10 @@
  */
 package org.atomnuke.cli.command.actor;
 
+import org.atomnuke.atombus.config.model.LanguageType;
+import org.atomnuke.atombus.config.model.MessageActor;
 import org.atomnuke.cli.CliConfigurationHandler;
 import org.atomnuke.cli.command.AbstractNukeCommand;
-import org.atomnuke.config.model.LanguageType;
-import org.atomnuke.config.model.MessageActor;
 import org.atomnuke.util.cli.command.result.CommandFailure;
 import org.atomnuke.util.cli.command.result.CommandResult;
 import org.atomnuke.util.cli.command.result.CommandSuccess;

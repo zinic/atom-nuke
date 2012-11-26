@@ -10,6 +10,8 @@ import org.slf4j.Logger;
  */
 public interface AtomTaskContext extends Context {
 
+   String actorId();
+
    AtomTasker atomTasker();
 
    Logger log();

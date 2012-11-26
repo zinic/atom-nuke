@@ -8,11 +8,11 @@ import java.util.Map;
 import java.util.Set;
 import org.atomnuke.Nuke;
 import org.atomnuke.NukeEnvironment;
-import org.atomnuke.config.model.Binding;
-import org.atomnuke.config.model.MessageActor;
-import org.atomnuke.config.model.MessageSource;
-import org.atomnuke.config.model.Parameter;
-import org.atomnuke.config.model.Parameters;
+import org.atomnuke.atombus.config.model.Binding;
+import org.atomnuke.atombus.config.model.MessageActor;
+import org.atomnuke.atombus.config.model.MessageSource;
+import org.atomnuke.atombus.config.model.Parameter;
+import org.atomnuke.atombus.config.model.Parameters;
 import org.atomnuke.fallout.config.server.ServerConfigurationHandler;
 import org.atomnuke.plugin.InstanceContext;
 import org.atomnuke.plugin.operation.OperationFailureException;
@@ -164,7 +164,7 @@ public class FalloutContextImpl implements FalloutContext {
    }
 
    private void bind(AtomTask source, Binding binding, ServerConfigurationHandler cfgHandler) throws ConfigurationException {
-      final MessageActor messageActor = cfgHandler.findMessageActor(binding.getSinkActor());
+      final MessageActor sinkMessageActorDescriptor = cfgHandler.findMessageActor(binding.getSinkActor());
       final ActorEntry sinkActor = actorManager.getActor(binding.getSinkActor());
 
       if (sinkActor == null) {
@@ -177,12 +177,13 @@ public class FalloutContextImpl implements FalloutContext {
          throw new ConfigurationException("Actor, \"" + binding.getSinkActor() + "\" does not implement the AtomSink interface and can not be used as a sink.");
       }
 
-      final AtomTaskContext taskContext = new TaskContextImpl(nukeEnvironment, LoggerFactory.getLogger(messageActor.getId()), parametersToMap(messageActor.getParameters()), servicesInterrogator, atomTasker);
+      final AtomTaskContext taskContext = new TaskContextImpl(nukeEnvironment, LoggerFactory.getLogger(sinkMessageActorDescriptor.getId()),
+              parametersToMap(sinkMessageActorDescriptor.getParameters()), servicesInterrogator, atomTasker, sinkMessageActorDescriptor.getId());
 
       try {
          sinkActor.init(taskContext);
       } catch (OperationFailureException ofe) {
-         LOG.error("Unable to initialize sink: " + messageActor.getId() + " with href: " + messageActor.getHref() + " - Reason: " + ofe.getMessage(), ofe);
+         LOG.error("Unable to initialize sink: " + sinkMessageActorDescriptor.getId() + " with href: " + sinkMessageActorDescriptor.getHref() + " - Reason: " + ofe.getMessage(), ofe);
       }
 
       actorManager.setCancellationRemote(binding.getSinkActor(), source.addSink((InstanceContext<AtomSink>) sinkActor.instanceContext()));
@@ -196,38 +197,39 @@ public class FalloutContextImpl implements FalloutContext {
    }
 
    private AtomTask registerTask(ServerConfigurationHandler cfgHandler, Binding binding) throws ConfigurationException {
-      final MessageActor messageActor = cfgHandler.findMessageActor(binding.getSourceActor());
+      final MessageActor sourceMessageActorDescriptor = cfgHandler.findMessageActor(binding.getSourceActor());
       final MessageSource messageSourceDef = cfgHandler.findMessageSource(binding.getSourceActor());
 
       if (messageSourceDef == null) {
          throw new ConfigurationException("Actor, \"" + binding.getSinkActor() + "\" does not have a source definition within the configuration.");
       }
 
-      final ActorEntry sourceActor = actorManager.getActor(messageActor.getId());
+      final ActorEntry sourceActor = actorManager.getActor(sourceMessageActorDescriptor.getId());
 
       if (sourceActor == null) {
-         throw new ConfigurationException("Unable to locate actor, \"" + messageActor.getId() + "\" for usage as a source.");
+         throw new ConfigurationException("Unable to locate actor, \"" + sourceMessageActorDescriptor.getId() + "\" for usage as a source.");
       }
 
       // Reaching deep
       final Class instanceRefClass = sourceActor.instanceClass();
 
       if (!AtomSource.class.isAssignableFrom(instanceRefClass)) {
-         throw new ConfigurationException("Actor, \"" + messageActor.getId() + "\" does not implement the AtomSource interface and can not be used as a source.");
+         throw new ConfigurationException("Actor, \"" + sourceMessageActorDescriptor.getId() + "\" does not implement the AtomSource interface and can not be used as a source.");
       }
 
-      final AtomTaskContext taskContext = new TaskContextImpl(nukeEnvironment, LoggerFactory.getLogger(messageActor.getId()), parametersToMap(messageActor.getParameters()), servicesInterrogator, atomTasker);
+      final AtomTaskContext taskContext = new TaskContextImpl(nukeEnvironment, LoggerFactory.getLogger(sourceMessageActorDescriptor.getId()),
+              parametersToMap(sourceMessageActorDescriptor.getParameters()), servicesInterrogator, atomTasker, sourceMessageActorDescriptor.getId());
 
       try {
          sourceActor.init(taskContext);
       } catch (OperationFailureException ofe) {
-         LOG.error("Unable to initialize source: " + messageActor.getId() + " with href: " + messageActor.getHref() + " - Reason: " + ofe.getMessage(), ofe);
+         LOG.error("Unable to initialize source: " + sourceMessageActorDescriptor.getId() + " with href: " + sourceMessageActorDescriptor.getHref() + " - Reason: " + ofe.getMessage(), ofe);
       }
 
       final AtomTask sourceTask = atomTasker.follow((InstanceContext<AtomSource>) sourceActor.instanceContext(), TimeValueUtil.fromPollingInterval(messageSourceDef.getPollingInterval()));
 
-      tasks.put(messageActor.getId(), sourceTask);
-      actorManager.setCancellationRemote(messageActor.getId(), sourceTask.handle().cancellationRemote());
+      tasks.put(sourceMessageActorDescriptor.getId(), sourceTask);
+      actorManager.setCancellationRemote(sourceMessageActorDescriptor.getId(), sourceTask.handle().cancellationRemote());
 
       return sourceTask;
    }

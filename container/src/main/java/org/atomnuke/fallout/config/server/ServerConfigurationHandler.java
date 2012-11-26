@@ -4,13 +4,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 import org.apache.commons.lang3.StringUtils;
-import org.atomnuke.config.model.Binding;
-import org.atomnuke.config.model.Bindings;
-import org.atomnuke.config.model.MessageActor;
-import org.atomnuke.config.model.MessageActors;
-import org.atomnuke.config.model.MessageSource;
-import org.atomnuke.config.model.MessageSources;
-import org.atomnuke.config.model.ServerConfiguration;
+import org.atomnuke.atombus.config.model.Binding;
+import org.atomnuke.atombus.config.model.Bindings;
+import org.atomnuke.atombus.config.model.MessageActor;
+import org.atomnuke.atombus.config.model.MessageActors;
+import org.atomnuke.atombus.config.model.MessageSource;
+import org.atomnuke.atombus.config.model.MessageSources;
+import org.atomnuke.atombus.config.model.ServerConfiguration;
 
 /**
  *

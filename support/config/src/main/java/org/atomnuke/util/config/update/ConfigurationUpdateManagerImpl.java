@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author zinic
  */
-public class ConfigurationUpdateManagerImpl implements ConfigurationUpdateManager {
+public class ConfigurationUpdateManagerImpl implements ConfigurationUpdateService {
 
    private static final Logger LOG = LoggerFactory.getLogger(ConfigurationUpdateManagerImpl.class);
 

@@ -1,7 +1,7 @@
 package org.atomnuke.cli.command.actor;
 
+import org.atomnuke.atombus.config.model.MessageActor;
 import org.atomnuke.cli.CliConfigurationHandler;
-import org.atomnuke.config.model.MessageActor;
 import org.atomnuke.util.cli.command.AbstractCommandList;
 import org.atomnuke.util.cli.command.result.CommandResult;
 import org.atomnuke.util.cli.command.result.MessageResult;

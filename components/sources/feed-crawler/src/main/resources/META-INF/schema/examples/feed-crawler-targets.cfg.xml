@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<crawler-targets xmlns='http://atomnuke.org/configuration/feed-crawler' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>
+   <feed actor-ref="crawler-1" href="http://host.domain:8080/dat/feed">
+      <fs-options>
+         <state-file>file:/var/lib/atomnuke/crawler1.state</state-file>
+      </fs-options>
+
+      <http-options>
+         <headers>
+            <header name="X-AUTH-TOKEN">12345</header>
+         </headers>
+      </http-options>
+   </feed>
+
+   <feed actor-ref="crawler-2" href="http://host.domain:8080/other/feed">
+      <fs-options>
+         <state-file>file:/var/lib/atomnuke/crawler2.state</state-file>
+      </fs-options>
+
+      <http-options>
+         <headers>
+            <header name="X-AUTH-TOKEN">67890</header>
+         </headers>
+      </http-options>
+   </feed>
+</crawler-targets>

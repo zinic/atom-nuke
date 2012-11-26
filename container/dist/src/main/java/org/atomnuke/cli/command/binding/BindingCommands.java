@@ -1,7 +1,7 @@
 package org.atomnuke.cli.command.binding;
 
+import org.atomnuke.atombus.config.model.Binding;
 import org.atomnuke.cli.CliConfigurationHandler;
-import org.atomnuke.config.model.Binding;
 import org.atomnuke.util.cli.command.AbstractCommandList;
 import org.atomnuke.util.cli.command.result.CommandResult;
 import org.atomnuke.util.cli.command.result.MessageResult;

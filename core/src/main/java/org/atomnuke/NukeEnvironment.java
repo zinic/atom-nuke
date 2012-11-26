@@ -1,7 +1,6 @@
 package org.atomnuke;
 
 /**
- *
  * @author zinic
  */
 public interface NukeEnvironment {

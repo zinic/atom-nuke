@@ -1,9 +1,9 @@
 package org.atomnuke.cli.command.binding;
 
 import java.util.UUID;
+import org.atomnuke.atombus.config.model.Binding;
 import org.atomnuke.cli.CliConfigurationHandler;
 import org.atomnuke.cli.command.AbstractNukeCommand;
-import org.atomnuke.config.model.Binding;
 import org.atomnuke.util.cli.command.result.CommandFailure;
 import org.atomnuke.util.cli.command.result.CommandResult;
 import org.atomnuke.util.cli.command.result.CommandSuccess;

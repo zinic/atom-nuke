@@ -1,6 +1,6 @@
 package org.atomnuke.util;
 
-import org.atomnuke.config.model.LanguageType;
+import org.atomnuke.atombus.config.model.LanguageType;
 import org.atomnuke.container.packaging.bindings.lang.BindingLanguage;
 
 /**

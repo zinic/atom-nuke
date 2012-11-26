@@ -1,10 +1,10 @@
 package org.atomnuke.cli.command.param;
 
 import java.util.Iterator;
+import org.atomnuke.atombus.config.model.MessageActor;
+import org.atomnuke.atombus.config.model.Parameter;
+import org.atomnuke.atombus.config.model.Parameters;
 import org.atomnuke.cli.CliConfigurationHandler;
-import org.atomnuke.config.model.MessageActor;
-import org.atomnuke.config.model.Parameter;
-import org.atomnuke.config.model.Parameters;
 import org.atomnuke.util.cli.command.AbstractCommandList;
 import org.atomnuke.util.cli.command.result.CommandFailure;
 import org.atomnuke.util.cli.command.result.CommandResult;
