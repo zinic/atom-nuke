@@ -8,7 +8,7 @@
 
       <http-options>
          <headers>
-            <header name="X-AUTH-TOKEN">12345</header>
+            <header name="X-TRACE">12345</header>
          </headers>
       </http-options>
    </feed>
@@ -20,7 +20,7 @@
 
       <http-options>
          <headers>
-            <header name="X-AUTH-TOKEN">67890</header>
+            <header name="X-TRACE">67890</header>
          </headers>
       </http-options>
    </feed>
