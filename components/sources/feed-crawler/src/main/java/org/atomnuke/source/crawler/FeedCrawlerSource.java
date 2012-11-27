@@ -183,6 +183,8 @@ public class FeedCrawlerSource implements AtomSource {
             if (feedTarget.getFsOptions() != null) {
                stateFile = new File(URI.create(feedTarget.getFsOptions().getStateFile()));
             }
+            
+            break;
          }
       }
    }
