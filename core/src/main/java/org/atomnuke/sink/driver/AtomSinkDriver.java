@@ -23,7 +23,7 @@ public class AtomSinkDriver extends ReclaimableTaskPartial {
             } else if (argument.entry() != null) {
                argument.setCapturedResult(instance.entry(argument.entry()));
             } else {
-               argument.setCapturedResult(AtomSinkResult.halt("Feed document was null."));
+               argument.setCapturedResult(AtomSinkResult.ok());
             }
          } catch (AtomSinkException ale) {
             throw new OperationFailureException(ale);

@@ -15,7 +15,7 @@ import org.atomnuke.util.config.io.marshall.jaxb.JaxbConfigurationMarhsaller;
  */
 public class ServerConfigurationMarhsaller extends JaxbConfigurationMarhsaller<ServerConfiguration> {
 
-   private static final QName NUKE_QNAME = new QName("http://atomnuke.org/configuration", "nuke");
+   private static final QName NUKE_QNAME = new QName("http://atomnuke.org/configuration/atombus", "atombus");
 
    public ServerConfigurationMarhsaller() throws JAXBException {
       this(JAXBContext.newInstance(ObjectFactory.class));

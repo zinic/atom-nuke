@@ -88,15 +88,18 @@ public class UpdateContext<T> implements ConfigurationContext<T> {
    public void dispatch() throws ConfigurationException {
       final T configuration = manager.read();
 
-      final UpdateTag currentUpdateTag = currentUpdateTag();
+      // TODO: This might mask a deeper error - should use exception handling
+      if (configuration != null) {
+         final UpdateTag currentUpdateTag = currentUpdateTag();
 
-      for (ListenerContext<T> listenerContext : getListeners()) {
-         if (listenerContext.lastUpdateTagSeen() == null || !listenerContext.lastUpdateTagSeen().equals(currentUpdateTag)) {
-            try {
-               listenerContext.configurationListener().updated(configuration);
-               listenerContext.setLastUpdateTagSeen(currentUpdateTag);
-            } catch (Exception ex) {
-               LOG.error("Configuration exception during dispatch: " + ex.getMessage(), ex);
+         for (ListenerContext<T> listenerContext : getListeners()) {
+            if (listenerContext.lastUpdateTagSeen() == null || !listenerContext.lastUpdateTagSeen().equals(currentUpdateTag)) {
+               try {
+                  listenerContext.configurationListener().updated(configuration);
+                  listenerContext.setLastUpdateTagSeen(currentUpdateTag);
+               } catch (Exception ex) {
+                  LOG.error("Configuration exception during dispatch: " + ex.getMessage(), ex);
+               }
             }
          }
       }

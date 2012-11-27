@@ -13,7 +13,7 @@ public interface NukeEnvironment {
 
    boolean debugEnabled();
 
-   String configurationLocation();
+   String configurationDirectory();
 
    String deploymentDirectory();
 

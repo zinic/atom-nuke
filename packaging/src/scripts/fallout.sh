@@ -2,9 +2,9 @@
 
 # Nuke env variables
 export NUKE_HOME="/var/lib/atomnuke";
-export NUKE_DEPLOY="${NUKE_HOME}/deployed";
-export NUKE_LIB="${NUKE_HOME}/deployable";
-export NUKE_CONFIG="/etc/atomnuke/nuke.cfg.xml";
+export NUKE_DEPLOY_DIR="${NUKE_HOME}/deployed";
+export NUKE_LIB_DIR="${NUKE_HOME}/deployable";
+export NUKE_CONFIG_DIR="/etc/atomnuke";
 
 # Location of the jar distribution
 JAR_LOCATION="/usr/lib/atomnuke/fallout-full.jar";

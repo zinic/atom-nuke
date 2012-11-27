@@ -21,17 +21,21 @@ public final class StaticNukeEnvironment implements NukeEnvironment {
       return INSTANCE;
    }
 
-   private final String homeDirectory, deploymentDirectory, libraryDirectory, configurationLocation;
+   private final String homeDirectory, deploymentDirectory, libraryDirectory, configurationDirectory;
    private final boolean debugEnabled;
    private final int numProcessors;
 
    public StaticNukeEnvironment() {
+      // Important directories
       homeDirectory = fromEnv("NUKE_HOME", fromSystem("user.home", "") + File.separator + ".nuke");
-      deploymentDirectory = fromEnv("NUKE_DEPLOY", homeDirectory + File.separator + "deployed");
-      libraryDirectory = fromEnv("NUKE_LIB", homeDirectory + File.separator + "lib");
-      configurationLocation = fromEnv("NUKE_CONFIG", homeDirectory + File.separator + "nuke.cfg.xml");
+      deploymentDirectory = fromEnv("NUKE_DEPLOY_DIR", homeDirectory + File.separator + "deployed");
+      libraryDirectory = fromEnv("NUKE_LIB_DIR", homeDirectory + File.separator + "lib");
+      configurationDirectory = fromEnv("NUKE_CONFIG_DIR", homeDirectory + File.separator + "etc");
+
+      // Global debug setting
       debugEnabled = Boolean.parseBoolean(fromEnv("DEBUG", "false"));
 
+      // Number of available processors
       numProcessors = Runtime.getRuntime().availableProcessors();
    }
 
@@ -66,8 +70,8 @@ public final class StaticNukeEnvironment implements NukeEnvironment {
    }
 
    @Override
-   public String configurationLocation() {
-      return configurationLocation;
+   public String configurationDirectory() {
+      return configurationDirectory;
    }
 
    @Override

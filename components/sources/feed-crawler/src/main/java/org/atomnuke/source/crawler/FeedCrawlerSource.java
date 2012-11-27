@@ -55,10 +55,10 @@ public class FeedCrawlerSource implements AtomSource {
    private static final QName _CrawlerTargets_QNAME = new QName("http://atomnuke.org/configuration/feed-crawler", "crawler-targets");
    private static final String CFG_MANAGER_NAME = "FeedCrawlerTargetsConfigurationManager";
    private static final Logger LOG = LoggerFactory.getLogger(FeedCrawlerSource.class);
-
+   
    private final AtomReaderFactory atomReaderFactory;
    private final Map<String, String> httpHeaders;
-
+   
    private String nextLocation, myActorId;
    private HttpClient httpClient;
    private File stateFile;
@@ -68,13 +68,13 @@ public class FeedCrawlerSource implements AtomSource {
       httpHeaders = new HashMap<String, String>();
    }
 
-   public ConfigurationContext<FeedCrawlerTargets> getConfigurationContext(ServicesInterrogator interrogator, String configurationLocation) throws JAXBException, ServiceUnavailableException, ConfigurationException {
+   public ConfigurationContext<FeedCrawlerTargets> getConfigurationContext(ServicesInterrogator interrogator, String configDir) throws JAXBException, ServiceUnavailableException, ConfigurationException {
       final ConfigurationUpdateService cfgService = interrogator.firstAvailable(ConfigurationUpdateService.class);
 
       ConfigurationContext<FeedCrawlerTargets> ctx = cfgService.get(CFG_MANAGER_NAME);
 
       if (ctx == null) {
-         final File configurationFile = new File(configurationLocation, "feed-crawler-targets.cfg.xml");
+         final File configurationFile = new File(configDir, "feed-crawler-targets.cfg.xml");
          final ConfigurationMarshaller<FeedCrawlerTargets> marshallerInstance = JaxbConfigurationMarhsaller.newJaxConfigurationMarshaller(FeedCrawlerTargets.class, _CrawlerTargets_QNAME);
          final ConfigurationManager<FeedCrawlerTargets> targetsConfigurationManager = new FileConfigurationManager<FeedCrawlerTargets>(marshallerInstance, configurationFile);
 
@@ -89,7 +89,7 @@ public class FeedCrawlerSource implements AtomSource {
       myActorId = tc.actorId();
 
       try {
-         final ConfigurationContext<FeedCrawlerTargets> configContext = getConfigurationContext(tc.services(), tc.environment().configurationLocation());
+         final ConfigurationContext<FeedCrawlerTargets> configContext = getConfigurationContext(tc.services(), tc.environment().configurationDirectory());
 
          configContext.addListener(new ConfigurationListener<FeedCrawlerTargets>() {
             @Override
@@ -142,23 +142,26 @@ public class FeedCrawlerSource implements AtomSource {
 
    @Override
    public synchronized AtomSourceResult poll() throws AtomSourceException {
-      try {
-         final ReaderResult readResult = read(nextLocation);
+      if (nextLocation != null) {
+         try {
+            final ReaderResult readResult = read(nextLocation);
 
-         if (readResult.isFeed()) {
-            for (Link pageLink : readResult.getFeed().links()) {
-               if (pageLink.rel().equalsIgnoreCase("previous")) {
-                  nextLocation = pageLink.href();
-                  writeState();
-
-                  return new AtomSourceResultImpl(readResult.getFeed());
+            if (readResult.isFeed()) {
+               for (Link pageLink : readResult.getFeed().links()) {
+                  if (pageLink.rel().equalsIgnoreCase("previous")) {
+                     nextLocation = pageLink.href();
+                     writeState();
+                     break;
+                  }
                }
+               
+               return new AtomSourceResultImpl(readResult.getFeed());
             }
+         } catch (Exception ex) {
+            throw new AtomSourceException("Failed to poll ATOM feed: \"" + nextLocation + "\"", ex);
          }
-      } catch (Exception ex) {
-         throw new AtomSourceException("Failed to poll ATOM feed: \"" + nextLocation + "\"", ex);
       }
-
+      
       return new AtomSourceResultImpl(new AtomSourceActionImpl(ActionType.OK));
    }
 

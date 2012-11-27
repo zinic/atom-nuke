@@ -94,7 +94,7 @@ public class NukeContainer {
 
    private void registerNukeCfgSink(ConfigurationUpdateService cfgUpdateManager) throws FalloutInitException {
       try {
-         final ConfigurationManager<ServerConfiguration> cfgManager = new ServerConfigurationFileManager(new File(nukeEnvironment.configurationLocation()));
+         final ConfigurationManager<ServerConfiguration> cfgManager = new ServerConfigurationFileManager(new File(nukeEnvironment.configurationDirectory(), "nuke.cfg.xml"));
          final ConfigurationContext<ServerConfiguration> configurationContext = cfgUpdateManager.register("Fallout File CFG", cfgManager);
 
          configurationContext.addListener(contextCfgListener);

@@ -167,7 +167,7 @@ public class FalloutContextImpl implements FalloutContext {
       final MessageActor sinkMessageActorDescriptor = cfgHandler.findMessageActor(binding.getSinkActor());
       final ActorEntry sinkActor = actorManager.getActor(binding.getSinkActor());
 
-      if (sinkActor == null) {
+      if (sinkActor == null || sinkMessageActorDescriptor == null) {
          throw new ConfigurationException("Unable to locate actor, \"" + binding.getSinkActor() + "\" for usage as a sink.");
       }
 
@@ -200,7 +200,7 @@ public class FalloutContextImpl implements FalloutContext {
       final MessageActor sourceMessageActorDescriptor = cfgHandler.findMessageActor(binding.getSourceActor());
       final MessageSource messageSourceDef = cfgHandler.findMessageSource(binding.getSourceActor());
 
-      if (messageSourceDef == null) {
+      if (messageSourceDef == null || sourceMessageActorDescriptor == null) {
          throw new ConfigurationException("Actor, \"" + binding.getSinkActor() + "\" does not have a source definition within the configuration.");
       }
 
