@@ -15,7 +15,9 @@ import org.atomnuke.util.cli.command.result.CommandSuccess;
  */
 public class AddSource extends AbstractNukeCommand {
 
-   private static final int SOURCE_ID = 0, POLLING_INTERVAL = 2, TIME_UNIT = 3;
+   private static final String TIME_UNIT_FAILURE_MESSAGE = "Time unit for polling period must be one of: nanoseconds, microseconds, milliseconds, seconds, minutes, hours, days.";
+   
+   private static final int SOURCE_ID = 0, POLLING_INTERVAL = 1, TIME_UNIT = 2;
 
    public AddSource(CliConfigurationHandler configurationHandler) {
       super(configurationHandler);
@@ -37,8 +39,12 @@ public class AddSource extends AbstractNukeCommand {
          return new CommandFailure("Usage: <source-id> [polling interval] [time-unit]");
       }
 
-      final boolean hasPollingInterval = arguments.length > 3;
-      final boolean hasTimeUnit = arguments.length > 4;
+      final boolean hasPollingInterval = arguments.length > 1;
+      final boolean hasTimeUnit = arguments.length > 2;
+
+      if (hasPollingInterval && !hasTimeUnit) {
+         return new CommandFailure(TIME_UNIT_FAILURE_MESSAGE);
+      }
 
       final CliConfigurationHandler cfgHandler = getConfigHandler();
 
@@ -53,15 +59,11 @@ public class AddSource extends AbstractNukeCommand {
 
       if (hasPollingInterval) {
          pollingInterval.setValue(Long.parseLong(arguments[POLLING_INTERVAL]));
-
-         if (hasTimeUnit) {
-            try {
-               pollingInterval.setUnit(TimeUnitType.fromValue(arguments[TIME_UNIT].toUpperCase()));
-            } catch (IllegalArgumentException iae) {
-               return new CommandFailure("Time unit must be one of: NANOSECONDS, MICROSECONDS, MILLISECONDS, SECONDS, MINUTES, HOURS, OR DAYS.");
-            }
-         } else {
-            pollingInterval.setUnit(TimeUnitType.MILLISECONDS);
+         
+         try {
+            pollingInterval.setUnit(TimeUnitType.fromValue(arguments[TIME_UNIT].toUpperCase()));
+         } catch (IllegalArgumentException iae) {
+            return new CommandFailure(TIME_UNIT_FAILURE_MESSAGE);
          }
       } else {
          pollingInterval.setValue(1);

@@ -1,7 +1,9 @@
 #[Nuke](http://atomnuke.org)#
-###[The Fast ATOM Framework](http://atomnuke.org)###
+###[The Fast ATOM Bus](http://atomnuke.org)###
 
 ##What is it?##
+
+###Nuke - The ATOM Implementation###
 
 Nuke is a collection of utilities built on a simple, fast ATOM implementation
 that aims for a minimal dependency footprint.
@@ -10,59 +12,142 @@ The ATOM implementation has its own model and utilizes a SAX parser and a StAX
 writer. The implementation was designed for immutability, maximum simplicity 
 and memory efficiency.
 
-Nuke also contains a polling event framework that can poll multiple sources. Each
-source may be registered with a configured polling interval that will govern how
-often the source is polled during normal operation.
+###Fallout - The ATOM Bus###
 
-Each source registered in Nuke may have any number of [ATOM listeners](https://github.com/zinic/atom-nuke/blob/master/core/src/main/java/org/atomnuke/listener/AtomListener.java)
-added to its dispatch list. These listeners will begin receiving events on the
-next scheduled poll.
+Nuke also contains a runtime container called [Fallout]() to host packages that
+contain the ATOM bus components.
 
-##How do I use it?##
+Fallout is a polling bus based off of an multi-core event dispatch kernel. The
+dispatch is backed by an generic execution pool. Fallout, by default, will attempt
+to take advantage of all available processors.
 
-###Blog Tutorials###
-
-* [Building a simple ATOM crawler with Atom Nuke, Netbeans 7.2 and Java](http://www.giantflyingsaucer.com/blog/?p=4078)
-* [Create an ATOM feed with Atom Nuke, NetBeans 7.2 and Java](http://www.giantflyingsaucer.com/blog/?p=4113)
-* [Finding specific ATOM categories using Atom Nuke and Java](http://www.giantflyingsaucer.com/blog/?p=4126)
-
-###The Nuke Event Bus###
-
-Nuke contains a high performance event dispatch kernel that's backed by an
-execution pool. The Nuke kernel supports nanosecond polling granularity.
-
-* [Event generator example](https://github.com/zinic/atom-nuke/blob/master/examples/src/main/java/org/atomnuke/examples/EventGeneratorMain.java)
+The Nuke kernel supports polling granularity as grainular as the underlying JVM
+implementation's timer.
 
 For more information see the [Nuke kernel](https://github.com/zinic/atom-nuke/blob/master/core/src/main/java/org/atomnuke/NukeKernel.java)
 and the [Nuke kernel run delegate](https://github.com/zinic/atom-nuke/blob/master/core/src/main/java/org/atomnuke/KernelDelegate.java).
 
+
+##How do I use it?##
+
+###Maven Repository###
+
+```xml
+<repository>
+	<id>releases.maven.research.rackspace.com</id>
+
+	<name>Rackspace Research Releases</name>
+	<url>http://maven.research.rackspacecloud.com/content/repositories/releases</url>
+</repository>
+```
+
+###Installing Fallout###
+
+####Using the Fallout RPM####
+
+The Fallout RPM provides the default set of services as a collection of package
+along with the Fallout libraries necessarry.
+
+The latest RPM may be downloaded at: [Nuke Fallout 1.1.5 RPM](http://maven.research.rackspacecloud.com/content/repositories/releases/org/atomnuke/packaging/nuke-rpm/1.1.5/nuke-rpm-1.1.5-rpm.rpm)
+
+
+```bash
+# Working on renaming the RPM...
+rpm -ivh nuke-rpm-1.1.5.rpm
+
+fallout
+```
+
+###Interacting with the Fallout CLI###
+
+Fallout is a persistent actor, source-sink bus, designed to be explicitly simple.
+
+####Adding an Actor####
+
+An actor is one of either interfaces, an [ATOM source](https://github.com/zinic/atom-nuke/blob/master/core/src/main/java/org/atomnuke/source/AtomSource.java)
+or an [ATOM sink](https://github.com/zinic/atom-nuke/blob/master/core/src/main/java/org/atomnuke/sink/AtomSink.java).
+
+Actors may be defined as one of three languages: javascript, java or python.
+
+```bash
+fallout actors add http-in-1 java org.atomnuke.http.HttpSource
+fallout actors add id-echo java org.atomnuke.utilities.sinks.JavaIdEchoSink
+```
+
+The actor may have some simple parameters set on it as well.
+
+```bash
+fallout params http-in-1 set debug true
+```
+
+####Making an Actor a Polling Target####
+
+An actor that implements the ATOMSource interface may be treated as a polling 
+target. The polling interval may be configured anywhere from nanoseconds 
+(JVM implementation dependent) to days.
+
+```bash
+# Poll the HTTP source every 10 milliseconds; a max of 100 events per second
+fallout sources add http-in-1 10 milliseconds
+```
+
+####Binding a Source to a Sink Actor####
+
+An actor that implements the ATOMSink interface may be bound to any number of
+configured sources. Once bound, the sink actor will receive events emitted by
+the source actors.
+
+```bash
+# Bind the ID echo sink to the HTTP source to emit the ID of any events published to the HTTP endpoint
+fallout bindings add http-in-1 id-echo
+```
+
+####Starting Fallout####
+
+Once the configuration has been completed, you can start Fallout!
+
+```bash
+fallout server start
+```
+
+###Other Fallout CLI Commands###
+
+####Listing Configuration Elements####
+
+```bash
+fallout actors
+fallout sources
+fallout params <actor-id>
+fallout bindings
+```
+
+####Removing Configuration Elements####
+
+```bash
+fallout actors rm <actor-id>
+fallout sources rm <actor-id>
+fallout params <actor-id> rm <param-name>
+fallout bindings rm <binding-id>
+```
+
 ###As a Feed Crawler###
 
-By default Nuke comes with an [ATOM source](https://github.com/zinic/atom-nuke/blob/master/core/src/main/java/org/atomnuke/source/AtomSource.java)
-that is useful for crawling feeds. The crawler is designed specifically to work 
-with [AtomHopper](http://atomhopper.org/).
+By default Nuke comes with an ATOM Source that is useful for crawling feeds. The
+crawler is designed specifically to work with [AtomHopper](http://atomhopper.org/).
 
-* [Using the Feed Crawler](https://github.com/zinic/atom-nuke/blob/master/examples/src/main/java/org/atomnuke/examples/HDFSMain.java)
-
-###ATOM Entry Event Selection###
-
-Nuke contains a framework for turning ATOM feeds and entries into selectable
-events. This framework is called the [event processing system or EPS](https://github.com/zinic/atom-nuke/tree/master/core/src/main/java/org/atomnuke/listener/eps) for short.
-
-* [Using an EPS Relay](https://github.com/zinic/atom-nuke/blob/master/examples/src/main/java/org/atomnuke/examples/EPSMain.java)
-* [The Eventlet interface](https://github.com/zinic/atom-nuke/blob/master/core/src/main/java/org/atomnuke/listener/eps/eventlet/AtomEventlet.java)
-* [The Selector interface](https://github.com/zinic/atom-nuke/blob/master/core/src/main/java/org/atomnuke/listener/eps/selector/Selector.java)
+For more information, please see the [nuke feed crawler source README](https://github.com/zinic/atom-nuke/blob/master/components/sources/feed-crawler).
 
 ###Other Java Code Exmaples###
 
 * [HDFS Example Listener](https://github.com/zinic/atom-nuke/blob/master/examples/src/main/java/org/atomnuke/examples/listener/HDFSFeedListener.java)
 
-##Features Missing##
+##Model Features Missing##
 
 * Extensible elements - Internal elements are currently treated as text content.
 
 ##Release Notes##
-* [Release Notes](https://github.com/zinic/atom-nuke/wiki/Release-Notes) can be found in the wiki
+
+* [Release Notes](https://github.com/zinic/atom-nuke/wiki/Release-Notes) can be found in the wiki.
 
 ##That Legal Thing...##
 

@@ -39,11 +39,11 @@ public class AddBinding extends AbstractNukeCommand {
       final CliConfigurationHandler cfgHandler = getConfigHandler();
 
       if (cfgHandler.findMessageSource(arguments[SOURCE_ID]) == null) {
-         return new CommandFailure("Unable to locate a source with the id, \"" + arguments[SOURCE_ID] + "\" to binding to.");
+         return new CommandFailure("Unable to locate a source with the id, \"" + arguments[SOURCE_ID] + "\" to bind to.");
       }
 
       if (cfgHandler.findMessageActor(arguments[SINK_ID]) == null) {
-         return new CommandFailure("Unable to locate a message actor with the id, \"" + arguments[SINK_ID] + "\" for binding to.");
+         return new CommandFailure("Unable to locate a message actor with the id, \"" + arguments[SINK_ID] + "\" for binding.");
       }
 
       for (Binding binding : cfgHandler.getBindings()) {
