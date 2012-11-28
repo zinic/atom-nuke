@@ -9,9 +9,9 @@
    </parent>
 
    <groupId>org.atomnuke.packaging</groupId>
-   <artifactId>nuke-rpm</artifactId>
+   <artifactId>nuke-fallout</artifactId>
 
-   <packaging>pom</packaging>
+   <packaging>rpm</packaging>
 
    <name>Atom Nuke - Packaging - RPM</name>
 

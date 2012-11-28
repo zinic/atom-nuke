@@ -31,7 +31,7 @@
             <plugin>
                <groupId>org.codehaus.mojo</groupId>
                <artifactId>rpm-maven-plugin</artifactId>
-               <version>2.1-alpha-1</version>
+               <version>2.1-alpha-2</version>
                
                <executions>
                   <execution>
@@ -40,7 +40,6 @@
                      <phase>package</phase>
 
                      <goals>
-                        <goal>rpm</goal>
                         <goal>attached-rpm</goal>
                      </goals>
                   </execution>
