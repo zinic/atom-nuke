@@ -1,21 +1,23 @@
 package org.atomnuke;
 
+import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 import org.atomnuke.examples.eventlets.CounterEventlet;
 import org.atomnuke.examples.source.EventGenerator;
 import org.atomnuke.fallout.service.gc.FalloutReclamationService;
 import org.atomnuke.sink.eps.EventletChainSink;
-import org.atomnuke.plugin.InstanceContextImpl;
-import org.atomnuke.plugin.env.NopInstanceEnvironment;
+import org.atomnuke.plugin.context.NopInstanceContext;
 import org.atomnuke.plugin.proxy.japi.JapiProxyFactory;
 import org.atomnuke.service.RuntimeServiceManager;
 import org.atomnuke.service.Service;
 import org.atomnuke.service.ServiceManager;
+import org.atomnuke.service.introspection.ServicesInterrogatorImpl;
 import org.atomnuke.task.atom.AtomTask;
 import org.atomnuke.task.context.TaskContextImpl;
 import org.atomnuke.util.TimeValue;
 import org.junit.Test;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -33,12 +35,12 @@ public class NukeKernelTest {
 
          final EventletChainSink relay = new EventletChainSink();
 
-         final ServiceManager svcManager = new RuntimeServiceManager(new JapiProxyFactory());
+         final ServiceManager svcManager = new RuntimeServiceManager(StaticNukeEnvironment.get(), new JapiProxyFactory());
 
-         svcManager.submit(new InstanceContextImpl<Service>(NopInstanceEnvironment.getInstance(), new FalloutReclamationService()));
+         svcManager.submit(new NopInstanceContext<Service>(new FalloutReclamationService()));
          svcManager.resolve();
 
-         relay.init(new TaskContextImpl(null, null, svcManager, null));
+         relay.init(new TaskContextImpl(StaticNukeEnvironment.get(), LoggerFactory.getLogger(NukeKernelTest.class), Collections.EMPTY_MAP, new ServicesInterrogatorImpl(svcManager), null, "test"));
 
          relay.enlistHandler(new CounterEventlet(eventsProcessed, false));
          relay.enlistHandler(new CounterEventlet(eventsProcessed, false));
