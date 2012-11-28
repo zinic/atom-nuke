@@ -24,7 +24,7 @@ The Nuke kernel supports polling granularity as grainular as the underlying JVM
 implementation's timer.
 
 For more information see the [Nuke kernel](https://github.com/zinic/atom-nuke/blob/master/core/src/main/java/org/atomnuke/NukeKernel.java)
-and the [Nuke kernel run delegate](https://github.com/zinic/atom-nuke/blob/master/core/src/main/java/org/atomnuke/KernelDelegate.java).
+and the [Nuke kernel run delegate](https://github.com/zinic/atom-nuke/blob/master/core/src/main/java/org/atomnuke/kernel/GenericKernelDelegate.java).
 
 
 ##How do I use it?##
