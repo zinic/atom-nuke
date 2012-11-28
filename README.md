@@ -1,18 +1,17 @@
-#[Nuke](http://atomnuke.org)#
-###[The Fast ATOM Bus](http://atomnuke.org)###
+#[Nuke - The Fast ATOM Bus](http://atomnuke.org)#
 
 ##What is it?##
-
-###Nuke - The ATOM Implementation###
 
 Nuke is a collection of utilities built on a simple, fast ATOM implementation
 that aims for a minimal dependency footprint.
 
-The ATOM implementation has its own model and utilizes a SAX parser and a StAX
-writer. The implementation was designed for immutability, maximum simplicity 
-and memory efficiency.
+###The ATOM Implementation###
 
-###Fallout - The ATOM Bus###
+The ATOM implementation within in Nuke has its own model that utilizes a SAX parser
+and StAX writer for serialization and deserialization. The model interfaces are
+immutable for simplicity and with the model itself emphasizing memory efficiency.
+
+###Fallout###
 
 Nuke also contains a runtime container called [Fallout]() to host packages that
 contain the ATOM bus components.
@@ -41,7 +40,25 @@ and the [Nuke kernel run delegate](https://github.com/zinic/atom-nuke/blob/maste
 </repository>
 ```
 
-###Installing Fallout###
+###Installing and Configuring Fallout###
+
+####Fallout Directories####
+
+Fallout directories are configured via setting environment variables. See the
+[Fallout run script](https://github.com/zinic/atom-nuke/blob/master/packaging/src/scripts/fallout.sh)
+for more information.
+
+<table>
+	<thead>
+    	<tr><th>Environment Variable Name</th><th>Usage</th><th>Default</th>
+    </thead>
+    <tbody>
+    	<tr><td>NUKE_HOME</td><td>Nuke home directory. Only setting this utilizes the defaults for all other environment variables.</td><td>~/.nuke</td></tr>
+        <tr><td>NUKE_LIB_DIR</td><td>Directory to load packages from.</td><td>${NUKE_HOME}/lib</td></tr>
+        <tr><td>NUKE_CFG_DIR</td><td>Default directory for configurations without absolute paths.</td><td>${NUKE_HOME}/etc</td></tr>
+        <tr><td>NUKE_DEPLOY_DIR</td><td>Directory to deploy packages to.</td><td>${NUKE_HOME}/deployed</td></tr>
+    </tbody>
+</table>
 
 ####Using the Fallout RPM####
 
@@ -54,8 +71,6 @@ The latest RPM may be downloaded at: [Nuke Fallout 1.1.5 RPM](http://maven.resea
 ```bash
 # Working on renaming the RPM...
 rpm -ivh nuke-rpm-1.1.5.rpm
-
-fallout
 ```
 
 ###Interacting with the Fallout CLI###
