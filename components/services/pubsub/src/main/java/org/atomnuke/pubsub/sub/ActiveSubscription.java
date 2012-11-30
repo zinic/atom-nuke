@@ -10,12 +10,12 @@ import org.atomnuke.util.remote.CancellationRemote;
  */
 public class ActiveSubscription {
 
-   private final SubscriptionSelector subscriptionSelector;
+   private final RegexCategorySelector subscriptionSelector;
    private final SubscriptionEventlet subscriptionEventlet;
    private final CancellationRemote cancellationRemote;
    private SubscriptionDocument subscriptionDocument;
 
-   public ActiveSubscription(SubscriptionSelector subscriptionSelector, SubscriptionEventlet subscriptionEventlet, CancellationRemote cancellationRemote) {
+   public ActiveSubscription(RegexCategorySelector subscriptionSelector, SubscriptionEventlet subscriptionEventlet, CancellationRemote cancellationRemote) {
       this.subscriptionSelector = subscriptionSelector;
       this.subscriptionEventlet = subscriptionEventlet;
       this.cancellationRemote = cancellationRemote;
@@ -29,7 +29,7 @@ public class ActiveSubscription {
       return subscriptionDocument;
    }
 
-   public SubscriptionSelector subscriptionSelector() {
+   public RegexCategorySelector subscriptionSelector() {
       return subscriptionSelector;
    }
 

@@ -40,23 +40,18 @@ public class TemporarySubscriptionManager implements SubscriptionManager {
       ActiveSubscription subscription = activeSubscriptions.get(sdoc.getId());
 
       if (subscription == null && !sdoc.getCategories().isEmpty()) {
-         final SubscriptionCategory subscriptionCategory = sdoc.getCategories().iterator().next();
-         final SubscriptionEventlet eventlet = new SubscriptionEventlet(subscriptionCategory, httpClient, sdoc.getId(), sdoc.getCallback());
-         final SubscriptionSelector selector = new SubscriptionSelector();
+         final SubscriptionEventlet eventlet = new SubscriptionEventlet(httpClient, sdoc.getId(), sdoc.getCallback());
+         final RegexCategorySelector selector = new RegexCategorySelector();
          final CancellationRemote cancellationRemote = eventletHandler.enlistHandler(eventlet, selector);
 
          subscription = new ActiveSubscription(selector, eventlet, cancellationRemote);
          activeSubscriptions.put(sdoc.getCallback(), subscription);
 
-         subscription.subscriptionSelector().addCategory(
-                 new CategoryBuilder().setScheme(subscriptionCategory.getScheme()).setTerm(subscriptionCategory.getTerm()).build());
+         // Subscribe
+         for (SubscriptionCategory subscriptionCategory : sdoc.getCategories()) {
+            subscription.subscriptionSelector().selectOn(subscriptionCategory);
+         }
       }
-
-      // Subscribe
-//      for (SubscriptionCategory subscriptionCategory : sdoc.getCategories()) {
-//         subscription.subscriptionSelector().addCategory(
-//                 new CategoryBuilder().setScheme(subscriptionCategory.getScheme()).setTerm(subscriptionCategory.getTerm()).build());
-//      }
    }
 
    @Override
