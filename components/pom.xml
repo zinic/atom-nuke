@@ -33,6 +33,7 @@
       <!-- Services -->
       <module>services</module>      
       <module>services/jetty</module>
+      <module>services/netty</module>
       <module>services/config</module>
       <module>services/pubsub</module>
       <module>services/http-client</module>

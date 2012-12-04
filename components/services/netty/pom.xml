@@ -1,0 +1,57 @@
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+   <modelVersion>4.0.0</modelVersion>
+
+   <parent>
+      <groupId>org.atomnuke.components</groupId>
+      <artifactId>components</artifactId>
+      <version>1.1.7-SNAPSHOT</version>
+      
+      <relativePath>./../../</relativePath>
+   </parent>
+
+   <groupId>org.atomnuke.components.services</groupId>
+   <artifactId>netty</artifactId>
+
+   <packaging>jar</packaging>
+
+   <name>Atom Nuke - Services - Netty Service</name>
+
+   <dependencies>
+      <dependency>
+         <groupId>io.netty</groupId>
+         <artifactId>netty</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>org.atomnuke.container</groupId>
+         <artifactId>fallout</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>com.rackspace.papi.commons</groupId>
+         <artifactId>utilities</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>org.slf4j</groupId>
+         <artifactId>slf4j-api</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>org.slf4j</groupId>
+         <artifactId>slf4j-log4j12</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>log4j</groupId>
+         <artifactId>log4j</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>junit</groupId>
+         <artifactId>junit</artifactId>
+         <scope>test</scope>
+      </dependency>
+   </dependencies>
+</project>
