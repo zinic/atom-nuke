@@ -165,6 +165,12 @@
             <artifactId>httpclient</artifactId>
             <version>4.2</version>
          </dependency>
+         
+         <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty</artifactId>
+            <version>3.5.11.Final</version>
+         </dependency>
 
          <dependency>
             <groupId>org.eclipse.jetty</groupId>
