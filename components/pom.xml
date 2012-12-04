@@ -23,6 +23,7 @@
       <module>sources/http-listener</module>
       <module>sources/util-sources</module>
       <module>sources/collectd-http</module>
+      <module>sources/syslog-netty</module>
       <module>sources/aggregator</module>
 
       <!-- Sinks -->
@@ -74,6 +75,12 @@
          <dependency>
             <groupId>org.atomnuke.components.services</groupId>
             <artifactId>configuration</artifactId>
+            <version>${project.version}</version>
+         </dependency>
+
+         <dependency>
+            <groupId>org.atomnuke.components.services</groupId>
+            <artifactId>netty</artifactId>
             <version>${project.version}</version>
          </dependency>
 

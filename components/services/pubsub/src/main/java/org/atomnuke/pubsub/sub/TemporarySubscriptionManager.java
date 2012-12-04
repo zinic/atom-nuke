@@ -4,7 +4,6 @@ import org.atomnuke.pubsub.eventlet.SubscriptionEventlet;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.http.client.HttpClient;
-import org.atomnuke.atom.model.builder.CategoryBuilder;
 import org.atomnuke.pubsub.api.type.SubscriptionCategory;
 import org.atomnuke.pubsub.api.type.SubscriptionDocument;
 import org.atomnuke.pubsub.api.type.SubscriptionDocumentCollection;
@@ -39,6 +38,7 @@ public class TemporarySubscriptionManager implements SubscriptionManager {
       // Get the eventlet configuration reference
       ActiveSubscription subscription = activeSubscriptions.get(sdoc.getId());
 
+      // Make sure we have categories to work with
       if (subscription == null && !sdoc.getCategories().isEmpty()) {
          final SubscriptionEventlet eventlet = new SubscriptionEventlet(httpClient, sdoc.getId(), sdoc.getCallback());
          final RegexCategorySelector selector = new RegexCategorySelector();
