@@ -6,5 +6,14 @@ package org.atomnuke.syslog.parser;
  */
 public interface CharConstants {
 
-   static final char LEFT_ANGLE_BRACKET = '<', RIGHT_ANGLE_BRACKET = '>', SPACE = ' ', NIL_CHAR = '-';
+   static final char LEFT_ANGLE_BRACKET = '<',
+           RIGHT_ANGLE_BRACKET = '>', 
+           LEFT_SQUARE_BRACKET = '[',
+           RIGHT_SQUARE_BRACKET = ']',
+           QUOTE = '"',
+           EQUALS = '=',
+           SPACE = ' ',
+           ESCAPE = '\\',
+           NIL_CHAR = '-',
+           LINE_FEED = '\n';
 }

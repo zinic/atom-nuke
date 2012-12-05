@@ -11,7 +11,7 @@ import static org.jboss.netty.buffer.ChannelBuffers.*;
  */
 public class Accumulator {
 
-   private final ChannelBuffer accumulatorBuffer;
+   private ChannelBuffer frontBuffer, backBuffer;
    private int accumulatorLocation;
 
    public Accumulator() {
@@ -19,7 +19,15 @@ public class Accumulator {
    }
    
    public Accumulator(int initialSize) {
-      accumulatorBuffer = dynamicBuffer(initialSize);
+      frontBuffer = dynamicBuffer(initialSize);
+      backBuffer = directBuffer(initialSize);
+   }
+   
+   public void switchBuffers() {
+      final ChannelBuffer currentFront = frontBuffer;
+      
+      frontBuffer = backBuffer;
+      backBuffer = currentFront;
    }
 
    public int size() {
@@ -27,10 +35,13 @@ public class Accumulator {
    }
 
    public void add(byte c) {
-      accumulatorBuffer.writeByte(c);
+      frontBuffer.writeByte(c);
    }
 
    public String getAll(Charset charset) {
-      return accumulatorBuffer.toString(charset);
+      final String value = frontBuffer.toString(charset);
+      frontBuffer.clear();
+      
+      return value;
    }
 }

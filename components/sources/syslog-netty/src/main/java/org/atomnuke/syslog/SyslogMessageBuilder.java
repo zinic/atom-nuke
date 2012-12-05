@@ -8,9 +8,23 @@ import java.util.Calendar;
  */
 public class SyslogMessageBuilder implements SyslogMessage {
 
-   private String originHostname, applicationName, processId, messageId;
+   private final StructuredDataBuilder structuredDataBuilder;
+   
+   private String originHostname, applicationName, processId, messageId, content;
    private int priority, version;
    private Calendar timestamp;
+
+   public SyslogMessageBuilder() {
+      structuredDataBuilder = new StructuredDataBuilder();
+   }
+
+   public StructuredDataBuilder getStructuredDataBuilder() {
+      return structuredDataBuilder;
+   }
+
+   public void setContent(String content) {
+      this.content = content;
+   }
 
    public void setVersion(int version) {
       this.version = version;
@@ -39,12 +53,22 @@ public class SyslogMessageBuilder implements SyslogMessage {
    public void setMessageId(String messageId) {
       this.messageId = messageId;
    }
-   
+
+   @Override
+   public String content() {
+      return content;
+   }
+
+   @Override
+   public StructuredDataElement structuredData() {
+      return structuredDataBuilder;
+   }
+
    @Override
    public String messageId() {
       return messageId;
    }
-   
+
    @Override
    public int version() {
       return version;

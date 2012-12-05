@@ -24,7 +24,11 @@ public interface SyslogMessage {
 
    String processId();
 
+   String content();
+   
    String messageId();
+   
+   StructuredDataElement structuredData();
 
    int version();
 }

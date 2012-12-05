@@ -102,11 +102,16 @@ public class SyslogParser {
             break;
 
          case MESSAGE_ID_HEAD:
-            readValueHead(b, SyslogParserState.PROCESS_ID_CONTENT, SyslogParserState.MESSAGE_ID_HEAD);
+            readValueHead(b, SyslogParserState.MESSAGE_ID_CONTENT, SyslogParserState.STRUCTURED_DATA_HEAD);
             break;
 
          case MESSAGE_ID_CONTENT:
             readMessageIdContent(b);
+            break;
+            
+         case STRUCTURED_DATA_HEAD:
+            
+            readValueHead(b, SyslogParserState.MESSAGE_ID_CONTENT, SyslogParserState.STRUCTURED_DATA_HEAD);
             break;
 
          case STOP:
