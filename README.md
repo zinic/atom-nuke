@@ -65,7 +65,7 @@ for more information.
 The Fallout RPM provides the default set of services as a collection of package
 along with the Fallout libraries necessarry.
 
-The latest RPM may be downloaded at: [Nuke Fallout 1.1.5 RPM](http://maven.research.rackspacecloud.com/content/repositories/releases/org/atomnuke/packaging/nuke-rpm/1.1.5/nuke-rpm-1.1.5-rpm.rpm)
+The latest RPM may be downloaded at: [Nuke Fallout 1.1.8 RPM](http://maven.research.rackspacecloud.com/content/repositories/releases/org/atomnuke/packaging/nuke-fallout/1.1.8/nuke-fallout-1.1.8.rpm)
 
 
 ```bash
