@@ -31,7 +31,7 @@ public class Accumulator {
    }
 
    public int size() {
-      return accumulatorLocation;
+      return frontBuffer.readableBytes();
    }
 
    public void add(byte c) {

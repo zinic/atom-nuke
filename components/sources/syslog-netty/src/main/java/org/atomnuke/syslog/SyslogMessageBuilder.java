@@ -1,6 +1,8 @@
 package org.atomnuke.syslog;
 
 import java.util.Calendar;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  *
@@ -8,18 +10,23 @@ import java.util.Calendar;
  */
 public class SyslogMessageBuilder implements SyslogMessage {
 
-   private final StructuredDataBuilder structuredDataBuilder;
+   private final Set<StructuredDataBuilder> structuredDataBuilders;
    
    private String originHostname, applicationName, processId, messageId, content;
    private int priority, version;
    private Calendar timestamp;
 
    public SyslogMessageBuilder() {
-      structuredDataBuilder = new StructuredDataBuilder();
+      structuredDataBuilders = new HashSet<StructuredDataBuilder>();
    }
 
-   public StructuredDataBuilder getStructuredDataBuilder() {
-      return structuredDataBuilder;
+   public StructuredDataBuilder newStructuredDataBuilder(String sdName) {
+      final StructuredDataBuilder builder = new StructuredDataBuilder();
+      builder.setId(sdName);
+      
+      structuredDataBuilders.add(builder);
+      
+      return builder;
    }
 
    public void setContent(String content) {
@@ -60,8 +67,8 @@ public class SyslogMessageBuilder implements SyslogMessage {
    }
 
    @Override
-   public StructuredDataElement structuredData() {
-      return structuredDataBuilder;
+   public Set<? extends StructuredDataElement> structuredData() {
+      return structuredDataBuilders;
    }
 
    @Override

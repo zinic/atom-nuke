@@ -2,6 +2,7 @@ package org.atomnuke.syslog.parser;
 
 import java.text.ParseException;
 import java.util.Calendar;
+import org.atomnuke.syslog.StructuredDataBuilder;
 import org.atomnuke.syslog.SyslogMessage;
 import org.atomnuke.syslog.SyslogMessageBuilder;
 import org.atomnuke.syslog.util.RFC3339DateParser;
@@ -16,10 +17,12 @@ public class FramingSyslogParser {
 
    private final Accumulator characterAccumulator;
    private final SyslogMessageBuilder messageBuilder;
+   private StructuredDataBuilder structuredDataBuilder;
+   private boolean countOctets, escaped, skip;
    private SyslogParserState parserState;
+   private int octetsRemaining;
    private String errorMessage;
-   private int octetsRemaining, skipCount;
-   private boolean countOctets, escaped;
+   private char skipUntil;
 
    public FramingSyslogParser() {
       // Smallest message for syslog is 2K so we'll start there
@@ -28,10 +31,10 @@ public class FramingSyslogParser {
       // Sup.
       messageBuilder = new SyslogMessageBuilder();
       parserState = SyslogParserState.START;
-
-      skipCount = 0;
+      skipUntil = 0;
       countOctets = false;
       escaped = false;
+      skip = false;
    }
 
    public SyslogParserState getState() {
@@ -46,24 +49,30 @@ public class FramingSyslogParser {
       return errorMessage;
    }
 
-   private void skipNext(int bytes) throws SyslogParserException {
-      if (countOctets && skipCount > octetsRemaining) {
-         throw new SyslogParserException("Attempting to skip more bytes than available");
-      }
-
-      skipCount = bytes;
+   private void skipUntil(char controlChar) {
+      skip = true;
+      skipUntil = controlChar;
    }
 
-   public void next(byte b) {
+   private boolean shouldSkip(byte character) {
+      if (skip && character == skipUntil) {
+         // Done skipping
+         skip = false;
+
+         return true;
+      }
+
+      return skip;
+   }
+
+   public void next(byte nextByte) {
       if (countOctets) {
          octetsRemaining--;
       }
 
       try {
-         if (skipCount <= 0) {
-            handleByte(b);
-         } else {
-            skipCount--;
+         if (!shouldSkip(nextByte)) {
+            handleByte(nextByte);
          }
       } catch (SyslogParserException spe) {
          updateState(SyslogParserState.ERROR);
@@ -167,38 +176,40 @@ public class FramingSyslogParser {
       }
    }
 
-   private boolean doneAccumulating(byte b, char... controlCharacters) {
+   private boolean doneAccumulating(byte b, boolean prefixTrim, char... controlCharacters) {
       boolean done = false;
 
-      for (char control : controlCharacters) {
-         // Found a control character that matches
-         if (b == control) {
-            if (!escaped) {
-               // If this character isn't escaped then we're done
-               done = true;
-            } else {
-               // If this character is escaped, mark that we aren't escaped anymore and accumulate
-               escaped = false;
+      if (!prefixTrim || characterAccumulator.size() > 0 || b != CharConstants.SPACE) {
+         for (char control : controlCharacters) {
+            // Found a control character that matches
+            if (b == control) {
+               if (!escaped) {
+                  // If this character isn't escaped then we're done
+                  done = true;
+               } else {
+                  // If this character is escaped, mark that we aren't escaped anymore and accumulate
+                  escaped = false;
+               }
+
+               break;
             }
-
-            break;
          }
-      }
 
-      if (!done) {
-         characterAccumulator.add(b);
+         if (!done) {
+            characterAccumulator.add(b);
+         }
       }
 
       return done;
    }
 
-   private boolean doneAccumulatingEscaped(byte b, char... controlCharacters) {
+   private boolean doneAccumulatingEscaped(byte b, boolean prefixTrim, char... controlCharacters) {
       if (!escaped && b == CharConstants.ESCAPE) {
          escaped = true;
          return false;
       }
 
-      return doneAccumulating(b, controlCharacters);
+      return doneAccumulating(b, prefixTrim, controlCharacters);
    }
 
    private void readStart(byte b) {
@@ -227,26 +238,26 @@ public class FramingSyslogParser {
    private void readValueHead(byte b, SyslogParserState contentState, SyslogParserState nilValueState) {
       if (b == CharConstants.NIL_CHAR) {
          updateState(nilValueState);
-      } else {
+      } else if (b != CharConstants.SPACE) {
          characterAccumulator.add(b);
          updateState(contentState);
       }
    }
 
    private void readMessageOctetLength(byte b) throws SyslogParserException {
-      if (doneAccumulating(b, CharConstants.SPACE)) {
+      if (doneAccumulating(b, false, CharConstants.SPACE)) {
          countOctets = true;
          octetsRemaining = readAccumulatedInteger();
 
-         // Skip the left angle bracket
-         skipNext(1);
+         // Skip to the left angle bracket
+         skipUntil(CharConstants.LEFT_ANGLE_BRACKET);
 
          updateState(SyslogParserState.PRIORITY);
       }
    }
 
    private void readPriority(byte b) throws SyslogParserException {
-      if (doneAccumulating(b, CharConstants.RIGHT_ANGLE_BRACKET)) {
+      if (doneAccumulating(b, false, CharConstants.RIGHT_ANGLE_BRACKET)) {
          // Parse the priority value
          final Integer priority = readAccumulatedInteger();
          messageBuilder.setPriority(priority);
@@ -257,18 +268,23 @@ public class FramingSyslogParser {
    }
 
    private void readVersion(byte b) throws SyslogParserException {
-      if (doneAccumulating(b, CharConstants.SPACE)) {
+      if (doneAccumulating(b, false, CharConstants.SPACE)) {
+         // Versions aren't specified for older syslog versions
+         if (characterAccumulator.size() == 0) {
+            throw new SyslogParserException("This parser expects messages to conform to rfc5424.");
+         }
+
          // Parse the version value
          final Integer version = readAccumulatedInteger();
          messageBuilder.setVersion(version);
 
-         // Update the state for reading the version
+         // Update the state for reading the timestamp
          updateState(SyslogParserState.TIMESTAMP_HEAD);
       }
    }
 
    private void readTimestampContent(byte b) throws SyslogParserException {
-      if (doneAccumulating(b, CharConstants.SPACE)) {
+      if (doneAccumulating(b, false, CharConstants.SPACE)) {
          final String timestampValue = characterAccumulator.getAll(CharsetUtil.US_ASCII);
 
          try {
@@ -283,72 +299,67 @@ public class FramingSyslogParser {
    }
 
    private void readHostnameContent(byte b) {
-      if (doneAccumulating(b, CharConstants.SPACE)) {
+      if (doneAccumulating(b, true, CharConstants.SPACE)) {
          messageBuilder.setOriginHostname(characterAccumulator.getAll(CharsetUtil.US_ASCII));
          updateState(SyslogParserState.APPNAME_HEAD);
       }
    }
 
    private void readAppNameContent(byte b) {
-      if (doneAccumulating(b, CharConstants.SPACE)) {
+      if (doneAccumulating(b, true, CharConstants.SPACE)) {
          messageBuilder.setApplicationName(characterAccumulator.getAll(CharsetUtil.US_ASCII));
          updateState(SyslogParserState.PROCESS_ID_HEAD);
       }
    }
 
    private void readProcessIdContent(byte b) {
-      if (doneAccumulating(b, CharConstants.SPACE)) {
+      if (doneAccumulating(b, true, CharConstants.SPACE)) {
          messageBuilder.setProcessId(characterAccumulator.getAll(CharsetUtil.US_ASCII));
          updateState(SyslogParserState.MESSAGE_ID_HEAD);
       }
    }
 
    private void readMessageIdContent(byte b) {
-      if (doneAccumulating(b, CharConstants.SPACE)) {
+      if (doneAccumulating(b, true, CharConstants.SPACE)) {
          messageBuilder.setMessageId(characterAccumulator.getAll(CharsetUtil.US_ASCII));
          updateState(SyslogParserState.STRUCTURED_DATA_HEAD);
       }
    }
 
    private void readStructuredDataHead(byte b) {
-      if (b == CharConstants.NIL_CHAR) {
-         updateState(SyslogParserState.MESSAGE_CONTENT);
-      } else {
+      if (b == CharConstants.LEFT_SQUARE_BRACKET) {
          updateState(SyslogParserState.STRUCTURED_DATA_ID);
+      } else if (b != CharConstants.SPACE) {
+         // Not a space or a left square bracket - accumulate this, it's part of the message
+         characterAccumulator.add(b);
+
+         updateState(SyslogParserState.MESSAGE_CONTENT);
       }
    }
 
    private void readStructuredDataId(byte b) {
-      if (b == CharConstants.RIGHT_SQUARE_BRACKET) {
-         readStructuredDataId(SyslogParserState.MESSAGE_CONTENT);
-      } else if (b == CharConstants.SPACE) {
-         readStructuredDataId(SyslogParserState.STRUCTURED_DATA_PARAM);
-      } else {
-         characterAccumulator.add(b);
+      if (doneAccumulating(b, true, CharConstants.SPACE)) {
+         structuredDataBuilder = messageBuilder.newStructuredDataBuilder(characterAccumulator.getAll(CharsetUtil.US_ASCII));
+         updateState(SyslogParserState.STRUCTURED_DATA_PARAM);
       }
    }
 
-   private void readStructuredDataId(SyslogParserState nextState) {
-      messageBuilder.getStructuredDataBuilder().setId(characterAccumulator.getAll(CharsetUtil.US_ASCII));
-      updateState(nextState);
-   }
-
    private void readStructuredDataParam(byte b) {
-      if (b == CharConstants.RIGHT_SQUARE_BRACKET) {
-         updateState(SyslogParserState.MESSAGE_CONTENT);
-      } else {
+      if (b != CharConstants.RIGHT_SQUARE_BRACKET) {
          characterAccumulator.add(b);
          updateState(SyslogParserState.STRUCTURED_DATA_PARAM_NAME);
+      } else {
+         updateState(SyslogParserState.STRUCTURED_DATA_HEAD);
       }
    }
 
    private void readStructuredDataParamName(byte b) throws SyslogParserException {
-      if (doneAccumulating(b, CharConstants.EQUALS)) {
+      if (doneAccumulating(b, false, CharConstants.EQUALS)) {
          // Switching buffers lets us store the name for now
          characterAccumulator.switchBuffers();
 
-         // Skip the quotation mark, don't care
-         skipNext(1);
+         // Skip the quotation mark, don't care about what's in between
+         skipUntil(CharConstants.QUOTE);
 
          // Next is the value itself
          updateState(SyslogParserState.STRUCTURED_DATA_PARAM_VALUE);
@@ -356,7 +367,7 @@ public class FramingSyslogParser {
    }
 
    private void readStructuredDataParamValue(byte b) {
-      if (doneAccumulatingEscaped(b, CharConstants.QUOTE)) {
+      if (doneAccumulatingEscaped(b, false, CharConstants.QUOTE)) {
          // Record our value as a UTF-8 String
          final String value = characterAccumulator.getAll(CharsetUtil.UTF_8);
 
@@ -367,7 +378,7 @@ public class FramingSyslogParser {
          final String name = characterAccumulator.getAll(CharsetUtil.US_ASCII);
 
          // Put the parameter
-         messageBuilder.getStructuredDataBuilder().setParam(name, value);
+         structuredDataBuilder.setParam(name, value);
 
          // Read the next parameter pair
          updateState(SyslogParserState.STRUCTURED_DATA_PARAM);
@@ -383,7 +394,7 @@ public class FramingSyslogParser {
 
          // If this is the last octet then we should commit the message
          commitMessageContent = octetsRemaining == 0;
-      } else if (doneAccumulatingEscaped(b, CharConstants.LINE_FEED)) {
+      } else if (doneAccumulatingEscaped(b, false, CharConstants.LINE_FEED)) {
          commitMessageContent = true;
       }
 

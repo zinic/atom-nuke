@@ -1,6 +1,7 @@
 package org.atomnuke.syslog;
 
 import java.util.Calendar;
+import java.util.Set;
 
 /**
  *
@@ -28,7 +29,7 @@ public interface SyslogMessage {
    
    String messageId();
    
-   StructuredDataElement structuredData();
+   Set<? extends StructuredDataElement> structuredData();
 
    int version();
 }
