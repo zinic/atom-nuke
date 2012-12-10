@@ -70,7 +70,7 @@ The latest RPM may be downloaded at: [Nuke Fallout 1.1.8 RPM](http://maven.resea
 
 ```bash
 # Working on renaming the RPM...
-rpm -ivh nuke-rpm-1.1.5.rpm
+rpm -ivh nuke-fallout-1.1.8.rpm
 ```
 
 ###Interacting with the Fallout CLI###
