@@ -13,6 +13,7 @@ import org.junit.Ignore;
  *
  * @author zinic
  */
+@Ignore("Work in progress...")
 @RunWith(Enclosed.class)
 public class FramingSyslogParserTest {
 
