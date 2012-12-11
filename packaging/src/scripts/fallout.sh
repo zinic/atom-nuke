@@ -10,7 +10,7 @@ export NUKE_CONFIG_DIR="/etc/atomnuke";
 JAR_LOCATION="/usr/lib/atomnuke/fallout-full.jar";
 
 if [ -z "${JPDA}" ]; then
-    java -jar "${JAR_LOCATION}" $@
+    java -XX:MaxPermSize=128M -jar "${JAR_LOCATION}" $@
 else
-    java -agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=y -jar "${JAR_LOCATION}" $@
+    java -XX:MaxPermSize=128M -agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=y -jar "${JAR_LOCATION}" $@
 fi
