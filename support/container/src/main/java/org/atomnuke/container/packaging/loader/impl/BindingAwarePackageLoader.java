@@ -1,5 +1,6 @@
 package org.atomnuke.container.packaging.loader.impl;
 
+import java.io.File;
 import org.atomnuke.container.packaging.loader.PackageLoader;
 import java.util.Collection;
 import java.util.HashMap;
@@ -23,7 +24,6 @@ import org.slf4j.LoggerFactory;
 public class BindingAwarePackageLoader implements PackageLoader {
 
    private static final Logger LOG = LoggerFactory.getLogger(BindingAwarePackageLoader.class);
-
    private final Map<String, PackageContext> loadedPackages;
    private final BindingEnvironmentFactory bindingEnvFactory;
 
@@ -44,9 +44,13 @@ public class BindingAwarePackageLoader implements PackageLoader {
 
          if (env != null) {
             try {
-                  env.load(resource);
+               env.load(resource);
             } catch (PackageLoadingException ble) {
-               LOG.error("Failed to load package: " + name + ". Reason: " + ble.getMessage(), ble);
+               if (!LOG.isDebugEnabled()) {
+                  LOG.error("Failed to load package resource: " + name + File.separator + resource.relativePath() + ". Reason: " + ble.getMessage());
+               } else {
+                  LOG.error("Failed to load package resource: " + name + File.separator + resource.relativePath() + ". Reason: " + ble.getMessage(), ble);
+               }
             }
          }
       }

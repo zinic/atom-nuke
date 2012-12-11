@@ -154,8 +154,6 @@ For more information, please see the [nuke feed crawler source README](https://g
 
 ###Other Java Code Exmaples###
 
-* [HDFS Example Listener](https://github.com/zinic/atom-nuke/blob/master/examples/src/main/java/org/atomnuke/examples/listener/HDFSFeedListener.java)
-
 ##Model Features Missing##
 
 * Extensible elements - Internal elements are currently treated as text content.

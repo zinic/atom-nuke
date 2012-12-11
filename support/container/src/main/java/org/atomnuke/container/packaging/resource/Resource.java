@@ -17,6 +17,6 @@ public interface Resource {
    byte[] digestBytes();
 
    String relativePath();
-
+   
    ResourceType type();
 }

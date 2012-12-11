@@ -20,44 +20,33 @@ import org.slf4j.LoggerFactory;
 public class JavaEnvironment extends ClassLoaderEnvironment {
 
    private static final Logger LOG = LoggerFactory.getLogger(JavaEnvironment.class);
-
-   private final ClassLoaderScanner classLoaderScanner;
+   private final ResourceManager resourceManager;
+   private final ClassLoader envClassloader;
 
    public JavaEnvironment(ClassLoader parent, ResourceManager resourceManager) {
       this(resourceManager, new IdentityClassLoader(parent, resourceManager));
    }
 
-   private JavaEnvironment(ResourceManager resourceManager, ClassLoader classLoader) {
-      super(classLoader);
+   private JavaEnvironment(ResourceManager resourceManager, ClassLoader envClassloader) {
+      super(envClassloader);
 
-      classLoaderScanner = new ClassLoaderScanner(resourceManager, classLoader);
+      this.envClassloader = envClassloader;
+      this.resourceManager = resourceManager;
    }
 
    @Override
    public List<Service> services() {
-      final List<Class> discoveredServiceClasses = new LinkedList<Class>();
-
-      classLoaderScanner.scan(new ClassVisitor() {
-         @Override
-         public void visit(Class<?> clazz) {
-            final Annotation nukeSvcAnnotation = clazz.getAnnotation(NukeService.class);
-
-            if (nukeSvcAnnotation != null) {
-               discoveredServiceClasses.add(clazz);
-            }
-         }
-      });
-
       final List<Service> builtServices = new LinkedList<Service>();
 
       try {
          stepInto();
 
-         for (Class serviceClass : discoveredServiceClasses) {
+         for (String serviceClassName : allServiceClassNames()) {
             try {
-               builtServices.add((Service) serviceClass.newInstance());
+               final Class serviceClazz = envClassloader.loadClass(serviceClassName);
+               builtServices.add((Service) serviceClazz.newInstance());
             } catch (Exception ex) {
-               LOG.error("Service init failed for service class: " + serviceClass.getName() + " - Reason: " + ex.getMessage(), ex);
+               LOG.error("Service init failed for service class: " + serviceClassName + " - Reason: " + ex.getMessage(), ex);
             }
          }
       } finally {
@@ -65,5 +54,25 @@ public class JavaEnvironment extends ClassLoaderEnvironment {
       }
 
       return builtServices;
+   }
+
+   private List<String> allServiceClassNames() {
+      final List<String> discoveredServiceClasses = new LinkedList<String>();
+      
+      final ClassLoader scannerClassLoader = new IdentityClassLoader(resourceManager);
+      final ClassLoaderScanner classLoaderScanner = new ClassLoaderScanner(resourceManager, scannerClassLoader);
+
+      classLoaderScanner.scan(new ClassVisitor() {
+         @Override
+         public void visit(Class<?> clazz) {
+            final Annotation nukeSvcAnnotation = clazz.getAnnotation(NukeService.class);
+
+            if (nukeSvcAnnotation != null) {
+               discoveredServiceClasses.add(String.valueOf(clazz.getName()));
+            }
+         }
+      });
+
+      return discoveredServiceClasses;
    }
 }

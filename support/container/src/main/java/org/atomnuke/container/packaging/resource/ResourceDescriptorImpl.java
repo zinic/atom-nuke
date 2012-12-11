@@ -26,7 +26,6 @@ public class ResourceDescriptorImpl implements Resource {
       this.resourceUri = resourceUri;
       this.resourceUrl = toUrl(resourceUri);
 
-
       this.relativePath = relativePath;
       this.resourceType = resourceType;
       this.digestBytes = Arrays.copyOf(digestBytes, digestBytes.length);
