@@ -1,7 +1,9 @@
 package org.atomnuke.syslog.netty.channel;
 
+import org.atomnuke.fallout.source.queue.QueueSource;
 import org.jboss.netty.channel.ChannelPipeline;
 import org.jboss.netty.channel.ChannelPipelineFactory;
+import org.jboss.netty.channel.Channels;
 
 /**
  *
@@ -9,8 +11,14 @@ import org.jboss.netty.channel.ChannelPipelineFactory;
  */
 public class SyslogChannelPipelineFactory implements ChannelPipelineFactory {
 
+   private final QueueSource messagePipe;
+
+   public SyslogChannelPipelineFactory(QueueSource messagePipe) {
+      this.messagePipe = messagePipe;
+   }
+   
    @Override
    public ChannelPipeline getPipeline() throws Exception {
-      throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+      return Channels.pipeline(new SyslogChannelDecoder(), new SyslogMessageHandler(messagePipe));
    }
 }

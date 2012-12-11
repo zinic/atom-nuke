@@ -9,6 +9,7 @@ import org.atomnuke.task.context.AtomTaskContext;
 import org.atomnuke.lifecycle.InitializationException;
 import org.atomnuke.service.ServiceUnavailableException;
 import org.atomnuke.service.netty.server.NettyServer;
+import org.atomnuke.syslog.netty.channel.SyslogChannelPipelineFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,7 +20,9 @@ import org.slf4j.LoggerFactory;
 public class NettySyslogSource implements AtomSource {
 
    private static final Logger LOG = LoggerFactory.getLogger(NettySyslogSource.class);
+   
    private final QueueSource queueSource;
+   private NettyServer server;
 
    public NettySyslogSource() {
       queueSource = new EntryQueueImpl();
@@ -33,15 +36,16 @@ public class NettySyslogSource implements AtomSource {
    @Override
    public void init(AtomTaskContext tc) throws InitializationException {
       try {
-         final NettyServer server = tc.services().firstAvailable(NettyServer.class);
+         server = tc.services().firstAvailable(NettyServer.class);
+         server.setChannelPipelineFactory(new SyslogChannelPipelineFactory(queueSource));
          server.open(5025);
-         
-         
       } catch (ServiceUnavailableException sue) {
+         throw new InitializationException(sue);
       }
    }
 
    @Override
    public void destroy() {
+      server.close(5025);
    }
 }

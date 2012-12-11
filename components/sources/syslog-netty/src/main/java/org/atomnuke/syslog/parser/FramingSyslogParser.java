@@ -16,8 +16,8 @@ import org.jboss.netty.util.CharsetUtil;
 public class FramingSyslogParser {
 
    private final Accumulator characterAccumulator;
-   private final SyslogMessageBuilder messageBuilder;
    private StructuredDataBuilder structuredDataBuilder;
+   private SyslogMessageBuilder messageBuilder;
    private boolean countOctets, escaped, skip;
    private SyslogParserState parserState;
    private int octetsRemaining;
@@ -28,7 +28,10 @@ public class FramingSyslogParser {
       // Smallest message for syslog is 2K so we'll start there
       characterAccumulator = new Accumulator(2048);
 
-      // Sup.
+      reset();
+   }
+
+   public void reset() {
       messageBuilder = new SyslogMessageBuilder();
       parserState = SyslogParserState.START;
       skipUntil = 0;
