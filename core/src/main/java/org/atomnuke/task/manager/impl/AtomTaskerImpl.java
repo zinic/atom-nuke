@@ -16,6 +16,8 @@ import org.atomnuke.util.TimeValue;
 
 /**
  *
+ * TODO: Add a polling controller interface to dynamically requeue or request sleep time per task
+ * 
  * @author zinic
  */
 public class AtomTaskerImpl implements AtomTasker {

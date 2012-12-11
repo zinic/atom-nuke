@@ -8,9 +8,6 @@ public class ResultCatchImpl<T> implements ResultCatch<T> {
 
    private T result;
 
-   public ResultCatchImpl() {
-   }
-
    @Override
    public boolean hasResult() {
       return result != null;

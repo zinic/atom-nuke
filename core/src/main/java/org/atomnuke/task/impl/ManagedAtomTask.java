@@ -106,7 +106,8 @@ public class ManagedAtomTask implements ReclaimableTask {
       final DriverArgument driverArgument = new DriverArgument(pollResult.feed(), pollResult.entry());
 
       for (ManagedSink sink : sinkManager.sinks()) {
-         tasker.queueTask(new LocalInstanceContext(new AtomSinkDriver(sink, driverArgument)));
+         final InstanceContext<AtomSinkDriver> ctx = new LocalInstanceContext(new AtomSinkDriver(sink, driverArgument));
+         tasker.queueTask(ctx);
       }
    }
 }
