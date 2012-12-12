@@ -11,8 +11,8 @@ import java.util.Date;
  */
 public class RFC3339DateParser {
 
-   private static final SimpleDateFormat RFC3339_BASIC_WITH_TZ = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX");
-   private static final SimpleDateFormat RFC3339_FRACTIONAL_WITH_TZ = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSSX");
+   private static final SimpleDateFormat RFC3339_BASIC_WITH_TZ = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+   private static final SimpleDateFormat RFC3339_FRACTIONAL_WITH_TZ = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS");
    
    private static final SimpleDateFormat RFC3339_BASIC_NO_TZ = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
    private static final SimpleDateFormat RFC3339_FRACTIONAL_NO_TZ = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'");
