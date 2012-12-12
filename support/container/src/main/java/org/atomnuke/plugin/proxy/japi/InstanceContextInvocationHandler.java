@@ -20,7 +20,7 @@ public class InstanceContextInvocationHandler implements InvocationHandler {
    }
 
    @Override
-   public Object invoke(Object proxy, final Method method, final Object[] args) throws Throwable {
+   public Object invoke(Object proxy, final Method method, final Object[] args) throws OperationFailureException {
       final ResultCatchImpl resultCatch = new ResultCatchImpl();
 
       context.perform(new ComplexOperation<Object, ResultCatchImpl>() {

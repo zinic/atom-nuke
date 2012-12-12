@@ -1,6 +1,7 @@
 package org.atomnuke.plugin.proxy.japi;
 
 import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import org.atomnuke.plugin.Environment;
 
@@ -19,7 +20,7 @@ public class InstanceEnvironmentProxy implements InvocationHandler {
    }
 
    @Override
-   public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+   public Object invoke(Object proxy, Method method, Object[] args) throws InvocationTargetException, IllegalAccessException {
       try {
          environment.stepInto();
          return method.invoke(target, args);

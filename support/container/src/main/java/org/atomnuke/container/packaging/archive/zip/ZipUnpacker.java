@@ -14,6 +14,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+import org.atomnuke.container.packaging.MissingDigestImplementationException;
+import org.atomnuke.container.packaging.archive.ArchiveExtractionException;
 import org.atomnuke.container.packaging.archive.ArchiveResource;
 import org.atomnuke.container.packaging.archive.ArchiveResourceImpl;
 import org.atomnuke.container.packaging.archive.ResourceType;
@@ -36,7 +38,7 @@ public class ZipUnpacker {
       try {
          SHA1_DIGESTER = MessageDigest.getInstance("SHA-1");
       } catch (NoSuchAlgorithmException nsae) {
-         throw new RuntimeException("Required crypto algorithm missing. Exception: " + nsae.getMessage(), nsae);
+         throw new MissingDigestImplementationException("Required crypto algorithm missing. Exception: " + nsae.getMessage(), nsae);
       }
    }
    private final ResourceManager rootResourceManager;
@@ -74,12 +76,12 @@ public class ZipUnpacker {
       return embeddedArchives;
    }
 
-   private void registerArchiveDirectory(ArchiveResource archiveResource) throws RuntimeException {
+   private void registerArchiveDirectory(ArchiveResource archiveResource) throws ArchiveExtractionException {
       if (!rootResourceManager.exists(archiveResource.name())) {
          final File desiredLocation = new File(deploymentRoot + File.separator + archiveResource.name());
 
          if (!desiredLocation.exists() && !desiredLocation.mkdirs()) {
-            throw new RuntimeException("Can't make deployment directories.");
+            throw new ArchiveExtractionException("Can't make deployment directories.");
          }
 
          final URI locationUri = desiredLocation.toURI();
@@ -94,7 +96,7 @@ public class ZipUnpacker {
       final File parentDir = fsTargetLocation.getParentFile();
 
       if (!parentDir.exists() && !parentDir.mkdirs()) {
-         throw new RuntimeException("Can't make deployment directories.");
+         throw new IOException("Can't make deployment directory: " + parentDir.getAbsolutePath());
       }
 
       // Set up our output streams and extract to the slotted location regardless

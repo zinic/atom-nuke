@@ -31,7 +31,7 @@ public final class ResourceUtil {
       }
 
       final String trimmedPath = StringUtilities.trim(unsanitizedPath, "/");
-      final int lastIndexOfIFS = unsanitizedPath.lastIndexOf("/");
+      final int lastIndexOfIFS = unsanitizedPath.lastIndexOf('/');
       final String sanitizedPath = (lastIndexOfIFS > 0 ? trimmedPath.substring(0, lastIndexOfIFS) : trimmedPath).replace("/", ".");
 
       return sanitizedPath;

@@ -22,7 +22,7 @@ import org.atomnuke.atom.model.builder.LinkBuilder;
 public final class CollectionUtil<R> {
 
    public static List<Author> copyAuthors(Collection<Author> authors) {
-      return forCollection(authors).copyInto(LinkedList.class, new Copier<Author>() {
+      return forCollection(authors).copyInto(new Copier<Author>() {
          @Override
          public Author element(Author element) {
             return new AuthorBuilder(element).build();
@@ -31,7 +31,7 @@ public final class CollectionUtil<R> {
    }
 
    public static List<Contributor> copyContributors(Collection<Contributor> contributors) {
-      return forCollection(contributors).copyInto(LinkedList.class, new Copier<Contributor>() {
+      return forCollection(contributors).copyInto(new Copier<Contributor>() {
          @Override
          public Contributor element(Contributor element) {
             return new ContributorBuilder(element).build();
@@ -40,7 +40,7 @@ public final class CollectionUtil<R> {
    }
 
    public static List<Category> copyCategories(Collection<Category> categories) {
-      return forCollection(categories).copyInto(LinkedList.class, new Copier<Category>() {
+      return forCollection(categories).copyInto(new Copier<Category>() {
          @Override
          public Category element(Category element) {
             return new CategoryBuilder(element).build();
@@ -49,7 +49,7 @@ public final class CollectionUtil<R> {
    }
 
    public static List<Link> copyLinks(Collection<Link> links) {
-      return forCollection(links).copyInto(LinkedList.class, new Copier<Link>() {
+      return forCollection(links).copyInto(new Copier<Link>() {
          @Override
          public Link element(Link element) {
             return new LinkBuilder(element).build();
@@ -58,7 +58,7 @@ public final class CollectionUtil<R> {
    }
 
    public static List<Entry> copyEntries(Collection<Entry> entries) {
-      return forCollection(entries).copyInto(LinkedList.class, new Copier<Entry>() {
+      return forCollection(entries).copyInto(new Copier<Entry>() {
          @Override
          public Entry element(Entry element) {
             return new EntryBuilder(element).build();
@@ -106,6 +106,7 @@ public final class CollectionUtil<R> {
 
       R element(R element);
    }
+   
    private static final Copier<Object> NOP_COPIER = new Copier<Object>() {
       @Override
       public Object element(Object element) {
@@ -113,13 +114,13 @@ public final class CollectionUtil<R> {
       }
    };
 
-   public <C extends Collection<R>> C copyInto(Class<C> collectionClass) {
-      return copyInto(collectionClass, (Copier<R>) NOP_COPIER);
+   public List<R> copyInto() {
+      return copyInto((Copier<R>) NOP_COPIER);
    }
 
-   public <C extends Collection<R>> C copyInto(Class<C> collectionClass, Copier<R> copier) {
+   public List<R> copyInto(Copier<R> copier) {
       try {
-         final C copyInstance = collectionClass.newInstance();
+         final List<R> copyInstance = new LinkedList<R>();
 
          for (R value : sourceCollection) {
             copyInstance.add(copier.element(value));

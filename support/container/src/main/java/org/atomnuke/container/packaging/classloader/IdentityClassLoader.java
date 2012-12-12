@@ -123,11 +123,6 @@ public class IdentityClassLoader extends ClassLoader {
       return findResources(name);
    }
 
-   @Override
-   public InputStream getResourceAsStream(String name) {
-      return super.getResourceAsStream(name); //To change body of generated methods, choose Tools | Templates.
-   }
-
    final Class<?> defineClass(Resource descriptor) throws IOException {
       final URL resourceUrl = descriptor.url();
 

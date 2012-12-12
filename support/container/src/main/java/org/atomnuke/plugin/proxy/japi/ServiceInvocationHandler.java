@@ -37,7 +37,7 @@ public class ServiceInvocationHandler implements InvocationHandler {
    }
 
    @Override
-   public Object invoke(Object proxy, final Method method, final Object[] args) throws Throwable {
+   public Object invoke(Object proxy, final Method method, final Object[] args) throws NoSuchMethodException, OperationFailureException { 
       final ResultCatchImpl resultCatch = new ResultCatchImpl();
 
       // TODO: Failure to find the actual method should result in a failure...

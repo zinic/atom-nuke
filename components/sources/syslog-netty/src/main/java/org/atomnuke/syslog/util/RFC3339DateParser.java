@@ -6,19 +6,22 @@ import java.util.Calendar;
 import java.util.Date;
 
 /**
- *
+ * TODO: Refactor into singleton
+ * 
  * @author zinic
  */
-public class RFC3339DateParser {
+public final class RFC3339DateParser {
 
    private static final SimpleDateFormat RFC3339_BASIC_WITH_TZ = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
    private static final SimpleDateFormat RFC3339_FRACTIONAL_WITH_TZ = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS");
-   
    private static final SimpleDateFormat RFC3339_BASIC_NO_TZ = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
    private static final SimpleDateFormat RFC3339_FRACTIONAL_NO_TZ = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'");
 
    static {
       RFC3339_FRACTIONAL_NO_TZ.setLenient(Boolean.TRUE);
+   }
+
+   private RFC3339DateParser() {
    }
 
    public static Calendar parseRFC3339Date(String datestring) throws ParseException {

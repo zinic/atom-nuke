@@ -38,10 +38,7 @@ public class SaxAtomParser implements AtomReader {
             }
          });
       } catch (ResourceContextException e) {
-         // Unwrap the inner exception
-         final Throwable cause = e.getCause();
-
-         throw new AtomReadException(e.getMessage(), cause);
+         throw new AtomReadException(e.getMessage(), e.getCause());
       }
    }
 }
