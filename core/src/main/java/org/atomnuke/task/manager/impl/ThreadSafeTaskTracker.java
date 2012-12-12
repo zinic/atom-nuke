@@ -28,6 +28,20 @@ public class ThreadSafeTaskTracker implements TaskTracker {
    }
 
    @Override
+   public synchronized boolean shouldSchedule() {
+      boolean shouldSchedule = false;
+      
+      for (ManagedTask task : pollingTasks) {
+         if (task.pollingController().shouldPoll()) {
+            shouldSchedule = true;
+            break;
+         }
+      }
+      
+      return shouldSchedule;
+   }
+   
+   @Override
    public synchronized List<ManagedTask> activeTasks() {
       for (Iterator<ManagedTask> managedTaskIter = pollingTasks.iterator(); managedTaskIter.hasNext();) {
          final ManagedTask managedTask = managedTaskIter.next();

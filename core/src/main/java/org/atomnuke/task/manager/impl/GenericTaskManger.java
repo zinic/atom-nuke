@@ -5,6 +5,9 @@ import org.atomnuke.task.ManagedTask;
 import org.atomnuke.task.TaskHandle;
 import org.atomnuke.task.manager.TaskManager;
 import org.atomnuke.task.manager.TaskTracker;
+import org.atomnuke.task.polling.PollingController;
+import org.atomnuke.task.polling.TaskFutureImpl;
+import org.atomnuke.task.threading.ExecutionLifeCycle;
 import org.atomnuke.task.threading.ExecutionManager;
 import org.atomnuke.util.TimeValue;
 
@@ -65,27 +68,24 @@ public class GenericTaskManger implements TaskManager {
    @Override
    public TimeValue scheduleTasks() {
       final TimeValue now = TimeValue.now();
-      TimeValue closestPollTime = null;
 
       for (ManagedTask managedTask : taskTracker.activeTasks()) {
+         final PollingController pollingController = managedTask.pollingController();
          final TaskHandle taskHandle = managedTask.handle();
-         TimeValue nextPollTime = managedTask.nextRunTime();
 
          // Sould this task be scheduled? If so, is the task already in the execution queue?
-         if (now.isGreaterThan(nextPollTime) && (taskHandle.reenterant() || !executionManager.submitted(taskHandle.id()))) {
-            executionManager.submit(taskHandle.id(), managedTask);
-            managedTask.scheduleNext();
-
-            nextPollTime = managedTask.nextRunTime();
-         }
-
-         if (closestPollTime == null || closestPollTime.isGreaterThan(nextPollTime)) {
-            // If the closest polling time is null or later than this task's
-            // next polling time, it becomes the next time the kernel wakes
-            closestPollTime = nextPollTime;
+         if (pollingController.shouldPoll() && (taskHandle.reenterant() || !executionManager.submitted(taskHandle.id()))) {
+            // Create a new future for this scheduling pass of the task - this is used to communicate progress
+            final TaskFutureImpl taskFuture = new TaskFutureImpl();
+            
+            // Tell the polling controller that we're being tasked before actually submitting the task
+            pollingController.taskScheduled(taskFuture);
+            
+            // Submit the runnable representation of the task
+            executionManager.submit(taskHandle.id(), new ExecutionLifeCycle(managedTask, taskFuture));
          }
       }
 
-      return closestPollTime == null ? now.add(DEFAULT_SLEEP_INTERVAL) : closestPollTime;
+      return taskTracker.shouldSchedule() ? now : now.add(DEFAULT_SLEEP_INTERVAL);
    }
 }

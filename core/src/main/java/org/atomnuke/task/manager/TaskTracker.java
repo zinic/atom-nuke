@@ -9,6 +9,8 @@ import org.atomnuke.task.ManagedTask;
  */
 public interface TaskTracker {
 
+   boolean shouldSchedule();
+   
    List<ManagedTask> activeTasks();
 
    void add(ManagedTask task);

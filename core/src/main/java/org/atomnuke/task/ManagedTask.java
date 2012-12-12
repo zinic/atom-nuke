@@ -1,12 +1,10 @@
 package org.atomnuke.task;
 
-import org.atomnuke.util.TimeValue;
+import org.atomnuke.task.polling.PollingController;
 
 /**
- * A managed task represents a runnable scheduled delegate. This is the primary
- * descriptor of work in the Nuke scheduler. Every runnable delegate registered
- * to the Nuke scheduler is wrapped in this interface to make scheduling
- * simpler.
+ * A managed task represents a runnable scheduled delegate. This is the primary descriptor of work in the Nuke scheduler. Every runnable delegate registered to
+ * the Nuke scheduler is wrapped in this interface to make scheduling simpler.
  *
  * @see TaskLifeCycle
  *
@@ -22,15 +20,9 @@ public interface ManagedTask<T extends TaskHandle> extends Runnable {
    T handle();
 
    /**
-    * Returns the next polling interval desired by the task.
+    * Returns the controller object that will tell the system when this task may be polled.
     *
-    * @return the time value of the next desired polling interval.
+    * @return
     */
-   TimeValue nextRunTime();
-
-   /**
-    * Notifies the task that it has been scheduled and to set its internal state
-    * for the next polling interval.
-    */
-   void scheduleNext();
+   PollingController pollingController();
 }
