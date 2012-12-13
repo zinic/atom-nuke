@@ -19,7 +19,6 @@ import org.atomnuke.container.packaging.resource.ResourceUtil;
 public class IdentityClassLoader extends ClassLoader {
 
    private static final Logger LOG = LoggerFactory.getLogger(IdentityClassLoader.class);
-
    private final ResourceManager resourceManager;
    private final ClassLoader parent;
 
@@ -91,16 +90,18 @@ public class IdentityClassLoader extends ClassLoader {
    //findResource("/META-INF/stuff")
    @Override
    protected URL findResource(String resourcePath) {
-      URL resourceUrl = super.findResource(resourcePath);
+      // Look it up locally first
+      final Resource descriptor = resourceManager.lookup(resourcePath);
+      URL resourceUrl = descriptor != null ? descriptor.url() : null;
 
+      // Look it up from the parent next if null
+      if (resourceUrl == null && parent != null) {
+         resourceUrl = parent.getResource(resourcePath);
+      }
+
+      // Lastly, call into our super definition if still null
       if (resourceUrl == null) {
-         final Resource descriptor = resourceManager.lookup(resourcePath);
-
-         if (descriptor != null) {
-            resourceUrl = descriptor.url();
-         } else if (parent instanceof IdentityClassLoader) {
-            LOG.debug("Unable to find resource: " + resourcePath);
-         }
+         resourceUrl = super.findResource(resourcePath);
       }
 
       return resourceUrl;
@@ -126,18 +127,18 @@ public class IdentityClassLoader extends ClassLoader {
    @Override
    public InputStream getResourceAsStream(String name) {
       final URL resourceUrl = getResource(name);
-      
+
       if (resourceUrl != null) {
          try {
-         return resourceUrl.openStream();
-         } catch(IOException ioe) {
+            return resourceUrl.openStream();
+         } catch (IOException ioe) {
             LOG.error("Failed to open resource with URL: " + resourceUrl.toString());
          }
       }
-      
+
       return null;
    }
-   
+
    final Class<?> defineClass(Resource descriptor) throws IOException {
       final URL resourceUrl = descriptor.url();
 
