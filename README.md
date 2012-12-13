@@ -1,5 +1,9 @@
 #[Nuke - The Fast ATOM Bus](http://atomnuke.org)#
 
+**Current version**: 1.1.10
+<br />
+**Latest RPM**: [Nuke Fallout 1.1.10 RPM](http://maven.research.rackspacecloud.com/content/repositories/releases/org/atomnuke/packaging/nuke-fallout/1.1.10/nuke-fallout-1.1.10.rpm)
+
 ##What is it?##
 
 Nuke is a collection of utilities built on a simple, fast ATOM implementation
@@ -65,12 +69,12 @@ for more information.
 The Fallout RPM provides the default set of services as a collection of package
 along with the Fallout libraries necessarry.
 
-The latest RPM may be downloaded at: [Nuke Fallout 1.1.9 RPM](http://maven.research.rackspacecloud.com/content/repositories/releases/org/atomnuke/packaging/nuke-fallout/1.1.9/nuke-fallout-1.1.9.rpm)
+The latest RPM may be downloaded at: [Nuke Fallout 1.1.10 RPM](http://maven.research.rackspacecloud.com/content/repositories/releases/org/atomnuke/packaging/nuke-fallout/1.1.10/nuke-fallout-1.1.10.rpm)
 
 
 ```bash
 # Working on renaming the RPM...
-rpm -ivh nuke-fallout-1.1.9.rpm
+rpm -ivh nuke-fallout-1.1.10.rpm
 ```
 
 ###Interacting with the Fallout CLI###
