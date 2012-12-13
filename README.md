@@ -1,8 +1,8 @@
 #[Nuke - The Fast ATOM Bus](http://atomnuke.org)#
 
-**Current version**: 1.1.10
+**Current version**: 1.1.11
 <br />
-**Latest RPM**: [Nuke Fallout 1.1.10 RPM](http://maven.research.rackspacecloud.com/content/repositories/releases/org/atomnuke/packaging/nuke-fallout/1.1.10/nuke-fallout-1.1.10.rpm)
+**Latest RPM**: [Nuke Fallout 1.1.11 RPM](http://maven.research.rackspacecloud.com/content/repositories/releases/org/atomnuke/packaging/nuke-fallout/1.1.11/nuke-fallout-1.1.11.rpm)
 
 ##What is it?##
 
@@ -73,8 +73,7 @@ The latest RPM may be downloaded at: [Nuke Fallout 1.1.10 RPM](http://maven.rese
 
 
 ```bash
-# Working on renaming the RPM...
-rpm -ivh nuke-fallout-1.1.10.rpm
+rpm -ivh nuke-fallout-1.1.11.rpm
 ```
 
 ###Interacting with the Fallout CLI###
