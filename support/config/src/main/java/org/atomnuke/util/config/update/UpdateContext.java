@@ -4,6 +4,9 @@ import org.atomnuke.util.config.io.ConfigurationManager;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import org.atomnuke.plugin.context.LocalInstanceContext;
+import org.atomnuke.plugin.operation.ComplexOperation;
+import org.atomnuke.plugin.operation.OperationFailureException;
 import org.atomnuke.util.config.ConfigurationException;
 import org.atomnuke.util.config.io.UpdateTag;
 import org.atomnuke.util.config.update.listener.ConfigurationListener;
@@ -20,6 +23,17 @@ import org.slf4j.LoggerFactory;
 public class UpdateContext<T> implements ConfigurationContext<T> {
 
    private static final Logger LOG = LoggerFactory.getLogger(UpdateContext.class);
+   
+   private final ComplexOperation<ConfigurationListener<T>, T> UPDATED_OPERATION = new ComplexOperation<ConfigurationListener<T>, T>() {
+      @Override
+      public void perform(ConfigurationListener<T> instance, T argument) throws OperationFailureException {
+         try {
+            instance.updated(argument);
+         } catch (ConfigurationException ce) {
+            throw new OperationFailureException(ce);
+         }
+      }
+   };
    
    private final List<ListenerContext<T>> ListenerContexts;
    private final CancellationRemote cancellationRemote;
@@ -43,8 +57,8 @@ public class UpdateContext<T> implements ConfigurationContext<T> {
    }
 
    @Override
-   public CancellationRemote addListener(ConfigurationListener<T> Listener) throws ConfigurationException {
-      final ListenerContext<T> newListenerContext = new ListenerContext<T>(Listener, new AtomicCancellationRemote());
+   public CancellationRemote addListener(ConfigurationListener<T> listener) throws ConfigurationException {
+      final ListenerContext<T> newListenerContext = new ListenerContext<T>(new LocalInstanceContext<ConfigurationListener<T>>(listener), new AtomicCancellationRemote());
       addListenerContext(newListenerContext);
 
       dispatch();
@@ -95,9 +109,9 @@ public class UpdateContext<T> implements ConfigurationContext<T> {
          for (ListenerContext<T> listenerContext : getListeners()) {
             if (listenerContext.lastUpdateTagSeen() == null || !listenerContext.lastUpdateTagSeen().equals(currentUpdateTag)) {
                try {
-                  listenerContext.configurationListener().updated(configuration);
+                  listenerContext.configurationListener().perform(UPDATED_OPERATION, configuration);
                   listenerContext.setLastUpdateTagSeen(currentUpdateTag);
-               } catch (Exception ex) {
+               } catch (OperationFailureException ex) {
                   LOG.error("Configuration exception during dispatch: " + ex.getMessage(), ex);
                }
             }

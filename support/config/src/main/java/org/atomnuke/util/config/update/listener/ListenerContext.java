@@ -1,5 +1,6 @@
 package org.atomnuke.util.config.update.listener;
 
+import org.atomnuke.plugin.InstanceContext;
 import org.atomnuke.util.config.io.UpdateTag;
 import org.atomnuke.util.remote.CancellationRemote;
 
@@ -9,11 +10,11 @@ import org.atomnuke.util.remote.CancellationRemote;
  */
 public class ListenerContext<T> {
 
-   private final ConfigurationListener<T> configurationListener;
+   private final InstanceContext<ConfigurationListener<T>> configurationListener;
    private final CancellationRemote cancellationRemote;
    private UpdateTag lastUpdateTagSeen;
 
-   public ListenerContext(ConfigurationListener<T> configurationListener, CancellationRemote cancellationRemote) {
+   public ListenerContext(InstanceContext<ConfigurationListener<T>> configurationListener, CancellationRemote cancellationRemote) {
       this.configurationListener = configurationListener;
       this.cancellationRemote = cancellationRemote;
    }
@@ -30,7 +31,7 @@ public class ListenerContext<T> {
       return cancellationRemote;
    }
 
-   public ConfigurationListener<T> configurationListener() {
+   public InstanceContext<ConfigurationListener<T>> configurationListener() {
       return configurationListener;
    }
 }
