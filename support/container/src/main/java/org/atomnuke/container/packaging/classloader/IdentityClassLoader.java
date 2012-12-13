@@ -123,6 +123,21 @@ public class IdentityClassLoader extends ClassLoader {
       return findResources(name);
    }
 
+   @Override
+   public InputStream getResourceAsStream(String name) {
+      final URL resourceUrl = getResource(name);
+      
+      if (resourceUrl != null) {
+         try {
+         return resourceUrl.openStream();
+         } catch(IOException ioe) {
+            LOG.error("Failed to open resource with URL: " + resourceUrl.toString());
+         }
+      }
+      
+      return null;
+   }
+   
    final Class<?> defineClass(Resource descriptor) throws IOException {
       final URL resourceUrl = descriptor.url();
 
