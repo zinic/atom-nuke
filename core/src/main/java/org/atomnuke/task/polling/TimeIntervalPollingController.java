@@ -10,26 +10,23 @@ import org.atomnuke.util.TimeValue;
 public class TimeIntervalPollingController extends AbstractPollingController {
    
    private final TimeValue scheduleInterval;
-   private TimeValue lastRunTimestamp;
+   private TimeValue nextRun;
    
    public TimeIntervalPollingController(TaskHandle taskHandle, TimeValue scheduleInterval) {
       super(taskHandle);
       
       this.scheduleInterval = scheduleInterval;
-      lastRunTimestamp = TimeValue.now();
+      
+      scheduled();
    }
    
    private synchronized void scheduled() {
-      lastRunTimestamp = TimeValue.now();
-   }
-   
-   private synchronized TimeValue lastRuntime() {
-      return lastRunTimestamp;
+      nextRun = TimeValue.now().add(scheduleInterval);
    }
    
    @Override
-   public boolean shouldPoll() {
-      return lastRuntime().add(scheduleInterval).isLessThan(TimeValue.now());
+   public boolean shouldPoll(TimeValue now) {
+      return nextRun.isLessThan(now);
    }
    
    @Override

@@ -1,5 +1,6 @@
 package org.atomnuke.task.threading;
 
+import java.util.concurrent.Future;
 import org.atomnuke.service.ServiceContext;
 import org.atomnuke.lifecycle.ResourceLifeCycle;
 
@@ -19,7 +20,9 @@ public interface ExecutionManager extends ResourceLifeCycle<ServiceContext> {
       DESTROYED
    }
 
-   ExecutionFuture submit(long handle, Runnable r);
+   Future submit(Runnable r);
+
+   TrackedFuture submitTracked(long handle, Runnable r);
 
    boolean submitted(long handle);
 

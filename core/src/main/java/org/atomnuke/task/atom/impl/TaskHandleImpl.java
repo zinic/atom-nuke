@@ -1,4 +1,4 @@
-package org.atomnuke.task.impl;
+package org.atomnuke.task.atom.impl;
 
 import java.util.concurrent.atomic.AtomicLong;
 import org.atomnuke.task.TaskHandle;

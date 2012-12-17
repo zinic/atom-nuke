@@ -12,7 +12,7 @@ import org.atomnuke.source.action.AtomSourceActionImpl;
  */
 public class AtomSourceResultImpl implements AtomSourceResult {
 
-   private static final AtomSourceAction DEFAULT_SOURCE_ACTION = new AtomSourceActionImpl(ActionType.OK);
+   private static final AtomSourceAction DEFAULT_SOURCE_ACTION = new AtomSourceActionImpl(ActionType.HAS_NEXT);
 
    private final AtomSourceAction requestedAction;
    private final ResultType resultType;

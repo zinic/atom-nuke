@@ -1,7 +1,8 @@
-package org.atomnuke.task.impl;
+package org.atomnuke.task.atom.impl;
 
 import org.atomnuke.plugin.InstanceContext;
 import org.atomnuke.plugin.context.LocalInstanceContext;
+import org.atomnuke.plugin.context.NopInstanceContext;
 import org.atomnuke.sink.manager.ManagedSink;
 import org.atomnuke.sink.driver.AtomSinkDriver;
 import org.atomnuke.sink.driver.DriverArgument;
@@ -47,16 +48,18 @@ public class ManagedAtomTask implements ReclaimableTask {
          }
       }
    };
-
+   
+   private final SourceManagedPollingController pollingController;
    private final InstanceContext<AtomSource> atomSourceContext;
    private final SinkManager sinkManager;
    private final Tasker tasker;
-
+   
    private CancellationRemote enlistedCancellationRemote;
 
-   public ManagedAtomTask(InstanceContext<AtomSource> atomSourceContext, SinkManager SinkManager, Tasker tasker) {
+   public ManagedAtomTask(SourceManagedPollingController pollingController, InstanceContext<AtomSource> atomSourceContext, SinkManager sinkManager, Tasker tasker) {
+      this.pollingController = pollingController;
       this.atomSourceContext = atomSourceContext;
-      this.sinkManager = SinkManager;
+      this.sinkManager = sinkManager;
       this.tasker = tasker;
    }
 
@@ -69,26 +72,16 @@ public class ManagedAtomTask implements ReclaimableTask {
    public void run() {
       // Only poll if we have Sinks
       if (sinkManager.hasRegisteredSinks()) {
+         final ResultCatch<AtomSourceResult> resultCatch = new ResultCatchImpl<AtomSourceResult>();
+
          try {
-            final ResultCatch<AtomSourceResult> resultCatch = new ResultCatchImpl<AtomSourceResult>();
             atomSourceContext.perform(POLLING_OPERATION, resultCatch);
-
-            if (resultCatch.hasResult()) {
-               switch (resultCatch.result().action().action()) {
-                  case OK:
-                     dispatchToSinks(resultCatch.result());
-                     break;
-
-                  case HALT:
-                     enlistedCancellationRemote.cancel();
-                     break;
-
-                  case SLEEP:
-                  default:
-               }
-            }
          } catch (OperationFailureException ofe) {
             LOG.error("Failed to poll atom source: " + atomSourceContext + " - Reason: " + ofe.getMessage(), ofe);
+         }
+
+         if (resultCatch.hasResult()) {
+            handlePollingResult(resultCatch);
          }
       }
    }
@@ -106,8 +99,27 @@ public class ManagedAtomTask implements ReclaimableTask {
       final DriverArgument driverArgument = new DriverArgument(pollResult.feed(), pollResult.entry());
 
       for (ManagedSink sink : sinkManager.sinks()) {
-         final InstanceContext<AtomSinkDriver> ctx = new LocalInstanceContext(new AtomSinkDriver(sink, driverArgument));
-         tasker.queueTask(ctx);
+         tasker.queueAction(new NopInstanceContext(new AtomSinkDriver(sink, driverArgument)));
+      }
+   }
+
+   private void handlePollingResult(final ResultCatch<AtomSourceResult> resultCatch) {
+      switch (resultCatch.result().action().action()) {
+         case HAS_NEXT:
+            // If we have more on this source, ignore our schedule to catch up
+            pollingController.ignoreSchedule();
+
+            // Dispatch our payload to the execution pool
+            dispatchToSinks(resultCatch.result());
+            break;
+
+         case HALT:
+            // If we need to halt we cancel our task and then tell our pooling controller to honor the schedule
+            enlistedCancellationRemote.cancel();
+
+         case SLEEP:
+         default:
+            pollingController.honorSchedule();
       }
    }
 }

@@ -1,6 +1,6 @@
 package org.atomnuke.task.manager.impl;
 
-import org.atomnuke.task.impl.ManagedAtomTask;
+import org.atomnuke.task.atom.impl.ManagedAtomTask;
 import org.atomnuke.task.manager.Tasker;
 import org.atomnuke.sink.manager.SinkManager;
 import org.atomnuke.sink.manager.SinkManagerImpl;
@@ -10,8 +10,9 @@ import org.atomnuke.service.gc.ReclamationHandler;
 import org.atomnuke.source.AtomSource;
 import org.atomnuke.task.atom.AtomTask;
 import org.atomnuke.task.TaskHandle;
-import org.atomnuke.task.impl.AtomTaskImpl;
+import org.atomnuke.task.atom.impl.AtomTaskImpl;
 import org.atomnuke.task.manager.AtomTasker;
+import org.atomnuke.task.atom.impl.SourceManagedPollingController;
 import org.atomnuke.util.TimeValue;
 
 /**
@@ -36,8 +37,9 @@ public class AtomTaskerImpl implements AtomTasker {
       final SinkManager sinkManager = new SinkManagerImpl(reclamationHandler);
 
       // Register and track the new source
-      final ManagedAtomTask managedAtomTask = new ManagedAtomTask(source, sinkManager, tasker);
-      final TaskHandle newHandle = tasker.pollTask(new LocalInstanceContext(managedAtomTask), pollingInterval);
+      final SourceManagedPollingController pollingController = new SourceManagedPollingController(pollingInterval);
+      final ManagedAtomTask managedAtomTask = new ManagedAtomTask(pollingController, source, sinkManager, tasker);
+      final TaskHandle newHandle = tasker.queueTask(new LocalInstanceContext(managedAtomTask), pollingController);
 
       return new AtomTaskImpl(sinkManager, newHandle);
    }

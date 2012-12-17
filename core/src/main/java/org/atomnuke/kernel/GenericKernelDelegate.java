@@ -54,7 +54,7 @@ public class GenericKernelDelegate implements Runnable {
    }
 
    private void sleep(TimeValue sleepTill) {
-      final long totalNanoseconds = sleepTill.subtract(TimeValue.now()).value(TimeUnit.NANOSECONDS);
+      final long totalNanoseconds = sleepTill.value(TimeUnit.NANOSECONDS);
 
       try {
          if (totalNanoseconds > ONE_MILLISECOND_IN_NANOS) {
@@ -98,7 +98,7 @@ public class GenericKernelDelegate implements Runnable {
          // Log this since yielding is usually a bad thing
          LOG.error("Execution queue too large to continue polling. Yielding till " + millisecondsToYield + " to allow queue to drain.");
 
-         return TimeValue.now().add(new TimeValue(millisecondsToYield, TimeUnit.MILLISECONDS));
+         return new TimeValue(millisecondsToYield, TimeUnit.MILLISECONDS);
       }
 
       drainMagnitude -= drainMagnitude == 0 ? 1 : 0;

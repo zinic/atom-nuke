@@ -18,7 +18,7 @@ import org.atomnuke.util.TimeValue;
 public class GenericTaskManger implements TaskManager {
 
    private static final TimeValue DEFAULT_SLEEP_INTERVAL = new TimeValue(3, TimeUnit.MILLISECONDS);
-
+   
    private final ExecutionManager executionManager;
    private final TaskTracker taskTracker;
 
@@ -33,7 +33,7 @@ public class GenericTaskManger implements TaskManager {
          return State.DESTROYED;
       }
 
-      switch(executionManager.state()) {
+      switch (executionManager.state()) {
          case NEW:
          case STARTING:
             return State.NEW;
@@ -44,17 +44,6 @@ public class GenericTaskManger implements TaskManager {
       }
 
       return State.READY;
-   }
-
-   @Override
-   public ManagedTask findTask(long taskId) {
-      for (ManagedTask managedTask : taskTracker.activeTasks()) {
-         if (managedTask.handle().id() == taskId) {
-            return managedTask;
-         }
-      }
-
-      return null;
    }
 
    @Override
@@ -73,19 +62,20 @@ public class GenericTaskManger implements TaskManager {
          final PollingController pollingController = managedTask.pollingController();
          final TaskHandle taskHandle = managedTask.handle();
 
-         // Sould this task be scheduled? If so, is the task already in the execution queue?
-         if (pollingController.shouldPoll() && (taskHandle.reenterant() || !executionManager.submitted(taskHandle.id()))) {
+         // Sould this task be scheduled? If so, is the task already in the execution queue? Reentrancy will also make a task eligible for polling.
+         if (pollingController.shouldPoll(now) && (taskHandle.reenterant() || !executionManager.submitted(taskHandle.id()))) {
             // Create a new future for this scheduling pass of the task - this is used to communicate progress
             final TaskFutureImpl taskFuture = new TaskFutureImpl();
-            
+
             // Tell the polling controller that we're being tasked before actually submitting the task
             pollingController.taskScheduled(taskFuture);
-            
+
             // Submit the runnable representation of the task
-            executionManager.submit(taskHandle.id(), new ExecutionLifeCycle(managedTask, taskFuture));
+            executionManager.submitTracked(taskHandle.id(), new ExecutionLifeCycle(managedTask, taskFuture));
          }
       }
 
-      return taskTracker.shouldSchedule() ? now : now.add(DEFAULT_SLEEP_INTERVAL);
+      // We check against a new time value representing now since scheduling may have taken time beyond the grainularity of the timer
+      return taskTracker.hasTasksToSchedule(TimeValue.now()) ? TimeValue.zero() : DEFAULT_SLEEP_INTERVAL;
    }
 }

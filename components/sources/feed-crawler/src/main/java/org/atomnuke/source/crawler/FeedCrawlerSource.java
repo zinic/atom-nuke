@@ -155,14 +155,14 @@ public class FeedCrawlerSource implements AtomSource {
                   }
                }
                
-               return new AtomSourceResultImpl(readResult.getFeed());
+               return new AtomSourceResultImpl(new AtomSourceActionImpl(ActionType.HAS_NEXT), readResult.getFeed());
             }
          } catch (Exception ex) {
             throw new AtomSourceException("Failed to poll ATOM feed: \"" + nextLocation + "\"", ex);
          }
       }
       
-      return new AtomSourceResultImpl(new AtomSourceActionImpl(ActionType.OK));
+      return new AtomSourceResultImpl(new AtomSourceActionImpl(ActionType.SLEEP));
    }
 
    private synchronized void configUpdate(FeedCrawlerTargets configuration) {

@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 import org.atomnuke.task.ManagedTask;
 import org.atomnuke.task.manager.TaskTracker;
+import org.atomnuke.util.TimeValue;
 import org.atomnuke.util.remote.CancellationRemote;
 
 /**
@@ -28,11 +29,11 @@ public class ThreadSafeTaskTracker implements TaskTracker {
    }
 
    @Override
-   public synchronized boolean shouldSchedule() {
+   public synchronized boolean hasTasksToSchedule(TimeValue now) {
       boolean shouldSchedule = false;
       
       for (ManagedTask task : pollingTasks) {
-         if (task.pollingController().shouldPoll()) {
+         if (task.pollingController().shouldPoll(now)) {
             shouldSchedule = true;
             break;
          }
@@ -56,7 +57,7 @@ public class ThreadSafeTaskTracker implements TaskTracker {
    }
 
    @Override
-   public synchronized void add(ManagedTask task) {
+   public synchronized void enlistAction(ManagedTask task) {
       if (active()) {
          pollingTasks.add(task);
       } else {

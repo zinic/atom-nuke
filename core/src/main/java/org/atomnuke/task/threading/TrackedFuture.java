@@ -6,12 +6,12 @@ import java.util.concurrent.Future;
  *
  * @author zinic
  */
-public class ExecutionFuture {
+public class TrackedFuture {
 
    private final Future future;
    private final long taskId;
 
-   public ExecutionFuture(Future future, long taskId) {
+   public TrackedFuture(Future future, long taskId) {
       this.future = future;
       this.taskId = taskId;
    }

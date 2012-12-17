@@ -20,6 +20,7 @@ import org.atomnuke.util.TimeValue;
 import org.atomnuke.lifecycle.InitializationException;
 import org.atomnuke.plugin.context.LocalInstanceContext;
 import org.atomnuke.service.runtime.AbstractRuntimeService;
+import org.atomnuke.task.threading.ExecutionManager;
 import org.atomnuke.util.remote.AtomicCancellationRemote;
 import org.atomnuke.util.remote.CancellationRemote;
 
@@ -58,10 +59,11 @@ public class FalloutTaskingBootstrapService extends AbstractRuntimeService {
    @Override
    public void init(ServiceContext contextObject) throws InitializationException {
       try {
+         final ExecutionManager executionManager = contextObject.services().firstAvailable(ExecutionManager.class);
          final ReclamationHandler reclamationHandler = contextObject.services().firstAvailable(ReclamationHandler.class);
 
          final TaskTracker taskTracker = new ThreadSafeTaskTracker(taskTrackerCancelRemote);
-         final Tasker tasker = new FalloutTasker(taskTracker, reclamationHandler);
+         final Tasker tasker = new FalloutTasker(reclamationHandler, executionManager, taskTracker);
 
          // As the tasking service, it's our job to spin up essential polling services?
          final InstanceContext gcTaskCtx = new LocalInstanceContext(new GarbageCollectionTask(reclamationHandler));

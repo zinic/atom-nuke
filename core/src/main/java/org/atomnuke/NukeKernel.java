@@ -35,7 +35,7 @@ public class NukeKernel extends AbstractNukeImpl {
    }
 
    public NukeKernel(NukeEnvironment nukeEnvironment, ExecutionManager executionManager, ReclamationHandler reclamationHandler, TaskTracker taskTracker) {
-      this(nukeEnvironment, executionManager, reclamationHandler, new GenericTaskManger(executionManager, taskTracker), new FalloutTasker(taskTracker, reclamationHandler));
+      this(nukeEnvironment, executionManager, reclamationHandler, new GenericTaskManger(executionManager, taskTracker), new FalloutTasker(reclamationHandler, executionManager, taskTracker));
    }
 
    /**

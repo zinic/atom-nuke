@@ -7,6 +7,6 @@ package org.atomnuke.source.action;
 public enum ActionType {
 
    SLEEP,
-   OK,
+   HAS_NEXT,
    HALT
 }

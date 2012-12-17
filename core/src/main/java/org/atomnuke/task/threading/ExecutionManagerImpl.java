@@ -3,6 +3,7 @@ package org.atomnuke.task.threading;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.concurrent.Future;
 import org.atomnuke.service.ServiceContext;
 
 /**
@@ -11,7 +12,7 @@ import org.atomnuke.service.ServiceContext;
  */
 public class ExecutionManagerImpl implements ExecutionManager {
 
-   private final Map<Long, ExecutionFuture> taskFutures;
+   private final Map<Long, TrackedFuture> taskFutures;
    private final ExecutionQueue executionQueue;
    private final StateManager stateManager;
 
@@ -19,12 +20,12 @@ public class ExecutionManagerImpl implements ExecutionManager {
       this.executionQueue = executionQueue;
 
       stateManager = new StateManager(State.NEW);
-      taskFutures = new TreeMap<Long, ExecutionFuture>();
+      taskFutures = new TreeMap<Long, TrackedFuture>();
    }
 
-   private synchronized Map<Long, ExecutionFuture> taskFutures() {
-      for (Iterator<ExecutionFuture> itr = taskFutures.values().iterator(); itr.hasNext();) {
-         final ExecutionFuture nextTask = itr.next();
+   private synchronized Map<Long, TrackedFuture> taskFutures() {
+      for (Iterator<TrackedFuture> itr = taskFutures.values().iterator(); itr.hasNext();) {
+         final TrackedFuture nextTask = itr.next();
 
          if (nextTask.done()) {
             itr.remove();
@@ -51,8 +52,13 @@ public class ExecutionManagerImpl implements ExecutionManager {
    }
 
    @Override
-   public synchronized ExecutionFuture submit(long taskId, Runnable r) {
-      final ExecutionFuture taskFuture = new ExecutionFuture(executionQueue.submit(r), taskId);
+   public synchronized Future submit(Runnable r) {
+      return executionQueue.submit(r);
+   }
+   
+   @Override
+   public synchronized TrackedFuture submitTracked(long taskId, Runnable r) {
+      final TrackedFuture taskFuture = new TrackedFuture(executionQueue.submit(r), taskId);
       taskFutures.put(taskId, taskFuture);
 
       return taskFuture;

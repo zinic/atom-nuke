@@ -1,7 +1,5 @@
 package org.atomnuke.task.manager;
 
-import java.util.UUID;
-import org.atomnuke.task.ManagedTask;
 import org.atomnuke.util.TimeValue;
 import org.atomnuke.lifecycle.Reclaimable;
 
@@ -30,14 +28,6 @@ public interface TaskManager extends Reclaimable {
     * @return
     */
    State state();
-
-   /**
-    * Looks up a ManagedTask by id.
-    *
-    * @param taskId the task ID to look up.
-    * @return the managed instance of the task, null otherwise.
-    */
-   ManagedTask findTask(long taskId);
 
    /**
     * Advances the scheduler and dispatches tasks to the execution queue.
