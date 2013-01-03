@@ -1,7 +1,8 @@
-package org.atomnuke.source;
+package org.atomnuke.util.source;
 
 import org.atomnuke.source.result.AtomSourceResult;
 import org.atomnuke.atom.model.Entry;
+import org.atomnuke.source.AtomSourceException;
 
 /**
  *
@@ -10,6 +11,6 @@ import org.atomnuke.atom.model.Entry;
 public interface QueueSource {
 
    void put(Entry e);
-
+   
    AtomSourceResult poll() throws AtomSourceException;
 }

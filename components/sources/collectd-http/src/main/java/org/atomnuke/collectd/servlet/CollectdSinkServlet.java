@@ -18,7 +18,7 @@ import org.atomnuke.atom.model.builder.IdBuilder;
 import org.atomnuke.atom.model.builder.PublishedBuilder;
 import org.atomnuke.collectd.command.PutValCommand;
 import org.atomnuke.collectd.command.PutValParser;
-import org.atomnuke.fallout.source.queue.QueueSource;
+import org.atomnuke.util.source.QueueSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

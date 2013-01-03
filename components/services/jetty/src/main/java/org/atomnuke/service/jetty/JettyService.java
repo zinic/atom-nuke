@@ -5,7 +5,9 @@ import org.atomnuke.lifecycle.InitializationException;
 import org.atomnuke.service.ServiceContext;
 import org.atomnuke.service.jetty.server.ContextBuilder;
 import org.atomnuke.service.jetty.server.JettyServer;
+import org.atomnuke.service.jetty.version.VersionServlet;
 import org.atomnuke.service.runtime.AbstractRuntimeService;
+import org.eclipse.jetty.servlet.ServletHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,6 +37,10 @@ public class JettyService extends AbstractRuntimeService {
    public void init(ServiceContext context) throws InitializationException {
       try {
          jettyServer.start(Integer.parseInt(context.environment().fromEnv("JETTY_PORT", "8080")));
+         
+         // Version servlet
+         final ServletHolder servletHolder = new ServletHolder(new VersionServlet());
+         jettyServer.getContextBuilder().newContext("/_version").addServlet(servletHolder, "/*");
       } catch (Exception ex) {
          throw new InitializationException(ex);
       }

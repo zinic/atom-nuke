@@ -4,12 +4,13 @@ import org.atomnuke.collectd.servlet.CollectdSinkServlet;
 import org.atomnuke.source.AtomSource;
 import org.atomnuke.source.AtomSourceException;
 import org.atomnuke.source.result.AtomSourceResult;
-import org.atomnuke.fallout.source.queue.QueueSource;
-import org.atomnuke.fallout.source.queue.EntryQueueImpl;
+
 import org.atomnuke.service.ServiceUnavailableException;
 import org.atomnuke.service.jetty.server.ContextBuilder;
 import org.atomnuke.task.context.AtomTaskContext;
 import org.atomnuke.lifecycle.InitializationException;
+import org.atomnuke.util.source.QueueSource;
+import org.atomnuke.util.source.QueueSourceImpl;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.slf4j.Logger;
@@ -28,7 +29,7 @@ public class CollectdSource implements AtomSource {
    private ServletContextHandler servletContextHandler;
 
    public CollectdSource() {
-      queueSource = new EntryQueueImpl();
+      queueSource = new QueueSourceImpl();
    }
 
    @Override
