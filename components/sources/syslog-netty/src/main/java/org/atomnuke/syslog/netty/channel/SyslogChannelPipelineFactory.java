@@ -1,6 +1,6 @@
 package org.atomnuke.syslog.netty.channel;
 
-import org.atomnuke.fallout.source.queue.QueueSource;
+import org.atomnuke.util.source.QueueSource;
 import org.jboss.netty.channel.ChannelPipeline;
 import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.channel.Channels;

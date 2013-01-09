@@ -19,6 +19,16 @@
 
    <dependencies>
       <dependency>
+         <groupId>org.atomnuke</groupId>
+         <artifactId>nuke</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>org.atomnuke.container</groupId>
+         <artifactId>container-core</artifactId>
+      </dependency>
+      
+      <dependency>
          <groupId>io.netty</groupId>
          <artifactId>netty</artifactId>
       </dependency>
@@ -26,11 +36,6 @@
       <dependency>
          <groupId>org.atomnuke.components.services</groupId>
          <artifactId>netty</artifactId>
-      </dependency>
-
-      <dependency>
-         <groupId>org.atomnuke</groupId>
-         <artifactId>nuke</artifactId>
       </dependency>
 
       <dependency>

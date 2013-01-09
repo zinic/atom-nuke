@@ -44,6 +44,36 @@
       <dependencies>
          <dependency>
             <groupId>org.atomnuke.components.sources</groupId>
+            <artifactId>aggregator</artifactId>
+            <version>${project.version}</version>
+         </dependency>
+         
+         <dependency>
+            <groupId>org.atomnuke.components.sinks</groupId>
+            <artifactId>category-index</artifactId>
+            <version>${project.version}</version>
+         </dependency>
+
+         <dependency>
+            <groupId>org.atomnuke.components.services.jee</groupId>
+            <artifactId>servlet-jetty</artifactId>
+            <version>${project.version}</version>
+         </dependency>
+
+         <dependency>
+            <groupId>org.atomnuke.components.services</groupId>
+            <artifactId>http-client</artifactId>
+            <version>${project.version}</version>
+         </dependency>
+
+         <dependency>
+            <groupId>org.atomnuke.components.services</groupId>
+            <artifactId>pubsub</artifactId>
+            <version>${project.version}</version>
+         </dependency>
+         
+         <dependency>
+            <groupId>org.atomnuke.components.sources</groupId>
             <artifactId>feed-crawler</artifactId>
             <version>${project.version}</version>
          </dependency>

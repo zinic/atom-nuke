@@ -13,7 +13,7 @@
 
    <packaging>jar</packaging>
 
-   <name>Atom Nuke - Container (Fallout)</name>
+   <name>Atom Nuke - Fallout</name>
 
    <dependencies>
       <dependency>

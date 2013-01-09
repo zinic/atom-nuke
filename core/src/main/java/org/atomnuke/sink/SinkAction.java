@@ -7,5 +7,5 @@ package org.atomnuke.sink;
 public enum SinkAction {
 
    HALT,
-   NO_ACTION
+   OK
 }

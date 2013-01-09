@@ -3,13 +3,13 @@ package org.atomnuke.syslog.netty;
 import org.atomnuke.source.AtomSource;
 import org.atomnuke.source.AtomSourceException;
 import org.atomnuke.source.result.AtomSourceResult;
-import org.atomnuke.fallout.source.queue.QueueSource;
-import org.atomnuke.fallout.source.queue.EntryQueueImpl;
 import org.atomnuke.task.context.AtomTaskContext;
 import org.atomnuke.lifecycle.InitializationException;
 import org.atomnuke.service.ServiceUnavailableException;
 import org.atomnuke.service.netty.server.NettyServer;
 import org.atomnuke.syslog.netty.channel.SyslogChannelPipelineFactory;
+import org.atomnuke.util.source.QueueSource;
+import org.atomnuke.util.source.QueueSourceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,7 +25,7 @@ public class NettySyslogSource implements AtomSource {
    private NettyServer server;
 
    public NettySyslogSource() {
-      queueSource = new EntryQueueImpl();
+      queueSource = new QueueSourceImpl();
    }
 
    @Override

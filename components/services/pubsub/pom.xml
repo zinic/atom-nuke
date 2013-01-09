@@ -19,6 +19,16 @@
 
    <dependencies>
       <dependency>
+         <groupId>org.atomnuke</groupId>
+         <artifactId>nuke</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>org.atomnuke.container</groupId>
+         <artifactId>container-core</artifactId>
+      </dependency>
+      
+      <dependency>
          <groupId>org.atomnuke.components.services</groupId>
          <artifactId>http-client</artifactId>
       </dependency>

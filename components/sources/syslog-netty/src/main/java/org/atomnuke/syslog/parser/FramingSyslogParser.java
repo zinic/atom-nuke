@@ -16,6 +16,7 @@ import org.jboss.netty.util.CharsetUtil;
 public class FramingSyslogParser {
 
    private final Accumulator characterAccumulator;
+   
    private StructuredDataBuilder structuredDataBuilder;
    private SyslogMessageBuilder messageBuilder;
    private boolean countOctets, escaped, skip;

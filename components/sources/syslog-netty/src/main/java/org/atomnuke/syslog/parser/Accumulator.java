@@ -12,7 +12,6 @@ import static org.jboss.netty.buffer.ChannelBuffers.*;
 public class Accumulator {
 
    private ChannelBuffer frontBuffer, backBuffer;
-   private int accumulatorLocation;
 
    public Accumulator() {
       this(256);

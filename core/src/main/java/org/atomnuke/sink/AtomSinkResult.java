@@ -11,7 +11,7 @@ public final class AtomSinkResult implements SinkResult {
    }
 
    public static AtomSinkResult ok() {
-      return new AtomSinkResult("No action.", SinkAction.NO_ACTION);
+      return new AtomSinkResult("No action, everything is okay.", SinkAction.OK);
    }
 
    private final SinkAction action;

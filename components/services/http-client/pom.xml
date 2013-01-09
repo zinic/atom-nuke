@@ -19,8 +19,13 @@
 
    <dependencies>
       <dependency>
+         <groupId>org.atomnuke</groupId>
+         <artifactId>nuke</artifactId>
+      </dependency>
+
+      <dependency>
          <groupId>org.atomnuke.container</groupId>
-         <artifactId>fallout</artifactId>
+         <artifactId>container-core</artifactId>
       </dependency>
 
       <dependency>
