@@ -7,6 +7,8 @@
       </fs-options>
 
       <http-options>
+         <authentication handler="" />
+         
          <headers>
             <header name="X-TRACE">12345</header>
          </headers>
@@ -19,6 +21,8 @@
       </fs-options>
 
       <http-options>
+         <authentication handler="" />
+         
          <headers>
             <header name="X-TRACE">67890</header>
          </headers>

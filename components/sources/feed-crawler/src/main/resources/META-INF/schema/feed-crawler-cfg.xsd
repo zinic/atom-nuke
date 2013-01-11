@@ -38,6 +38,7 @@
 
       <xs:all>
          <xs:element name="fs-options" type="fc:FileSystemOptions" minOccurs="0" maxOccurs="1" />
+         <xs:element name="authentication" type="fc:AuthenticationSpec" minOccurs="0" maxOccurs="1" />
          <xs:element name="http-options" type="fc:HttpOptions" minOccurs="0" maxOccurs="1" />
       </xs:all>
 
@@ -132,5 +133,23 @@
             </xs:attribute>
          </xs:extension>
       </xs:simpleContent>
+   </xs:complexType>
+   
+   <xs:complexType name="AuthenticationSpec">
+      <xs:annotation>
+         <xs:documentation>
+            <html:p>
+            </html:p>
+         </xs:documentation>
+      </xs:annotation>
+
+      <xs:attribute name="handler" type="xs:string" use="required">
+         <xs:annotation>
+            <xs:documentation>
+               <html:p>
+               </html:p>
+            </xs:documentation>
+         </xs:annotation>
+      </xs:attribute>
    </xs:complexType>
 </xs:schema>
