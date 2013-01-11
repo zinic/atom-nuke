@@ -21,21 +21,25 @@
       <dependency>
          <groupId>org.atomnuke</groupId>
          <artifactId>nuke</artifactId>
+         <scope>compile</scope>
       </dependency>
 
       <dependency>
          <groupId>org.atomnuke.container</groupId>
          <artifactId>container-core</artifactId>
+         <scope>compile</scope>
       </dependency>
 
       <dependency>
          <groupId>org.atomnuke.container</groupId>
          <artifactId>fallout</artifactId>
+         <scope>compile</scope>
       </dependency>
 
       <dependency>
          <groupId>org.atomnuke.support</groupId>
          <artifactId>configuration-support</artifactId>
+         <scope>compile</scope>
       </dependency>
 
       <dependency>
