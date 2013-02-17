@@ -26,4 +26,9 @@ public class ServicesInterrogatorImpl implements ServicesInterrogator {
 
       return manager.get(registeredServiceNames.iterator().next(), serviceClass);
    }
+
+   @Override
+   public <T> T lookup(String serviceName, Class<T> serviceClass) throws ServiceUnavailableException {
+      return manager.get(serviceName, serviceClass);
+   }
 }

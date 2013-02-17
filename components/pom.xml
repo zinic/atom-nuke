@@ -37,6 +37,7 @@
       <module>services/netty</module>
       <module>services/config</module>
       <module>services/pubsub</module>
+      <module>services/rackspace-auth</module>
       <module>services/http-client</module>
    </modules>
 

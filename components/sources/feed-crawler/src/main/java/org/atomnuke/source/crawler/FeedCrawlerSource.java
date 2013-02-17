@@ -1,10 +1,6 @@
 package org.atomnuke.source.crawler;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -32,6 +28,7 @@ import org.atomnuke.service.ServiceUnavailableException;
 import org.atomnuke.service.introspection.ServicesInterrogator;
 import org.atomnuke.source.action.ActionType;
 import org.atomnuke.source.action.AtomSourceActionImpl;
+import org.atomnuke.source.crawler.auth.AuthenticationHandler;
 import org.atomnuke.source.crawler.config.model.FeedCrawlerTargets;
 import org.atomnuke.source.crawler.config.model.FeedTarget;
 import org.atomnuke.source.crawler.config.model.HttpHeader;
@@ -57,15 +54,16 @@ public class FeedCrawlerSource implements AtomSource {
    private static final Logger LOG = LoggerFactory.getLogger(FeedCrawlerSource.class);
    
    private final AtomReaderFactory atomReaderFactory;
-   private final Map<String, String> httpHeaders;
+   
+   private AuthenticationHandler authenticationHandler;
+   private ServicesInterrogator availableServices;
    
    private String nextLocation, myActorId;
+   private StateManager stateManager;
    private HttpClient httpClient;
-   private File stateFile;
 
    public FeedCrawlerSource() {
       atomReaderFactory = new SaxAtomReaderFactory();
-      httpHeaders = new HashMap<String, String>();
    }
 
    public ConfigurationContext<FeedCrawlerTargets> getConfigurationContext(ServicesInterrogator interrogator, String configDir) throws JAXBException, ServiceUnavailableException, ConfigurationException {
@@ -87,6 +85,7 @@ public class FeedCrawlerSource implements AtomSource {
    @Override
    public void init(AtomTaskContext tc) throws InitializationException {
       myActorId = tc.actorId();
+      availableServices = tc.services();
 
       try {
          final ConfigurationContext<FeedCrawlerTargets> configContext = getConfigurationContext(tc.services(), tc.environment().configurationDirectory());
@@ -98,50 +97,22 @@ public class FeedCrawlerSource implements AtomSource {
             }
          });
 
-         httpClient = tc.services().firstAvailable(HttpClient.class);
+         httpClient = availableServices.firstAvailable(HttpClient.class);
       } catch (Exception sue) {
          throw new InitializationException(sue);
       }
 
-      loadState();
+      nextLocation = stateManager.loadState();
    }
 
    @Override
    public void destroy() {
-      writeState();
-   }
-
-   private void loadState() {
-      if (stateFile != null) {
-         try {
-            final BufferedReader fin = new BufferedReader(new FileReader(stateFile));
-            nextLocation = fin.readLine();
-
-            fin.close();
-         } catch (FileNotFoundException fnfe) {
-            // Suppress this
-         } catch (IOException ioe) {
-            LOG.error("Failed to load statefile \"" + stateFile.getAbsolutePath() + "\" - Reason: " + ioe.getMessage());
-         }
-      }
-   }
-
-   private void writeState() {
-      if (stateFile != null) {
-         try {
-            final FileWriter fout = new FileWriter(stateFile);
-            fout.append(nextLocation);
-            fout.append("\n");
-
-            fout.close();
-         } catch (IOException ioe) {
-            LOG.error("Failed to write statefile \"" + stateFile.getAbsolutePath() + "\" - Reason: " + ioe.getMessage());
-         }
-      }
+      stateManager.writeState(nextLocation);
    }
 
    @Override
    public synchronized AtomSourceResult poll() throws AtomSourceException {
+      // If the nextLocation is null then we haven't been configured yet
       if (nextLocation != null) {
          try {
             final ReaderResult readResult = read(nextLocation);
@@ -150,18 +121,18 @@ public class FeedCrawlerSource implements AtomSource {
                for (Link pageLink : readResult.getFeed().links()) {
                   if (pageLink.rel().equalsIgnoreCase("previous")) {
                      nextLocation = pageLink.href();
-                     writeState();
+                     stateManager.writeState(nextLocation);
                      break;
                   }
                }
-               
+
                return new AtomSourceResultImpl(new AtomSourceActionImpl(ActionType.HAS_NEXT), readResult.getFeed());
             }
          } catch (Exception ex) {
-            throw new AtomSourceException("Failed to poll ATOM feed: \"" + nextLocation + "\"", ex);
+            throw new AtomSourceException("Failed to poll ATOM feed: \"" + nextLocation + "\" - Error: " + ex.getMessage(), ex);
          }
       }
-      
+
       return new AtomSourceResultImpl(new AtomSourceActionImpl(ActionType.SLEEP));
    }
 
@@ -170,46 +141,73 @@ public class FeedCrawlerSource implements AtomSource {
          if (myActorId.equals(feedTarget.getActorRef())) {
             // This is us, let's configure
             nextLocation = feedTarget.getHref();
-            httpHeaders.clear();
 
-            if (feedTarget.getHttpOptions() != null) {
-               if (feedTarget.getHttpOptions().getHeaders() != null) {
-                  for (HttpHeader header : feedTarget.getHttpOptions().getHeaders().getHeader()) {
-                     httpHeaders.put(header.getName(), header.getValue());
-                  }
+            // Where should we write state?
+            if (feedTarget.getFsOptions() != null) {
+               final File stateFile = new File(URI.create(feedTarget.getFsOptions().getStateFile()));
+               stateManager = new StateManager(stateFile);
+            }
+
+            // Is there an auth handler we should use?
+            if (feedTarget.getAuthentication() != null) {
+               final String authenticationHandlerName = feedTarget.getAuthentication().getHandler();
+
+               try {
+                  authenticationHandler = availableServices.lookup(authenticationHandlerName, AuthenticationHandler.class);
+               } catch (ServiceUnavailableException sue) {
+                  LOG.error("Unable to find an authentication handler named: "
+                          + authenticationHandlerName
+                          + ". While this is not fatal, authentication for this feed crawler will not be enabled.");
                }
             }
 
-            if (feedTarget.getFsOptions() != null) {
-               stateFile = new File(URI.create(feedTarget.getFsOptions().getStateFile()));
-            }
-            
             break;
          }
       }
    }
 
    private ReaderResult read(String location) throws AtomReadException, IOException {
-      final HttpGet httpGet = new HttpGet(location);
-
-      for (Map.Entry<String, String> headerToAdd : httpHeaders.entrySet()) {
-         httpGet.addHeader(headerToAdd.getKey(), headerToAdd.getValue());
-      }
-
-      ReaderResult readResult = null;
+      boolean done = false;
       InputStream inputStream = null;
 
       try {
-         final HttpResponse response = httpClient.execute(httpGet);
-         final HttpEntity entity = response.getEntity();
+         while (!done) {
+            final HttpGet httpGet = new HttpGet(location);
 
-         readResult = atomReaderFactory.getInstance().read(entity.getContent());
+            if (authenticationHandler != null) {
+               for (Map.Entry<String, String> headerToAdd : authenticationHandler.authenticationHeaders().entrySet()) {
+                  httpGet.addHeader(headerToAdd.getKey(), headerToAdd.getValue());
+               }
+            }
+
+            final HttpResponse response = httpClient.execute(httpGet);
+            final int statusCode = response.getStatusLine().getStatusCode();
+
+            switch (statusCode) {
+               case 200:
+                  final HttpEntity entity = response.getEntity();
+                  final ReaderResult result = atomReaderFactory.getInstance().read(entity.getContent());
+
+                  return result;
+
+               case 401:
+                  if (authenticationHandler != null) {
+                     authenticationHandler.authenticate();
+                  }
+
+                  break;
+
+               default:
+                  done = true;
+               // TODO: log
+            }
+         }
       } finally {
          if (inputStream != null) {
             inputStream.close();
          }
       }
 
-      return readResult;
+      return null;
    }
 }
