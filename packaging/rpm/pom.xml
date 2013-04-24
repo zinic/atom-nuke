@@ -126,6 +126,21 @@
                   </mapping>
 
                   <mapping>
+                     <directory>/etc/rc.d/init.d/fallout</directory>
+
+                     <username>root</username>
+                     <groupname>root</groupname>
+                     <filemode>755</filemode>
+
+                     <sources>
+                        <source>
+                           <location>../src/scripts/fallout.init</location>
+                           <destination>fallout</destination>
+                        </source>
+                     </sources>
+                  </mapping>
+
+                  <mapping>
                      <directory>/var/lib/atomnuke/deployable/</directory>
 
                      <username>atomnuke</username>
@@ -153,18 +168,20 @@
 
                <preinstallScriptlet>
                   <script>
-                     id -u atomnuke &gt;&gt; /dev/null 2&gt;&amp;1;
-
-                     if [ $? -eq 1 ]; then
-                        useradd -M -d /var/lib/atomnuke -s /bin/false atomnuke
-                     fi
+                     getent group atomnuke || groupadd -r atomnuke;
+                     getent passwd atomnuke || useradd -r -M -d /var/lib/atomnuke -s /bin/false atomnuke;
                   </script>
                </preinstallScriptlet>
 
+               <postinstallScriptlet>
+                  <script>
+                     chkconfig --add fallout;
+                  </script>
+               </postinstallScriptlet>
+
                <postremoveScriptlet>
                   <script>
-                     rm -rf /var/lib/atomnuke;
-                     rm -rf /var/log/atomnume;
+                     chkconfig --del fallout;
                   </script>
                </postremoveScriptlet>
 
