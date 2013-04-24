@@ -26,7 +26,7 @@ fi
 
 start() {
     echo -n $"Starting ${prog}: "
-    DATA=`java ${OPTS} -jar ${JARFILE} server start > ${NUKE_LOGFILE} 2>&1 & echo $!:$?`
+    DATA=`java ${OPTS} -jar ${JARFILE} server start >> ${NUKE_LOGFILE} 2>&1 & echo $!:$?`
     RETVAL=`echo ${DATA} | cut -f2 -d':'`
     if [ $RETVAL = 0 ]; then
         echo_success
@@ -46,7 +46,7 @@ status(){
 stop(){
     echo -n $"Stopping ${prog}: "
     if [ -f $PIDFILE ]; then
-        java ${OPTS} -jar ${JARFILE} server stop > ${NUKE_LOGFILE} 2>&1
+        java ${OPTS} -jar ${JARFILE} server stop >> ${NUKE_LOGFILE} 2>&1
         RETVAL=$?
         if [ $RETVAL = 0 ]; then
             echo_success
