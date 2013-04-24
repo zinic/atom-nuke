@@ -112,6 +112,7 @@
 
                   <mapping>
                      <directory>/usr/local/bin/</directory>
+                     <directoryIncluded>false</directoryIncluded>
 
                      <username>atomnuke</username>
                      <groupname>atomnuke</groupname>
@@ -126,7 +127,8 @@
                   </mapping>
 
                   <mapping>
-                     <directory>/etc/rc.d/init.d/fallout</directory>
+                     <directory>/etc/rc.d/init.d/</directory>
+                     <directoryIncluded>false</directoryIncluded>
 
                      <username>root</username>
                      <groupname>root</groupname>
