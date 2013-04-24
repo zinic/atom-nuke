@@ -18,6 +18,7 @@ export NUKE_HOME="/var/lib/atomnuke";
 export NUKE_DEPLOY="${NUKE_HOME}/deployed";
 export NUKE_LIB="${NUKE_HOME}/deployable";
 export NUKE_CONFIG="/etc/atomnuke/nuke.cfg.xml";
+export NUKE_LOGFILE="/var/log/atomnuke/atomnuke.log"
 
 if [ -f /etc/sysconfig/fallout ]; then
     . /etc/sysconfig/fallout
@@ -26,31 +27,34 @@ fi
 case "$1" in
   start)
     echo -n $"Starting ${prog}: "
-    DATA=`java $OPTS -jar $JARFILE server start > /dev/null 2>&1 & echo $!:$?`
+    DATA=`java ${OPTS} -jar ${JARFILE} server start > ${NUKE_LOGFILE} 2>&1 & echo $!:$?`
     RETVAL=`echo ${DATA} | cut -f2 -d':'`
     if [ $RETVAL = 0 ]; then
-        echo ${DATA} | cut -f1 -d':' > $PIDFILE
         echo_success
+        echo ${DATA} | cut -f1 -d':' > $PIDFILE
     else
         echo_failure
     fi
     ;;
 
   status)
-    status -p ${PIDFILE} 
+    status -p $PIDFILE
     RETVAL=$?
     ;;
 
   stop)
-    echo -n $"Stopping $prog: "
-    if [ -f ${PIDFILE} ]; then
-        killproc -p ${PIDFILE}
+    echo -n $"Stopping ${prog}: "
+    if [ -f $PIDFILE ]; then
+        java ${OPTS} -jar ${JARFILE} server stop > ${NUKE_LOGFILE} 2>&1
         RETVAL=$?
+        if [ $RETVAL = 0 ]; then
+            echo_success
+        else
+            echo_failure
+        fi
     else
-        echo -n $"Fallout was not running.";
         failure $"Fallout was not running.";
-        echo
-        return 1
+        RETVAL=1
     fi
     ;;
 
@@ -60,8 +64,8 @@ case "$1" in
     ;;
 
   *)
-        echo "Usage: $0 {start|stop|restart|status}"
-        exit 1
+    echo "Usage: $0 {start|stop|restart|status}"
+    exit 1
 esac
 echo
 exit $RETVAL
