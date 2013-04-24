@@ -24,8 +24,7 @@ if [ -f /etc/sysconfig/fallout ]; then
     . /etc/sysconfig/fallout
 fi
 
-case "$1" in
-  start)
+start() {
     echo -n $"Starting ${prog}: "
     DATA=`java ${OPTS} -jar ${JARFILE} server start > ${NUKE_LOGFILE} 2>&1 & echo $!:$?`
     RETVAL=`echo ${DATA} | cut -f2 -d':'`
@@ -35,14 +34,16 @@ case "$1" in
     else
         echo_failure
     fi
-    ;;
+    echo
+    return $RETVAL
+}
 
-  status)
+status(){
     status -p $PIDFILE
-    RETVAL=$?
-    ;;
+    return $?
+}
 
-  stop)
+stop(){
     echo -n $"Stopping ${prog}: "
     if [ -f $PIDFILE ]; then
         java ${OPTS} -jar ${JARFILE} server stop > ${NUKE_LOGFILE} 2>&1
@@ -56,16 +57,31 @@ case "$1" in
         failure $"Fallout was not running.";
         RETVAL=1
     fi
+    echo
+    return $RETVAL
+}
+
+case "$1" in
+  start)
+    start
+    ;;
+
+  status)
+    status
+    ;;
+
+  stop)
+    stop
     ;;
 
   restart)
-    $0 stop
-    $0 start
+    stop
+    start
     ;;
 
   *)
     echo "Usage: $0 {start|stop|restart|status}"
     exit 1
 esac
-echo
-exit $RETVAL
+
+exit $?
