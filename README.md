@@ -1,8 +1,8 @@
 #[Nuke - The Fast ATOM Bus](http://atomnuke.org)#
 
-**Current version**: 1.1.15
+**Current version**: 1.1.16
 <br />
-**Latest RPM**: [Nuke Fallout 1.1.15 RPM](http://maven.research.rackspacecloud.com/content/repositories/releases/org/atomnuke/packaging/nuke-fallout/1.1.15/nuke-fallout-1.1.15.rpm)
+**Latest RPM**: [Nuke Fallout 1.1.16 RPM](http://maven.research.rackspacecloud.com/content/repositories/releases/org/atomnuke/packaging/nuke-fallout/1.1.16/nuke-fallout-1.1.16.rpm)
 
 ##What is it?##
 
