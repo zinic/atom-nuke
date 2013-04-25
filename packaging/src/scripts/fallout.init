@@ -8,17 +8,11 @@
 . /etc/rc.d/init.d/functions
 
 prog=fallout
-OPTS="-Xms2048m -Xmx4098m -XX:MaxPermSize=2048m"
-
-JARFILE=/usr/lib/atomnuke/fallout-full.jar
-PIDFILE=/var/run/${prog}.pid
-
-# Nuke env variables
-export NUKE_HOME="/var/lib/atomnuke";
-export NUKE_DEPLOY="${NUKE_HOME}/deployed";
-export NUKE_LIB="${NUKE_HOME}/deployable";
-export NUKE_CONFIG="/etc/atomnuke/nuke.cfg.xml";
+export JAVA_OPTS="-Xms2048m -Xmx4098m -XX:MaxPermSize=2048m"
 export NUKE_LOGFILE="/var/log/atomnuke/atomnuke.log"
+
+FALLOUT=/usr/local/bin/fallout
+PIDFILE=/var/run/${prog}.pid
 
 if [ -f /etc/sysconfig/fallout ]; then
     . /etc/sysconfig/fallout
@@ -26,7 +20,7 @@ fi
 
 start() {
     echo -n $"Starting ${prog}: "
-    DATA=`java ${OPTS} -jar ${JARFILE} server start >> ${NUKE_LOGFILE} 2>&1 & echo $!:$?`
+    DATA=`${FALLOUT} server start >> ${NUKE_LOGFILE} 2>&1 & echo $!:$?`
     RETVAL=`echo ${DATA} | cut -f2 -d':'`
     if [ $RETVAL = 0 ]; then
         echo_success
@@ -46,7 +40,7 @@ status(){
 stop(){
     echo -n $"Stopping ${prog}: "
     if [ -f $PIDFILE ]; then
-        java ${OPTS} -jar ${JARFILE} server stop >> ${NUKE_LOGFILE} 2>&1
+        kill `cat ${PIDFILE}`
         RETVAL=$?
         if [ $RETVAL = 0 ]; then
             echo_success

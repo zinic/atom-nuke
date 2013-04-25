@@ -171,7 +171,7 @@
                <preinstallScriptlet>
                   <script>
                      getent group atomnuke || groupadd -r atomnuke;
-                     getent passwd atomnuke || useradd -r -M -d /var/lib/atomnuke -s /bin/false atomnuke;
+                     getent passwd atomnuke || useradd -r -N -M -d /var/lib/atomnuke -s /bin/false atomnuke;
                   </script>
                </preinstallScriptlet>
 
