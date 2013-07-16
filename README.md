@@ -1,5 +1,7 @@
 #[Nuke - The Fast ATOM Bus](http://atomnuke.org)#
 
+###Deprecation Notice: Please note that this project has been deprecated###
+
 **Current version**: 1.1.16
 <br />
 **Latest RPM**: [Nuke Fallout 1.1.16 RPM](http://maven.research.rackspacecloud.com/content/repositories/releases/org/atomnuke/packaging/nuke-fallout/1.1.16/nuke-fallout-1.1.16.rpm)
